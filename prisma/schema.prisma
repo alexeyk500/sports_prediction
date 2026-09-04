@@ -1,0 +1,427 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TournamentStatus {
+  SCHEDULED
+  ACTIVE
+  FINALIZING
+  FINISHED
+}
+
+enum FixtureStatus {
+  DRAFT
+  OPEN
+  LOCKED
+  LIVE
+  FINISHED
+  SETTLED
+}
+
+enum PredictionOutcome {
+  HOME
+  DRAW
+  AWAY
+}
+
+enum PredictionResultStatus {
+  PENDING
+  CORRECT
+  INCORRECT
+}
+
+enum PredictionSlotType {
+  FREE
+  REWARDED
+}
+
+enum AdRewardStatus {
+  CREATED
+  VERIFIED
+  CONSUMED
+  EXPIRED
+  REJECTED
+}
+
+enum PrizeClaimStatus {
+  UNCLAIMED
+  CLAIM_PENDING
+  PAID
+  FAILED
+}
+
+enum RatingLeague {
+  UNRANKED
+
+  BRONZE_III
+  BRONZE_II
+  BRONZE_I
+
+  SILVER_III
+  SILVER_II
+  SILVER_I
+
+  GOLD_III
+  GOLD_II
+  GOLD_I
+
+  PLATINUM_III
+  PLATINUM_II
+  PLATINUM_I
+
+  DIAMOND_III
+  DIAMOND_II
+  DIAMOND_I
+
+  MASTER
+  LEGEND
+}
+
+model User {
+  id             String    @id @default(uuid()) @db.Uuid
+  telegramUserId BigInt    @unique
+  username       String?
+  firstName      String?
+  lastName       String?
+  languageCode   String?
+  isDeleted      Boolean   @default(false)
+  deletedAt      DateTime? @db.Timestamptz(6)
+  createdAt      DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime  @updatedAt @db.Timestamptz(6)
+
+  tournamentParticipants TournamentParticipant[]
+  predictions            Prediction[]
+  dailyPredictionUsage   DailyPredictionUsage[]
+  adRewards              AdReward[]
+  ratingProfile          RatingProfile?
+  ratingHistory          RatingHistory[]
+  userAchievements       UserAchievement[]
+  prizes                 Prize[]
+  idempotencyRecords     IdempotencyRecord[]
+
+  @@index([createdAt])
+}
+
+model Competition {
+  id                    String   @id @default(uuid()) @db.Uuid
+  providerCompetitionId String   @unique
+  code                  String   @unique
+  name                  String
+  country               String?
+  logoUrl               String?  @db.Text
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime @updatedAt @db.Timestamptz(6)
+
+  fixtures Fixture[]
+
+  @@index([isActive])
+}
+
+model Team {
+  id             String   @id @default(uuid()) @db.Uuid
+  providerTeamId String   @unique
+  name           String
+  shortName      String?
+  country        String?
+  logoUrl        String?  @db.Text
+  createdAt      DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime @updatedAt @db.Timestamptz(6)
+
+  homeFixtures Fixture[] @relation("HomeTeamFixtures")
+  awayFixtures Fixture[] @relation("AwayTeamFixtures")
+}
+
+model Tournament {
+  id               String           @id @default(uuid()) @db.Uuid
+  number           Int              @unique
+  status           TournamentStatus
+  startsAt         DateTime         @db.Timestamptz(6)
+  endsAt           DateTime         @db.Timestamptz(6)
+  prizePoolNanoTon BigInt
+  createdAt        DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime         @updatedAt @db.Timestamptz(6)
+
+  participants  TournamentParticipant[]
+  predictions   Prediction[]
+  ratingHistory RatingHistory[]
+  prizes        Prize[]
+
+  @@index([status])
+  @@index([startsAt])
+  @@index([endsAt])
+  @@index([status, startsAt, endsAt])
+}
+
+model TournamentParticipant {
+  id                      String   @id @default(uuid()) @db.Uuid
+  tournamentId            String   @db.Uuid
+  userId                  String   @db.Uuid
+  tournamentPoints        Int      @default(0)
+  predictionsCount        Int      @default(0)
+  correctPredictionsCount Int      @default(0)
+  finalRank               Int?
+  ratingPerformanceZ      Decimal? @db.Decimal(12, 8)
+  ratingDelta             Int?
+  createdAt               DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt               DateTime @updatedAt @db.Timestamptz(6)
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([tournamentId, userId])
+  @@index([tournamentId, tournamentPoints(sort: Desc)])
+  @@index([tournamentId, tournamentPoints(sort: Desc), id])
+  @@index([userId, tournamentId])
+}
+
+model Fixture {
+  id                String             @id @default(uuid()) @db.Uuid
+  providerFixtureId String             @unique
+  competitionId     String             @db.Uuid
+  homeTeamId        String             @db.Uuid
+  awayTeamId        String             @db.Uuid
+  kickoffAt         DateTime           @db.Timestamptz(6)
+  status            FixtureStatus      @default(DRAFT)
+  providerStatus    String?
+  homeScore         Int?
+  awayScore         Int?
+  finalOutcome      PredictionOutcome?
+  scoringSnapshotId String?            @unique @db.Uuid
+  createdAt         DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime           @updatedAt @db.Timestamptz(6)
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  homeTeam    Team        @relation("HomeTeamFixtures", fields: [homeTeamId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  awayTeam    Team        @relation("AwayTeamFixtures", fields: [awayTeamId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  snapshots       OutcomeSnapshot[] @relation("FixtureSnapshots")
+  scoringSnapshot OutcomeSnapshot?  @relation("FixtureScoringSnapshot", fields: [scoringSnapshotId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  predictions Prediction[]
+
+  @@index([kickoffAt])
+  @@index([status, kickoffAt])
+  @@index([competitionId, kickoffAt])
+  @@index([status, competitionId, kickoffAt])
+  @@index([kickoffAt, status, competitionId])
+}
+
+model OutcomeSnapshot {
+  id              String   @id @default(uuid()) @db.Uuid
+  fixtureId       String   @db.Uuid
+  homeRawOdds     Decimal  @db.Decimal(12, 6)
+  drawRawOdds     Decimal  @db.Decimal(12, 6)
+  awayRawOdds     Decimal  @db.Decimal(12, 6)
+  homeProbability Decimal  @db.Decimal(10, 8)
+  drawProbability Decimal  @db.Decimal(10, 8)
+  awayProbability Decimal  @db.Decimal(10, 8)
+  homePoints      Int
+  drawPoints      Int
+  awayPoints      Int
+  snapshotAt      DateTime @db.Timestamptz(6)
+  scoringVersion  String
+  createdAt       DateTime @default(now()) @db.Timestamptz(6)
+
+  fixture          Fixture      @relation("FixtureSnapshots", fields: [fixtureId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  activeForFixture Fixture?     @relation("FixtureScoringSnapshot")
+  predictions      Prediction[]
+
+  @@index([fixtureId])
+  @@index([fixtureId, snapshotAt(sort: Desc)])
+}
+
+model Prediction {
+  id                      String                 @id @default(uuid()) @db.Uuid
+  userId                  String                 @db.Uuid
+  tournamentId            String                 @db.Uuid
+  fixtureId               String                 @db.Uuid
+  outcomeSnapshotId       String                 @db.Uuid
+  selectedOutcome         PredictionOutcome
+  slotType                PredictionSlotType
+  probabilityAtPrediction Decimal                @db.Decimal(10, 8)
+  potentialPoints         Int
+  resultStatus            PredictionResultStatus @default(PENDING)
+  earnedPoints            Int                    @default(0)
+  createdAt               DateTime               @default(now()) @db.Timestamptz(6)
+  updatedAt               DateTime               @updatedAt @db.Timestamptz(6)
+  settledAt               DateTime?              @db.Timestamptz(6)
+
+  user             User            @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  tournament       Tournament      @relation(fields: [tournamentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  fixture          Fixture         @relation(fields: [fixtureId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  outcomeSnapshot  OutcomeSnapshot @relation(fields: [outcomeSnapshotId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  consumedAdReward AdReward?       @relation("ConsumedAdReward")
+
+  @@unique([userId, fixtureId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, tournamentId])
+  @@index([tournamentId, resultStatus])
+  @@index([fixtureId, resultStatus])
+  @@index([fixtureId])
+  @@index([outcomeSnapshotId])
+}
+
+model DailyPredictionUsage {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @db.Uuid
+  businessDate DateTime @db.Date
+  freeUsed     Int      @default(0)
+  rewardedUsed Int      @default(0)
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([userId, businessDate])
+  @@index([userId, businessDate])
+  @@index([businessDate])
+}
+
+model AdReward {
+  id                     String         @id @default(uuid()) @db.Uuid
+  userId                 String         @db.Uuid
+  provider               String
+  providerRewardId       String?
+  attemptKey             String         @unique
+  status                 AdRewardStatus @default(CREATED)
+  createdAt              DateTime       @default(now()) @db.Timestamptz(6)
+  verifiedAt             DateTime?      @db.Timestamptz(6)
+  consumedAt             DateTime?      @db.Timestamptz(6)
+  expiresAt              DateTime?      @db.Timestamptz(6)
+  consumedByPredictionId String?        @unique @db.Uuid
+  metadata               Json?
+
+  user                 User        @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  consumedByPrediction Prediction? @relation("ConsumedAdReward", fields: [consumedByPredictionId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([provider, providerRewardId])
+  @@index([userId, status, expiresAt])
+  @@index([status, expiresAt])
+}
+
+model RatingProfile {
+  id                 String       @id @default(uuid()) @db.Uuid
+  userId             String       @unique @db.Uuid
+  rating             Int          @default(1500)
+  league             RatingLeague @default(UNRANKED)
+  qualifiedCupsCount Int          @default(0)
+  createdAt          DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime     @updatedAt @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([rating(sort: Desc)])
+  @@index([league, rating(sort: Desc)])
+}
+
+model RatingHistory {
+  id                 String       @id @default(uuid()) @db.Uuid
+  userId             String       @db.Uuid
+  tournamentId       String       @db.Uuid
+  ratingBefore       Int
+  ratingAfter        Int
+  ratingDelta        Int
+  performanceZ       Decimal      @db.Decimal(12, 8)
+  actualPercentile   Decimal      @db.Decimal(10, 8)
+  expectedPercentile Decimal      @db.Decimal(10, 8)
+  leagueBefore       RatingLeague
+  leagueAfter        RatingLeague
+  createdAt          DateTime     @default(now()) @db.Timestamptz(6)
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([userId, tournamentId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([tournamentId])
+  @@index([tournamentId, performanceZ(sort: Desc)])
+}
+
+model Achievement {
+  id          String   @id @default(uuid()) @db.Uuid
+  code        String   @unique
+  name        String
+  description String?  @db.Text
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
+
+  userAchievements UserAchievement[]
+
+  @@index([isActive])
+}
+
+model UserAchievement {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String   @db.Uuid
+  achievementId String   @db.Uuid
+  unlockedAt    DateTime @db.Timestamptz(6)
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([userId, achievementId])
+  @@index([userId, unlockedAt(sort: Desc)])
+  @@index([achievementId])
+}
+
+model Prize {
+  id            String   @id @default(uuid()) @db.Uuid
+  tournamentId  String   @db.Uuid
+  userId        String   @db.Uuid
+  rank          Int
+  amountNanoTon BigInt
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+
+  tournament Tournament  @relation(fields: [tournamentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  claim      PrizeClaim?
+
+  @@unique([tournamentId, rank])
+  @@unique([tournamentId, userId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([tournamentId])
+}
+
+model PrizeClaim {
+  id              String           @id @default(uuid()) @db.Uuid
+  prizeId         String           @unique @db.Uuid
+  walletAddress   String?
+  status          PrizeClaimStatus @default(UNCLAIMED)
+  transactionHash String?
+  claimedAt       DateTime?        @db.Timestamptz(6)
+  paidAt          DateTime?        @db.Timestamptz(6)
+  failedAt        DateTime?        @db.Timestamptz(6)
+  failureReason   String?          @db.Text
+  createdAt       DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime         @updatedAt @db.Timestamptz(6)
+
+  prize Prize @relation(fields: [prizeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([status])
+  @@index([walletAddress])
+}
+
+model IdempotencyRecord {
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String    @db.Uuid
+  operation      String
+  key            String
+  requestHash    String?
+  responseStatus Int?
+  responseBody   Json?
+  createdAt      DateTime  @default(now()) @db.Timestamptz(6)
+  expiresAt      DateTime? @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([userId, operation, key])
+  @@index([expiresAt])
+  @@index([userId, operation, createdAt(sort: Desc)])
+}
