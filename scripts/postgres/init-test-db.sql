@@ -1,0 +1,1 @@
+CREATE DATABASE sports_prediction_test;
