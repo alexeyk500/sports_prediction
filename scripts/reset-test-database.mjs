@@ -29,12 +29,20 @@ if (developmentDatabaseUrl && testDatabaseUrl === developmentDatabaseUrl) {
 }
 
 const client = new Client({ connectionString: testDatabaseUrl });
+let connected = false;
 
 try {
   await client.connect();
+  connected = true;
+  await client.query("SELECT pg_advisory_lock(hashtext('sports_prediction_test_database_reset'))");
   await client.query("DROP SCHEMA IF EXISTS public CASCADE");
-  await client.query("CREATE SCHEMA public");
+  await client.query("CREATE SCHEMA IF NOT EXISTS public");
   await client.query("GRANT ALL ON SCHEMA public TO public");
 } finally {
-  await client.end();
+  if (connected) {
+    await client.query("SELECT pg_advisory_unlock(hashtext('sports_prediction_test_database_reset'))").catch(
+      () => undefined,
+    );
+    await client.end();
+  }
 }

@@ -361,8 +361,14 @@ SETTLED -> not selectable
 Test:
 
 - outcome can change before kickoff;
+- edit succeeds immediately before kickoff;
+- edit fails exactly at kickoff;
+- edit fails after kickoff;
+- Fixture status must not reject edit before kickoff unless a separate approved product rule exists;
 - slotType remains unchanged;
 - daily usage remains unchanged;
+- TournamentParticipant.predictionsCount remains unchanged;
+- AdReward is not consumed again;
 - same OutcomeSnapshot remains;
 - probabilityAtPrediction changes to selected outcome value;
 - potentialPoints changes to selected outcome value;
@@ -593,8 +599,19 @@ Prediction count unchanged
 DailyPredictionUsage unchanged
 TournamentParticipant.predictionsCount unchanged
 slotType unchanged
+AdReward unchanged
+outcomeSnapshotId unchanged
 selectedOutcome changed
 potentialPoints updated
+```
+
+Regression cases:
+
+```text
+edit succeeds at kickoffAt - 1 ms
+edit fails at kickoffAt
+edit fails at kickoffAt + 1 ms
+Fixture.status != OPEN does not block edit when now < kickoffAt unless an approved product rule says otherwise
 ```
 
 ---
@@ -1013,6 +1030,8 @@ Test:
 - invalid hash;
 - modified user payload;
 - expired auth_date if expiry policy exists;
+- malformed initData;
+- missing initData;
 - missing required data;
 - wrong bot token;
 - large Telegram user ID.
@@ -1037,6 +1056,21 @@ idempotency behavior
 ```
 
 Do not duplicate all service tests through HTTP.
+
+Mandatory v0.1 API regression coverage:
+
+```text
+valid Telegram initData creates User
+second authenticated request updates Telegram profile fields without duplicate User
+invalid Telegram initData returns 401 error envelope
+GET /api/bootstrap returns user, active tournament, daily usage, rating summary, serverTime, businessTimezone
+GET /api/fixtures/today includes current London day displayable fixtures and excludes tomorrow/inactive/unsupported fixtures
+GET /api/predictions/today returns current-day predictions with editable computed by now < kickoffAt
+POST /api/predictions uses authenticated User only and requires Idempotency-Key
+POST /api/predictions rejects frontend user impersonation
+PATCH /api/predictions/:predictionId updates selectedOutcome through application service
+PATCH locked prediction returns PREDICTION_LOCKED
+```
 
 ---
 

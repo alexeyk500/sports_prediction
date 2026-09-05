@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { DomainError } from "@/lib/errors/domain-error";
 
 export const SCORING_VERSION = "v1";
 export const MIN_PREDICTION_POINTS = 7;
@@ -36,7 +37,7 @@ export function normalizeOneXTwoOdds(odds: RawOneXTwoOdds): NormalizedOneXTwoPro
   const impliedTotal = homeImplied.plus(drawImplied).plus(awayImplied);
 
   if (impliedTotal.lte(0)) {
-    throw new Error("Implied probability total must be greater than zero.");
+    throw new DomainError("INVALID_ODDS", "Implied probability total must be greater than zero.");
   }
 
   return {
@@ -50,7 +51,7 @@ function parseProbability(probability: Prisma.Decimal.Value): Prisma.Decimal {
   const decimal = parsePositiveDecimal(probability, "probability");
 
   if (decimal.gt(1)) {
-    throw new Error("Probability must be less than or equal to 1.");
+    throw new DomainError("INVALID_PROBABILITY", "Probability must be less than or equal to 1.");
   }
 
   return decimal;
@@ -62,15 +63,24 @@ function parsePositiveDecimal(value: Prisma.Decimal.Value, fieldName: string): P
   try {
     decimal = new Prisma.Decimal(value);
   } catch {
-    throw new Error(`${fieldName} must be a valid decimal.`);
+    throw new DomainError(
+      fieldName === "probability" ? "INVALID_PROBABILITY" : "INVALID_ODDS",
+      `${fieldName} must be a valid decimal.`,
+    );
   }
 
   if (!decimal.isFinite()) {
-    throw new Error(`${fieldName} must be finite.`);
+    throw new DomainError(
+      fieldName === "probability" ? "INVALID_PROBABILITY" : "INVALID_ODDS",
+      `${fieldName} must be finite.`,
+    );
   }
 
   if (decimal.lte(0)) {
-    throw new Error(`${fieldName} must be greater than zero.`);
+    throw new DomainError(
+      fieldName === "probability" ? "INVALID_PROBABILITY" : "INVALID_ODDS",
+      `${fieldName} must be greater than zero.`,
+    );
   }
 
   return decimal;

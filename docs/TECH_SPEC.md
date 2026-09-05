@@ -250,6 +250,24 @@ Frontend передаёт Telegram `initData` backend.
 
 Backend обязан выполнять server-side validation согласно официальному Telegram Mini Apps algorithm.
 
+For v0.1 authenticated API requests pass Telegram Mini App `initData`
+in the HTTP header:
+
+```text
+X-Telegram-Init-Data
+```
+
+The backend validates `hash`, parses `auth_date`, rejects expired
+`initData`, and resolves the internal `User` from the validated
+Telegram user payload. Default max age:
+
+```text
+TELEGRAM_INIT_DATA_MAX_AGE_SECONDS=86400
+```
+
+`TELEGRAM_BOT_TOKEN` is server-side only and must never be returned to
+the client.
+
 Нельзя доверять:
 
 - `user.id`, переданному frontend отдельно;
@@ -745,15 +763,30 @@ UNIQUE(userId, fixtureId)
 
 До `kickoffAt` пользователь может изменить `selectedOutcome`.
 
+Server-side invariant:
+
+```text
+now < fixture.kickoffAt -> update permitted
+now >= fixture.kickoffAt -> PREDICTION_LOCKED
+```
+
+Проверка выполняется на backend/application layer внутри transaction
+boundary с использованием backend time source. Client time не является
+authoritative.
+
+`Fixture.status` не является authoritative источником истины для
+момента блокировки edit. Если `Fixture.status` используется для других
+lifecycle-задач, он не должен преждевременно запрещать пользователю
+изменить существующий Prediction до `kickoffAt`.
+
 `updatePrediction()`:
 
 - не увеличивает Daily Usage;
 - не создаёт новый TournamentParticipant;
 - не расходует новый Rewarded Slot;
 - не меняет первоначальный Daily Slot type;
-- запрещён после `kickoffAt`.
-
-Backend time является source of truth.
+- не потребляет `AdReward` повторно;
+- запрещён при `now >= fixture.kickoffAt`.
 
 ---
 
@@ -1034,6 +1067,12 @@ idempotencyKey
 ```
 
 например UUID.
+
+For `POST /api/predictions`, the key is sent in:
+
+```text
+Idempotency-Key
+```
 
 Backend сохраняет key scoped by:
 
@@ -1328,6 +1367,7 @@ INVALID_TELEGRAM_INIT_DATA
 NO_ACTIVE_TOURNAMENT
 FIXTURE_NOT_FOUND
 FIXTURE_NOT_OPEN
+FIXTURE_NOT_IN_DAILY_POOL
 PREDICTION_LOCKED
 PREDICTION_ALREADY_EXISTS
 FREE_PREDICTION_LIMIT_REACHED
@@ -1340,6 +1380,41 @@ IDEMPOTENCY_CONFLICT
 ```
 
 ---
+
+## 23.1 HTTP Status Policy
+
+Stable mapping:
+
+```text
+200 success
+201 created Prediction
+400 malformed request / validation / non-conflict domain rejection
+401 missing, invalid, or expired Telegram initData
+404 missing resource
+409 duplicate Prediction / idempotency conflict
+423 locked Prediction
+429 daily quota or rewarded-ad-required limit response
+500 unexpected server error
+```
+
+Unexpected errors return the standard error envelope without stack
+traces, database internals, Prisma details, or secrets.
+
+# 23.2 HTTP Auth Contract
+
+Authenticated endpoints in v0.1:
+
+```text
+GET /api/bootstrap
+GET /api/fixtures/today
+GET /api/predictions/today
+POST /api/predictions
+PATCH /api/predictions/:predictionId
+```
+
+All require `X-Telegram-Init-Data`. Frontend-supplied `userId`,
+Telegram user id, username, points, probability, slot type,
+tournament id, business date, and snapshot id are not authoritative.
 
 # 24. Validation
 

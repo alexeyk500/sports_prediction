@@ -1,10 +1,8 @@
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createTestPrismaClient, requireTestDatabaseUrl } from "../helpers/prisma-test-client";
 
-const databaseUrl = assertDatabaseUrl();
-const adapter = new PrismaPg(databaseUrl);
-const prisma = new PrismaClient({ adapter });
+const databaseUrl = requireTestDatabaseUrl();
+const prisma = createTestPrismaClient(databaseUrl);
 
 describe("test database migrations", () => {
   beforeAll(() => {
@@ -51,13 +49,3 @@ describe("test database migrations", () => {
     expect(names).toContain("Tournament_startsAt_before_endsAt_check");
   });
 });
-
-function assertDatabaseUrl(): string {
-  const databaseUrl = process.env.DATABASE_URL;
-
-  if (!databaseUrl) {
-    throw new Error("DATABASE_URL is required for integration tests.");
-  }
-
-  return databaseUrl;
-}

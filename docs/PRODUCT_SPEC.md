@@ -97,8 +97,19 @@ Prediction и не создаёт отдельный Ticket/Token.
 **•** Сделанные Prediction остаются в My Picks после kickoff и после
 Settlement.
 
-**•** До kickoffAt пользователь может изменить selectedOutcome без
-расходования дополнительного Daily Slot.
+**•** До `kickoffAt` пользователь может изменить `selectedOutcome` уже
+сделанного Prediction без расходования дополнительного Daily Slot.
+
+**•** Точная backend-граница для редактирования Prediction:
+`now < fixture.kickoffAt` — изменение разрешено; `now >=
+fixture.kickoffAt` — Prediction становится неизменяемым и backend
+возвращает `PREDICTION_LOCKED`.
+
+**•** Возможность редактирования существующего Prediction до
+`kickoffAt` не зависит от `Fixture.status === OPEN`.
+
+**•** При изменении Prediction `slotType` не меняется, Daily Prediction
+Usage не увеличивается, Rewarded `AdReward` повторно не потребляется.
 
 **•** В момент kickoffAt Prediction становится LOCKED на Backend
 независимо от состояния клиента и задержек Sports API.
@@ -215,8 +226,9 @@ Prediction.
 **•** Tap по Outcome сразу вызывает createPrediction(); Confirmation
 Modal отсутствует.
 
-**•** До kickoffAt действие Change вызывает updatePrediction() и не
-увеличивает Daily Usage.
+**•** До `kickoffAt` действие Change вызывает `updatePrediction()` и не
+увеличивает Daily Usage, не меняет `slotType` и не потребляет Rewarded
+`AdReward` повторно.
 
 **•** После 3 Free Prediction tap по следующему Outcome открывает
 RewardedPredictionSheet для конкретного Fixture/Outcome.

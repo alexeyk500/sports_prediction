@@ -61,6 +61,11 @@ export function getBusinessDayRangeUtc(businessDate: BusinessDate): BusinessDayR
   };
 }
 
+export function businessDateToDatabaseDate(businessDate: BusinessDate): Date {
+  const localDate = parseBusinessDate(businessDate);
+  return new Date(Date.UTC(localDate.year, localDate.month - 1, localDate.day));
+}
+
 function zonedLocalTimeToUtc(localTime: LocalDateTimeParts): Date {
   let utcTimestamp = Date.UTC(
     localTime.year,
