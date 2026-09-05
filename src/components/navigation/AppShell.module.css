@@ -1,13 +1,19 @@
 .shell {
-  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
   background: #f4f7fb;
 }
 
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .nav {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
@@ -35,8 +41,9 @@
 }
 
 .placeholder {
-  min-height: 100dvh;
-  padding: calc(24px + env(safe-area-inset-top)) 16px calc(88px + env(safe-area-inset-bottom));
+  height: 100%;
+  overflow: auto;
+  padding: calc(24px + env(safe-area-inset-top)) 16px 16px;
 }
 
 .placeholder h1 {

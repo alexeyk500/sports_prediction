@@ -55,7 +55,10 @@ export function PredictScreen() {
     initializeTelegramWebApp();
     // eslint-disable-next-line react-hooks/set-state-in-effect -- initial client bootstrap fetch synchronizes with backend API.
     load()
-      .catch((error: unknown) => setErrorMessage(messageForError(error)))
+      .catch((error: unknown) => {
+        logPredictLoadError(error);
+        setErrorMessage(messageForError(error));
+      })
       .finally(() => setIsLoading(false));
   }, [load]);
 
@@ -114,12 +117,12 @@ export function PredictScreen() {
   }
 
   if (isLoading) {
-    return <main className={styles.screen}>Loading today&apos;s matches...</main>;
+    return <main className={styles.centerState}>Loading today&apos;s matches...</main>;
   }
 
   if (!bootstrap) {
     return (
-      <main className={styles.screen}>
+      <main className={styles.centerState}>
         <section className={styles.statePanel}>
           <h1>Predict</h1>
           <p>{errorMessage ?? "Authentication is required."}</p>
@@ -130,36 +133,40 @@ export function PredictScreen() {
 
   return (
     <main className={styles.screen}>
-      <Header bootstrap={bootstrap} />
-      {errorMessage ? <div className={styles.errorBanner}>{errorMessage}</div> : null}
-      <Quota usage={bootstrap.dailyPredictionUsage} />
-      <div className={styles.tabs} role="tablist" aria-label="Predict views">
-        <button
-          className={activeTab === "available" ? styles.activeTab : styles.tab}
-          type="button"
-          onClick={() => setActiveTab("available")}
-        >
-          Available
-        </button>
-        <button
-          className={activeTab === "my-picks" ? styles.activeTab : styles.tab}
-          type="button"
-          onClick={() => setActiveTab("my-picks")}
-        >
-          My Picks
-        </button>
+      <div className={styles.topArea}>
+        <Header bootstrap={bootstrap} />
+        {errorMessage ? <div className={styles.errorBanner}>{errorMessage}</div> : null}
+        <Quota usage={bootstrap.dailyPredictionUsage} />
+        <div className={styles.tabs} role="tablist" aria-label="Predict views">
+          <button
+            className={activeTab === "available" ? styles.activeTab : styles.tab}
+            type="button"
+            onClick={() => setActiveTab("available")}
+          >
+            Available
+          </button>
+          <button
+            className={activeTab === "my-picks" ? styles.activeTab : styles.tab}
+            type="button"
+            onClick={() => setActiveTab("my-picks")}
+          >
+            My Picks
+          </button>
+        </div>
       </div>
-      {activeTab === "available" ? (
-        <FixtureList
-          fixtures={state.fixtures}
-          predictionsByFixture={predictionsByFixture}
-          pendingFixtureId={pendingFixtureId}
-          rewardPromptFixtureId={rewardPromptFixtureId}
-          onSelectOutcome={handleOutcome}
-        />
-      ) : (
-        <MyPicks predictions={state.predictions} fixtures={state.fixtures} onSelectOutcome={handleOutcome} />
-      )}
+      <div className={styles.scrollArea}>
+        {activeTab === "available" ? (
+          <FixtureList
+            fixtures={state.fixtures}
+            predictionsByFixture={predictionsByFixture}
+            pendingFixtureId={pendingFixtureId}
+            rewardPromptFixtureId={rewardPromptFixtureId}
+            onSelectOutcome={handleOutcome}
+          />
+        ) : (
+          <MyPicks predictions={state.predictions} fixtures={state.fixtures} onSelectOutcome={handleOutcome} />
+        )}
+      </div>
     </main>
   );
 }
@@ -354,6 +361,10 @@ function formatKickoff(kickoffAt: string): string {
 
 function messageForError(error: unknown): string {
   if (error instanceof ApiClientError) {
+    if (process.env.NODE_ENV === "development") {
+      return `${error.code}${error.endpoint ? ` at ${error.endpoint}` : ""}: ${error.message}`;
+    }
+
     if (error.code === "MISSING_TELEGRAM_INIT_DATA") {
       return "Open this app in Telegram or configure development initData.";
     }
@@ -362,4 +373,22 @@ function messageForError(error: unknown): string {
   }
 
   return "Something went wrong.";
+}
+
+function logPredictLoadError(error: unknown): void {
+  if (process.env.NODE_ENV !== "development") {
+    return;
+  }
+
+  if (error instanceof ApiClientError) {
+    console.error("Predict bootstrap failed", {
+      endpoint: error.endpoint,
+      status: error.status,
+      code: error.code,
+      message: error.message,
+    });
+    return;
+  }
+
+  console.error("Predict bootstrap failed", error instanceof Error ? error.message : error);
 }

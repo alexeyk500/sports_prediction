@@ -1467,6 +1467,11 @@ Components must not read `window.Telegram` directly. The frontend may
 obtain raw `initData` only to forward it to the backend; it must not use
 parsed Telegram user data as authentication authority.
 
+Predict screen uses an app-shell layout. The application viewport itself
+is non-scrolling. Header/status controls and bottom navigation remain
+visible, while the match list is the single vertically scrollable content
+region.
+
 Development outside Telegram may use `NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA`
 or the browser localStorage key:
 
@@ -1840,8 +1845,8 @@ business day:
 active Tournament
 supported active Competitions
 Teams
-today Fixtures
-published OutcomeSnapshots with fixed probabilities/points
+10 today Fixtures across supported MVP competitions
+published OutcomeSnapshots calculated from deterministic development odds
 ```
 
 The seed must be safe to re-run. It does not create production data,

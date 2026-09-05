@@ -19,7 +19,7 @@
     "prisma:migrate:create": "prisma migrate dev --create-only --name init",
     "db:test:migrate": "node --env-file=.env scripts/run-with-test-database.mjs prisma migrate deploy",
     "db:test:reset": "node --env-file=.env scripts/reset-test-database.mjs && node --env-file=.env scripts/run-with-test-database.mjs prisma migrate deploy",
-    "db:seed:dev": "node --env-file=.env scripts/seed-dev.mjs",
+    "db:seed:dev": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env scripts/seed-dev.mjs",
     "telegram:dev-init-data": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env scripts/generate-telegram-dev-init-data.mjs",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",

@@ -1,7 +1,24 @@
 .screen {
-  min-height: 100dvh;
-  padding: calc(16px + env(safe-area-inset-top)) 16px calc(88px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  padding: calc(16px + env(safe-area-inset-top)) 16px 0;
   background: #f4f7fb;
+}
+
+.centerState {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  overflow: hidden;
+  padding: calc(16px + env(safe-area-inset-top)) 16px 16px;
+  background: #f4f7fb;
+}
+
+.topArea {
+  flex: 0 0 auto;
 }
 
 .header {
@@ -58,7 +75,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .tab,
@@ -76,6 +93,15 @@
   border-color: #126b5a;
   background: #126b5a;
   color: #fff;
+}
+
+.scrollArea {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: 16px;
+  scrollbar-gutter: stable;
 }
 
 .fixtureList {

@@ -12,7 +12,7 @@ export function AppShell({ predict }: { predict: ReactNode }) {
 
   return (
     <div className={styles.shell}>
-      {active === "Predict" ? predict : <Placeholder title={active} />}
+      <div className={styles.content}>{active === "Predict" ? predict : <Placeholder title={active} />}</div>
       <nav className={styles.nav} aria-label="Primary">
         {navItems.map((item) => (
           <button

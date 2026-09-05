@@ -13,13 +13,15 @@ export class ApiClientError extends Error {
   readonly code: string;
   readonly status: number;
   readonly details: Record<string, unknown>;
+  readonly endpoint?: string;
 
-  constructor(error: ApiErrorEnvelope["error"], status: number) {
+  constructor(error: ApiErrorEnvelope["error"], status: number, endpoint?: string) {
     super(error.message);
     this.name = "ApiClientError";
     this.code = error.code;
     this.status = status;
     this.details = error.details;
+    this.endpoint = endpoint;
   }
 }
 
@@ -34,7 +36,7 @@ export class ApiClient {
 
   constructor(options: ApiClientOptions) {
     this.#getTelegramInitData = options.getTelegramInitData;
-    this.#fetch = options.fetchImpl ?? fetch;
+    this.#fetch = options.fetchImpl ?? globalThis.fetch.bind(globalThis);
   }
 
   getBootstrap(): Promise<BootstrapResponse> {
@@ -98,31 +100,53 @@ export class ApiClient {
           details: {},
         },
         401,
+        path,
       );
     }
 
-    const response = await this.#fetch(path, {
-      method: init.method ?? "GET",
-      headers: {
-        "X-Telegram-Init-Data": initData,
-        ...(init.body === undefined ? {} : { "Content-Type": "application/json" }),
-        ...init.headers,
-      },
-      body: init.body === undefined ? undefined : JSON.stringify(init.body),
-    });
-    const payload = (await response.json()) as unknown;
+    let response: Response;
+
+    try {
+      response = await this.#fetch(path, {
+        method: init.method ?? "GET",
+        headers: {
+          "X-Telegram-Init-Data": initData,
+          ...(init.body === undefined ? {} : { "Content-Type": "application/json" }),
+          ...init.headers,
+        },
+        body: init.body === undefined ? undefined : JSON.stringify(init.body),
+      });
+    } catch (error) {
+      const apiError = new ApiClientError(
+        {
+          code: "NETWORK_ERROR",
+          message: "Network request failed.",
+          details: { endpoint: path },
+        },
+        0,
+        path,
+      );
+
+      logApiClientError(apiError, error);
+      throw apiError;
+    }
+
+    const payload = await parseJsonResponse(response, path);
 
     if (!response.ok) {
-      throw toApiClientError(payload, response.status);
+      const apiError = toApiClientError(payload, response.status, path);
+
+      logApiClientError(apiError);
+      throw apiError;
     }
 
     return payload as TResponse;
   }
 }
 
-export function toApiClientError(payload: unknown, status: number): ApiClientError {
+export function toApiClientError(payload: unknown, status: number, endpoint?: string): ApiClientError {
   if (isApiErrorEnvelope(payload)) {
-    return new ApiClientError(payload.error, status);
+    return new ApiClientError(payload.error, status, endpoint);
   }
 
   return new ApiClientError(
@@ -132,7 +156,41 @@ export function toApiClientError(payload: unknown, status: number): ApiClientErr
       details: {},
     },
     status,
+    endpoint,
   );
+}
+
+async function parseJsonResponse(response: Response, endpoint: string): Promise<unknown> {
+  try {
+    return await response.json() as unknown;
+  } catch (error) {
+    const apiError = new ApiClientError(
+      {
+        code: "INVALID_API_RESPONSE",
+        message: "API response was not valid JSON.",
+        details: { endpoint },
+      },
+      response.status,
+      endpoint,
+    );
+
+    logApiClientError(apiError, error);
+    throw apiError;
+  }
+}
+
+function logApiClientError(error: ApiClientError, cause?: unknown): void {
+  if (process.env.NODE_ENV !== "development") {
+    return;
+  }
+
+  console.error("API request failed", {
+    endpoint: error.endpoint,
+    status: error.status,
+    code: error.code,
+    message: error.message,
+    cause: cause instanceof Error ? cause.message : undefined,
+  });
 }
 
 function isApiErrorEnvelope(payload: unknown): payload is ApiErrorEnvelope {

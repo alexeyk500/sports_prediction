@@ -7,11 +7,9 @@ import {
   SCORING_VERSION,
   type RawOneXTwoOdds,
 } from "@/modules/predictions/scoring.domain";
+import { quantizeProbabilityCore, quantizeRawOddsCore } from "@/modules/predictions/scoring.core";
 import { SUPPORTED_COMPETITION_CODES } from "./fixture.domain";
 
-const DECIMAL_ROUNDING_MODE = Prisma.Decimal.ROUND_HALF_UP;
-const RAW_ODDS_SCALE = 6;
-const NORMALIZED_PROBABILITY_SCALE = 8;
 const supportedCompetitionCodes = new Set<string>(SUPPORTED_COMPETITION_CODES);
 
 export interface PublishOutcomeSnapshotInput {
@@ -99,11 +97,11 @@ export async function publishOutcomeSnapshot(
 }
 
 export function quantizeProbability(value: Prisma.Decimal.Value): Prisma.Decimal {
-  return new Prisma.Decimal(value).toDecimalPlaces(NORMALIZED_PROBABILITY_SCALE, DECIMAL_ROUNDING_MODE);
+  return quantizeProbabilityCore(value);
 }
 
 export function quantizeRawOdds(value: Prisma.Decimal.Value): Prisma.Decimal {
-  return new Prisma.Decimal(value).toDecimalPlaces(RAW_ODDS_SCALE, DECIMAL_ROUNDING_MODE);
+  return quantizeRawOddsCore(value);
 }
 
 async function lockFixtureForSnapshotPublication(
