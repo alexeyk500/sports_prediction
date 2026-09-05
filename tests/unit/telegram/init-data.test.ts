@@ -1,6 +1,6 @@
-import { createHmac } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { TelegramAuthError, validateTelegramInitData } from "@/lib/telegram/init-data";
+import { signTelegramInitData } from "@/lib/telegram/init-data-signing";
 
 const botToken = "123456:test_bot_token";
 const now = new Date("2026-09-05T12:00:00.000Z");
@@ -86,15 +86,5 @@ function catchTelegramAuthError(callback: () => unknown): TelegramAuthError {
 }
 
 function signInitData(fields: Record<string, string>): string {
-  const dataCheckString = Object.entries(fields)
-    .sort(([left], [right]) => left.localeCompare(right))
-    .map(([key, value]) => `${key}=${value}`)
-    .join("\n");
-  const secretKey = createHmac("sha256", "WebAppData").update(botToken).digest();
-  const hash = createHmac("sha256", secretKey).update(dataCheckString).digest("hex");
-  const params = new URLSearchParams(fields);
-
-  params.set("hash", hash);
-
-  return params.toString();
+  return signTelegramInitData(fields, botToken);
 }

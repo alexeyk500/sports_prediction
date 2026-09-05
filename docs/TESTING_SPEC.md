@@ -1035,6 +1035,8 @@ Test:
 - missing required data;
 - wrong bot token;
 - large Telegram user ID.
+- development initData generator output validates with production validator;
+- development initData generator refuses NODE_ENV=production.
 
 Frontend-provided `userId` must never override authenticated Telegram identity.
 
@@ -1188,15 +1190,18 @@ UI reflects updated points
 
 ## 21.3 Rewarded UI Flow
 
-Mock rewarded success:
+Until real Monetag integration exists:
 
 ```text
 3 free used
 select fourth outcome
 reward sheet shown
-reward completes
-Prediction created
+REWARDED_AD_REQUIRED maps to controlled placeholder state
+frontend does not create fake VERIFIED AdReward
 ```
+
+After Monetag integration is approved, add separate tests for rewarded
+success through the backend verification contract.
 
 ---
 

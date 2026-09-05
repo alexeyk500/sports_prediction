@@ -1,0 +1,49 @@
+.shell {
+  min-height: 100dvh;
+  background: #f4f7fb;
+}
+
+.nav {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid #d7dde6;
+  background: rgb(255 255 255 / 96%);
+  box-shadow: 0 -8px 24px rgb(15 23 42 / 8%);
+}
+
+.navButton,
+.activeNavButton {
+  min-height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #475569;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.activeNavButton {
+  background: #e7f5ef;
+  color: #0f513f;
+}
+
+.placeholder {
+  min-height: 100dvh;
+  padding: calc(24px + env(safe-area-inset-top)) 16px calc(88px + env(safe-area-inset-bottom));
+}
+
+.placeholder h1 {
+  margin: 0 0 8px;
+}
+
+.placeholder p {
+  margin: 0;
+  color: #64748b;
+}

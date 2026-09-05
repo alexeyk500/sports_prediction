@@ -1,5 +1,6 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { timingSafeEqual } from "node:crypto";
 import { z } from "zod";
+import { createTelegramInitDataHashFromEntries } from "./init-data-signing";
 
 export const DEFAULT_TELEGRAM_INIT_DATA_MAX_AGE_SECONDS = 24 * 60 * 60;
 
@@ -96,13 +97,8 @@ export function validateTelegramInitData(
 }
 
 function assertValidHash(params: URLSearchParams, receivedHash: string, botToken: string): void {
-  const dataCheckString = [...params.entries()]
-    .filter(([key]) => key !== "hash")
-    .sort(([left], [right]) => left.localeCompare(right))
-    .map(([key, value]) => `${key}=${value}`)
-    .join("\n");
-  const secretKey = createHmac("sha256", "WebAppData").update(botToken).digest();
-  const expectedHash = createHmac("sha256", secretKey).update(dataCheckString).digest("hex");
+  const fields = [...params.entries()].filter(([key]) => key !== "hash");
+  const expectedHash = createTelegramInitDataHashFromEntries(fields, botToken);
   const received = Buffer.from(receivedHash, "hex");
   const expected = Buffer.from(expectedHash, "hex");
 

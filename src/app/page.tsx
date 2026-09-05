@@ -1,8 +1,6 @@
+import { AppShell } from "@/components/navigation/AppShell";
+import { PredictScreen } from "@/components/predict/PredictScreen";
+
 export default function Home() {
-  return (
-    <main>
-      <h1>Sports Prediction Tournament</h1>
-      <p>Base application infrastructure is ready.</p>
-    </main>
-  );
+  return <AppShell predict={<PredictScreen />} />;
 }

@@ -1451,6 +1451,57 @@ background refresh only where product needs it
 
 Не строить заранее сложную generic caching framework.
 
+For v0.1 frontend API calls use the custom typed client in
+`src/lib/api`. It automatically attaches:
+
+```text
+X-Telegram-Init-Data
+```
+
+from the frontend Telegram boundary and maps the standard API error
+envelope to typed client errors. Do not introduce TanStack Query without
+an explicit architecture decision.
+
+Frontend Telegram Mini App access is isolated in `src/lib/telegram`.
+Components must not read `window.Telegram` directly. The frontend may
+obtain raw `initData` only to forward it to the backend; it must not use
+parsed Telegram user data as authentication authority.
+
+Development outside Telegram may use `NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA`
+or the browser localStorage key:
+
+```text
+sports_prediction_dev_init_data
+```
+
+This is development-only. The backend still validates the signed
+`initData` with `TELEGRAM_BOT_TOKEN`; there is no production auth bypass.
+
+Generate local development `initData` with:
+
+```text
+npm run telegram:dev-init-data
+```
+
+The command signs a deterministic development Telegram user with the
+server-side `TELEGRAM_BOT_TOKEN`. The generated value can be copied to:
+
+```text
+NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA=<generated initData>
+```
+
+in `.env.local`. Because `NEXT_PUBLIC_*` values are bundled for the
+browser by Next.js, restart `npm run dev` after changing this value.
+
+Optional local write mode:
+
+```text
+npm run telegram:dev-init-data -- --write
+```
+
+This updates only `NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA` in `.env.local`.
+It must not copy secrets into `.env.local`.
+
 ---
 
 ## 25.1 Data ownership
@@ -1751,6 +1802,8 @@ DATABASE_URL
 
 # Telegram
 TELEGRAM_BOT_TOKEN
+TELEGRAM_INIT_DATA_MAX_AGE_SECONDS
+NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA
 
 # Sports
 API_FOOTBALL_KEY
@@ -1771,7 +1824,44 @@ Secrets не хранятся в git.
 
 ---
 
-# 35. Testing Strategy
+# 35. Development Seed
+
+Local UI development without API-Football may use:
+
+```text
+npm run db:seed:dev
+```
+
+The seed is development-only and must refuse `NODE_ENV=production`.
+It creates deterministic demo data for the current Europe/London
+business day:
+
+```text
+active Tournament
+supported active Competitions
+Teams
+today Fixtures
+published OutcomeSnapshots with fixed probabilities/points
+```
+
+The seed must be safe to re-run. It does not create production data,
+does not call API-Football, does not simulate Monetag success, and does
+not create TON state.
+
+Manual local Predict workflow:
+
+```text
+1. configure TELEGRAM_BOT_TOKEN
+2. npm run db:seed:dev
+3. npm run telegram:dev-init-data
+4. copy NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA to .env.local
+5. npm run dev
+6. open http://localhost:3000
+```
+
+---
+
+# 36. Testing Strategy
 
 ## 35.1 Unit tests
 
@@ -1819,7 +1909,7 @@ duplicate PrizeClaim request
 
 ---
 
-# 36. Performance Principles
+# 37. Performance Principles
 
 Сразу строим architecture, допускающую рост, но без premature distributed systems.
 
@@ -1852,7 +1942,7 @@ Domain boundaries должны позволять такой split без пер
 
 ---
 
-# 37. Scaling Boundaries
+# 38. Scaling Boundaries
 
 Компоненты, которые должны быть отделимы в будущем:
 
@@ -1869,7 +1959,7 @@ Prize payout
 
 ---
 
-# 38. Open Technical Decisions
+# 39. Open Technical Decisions
 
 До Implementation Freeze необходимо дополнительно зафиксировать:
 
@@ -1890,7 +1980,7 @@ Prize payout
 
 ---
 
-# 39. Explicit Non-Goals v0.1
+# 40. Explicit Non-Goals v0.1
 
 Не добавлять без отдельного product/technical decision:
 
