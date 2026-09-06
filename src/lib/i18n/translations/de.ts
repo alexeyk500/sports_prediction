@@ -16,6 +16,7 @@ export const de = {
   },
   predict: {
     title: "Tipps",
+    subtitle: "Gib deine Tipps für heute ab",
     weeklyCup: "Wochen-Cup",
     loading: "Heutige Spiele werden geladen...",
     authRequired: "Authentifizierung erforderlich.",
@@ -28,6 +29,15 @@ export const de = {
       free: "Gratis-Tipps: {used} / {limit}",
       rewarded: "Belohnte Tipps: {used} / {limit}",
       total: "Gesamt: {used} / {limit}",
+      title: "Heutige Tipps",
+      totalShort: "{used} / {limit}",
+      freeCompact: "Gratis ({used} / {limit})",
+      rewardedCompact: "Belohnt ({used} / {limit})",
+    },
+    today: {
+      label: "Heute",
+      labelWithDate: "Heute · {date}",
+      matchCount: "{count} Spiele",
     },
     empty: {
       available: "Heute sind keine Spiele verfügbar.",
@@ -61,6 +71,8 @@ export const de = {
     reward: {
       title: "Werbung ansehen, um den Tipp freizuschalten",
       body: "Belohnte Werbung ist in dieser Entwicklungsphase noch nicht verbunden.",
+      cta: "Sieh Werbung an, um einen weiteren Tipp freizuschalten",
+      plusOne: "+1",
     },
     aria: {
       selectOutcome: "{outcome}, {trophyValue}, für {homeTeam} gegen {awayTeam} wählen",

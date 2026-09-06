@@ -17,3 +17,17 @@ export function formatKickoffTime(
     timeZone: options.timeZone,
   }).format(new Date(kickoffAt));
 }
+
+export function formatBusinessDate(locale: SupportedLocale, businessDate: string): string {
+  const [year, month, day] = businessDate.split("-").map(Number);
+
+  if (!year || !month || !day) {
+    return businessDate;
+  }
+
+  return new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, day, 12)));
+}

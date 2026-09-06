@@ -12,6 +12,7 @@ export const ru = {
   },
   predict: {
     title: "Прогнозы",
+    subtitle: "Сделайте прогнозы на сегодня",
     weeklyCup: "Недельный кубок",
     loading: "Загружаем матчи на сегодня...",
     authRequired: "Требуется авторизация.",
@@ -20,7 +21,12 @@ export const ru = {
       free: "Бесплатные прогнозы: {used} / {limit}",
       rewarded: "За рекламу: {used} / {limit}",
       total: "Всего: {used} / {limit}",
+      title: "Прогнозы на сегодня",
+      totalShort: "{used} / {limit}",
+      freeCompact: "Бесплатные ({used} / {limit})",
+      rewardedCompact: "За рекламу ({used} / {limit})",
     },
+    today: { label: "Сегодня", labelWithDate: "Сегодня · {date}", matchCount: "{count} матчей" },
     empty: { available: "Сегодня нет доступных матчей.", myPicks: "Прогнозов пока нет." },
     outcomes: { HOME: "Хозяева", DRAW: "Ничья", AWAY: "Гости" },
     status: {
@@ -43,6 +49,8 @@ export const ru = {
     reward: {
       title: "Посмотрите рекламу, чтобы открыть прогноз",
       body: "Rewarded-реклама пока не подключена на этом этапе разработки.",
+      cta: "Посмотрите рекламу, чтобы открыть ещё прогноз",
+      plusOne: "+1",
     },
     aria: { selectOutcome: "Выбрать {outcome}, {trophyValue}, для {homeTeam} - {awayTeam}" },
   },

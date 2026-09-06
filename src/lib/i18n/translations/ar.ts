@@ -16,6 +16,7 @@ export const ar = {
   },
   predict: {
     title: "التوقعات",
+    subtitle: "اختر توقعاتك لليوم",
     weeklyCup: "كأس الأسبوع",
     loading: "جار تحميل مباريات اليوم...",
     authRequired: "يلزم تسجيل الدخول.",
@@ -28,6 +29,15 @@ export const ar = {
       free: "التوقعات المجانية: {used} / {limit}",
       rewarded: "توقعات المكافأة: {used} / {limit}",
       total: "الإجمالي: {used} / {limit}",
+      title: "توقعات اليوم",
+      totalShort: "{used} / {limit}",
+      freeCompact: "مجاني ({used} / {limit})",
+      rewardedCompact: "مكافأة ({used} / {limit})",
+    },
+    today: {
+      label: "اليوم",
+      labelWithDate: "اليوم · {date}",
+      matchCount: "{count} مباراة",
     },
     empty: {
       available: "لا توجد مباريات متاحة اليوم.",
@@ -61,6 +71,8 @@ export const ar = {
     reward: {
       title: "شاهد إعلانا لفتح التوقع",
       body: "إعلانات المكافأة غير متصلة في مرحلة التطوير هذه.",
+      cta: "شاهد إعلانا لفتح توقع آخر",
+      plusOne: "+1",
     },
     aria: {
       selectOutcome: "اختر {outcome}، {trophyValue}، في مباراة {homeTeam} ضد {awayTeam}",

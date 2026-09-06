@@ -14,6 +14,7 @@ export const en = {
   },
   predict: {
     title: "Predict",
+    subtitle: "Make your picks for today",
     weeklyCup: "Weekly Cup",
     loading: "Loading today's matches...",
     authRequired: "Authentication is required.",
@@ -26,6 +27,15 @@ export const en = {
       free: "Free predictions: {used} / {limit}",
       rewarded: "Rewarded predictions: {used} / {limit}",
       total: "Total: {used} / {limit}",
+      title: "Today's predictions",
+      totalShort: "{used} / {limit}",
+      freeCompact: "Free ({used} / {limit})",
+      rewardedCompact: "Rewarded ({used} / {limit})",
+    },
+    today: {
+      label: "Today",
+      labelWithDate: "Today · {date}",
+      matchCount: "{count} matches",
     },
     empty: {
       available: "No available matches today.",
@@ -59,6 +69,8 @@ export const en = {
     reward: {
       title: "Watch ad to unlock prediction",
       body: "Rewarded ads are not connected in this development stage.",
+      cta: "Watch an ad to unlock another prediction",
+      plusOne: "+1",
     },
     aria: {
       selectOutcome: "Select {outcome}, {trophyValue}, for {homeTeam} vs {awayTeam}",

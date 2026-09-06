@@ -16,6 +16,7 @@ export const es = {
   },
   predict: {
     title: "Pronosticar",
+    subtitle: "Haz tus pronósticos de hoy",
     weeklyCup: "Copa semanal",
     loading: "Cargando partidos de hoy...",
     authRequired: "Se requiere autenticación.",
@@ -28,6 +29,15 @@ export const es = {
       free: "Pronosticos gratis: {used} / {limit}",
       rewarded: "Con recompensa: {used} / {limit}",
       total: "Total: {used} / {limit}",
+      title: "Pronósticos de hoy",
+      totalShort: "{used} / {limit}",
+      freeCompact: "Gratis ({used} / {limit})",
+      rewardedCompact: "Recompensa ({used} / {limit})",
+    },
+    today: {
+      label: "Hoy",
+      labelWithDate: "Hoy · {date}",
+      matchCount: "{count} partidos",
     },
     empty: {
       available: "No hay partidos disponibles hoy.",
@@ -61,6 +71,8 @@ export const es = {
     reward: {
       title: "Mira un anuncio para desbloquear el pronóstico",
       body: "Los anuncios con recompensa aún no están conectados en esta etapa.",
+      cta: "Mira un anuncio para desbloquear otro pronóstico",
+      plusOne: "+1",
     },
     aria: {
       selectOutcome: "Elegir {outcome}, {trophyValue}, para {homeTeam} vs {awayTeam}",

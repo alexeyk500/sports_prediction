@@ -9,7 +9,7 @@ import type {
   PredictionOutcome,
   TodayFixtureDto,
 } from "@/lib/api/types";
-import { formatLocalizedNumber } from "@/lib/i18n/format";
+import { formatBusinessDate, formatLocalizedNumber } from "@/lib/i18n/format";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import { getTelegramInitData, initializeTelegramWebApp } from "@/lib/telegram/client";
 import { useBootstrapStore } from "@/stores/bootstrap-store";
@@ -23,13 +23,14 @@ type KnownFixtureStatus = "DRAFT" | "OPEN" | "LOCKED" | "LIVE" | "FINISHED" | "S
 interface PredictState {
   fixtures: TodayFixtureDto[];
   predictions: PredictionDto[];
+  businessDate: string | null;
 }
 
 export function PredictScreen() {
   const { bootstrap, setBootstrap } = useBootstrapStore();
   const { t, locale } = useTranslation();
   const apiClient = useMemo(() => new ApiClient({ getTelegramInitData }), []);
-  const [state, setState] = useState<PredictState>({ fixtures: [], predictions: [] });
+  const [state, setState] = useState<PredictState>({ fixtures: [], predictions: [], businessDate: null });
   const [activeTab, setActiveTab] = useState<ActiveTab>("available");
   const [isLoading, setIsLoading] = useState(true);
   const [pendingFixtureId, setPendingFixtureId] = useState<string | null>(null);
@@ -48,6 +49,7 @@ export function PredictScreen() {
     setState({
       fixtures: fixtures.fixtures,
       predictions: predictions.predictions,
+      businessDate: fixtures.businessDate,
     });
   }, [apiClient, setBootstrap]);
 
@@ -66,6 +68,7 @@ export function PredictScreen() {
     () => new Map(state.predictions.map((prediction) => [prediction.fixtureId, prediction])),
     [state.predictions],
   );
+  const visibleMatchCount = activeTab === "available" ? state.fixtures.length : state.predictions.length;
 
   async function handleOutcome(fixtureId: string, selectedOutcome: PredictionOutcome): Promise<void> {
     if (pendingFixtureId) {
@@ -141,6 +144,8 @@ export function PredictScreen() {
           <button
             className={activeTab === "available" ? styles.activeTab : styles.tab}
             type="button"
+            role="tab"
+            aria-selected={activeTab === "available"}
             onClick={() => setActiveTab("available")}
           >
             {t("predict.tabs.available")}
@@ -148,11 +153,17 @@ export function PredictScreen() {
           <button
             className={activeTab === "my-picks" ? styles.activeTab : styles.tab}
             type="button"
+            role="tab"
+            aria-selected={activeTab === "my-picks"}
             onClick={() => setActiveTab("my-picks")}
           >
-            {t("predict.tabs.myPicks")}
+            <span>{t("predict.tabs.myPicks")}</span>
+            {state.predictions.length > 0 ? (
+              <span className={styles.tabCount}>{formatLocalizedNumber(locale, state.predictions.length)}</span>
+            ) : null}
           </button>
         </div>
+        <TodayContextRow businessDate={state.businessDate} matchCount={visibleMatchCount} />
       </div>
       <div className={styles.scrollArea} data-ui="predict-scroll-area">
         {activeTab === "available" ? (
@@ -173,24 +184,30 @@ export function PredictScreen() {
 
 function Header({ bootstrap }: { bootstrap: BootstrapResponse }) {
   const { t } = useTranslation();
+  const isDevelopment = process.env.NODE_ENV === "development";
 
   return (
     <section className={styles.header}>
       <div>
-        <p className={styles.kicker}>{t("predict.weeklyCup")}</p>
         <h1>{t("predict.title")}</h1>
+        <p className={styles.subtitle}>{t("predict.subtitle")}</p>
       </div>
-      <div className={styles.userBadge} dir="auto">
-        {bootstrap.user.firstName ??
-          bootstrap.user.username ??
-          t("common.userFallback", { id: bootstrap.user.telegramUserId })}
-      </div>
+      {isDevelopment ? (
+        <div className={styles.userBadge} dir="auto">
+          {bootstrap.user.firstName ??
+            bootstrap.user.username ??
+            t("common.userFallback", { id: bootstrap.user.telegramUserId })}
+        </div>
+      ) : null}
     </section>
   );
 }
 
 function Quota({ usage }: { usage: BootstrapResponse["dailyPredictionUsage"] }) {
   const { t, locale } = useTranslation();
+  const freeSlots = Array.from({ length: usage.freeLimit }, (_, index) => index < usage.freeUsed);
+  const rewardedSlots = Array.from({ length: usage.rewardedLimit }, (_, index) => index < usage.rewardedUsed);
+  const showRewardCta = usage.freeUsed >= usage.freeLimit && usage.rewardedUsed < usage.rewardedLimit;
   const values = {
     freeUsed: formatLocalizedNumber(locale, usage.freeUsed),
     freeLimit: formatLocalizedNumber(locale, usage.freeLimit),
@@ -202,10 +219,55 @@ function Quota({ usage }: { usage: BootstrapResponse["dailyPredictionUsage"] }) 
 
   return (
     <section className={styles.quota}>
-      <span>{t("predict.quota.free", { used: values.freeUsed, limit: values.freeLimit })}</span>
-      <span>{t("predict.quota.rewarded", { used: values.rewardedUsed, limit: values.rewardedLimit })}</span>
-      <span>{t("predict.quota.total", { used: values.totalUsed, limit: values.totalLimit })}</span>
+      <div className={styles.quotaHeader}>
+        <h2>{t("predict.quota.title")}</h2>
+        <strong>{t("predict.quota.totalShort", { used: values.totalUsed, limit: values.totalLimit })}</strong>
+      </div>
+      <div className={styles.quotaSlots} aria-hidden="true">
+        <span className={styles.slotGroup}>
+          {freeSlots.map((isUsed, index) => (
+            <span key={`free-${index}`} className={isUsed ? styles.freeSlotUsed : styles.slotUnused} />
+          ))}
+        </span>
+        <span className={styles.slotDivider} />
+        <span className={styles.slotGroup}>
+          {rewardedSlots.map((isUsed, index) => (
+            <span key={`rewarded-${index}`} className={isUsed ? styles.rewardedSlotUsed : styles.slotUnused} />
+          ))}
+        </span>
+      </div>
+      <div className={styles.quotaLabels}>
+        <span>{t("predict.quota.freeCompact", { used: values.freeUsed, limit: values.freeLimit })}</span>
+        <span>{t("predict.quota.rewardedCompact", { used: values.rewardedUsed, limit: values.rewardedLimit })}</span>
+      </div>
+      {showRewardCta ? (
+        <button className={styles.rewardCta} type="button" disabled aria-disabled="true">
+          <VideoIcon />
+          <span>{t("predict.reward.cta")}</span>
+          <strong>{t("predict.reward.plusOne")}</strong>
+        </button>
+      ) : null}
     </section>
+  );
+}
+
+function TodayContextRow({ businessDate, matchCount }: { businessDate: string | null; matchCount: number }) {
+  const { t, locale } = useTranslation();
+  const dateLabel = businessDate ? formatBusinessDate(locale, businessDate) : "";
+
+  return (
+    <div className={styles.todayRow}>
+      <strong>{dateLabel ? t("predict.today.labelWithDate", { date: dateLabel }) : t("predict.today.label")}</strong>
+      <span>{t("predict.today.matchCount", { count: formatLocalizedNumber(locale, matchCount) })}</span>
+    </div>
+  );
+}
+
+function VideoIcon() {
+  return (
+    <svg className={styles.rewardCtaIcon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h8A2.5 2.5 0 0 1 17 6.5v1.23l2.27-1.36A1.15 1.15 0 0 1 21 7.35v9.3a1.15 1.15 0 0 1-1.73.98L17 16.27v1.23a2.5 2.5 0 0 1-2.5 2.5h-8A2.5 2.5 0 0 1 4 17.5v-11Zm5.4 2.15a.9.9 0 0 0-1.4.75v5.2a.9.9 0 0 0 1.4.75l3.9-2.6a.9.9 0 0 0 0-1.5l-3.9-2.6Z" />
+    </svg>
   );
 }
 

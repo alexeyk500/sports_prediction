@@ -156,19 +156,17 @@ function LeagueBadge({ badge }: { badge: VisualBadge }) {
 function TeamIdentity({
   badge,
   name,
-  align,
 }: {
   badge: VisualBadge;
   name: string;
   align: "start" | "end";
 }) {
   return (
-    <span className={align === "start" ? styles.teamIdentityStart : styles.teamIdentityEnd}>
-      {align === "start" ? <Badge badge={badge} size="large" /> : null}
+    <span className={styles.teamIdentity}>
+      <Badge badge={badge} size="large" />
       <span className={styles.teamName} dir="auto">
         {name}
       </span>
-      {align === "end" ? <Badge badge={badge} size="large" /> : null}
     </span>
   );
 }
