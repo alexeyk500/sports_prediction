@@ -1,1863 +1,890 @@
-# TECH_SPEC.md
+# Goalstery --- Technical Specification
 
-# Sports Prediction Tournament — Technical Spec v0.1
+**Technical Spec v0.1**
 
-**Status:** Working technical baseline  
-**Platform:** Telegram Mini App  
-**Product source of truth:** `docs/PRODUCT_SPEC.md`  
-**Language policy:** архитектурные объяснения — русский; code entities, enums, API paths, field names и программные идентификаторы — English.
+  ----------------------- ----------------------------
+  **Status**              Working technical baseline
+  **Platform**            Telegram Mini App
+  **Product authority**   `docs/PRODUCT_SPEC.md`
+  **Decision register**   `docs/DECISIONS.md`
+  ----------------------- ----------------------------
 
----
+Этот документ определяет backend architecture, integration boundaries,
+runtime, workers, security и operational rules. Product behavior,
+database field-level structure, frontend architecture, testing strategy
+и visual rules принадлежат соответствующим специализированным specs.
 
-## 1. Назначение документа
+------------------------------------------------------------------------
 
-Этот документ описывает, **как технически реализуется** поведение, зафиксированное в `PRODUCT_SPEC.md`.
+# 1. Technical Boundaries
 
-При конфликте между документами действует следующий приоритет:
+Goalstery v0.1 --- modular monolith:
 
-1. `PRODUCT_SPEC.md` — source of truth для product/business rules.
-2. `TECH_SPEC.md` — source of truth для architecture/implementation rules.
-3. `DB_SCHEMA.md` — source of truth для database structure после его появления.
-4. Код должен соответствовать этим документам.
+``` text
+Telegram Mini App
+      │
+      ▼
+     Nginx
+      │
+      ▼
+Next.js App Router
+      │
+      ├── Route Handlers /api/*
+      │
+      ▼
+Application / Domain Services
+      │
+      ├────────────► external adapters
+      │
+      ▼
+    Prisma
+      │
+      ▼
+PostgreSQL
 
-Если реализация требует изменить product rule, сначала изменяется `PRODUCT_SPEC.md`, затем связанные технические документы, и только после этого код.
-
----
-
-# 2. Technology Stack
-
-## 2.1 Frontend
-
-- **Next.js** — latest stable version на момент implementation.
-- **React**
-- **TypeScript**
-- **App Router only**
-- **CSS Modules**
-- **Zustand** для client-side application/UI state.
-- Собственная реализация server-state/data fetching без TanStack Query.
-- Telegram Mini App environment.
-
-Не использовать Pages Router.
-
----
-
-## 2.2 Backend
-
-Backend является частью того же Next.js project.
-
-Основной transport между frontend и backend:
-
-```text
-/api/...
+Separate Node.js Workers
+      │
+      └── reuse Application / Domain Services
 ```
 
-через **Next.js Route Handlers**.
+Core stack:
 
-`Server Actions` могут использоваться точечно для внутренних server-driven сценариев, но:
-
-- не являются основным public/internal API transport;
-- не должны содержать уникальную business logic;
-- business logic должна находиться в domain/service layer и быть доступна Route Handlers и Workers.
-
----
-
-## 2.3 Database
-
-- **PostgreSQL**
-- PostgreSQL запускается в **Docker**
-- **Prisma ORM**
-- Redis в v0.1 не используется.
-
-Все критичные ограничения должны обеспечиваться не только application code, но по возможности также:
-
-- database constraints;
-- unique indexes;
-- foreign keys;
-- transactions.
-
----
-
-## 2.4 Infrastructure
-
-```text
-Internet
-   │
-   ▼
+``` text
+Next.js
+React
+TypeScript
+App Router
+PostgreSQL
+Prisma
+Node.js Workers
 Nginx
-   │
-   ▼
-Next.js Node.js process
-   │
-   ├── PostgreSQL (Docker)
-   │
-   └── shared domain/services
-          ▲
-          │
-    Worker processes
+systemd
+npm
 ```
 
-Deployment:
+Frontend implementation details are governed by:
 
-- VPS under project control.
-- Nginx as reverse proxy.
-- Next.js запускается как Node.js service через `systemd`.
-- Workers запускаются как отдельные Node.js processes/services через `systemd`.
-- Scheduled workers запускаются через `systemd timers` либо другой системный scheduler, но business logic живёт в Node.js codebase.
-- PM2 не является базовым runtime manager v0.1.
-
----
-
-# 3. Repository Structure
-
-Базовая структура:
-
-```text
-project/
-├── docs/
-│   ├── PRODUCT_SPEC.md
-│   ├── TECH_SPEC.md
-│   └── DB_SCHEMA.md
-│
-├── prisma/
-│   ├── schema.prisma
-│   └── migrations/
-│
-├── scripts/
-│
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   └── ...
-│   │
-│   ├── modules/
-│   │   ├── auth/
-│   │   ├── users/
-│   │   ├── tournaments/
-│   │   ├── fixtures/
-│   │   ├── predictions/
-│   │   ├── ratings/
-│   │   ├── prizes/
-│   │   └── ads/
-│   │
-│   ├── lib/
-│   │   ├── prisma/
-│   │   ├── telegram/
-│   │   ├── sports-api/
-│   │   ├── time/
-│   │   ├── logger/
-│   │   └── errors/
-│   │
-│   ├── stores/
-│   ├── hooks/
-│   ├── components/
-│   └── workers/
-│       ├── fixture-sync/
-│       ├── odds-sync/
-│       ├── result-sync/
-│       ├── settlement/
-│       ├── tournament-lifecycle/
-│       └── rating-finalization/
-│
-├── AGENTS.md
-├── package.json
-└── ...
+``` text
+docs/FRONTEND_ARCHITECTURE.md
 ```
 
-Структура может уточняться без изменения архитектурного принципа.
+Database structure is governed by:
 
----
-
-# 4. Domain Layer Rules
-
-## 4.1 Route Handlers должны быть thin
-
-Route Handler отвечает за:
-
-1. authentication;
-2. input parsing;
-3. validation;
-4. вызов domain/service method;
-5. преобразование результата в HTTP response.
-
-Route Handler **не должен** содержать:
-
-- прямые сложные Prisma queries;
-- scoring formulas;
-- quota calculation;
-- settlement logic;
-- tournament finalization;
-- rating calculation.
-
-Пример:
-
-```ts
-export async function POST(request: Request) {
-  const auth = await requireTelegramUser(request);
-  const input = await parseCreatePredictionRequest(request);
-
-  const result = await predictionService.createPrediction({
-    userId: auth.userId,
-    ...input,
-  });
-
-  return Response.json(result);
-}
+``` text
+docs/DB_SCHEMA.md
+prisma/schema.prisma
 ```
 
----
+Testing requirements are governed by:
 
-## 4.2 Module structure
-
-Рекомендуемая структура module:
-
-```text
-modules/predictions/
-├── prediction.service.ts
-├── prediction.repository.ts
-├── prediction.domain.ts
-├── prediction.types.ts
-├── prediction.errors.ts
-└── prediction.validation.ts
+``` text
+docs/TESTING_SPEC.md
 ```
 
-`service` orchestration layer.
+Accepted/Open project decisions are governed by:
 
-`repository` инкапсулирует persistence access.
+``` text
+docs/DECISIONS.md
+```
 
-`domain` содержит pure business calculations/rules, когда это возможно.
+Do not duplicate those documents here unless a technical boundary must
+be stated to make this spec coherent.
 
----
+------------------------------------------------------------------------
 
-## 4.3 Shared business logic
+# 2. Runtime and Deployment Architecture
 
-Workers и HTTP backend используют **один и тот же** domain/service code.
+Backend is part of the same Next.js project.
 
-Worker не должен обращаться HTTP-запросом к собственному Next.js backend, если ту же операцию можно вызвать напрямую через shared module.
+Primary frontend/backend transport:
 
----
+``` text
+/api/*
+```
+
+using Next.js Route Handlers.
+
+Server Actions may be used only for appropriate internal server-driven
+scenarios. They are not the primary API transport and must not own
+unique business logic.
+
+Production baseline:
+
+``` text
+VPS
+Nginx reverse proxy / HTTPS termination
+Next.js Node.js service via systemd
+PostgreSQL in Docker
+separate Node.js Worker services via systemd
+systemd timers or equivalent scheduler
+```
+
+v0.1 does not require:
+
+``` text
+Redis
+message broker
+microservices
+Kubernetes
+PM2
+GraphQL
+WebSocket infrastructure
+```
+
+Such infrastructure requires a concrete need and approved architecture
+decision.
+
+PostgreSQL must use persistent storage, private/local exposure where
+practical, health checks and backups.
+
+Production schema changes use Prisma Migrations, not destructive schema
+push.
+
+------------------------------------------------------------------------
+
+# 3. Application Architecture
+
+Route Handlers are thin:
+
+``` text
+authenticate
+parse/validate input
+call application/domain service
+map result/error to HTTP
+```
+
+Do not place in Route Handlers:
+
+``` text
+scoring formulas
+quota logic
+settlement logic
+rating calculation
+tournament finalization
+complex persistence workflows
+```
+
+Business logic belongs in reusable application/domain modules.
+
+Workers and HTTP handlers call the same application/domain code. Workers
+must not call the application's own HTTP API when the same operation can
+be invoked directly.
+
+Do not add a mechanical Repository layer over Prisma. Persistence
+abstractions are justified only where they provide a real boundary or
+solve a concrete problem.
+
+Provider-specific payloads must not leak into domain modules.
+
+------------------------------------------------------------------------
+
+# 4. External Adapter Boundaries
+
+External systems are isolated behind project-owned adapters.
+
+Current integration boundaries:
+
+``` text
+Telegram
+Sports Provider
+Rewarded Ads
+TON
+Clock
+```
+
+Provider-specific API structures are translated into internal DTO/domain
+structures before entering core business logic.
+
+Changing an external provider should not require rewriting Prediction,
+Tournament, Rating or Prize domain rules.
+
+Secrets remain server-side.
+
+------------------------------------------------------------------------
 
 # 5. Authentication
 
-## 5.1 Telegram Mini App Auth
+Telegram Mini App authentication uses:
 
-Основной login mechanism:
-
-```text
-Telegram Mini App initData
+``` text
+Telegram initData
 ```
 
-Frontend передаёт Telegram `initData` backend.
+Authenticated v0.1 API requests send raw initData in:
 
-Backend обязан выполнять server-side validation согласно официальному Telegram Mini Apps algorithm.
-
-For v0.1 authenticated API requests pass Telegram Mini App `initData`
-in the HTTP header:
-
-```text
+``` text
 X-Telegram-Init-Data
 ```
 
-The backend validates `hash`, parses `auth_date`, rejects expired
-`initData`, and resolves the internal `User` from the validated
-Telegram user payload. Default max age:
+Backend performs official server-side validation including:
 
-```text
+``` text
+hash verification
+auth_date validation
+expiration check
+Telegram user extraction
+internal User resolution
+```
+
+Default maximum age:
+
+``` text
 TELEGRAM_INIT_DATA_MAX_AGE_SECONDS=86400
 ```
 
-`TELEGRAM_BOT_TOKEN` is server-side only and must never be returned to
-the client.
+`TELEGRAM_BOT_TOKEN` is server-only.
 
-Нельзя доверять:
+Never trust separately supplied client identity fields such as:
 
-- `user.id`, переданному frontend отдельно;
-- username;
-- query parameters;
-- client-generated auth state.
-
-После успешной проверки backend определяет authenticated Telegram user и internal `User`.
-
----
-
-## 5.2 User bootstrap
-
-При первом валидном authenticated request:
-
-```text
-Telegram user
-      ↓
-find User by telegramUserId
-      ↓
-create if absent
-      ↓
-return internal user context
+``` text
+userId
+telegramUserId
+username
+client auth state
 ```
 
-Поля Telegram profile могут синхронизироваться при последующих сессиях.
+At first valid authenticated request:
 
-`telegramUserId` должен быть unique.
-
-User settings are persisted on `User`:
-
-```text
-locale: en | ru | de | es | ar
-appearance: system | light | dark
+``` text
+validated Telegram user
+→ find User by telegramUserId
+→ create if absent
+→ return internal user context
 ```
 
-Default `locale` is `en`. On first User creation only, Telegram
-`language_code` may initialize `locale` when it maps to a supported
-locale, for example `ru` or `ru-RU` -> `ru`; unsupported language codes
-fall back to `en`. Later Telegram profile sync updates raw
-`languageCode` metadata but must not overwrite the manual `locale`
-preference. Default `appearance` is `system`.
+Telegram profile metadata may be synchronized later. Manual Goalstery
+settings must not be overwritten by subsequent Telegram metadata sync.
 
----
+Supported persisted user settings are defined in database/frontend
+specs.
 
-## 5.3 Session strategy
+## 5.1 Session note
 
-Для MVP допустимы два варианта:
+The earlier Technical Spec described a possible future server-controlled
+session/token optimization.
 
-1. валидировать `initData` на authenticated API requests;
-2. после первичной validation выдавать server-controlled session.
+Current implemented/authenticated HTTP contract uses validated
+`X-Telegram-Init-Data`.
 
-По умолчанию для v0.1 предпочтителен простой server-controlled session/token после Telegram validation, если это заметно уменьшает повторную crypto validation cost.
+Introducing a different session mechanism changes the auth contract and
+must not be done as an opportunistic optimization. It requires explicit
+architecture approval and synchronized contract updates.
 
-Конкретная session implementation фиксируется при реализации auth module.
-
-Нельзя создавать password/email login.
-
----
+------------------------------------------------------------------------
 
 # 6. Time Model
 
-## 6.1 Storage timezone
-
-Все timestamps в PostgreSQL:
-
-```text
-UTC
-```
-
-Использовать timezone-aware timestamps.
-
-Основные поля:
-
-```text
-kickoffAt
-startsAt
-endsAt
-snapshotAt
-settledAt
-createdAt
-updatedAt
-```
-
----
-
-## 6.2 Business timezone
+Persistent timestamps are timezone-aware and represent UTC instants.
 
 Canonical business timezone:
 
-```text
+``` text
 Europe/London
 ```
 
-Она используется для:
+Use IANA timezone semantics; never emulate London with a fixed UTC
+offset.
 
-- Weekly Cup boundaries;
-- Daily Prediction reset;
-- определения current calendar day;
-- Daily Match Pool eligibility.
+Business-day logic must use one shared time boundary implementation for:
 
-Нельзя реализовывать London timezone через фиксированный offset.
-
-Нужно использовать IANA timezone:
-
-```text
-Europe/London
+``` text
+current business date
+business-day UTC range
+Daily Prediction quota
+Daily Match Pool
+Tournament time rules where applicable
 ```
 
-чтобы автоматически учитывать:
+Frontend/device local time is not authoritative.
 
-- GMT;
-- BST;
-- DST transitions.
+Time-sensitive business logic uses the approved `Clock` abstraction so
+tests can control time deterministically.
 
----
+Exact product time rules remain in `PRODUCT_SPEC.md`.
 
-## 6.3 Daily boundaries
+------------------------------------------------------------------------
 
-`calendarDay` определяется в `Europe/London`.
+# 7. Tournament Technical Model
 
-Пример:
+Core lifecycle:
 
-```text
-2026-09-04 Europe/London
-```
-
-должен быть преобразован в соответствующий UTC interval:
-
-```text
-dayStartUtc <= kickoffAt < nextDayStartUtc
-```
-
-Все Daily Prediction Usage операции используют ту же функцию определения business day.
-
-В проекте должен существовать единый time utility, например:
-
-```ts
-getBusinessDate(now)
-getBusinessDayRangeUtc(date)
-getCurrentTournamentWindow(now)
-```
-
-Frontend не определяет Daily Reset самостоятельно как source of truth.
-
----
-
-# 7. Core Domain Entities
-
-Полная database definition будет находиться в `DB_SCHEMA.md`.
-
-В архитектуре фиксируются следующие основные entities:
-
-```text
-User
-Tournament
-TournamentParticipant
-Fixture
-OutcomeSnapshot
-Prediction
-DailyPredictionUsage
-RatingProfile
-RatingHistory
-Achievement
-UserAchievement
-AdReward
-Prize
-PrizeClaim
-```
-
----
-
-# 8. Tournament Architecture
-
-## 8.1 Tournament lifecycle
-
-Рекомендуемый enum:
-
-```ts
-enum TournamentStatus {
-  SCHEDULED
-  ACTIVE
-  FINALIZING
-  FINISHED
-}
-```
-
-Основной lifecycle:
-
-```text
+``` text
 SCHEDULED
-   ↓
-ACTIVE
-   ↓
-FINALIZING
-   ↓
+→ ACTIVE
+→ FINALIZING
+→ FINISHED
+```
+
+`FINALIZING` separates closed gameplay from completion of
+settlement/rating/prize finalization.
+
+Tournament lifecycle operations must be idempotent.
+
+The lifecycle worker is responsible for orchestration such as:
+
+``` text
+ensure/create next Tournament
+activate scheduled Tournament
+transition previous Tournament to FINALIZING
+wait for required settlement
+run finalization
+run rating finalization
+create Prize records according to the approved Prize Distribution, once that distribution is defined
+finish Tournament
+```
+
+Exact Weekly Cup boundaries are not defined by this section; they remain
+subject to the relevant product/Open Decision.
+
+`TournamentParticipant` is created automatically by the successful
+Prediction workflow, not through a separate user join action.
+
+Leaderboard uses maintained TournamentParticipant aggregates rather than
+recomputing all Prediction sums on every request.
+
+Official sports tie-break behavior must not be invented by database
+ordering.
+
+------------------------------------------------------------------------
+
+# 8. Fixture and Daily Match Pool
+
+Fixture product lifecycle:
+
+``` text
+DRAFT
+OPEN
+LOCKED
+LIVE
 FINISHED
+SETTLED
 ```
 
-`FINALIZING` нужен, чтобы Tournament перестал принимать новый gameplay, но backend мог дождаться окончательного Settlement относящихся к турниру Fixture и выполнить Rating Finalization.
+Provider-specific statuses may be stored/mapped separately; product
+status remains provider-agnostic.
 
----
+Daily Match Pool is a derived query, not a dedicated persistence entity.
 
-## 8.2 Tournament creation
+Its product eligibility rules are defined by `PRODUCT_SPEC.md`;
+persistence/query details belong to `DB_SCHEMA.md`.
 
-`tournament-lifecycle` Worker:
+For new Prediction, server-side eligibility includes the current
+authoritative Fixture/snapshot/day rules.
 
-- гарантирует наличие следующего Tournament;
-- активирует Tournament в `startsAt`;
-- переводит предыдущий в `FINALIZING`;
-- после необходимых Settlement выполняет finalization;
-- запускает Rating Finalization;
-- создаёт Prize records;
-- переводит Tournament в `FINISHED`.
+Existing Prediction editability follows the product kickoff rule and
+must not be prematurely blocked by `Fixture.status`.
 
-Операции должны быть idempotent.
+Policy for postponed/cancelled/abandoned/rescheduled Fixture remains
+unresolved until explicitly decided.
 
----
+------------------------------------------------------------------------
 
-## 8.3 TournamentParticipant
+# 9. Outcome Probability and Scoring Snapshot Boundary
 
-`TournamentParticipant` создаётся автоматически при первой успешно сохранённой `Prediction` пользователя в Tournament.
+`OutcomeSnapshot` is immutable after publication.
 
-Не существует отдельной `joinTournament()` операции для обычного пользователя.
+A Fixture points to its published scoring snapshot through the database
+model defined in `DB_SCHEMA.md`.
 
-В entity хранятся агрегаты Weekly Cup, как минимум:
+Prediction preserves the scoring evidence/snapshot under which it was
+created. Editing selected outcome does not silently migrate it to a
+newer snapshot.
 
-```text
-tournamentPoints
-predictionsCount
-correctPredictionsCount
-rank-related derived/cache fields where needed
+Scoring formula and product semantics belong to `PRODUCT_SPEC.md`.
+
+Numeric persistence/rounding rules belong to `DB_SCHEMA.md`.
+
+Scoring/probability calculations should be implemented as deterministic,
+testable domain functions.
+
+## 9.1 Probability-model transition guardrail
+
+The current implemented/scoring baseline is based on the presently
+approved scoring specification and persisted OutcomeSnapshot semantics.
+
+Goalstery has also accepted the architectural direction that external
+football providers are data sources rather than authoritative prediction
+engines, and that Goalstery will own its probability-generation model.
+
+The exact mathematical model has not yet been designed.
+
+Therefore:
+
+``` text
+do not replace current scoring/probability behavior yet
+do not adopt provider prediction products as authority
+do not silently redesign OutcomeSnapshot
 ```
 
----
+When the mathematical model is designed, reconcile `PRODUCT_SPEC.md`,
+`TECH_SPEC.md`, `DB_SCHEMA.md`, `TESTING_SPEC.md` and `DECISIONS.md`
+explicitly before implementation.
 
-# 9. Leaderboard Architecture
+------------------------------------------------------------------------
 
-Leaderboard не пересчитывает `SUM(Prediction.points)` по всей таблице при каждом frontend request.
+# 10. Prediction Transaction
 
-`TournamentParticipant` хранит актуальные агрегаты.
+`createPrediction()` is a correctness-critical PostgreSQL transaction.
 
-При Settlement correct Prediction в одной transaction обновляются:
+The operation must atomically enforce all current authoritative rules
+required to:
 
-```text
-Prediction
-TournamentParticipant.tournamentPoints
-TournamentParticipant.correctPredictionsCount
+``` text
+resolve authenticated User
+resolve Active Tournament
+lock/read eligible Fixture
+enforce current Daily Match Pool eligibility
+resolve published scoring snapshot
+resolve London business date
+enforce DailyPredictionUsage quota
+validate/consume Rewarded entitlement when required
+create TournamentParticipant if absent
+create Prediction
+update usage/participant aggregates
+record idempotent business result
 ```
 
-`predictionsCount` обновляется при создании Prediction.
+Failure of any required invariant rolls back the operation.
 
----
+Concurrency must prevent:
 
-## 9.1 Ranking
-
-Ranking вычисляется по индексируемым aggregate fields.
-
-Основной порядок:
-
-```text
-tournamentPoints DESC
+``` text
+Prediction beyond daily quota
+duplicate Prediction for User + Fixture
+double AdReward consumption
+duplicate participant/business effects
+duplicate idempotent mutation effects
 ```
 
-Окончательные tie-break rules пока остаются Open Decision в Product Spec.
+Exact database constraints/locks belong in `DB_SCHEMA.md` and
+implementation/tests.
 
-До их фиксации нельзя случайно делать `createdAt` или `userId` product-level tie breaker.
+`updatePrediction()` is also server-authoritative and transactional.
 
-Для deterministic DB query допустим технический final sort по stable unique key, но он не должен считаться официальным спортивным tie breaker.
+Its product invariant is:
 
----
-
-## 9.2 Leaderboard queries
-
-Backend должен эффективно поддерживать:
-
-```text
-Top N
-User current rank
-User rank neighborhood
-Prize zone
-pointsToPrizeZone
+``` text
+now < fixture.kickoffAt  → permitted
+now >= fixture.kickoffAt → PREDICTION_LOCKED
 ```
 
-При росте нагрузки допускаются:
+It must preserve the original slot/snapshot/quota/reward semantics
+defined by `PRODUCT_SPEC.md`.
 
-- materialized ranking;
-- scheduled rank cache;
-- Redis;
-- separate leaderboard service.
+------------------------------------------------------------------------
 
-Но Redis не добавляется в v0.1 без измеренной необходимости.
+# 11. Rewarded Ads
 
----
+Rewarded Ads are behind an adapter/integration boundary.
 
-# 10. Fixture Architecture
+Current intended provider:
 
-## 10.1 Fixture
-
-Минимальная domain model:
-
-```ts
-Fixture {
-  id
-  providerFixtureId
-  competitionCode
-  homeTeam
-  awayTeam
-  kickoffAt
-  status
-  scoringSnapshotId
-}
-```
-
----
-
-## 10.2 FixtureStatus
-
-Product lifecycle:
-
-```ts
-enum FixtureStatus {
-  DRAFT
-  OPEN
-  LOCKED
-  LIVE
-  FINISHED
-  SETTLED
-}
-```
-
-Backend может хранить дополнительные provider-specific statuses отдельно, но product status должен оставаться provider-agnostic.
-
----
-
-# 11. Daily Match Pool
-
-Отдельная entity/table:
-
-```text
-DailyMatchPool
-```
-
-**не создаётся**.
-
-Daily Match Pool — derived query из `Fixture`.
-
-Основные условия:
-
-```text
-kickoffAt within current Europe/London business day
-competitionCode in supportedCompetitions
-Fixture is eligible for display
-scoringSnapshotId is not null
-```
-
-Доступность для нового Prediction дополнительно требует:
-
-```text
-status = OPEN
-now < kickoffAt
-```
-
----
-
-# 12. Odds and OutcomeSnapshot
-
-## 12.1 Immutability
-
-`OutcomeSnapshot` после публикации immutable.
-
-Пример:
-
-```ts
-OutcomeSnapshot {
-  id
-  fixtureId
-  homeRawOdds
-  drawRawOdds
-  awayRawOdds
-  homeProbability
-  drawProbability
-  awayProbability
-  homePoints
-  drawPoints
-  awayPoints
-  snapshotAt
-  scoringVersion
-}
-```
-
-Точные поля определяются в `DB_SCHEMA.md`.
-
----
-
-## 12.2 Snapshot lifecycle
-
-До публикации Fixture может существовать несколько candidate/internal odds samples.
-
-Но один `Fixture` имеет один активный:
-
-```text
-scoringSnapshotId
-```
-
-После перехода Fixture в `OPEN`:
-
-```text
-scoringSnapshotId
-```
-
-не заменяется обычным odds refresh.
-
-Таким образом пользователь всегда получает те же displayedPoints, которые были опубликованы.
-
----
-
-## 12.3 Scoring
-
-Scoring source of truth:
-
-```text
-PRODUCT_SPEC.md
-```
-
-v0.1:
-
-```ts
-points = clamp(round(6.5 / normalizedProbability), 7, 50)
-```
-
-Scoring logic должна быть pure function и покрыта unit tests.
-
----
-
-# 13. Prediction Architecture
-
-## 13.1 Create Prediction
-
-`createPrediction()` является критичной transactional operation.
-
-В одной PostgreSQL transaction необходимо:
-
-1. определить authenticated `User`;
-2. получить Active Tournament;
-3. получить `Fixture`;
-4. проверить `Fixture.status`;
-5. проверить `now < kickoffAt`;
-6. проверить selected `Outcome`;
-7. определить business `calendarDay`;
-8. получить/создать `DailyPredictionUsage`;
-9. проверить free/rewarded quota;
-10. при необходимости проверить валидный unused `AdReward`;
-11. создать `TournamentParticipant`, если его ещё нет;
-12. создать `Prediction`;
-13. увеличить `DailyPredictionUsage`;
-14. увеличить `TournamentParticipant.predictionsCount`;
-15. пометить использованный `AdReward`, если применимо;
-16. commit.
-
-Если любой шаг не проходит, transaction rollback.
-
----
-
-## 13.2 Race condition protection
-
-Нельзя полагаться только на:
-
-```ts
-if (usage < 8)
-```
-
-в application memory.
-
-Нужно сочетать:
-
-- transaction;
-- unique constraints;
-- atomic updates;
-- row locking / suitable isolation where required.
-
-Цель:
-
-два параллельных requests не могут создать:
-
-- 9-ю Prediction;
-- двойное использование одного `AdReward`;
-- duplicate Prediction для `User + Fixture`.
-
----
-
-## 13.3 Prediction uniqueness
-
-Для одного User и Fixture существует максимум одна active Prediction.
-
-Рекомендуемый DB constraint:
-
-```text
-UNIQUE(userId, fixtureId)
-```
-
-Изменение Outcome выполняется через `updatePrediction()`, а не созданием второй Prediction.
-
----
-
-## 13.4 Update Prediction
-
-До `kickoffAt` пользователь может изменить `selectedOutcome`.
-
-Server-side invariant:
-
-```text
-now < fixture.kickoffAt -> update permitted
-now >= fixture.kickoffAt -> PREDICTION_LOCKED
-```
-
-Проверка выполняется на backend/application layer внутри transaction
-boundary с использованием backend time source. Client time не является
-authoritative.
-
-`Fixture.status` не является authoritative источником истины для
-момента блокировки edit. Если `Fixture.status` используется для других
-lifecycle-задач, он не должен преждевременно запрещать пользователю
-изменить существующий Prediction до `kickoffAt`.
-
-`updatePrediction()`:
-
-- не увеличивает Daily Usage;
-- не создаёт новый TournamentParticipant;
-- не расходует новый Rewarded Slot;
-- не меняет первоначальный Daily Slot type;
-- не потребляет `AdReward` повторно;
-- запрещён при `now >= fixture.kickoffAt`.
-
----
-
-# 14. DailyPredictionUsage
-
-`DailyPredictionUsage` существует для atomic quota enforcement.
-
-Концептуальные поля:
-
-```ts
-DailyPredictionUsage {
-  userId
-  businessDate
-  freeUsed
-  rewardedUsed
-}
-```
-
-Constraint:
-
-```text
-UNIQUE(userId, businessDate)
-```
-
-Business constants:
-
-```ts
-FREE_PREDICTION_LIMIT = 3
-REWARDED_PREDICTION_LIMIT = 5
-DAILY_PREDICTION_LIMIT = 8
-```
-
-Неиспользованные значения не переносятся.
-
----
-
-# 15. Rewarded Ads Architecture
-
-Provider:
-
-```text
+``` text
 Monetag
 ```
 
-Rewarded flow:
+High-level flow:
 
-```text
-User selects Outcome
-   ↓
-Free quota exhausted?
-   ↓ yes
-Frontend requests rewarded flow
-   ↓
-Monetag ad
-   ↓
-verified reward completion
-   ↓
-AdReward created/confirmed
-   ↓
-createPrediction(..., adRewardId)
+``` text
+intended Prediction
+→ server-created reward attempt
+→ provider flow
+→ strongest available verification
+→ verified AdReward
+→ one-time Prediction consumption
 ```
 
----
+A client callback claiming that an ad was watched is not sufficient
+proof by itself.
 
-## 15.1 Security rule
+If the provider lacks a signed server verification mechanism, the
+integration must minimize forgery/replay using mechanisms such as:
 
-Frontend callback:
-
-```text
-"ad watched"
+``` text
+server-created attempt
+unique attempt ID
+expiration
+one-time consumption
+replay protection
+telemetry/anomaly detection
 ```
 
-сам по себе не является достаточным доказательством Reward.
+Exact Monetag verification contract remains unresolved until integration
+design is approved.
 
-Backend должен использовать strongest verification mechanism, который предоставляет Monetag для выбранного integration mode.
+------------------------------------------------------------------------
 
-Если provider не предоставляет полноценный signed server callback, техническая схема должна минимизировать client forgery через:
+# 12. Sports Data Integration
 
-- server-created reward attempt;
-- unique attempt ID;
-- short expiration;
-- one-time consumption;
-- replay protection;
-- telemetry/anomaly detection.
+Sports provider code is isolated behind the Sports Provider adapter.
 
----
+Current provider/discovery source:
 
-## 15.2 AdReward
-
-`AdReward` должен иметь lifecycle, например:
-
-```ts
-enum AdRewardStatus {
-  CREATED
-  VERIFIED
-  CONSUMED
-  EXPIRED
-  REJECTED
-}
+``` text
+API-Football / API-Sports
 ```
 
-Один `AdReward` можно использовать максимум один раз.
+Core domain code must not depend on raw provider responses.
 
----
+High-level ingestion responsibilities may include:
 
-# 16. Settlement Architecture
+``` text
+Fixture ingestion/sync
+historical football data ingestion
+result/status ingestion
+data required by the future Goalstery probability model
+```
 
-Settlement разделён на:
+Provider predictions are not Goalstery's authoritative probability
+model.
 
-```text
+Provider request budgeting, endpoint selection and polling cadence are
+operational concerns and may evolve without changing product rules,
+provided correctness and approved provider/model boundaries remain
+intact.
+
+## 12.1 Canonical football assets
+
+Football presentation identity is Goalstery-owned and
+provider-independent:
+
+``` text
+Competition.slug
+Team.slug
+```
+
+Runtime local assets:
+
+``` text
+/assets/competitions/<Competition.slug>.webp
+/assets/teams/<Team.slug>.webp
+```
+
+Canonical mapping:
+
+``` text
+data/football-assets.manifest.json
+```
+
+Provider IDs/names are mapping/discovery data, not canonical Goalstery
+identity and not runtime asset filenames.
+
+Frontend must not derive canonical asset identity from:
+
+``` text
+provider ID
+provider logo URL
+runtime slugify(displayName)
+```
+
+Provider-hosted logo URLs may exist in tooling/report data as download
+sources but must not become runtime frontend dependencies.
+
+Unknown provider entities must be surfaced as unmapped/reviewable rather
+than silently assigned canonical identity.
+
+Operational discovery/download reports are non-authoritative for
+existing canonical slugs.
+
+Detailed asset tooling belongs in scripts/tooling documentation rather
+than this Technical Spec.
+
+------------------------------------------------------------------------
+
+# 13. Result Ingestion and Settlement
+
+Separate external data ingestion from internal business settlement.
+
+Conceptually:
+
+``` text
 result-sync
+→ provider result/status ingestion
+
 settlement
+→ Goalstery Prediction consequences
 ```
 
-`result-sync` отвечает за external sports result ingestion.
+Settlement for a finished eligible Fixture determines final outcome,
+settles previously unsettled Prediction, updates participant aggregates
+and marks settlement state according to authoritative product/database
+rules.
 
-`settlement` отвечает за internal business consequences.
+Settlement must be safe under retries and duplicate worker execution.
 
----
+Required business property:
 
-## 16.1 result-sync
-
-Получает от API-Football:
-
-- match status;
-- final score;
-- final 1X2 outcome;
-- provider metadata.
-
-Обновляет provider/result data idempotently.
-
----
-
-## 16.2 settlement
-
-Для FINISHED Fixture:
-
-1. определить finalOutcome;
-2. найти unsettled `Prediction`;
-3. для каждой Prediction определить:
-   - `CORRECT`;
-   - `INCORRECT`;
-4. assign `earnedPoints`;
-5. обновить `TournamentParticipant`;
-6. отметить Prediction settled;
-7. перевести Fixture в `SETTLED`.
-
-Settlement должен быть безопасен при повторном запуске.
-
-Повторный Worker run не может второй раз начислить Points.
-
----
-
-## 16.3 Atomic settlement
-
-Settlement batch может выполняться:
-
-- одной transaction для Fixture, если размер приемлем;
-- chunked transactions при большом числе Prediction.
-
-Обязательное требование:
-
-```text
-exactly-once business effect
+``` text
+at-least-once execution
+→ exactly-once business effect
 ```
 
-даже если технически Worker выполняется at-least-once.
+Large settlement work may be chunked if necessary, but chunking must
+preserve correctness and idempotency.
 
----
+------------------------------------------------------------------------
 
-# 17. Global Rating Architecture
+# 14. Global Rating Finalization
 
-`rating-finalization` запускается после завершения Tournament и Settlement всех относящихся к нему Prediction.
+Rating formulas and qualification rules belong to `PRODUCT_SPEC.md`.
 
-Source of truth формулы:
+Technical finalization runs only after the Tournament has reached the
+required settlement state.
 
-```text
-PRODUCT_SPEC.md
+Conceptual operation:
+
+``` text
+select qualified participants
+calculate approved rating inputs/results
+update RatingProfile
+create immutable RatingHistory
 ```
 
-Основные этапы:
+For a given:
 
-1. выбрать `TournamentParticipant` с `predictionsCount >= MIN_RATING_PREDICTIONS`;
-2. вычислить Expected Points и Variance по их Prediction;
-3. вычислить `Z`;
-4. построить distribution qualified field;
-5. получить `actualPercentile`;
-6. вычислить `expectedPercentile`;
-7. определить K;
-8. вычислить `ratingDelta`;
-9. обновить `RatingProfile`;
-10. создать immutable `RatingHistory`.
-
----
-
-## 17.1 Rating idempotency
-
-Для пары:
-
-```text
+``` text
 (userId, tournamentId)
 ```
 
-может существовать максимум одна final `RatingHistory`.
+rating finalization must not apply twice.
 
-Constraint должен предотвращать двойной Rating Update.
+The exact future mathematical probability/rating calibration work must
+not be inferred or implemented before its relevant decisions/spec
+changes are approved.
 
----
+------------------------------------------------------------------------
 
-# 18. Prize Architecture
+# 15. Prize and TON
 
-MVP:
+MVP Prize flow uses application-level `Prize` / `PrizeClaim` state.
 
-```text
-PrizeClaim + manual TON payout
-```
+Wallet is not required before a claimable Prize exists.
 
-Автоматический smart-contract payout не требуется.
+Prize state transitions and money persistence are governed by
+product/database specs.
 
-После финализации Tournament создаются `Prize` records для winning positions.
+Current MVP payout execution is manual unless superseded by an approved
+decision.
 
----
+The operator verifies the submitted wallet, performs the TON transfer
+manually, records the transaction reference/hash and marks the claim
+`PAID`.
 
-## 18.1 PrizeClaimStatus
+Exact Prize Distribution by winning rank is intentionally deferred and
+must not be invented by finalization code before it is approved.
 
-Минимальный enum:
+Critical Prize/Claim state transitions go through controlled
+application/service operations and must be auditable/idempotent.
 
-```ts
-enum PrizeClaimStatus {
-  UNCLAIMED
-  CLAIM_PENDING
-  PAID
-  FAILED
-}
-```
+Do not introduce automatic smart-contract payout architecture without an
+approved change.
 
-TON wallet не требуется пользователю до появления claimable Prize.
+------------------------------------------------------------------------
 
----
+# 16. Idempotency
 
-## 18.2 Manual payout
+Critical operations must be safe under retries.
 
-Для MVP оператор:
+At minimum this applies where relevant to:
 
-1. получает PrizeClaim;
-2. проверяет wallet;
-3. выполняет TON transfer вручную;
-4. сохраняет transaction reference/hash;
-5. переводит claim в `PAID`.
-
-Admin UI не требуется; операция может выполняться script/DB-assisted tool.
-
-Критичные изменения Prize state должны проходить через application/service function, а не произвольный SQL update, если есть риск нарушить invariants.
-
----
-
-# 19. Idempotency
-
-Обязательная idempotency для критичных operations:
-
-```text
+``` text
 Prediction creation
-Rewarded ad completion
+Rewarded reward completion
 Settlement
 Prize claim
 Tournament finalization
 Rating finalization
 ```
 
----
+Client-created critical POST operations use stable idempotency keys
+where defined by the API contract.
 
-## 19.1 HTTP Idempotency
+Current Prediction creation contract uses:
 
-Для client-created critical requests frontend генерирует:
-
-```text
-idempotencyKey
-```
-
-например UUID.
-
-For `POST /api/predictions`, the key is sent in:
-
-```text
+``` text
 Idempotency-Key
 ```
 
-Backend сохраняет key scoped by:
+scoped by user + operation.
 
-```text
-user + operation type
-```
+Same key + same operation/payload returns the same business result.
 
-Повторный request с тем же key должен вернуть тот же business result, а не выполнить операцию повторно.
+Conflicting reuse returns the stable idempotency conflict error.
 
----
+Workers must assume scheduler/process delivery is at-least-once.
 
-## 19.2 Worker Idempotency
+------------------------------------------------------------------------
 
-Worker operations не должны зависеть от того, что scheduler вызовет их ровно один раз.
+# 17. Worker Model
 
-Каждый Worker должен быть безопасен при:
+Logical responsibilities:
 
-- retry;
-- process restart;
-- duplicate timer invocation;
-- temporary network failure.
-
----
-
-# 20. Worker Model
-
-Логически Workers разделяются на:
-
-```text
-fixture-sync
-odds-sync
+``` text
+fixture-sync / sports ingestion
 result-sync
 settlement
 tournament-lifecycle
 rating-finalization
 ```
 
-Физически несколько Worker tasks могут запускаться одной command/process, если это не смешивает responsibility и не мешает независимо управлять cadence/retry.
+Additional model/data ingestion workers may be introduced when the
+Goalstery mathematical model is explicitly designed.
 
----
+Logical responsibilities do not require one OS process per task. Several
+tasks may share a command/process when responsibility, retry and
+scheduling remain clear.
 
-## 20.1 Responsibilities
+Worker operations must tolerate:
 
-### `fixture-sync`
-
-- получает upcoming Fixtures;
-- upsert по `providerFixtureId`;
-- обновляет schedule/provider metadata;
-- не меняет published scoring snapshot.
-
-### `odds-sync`
-
-- получает Pre-match 1X2 Odds;
-- нормализует probabilities;
-- рассчитывает candidate Scoring Snapshot;
-- публикует `OutcomeSnapshot`;
-- переводит eligible Fixture в `OPEN`.
-
-### `result-sync`
-
-- проверяет unresolved Fixtures;
-- получает official/final status;
-- сохраняет result.
-
-### `settlement`
-
-- рассчитывает Prediction;
-- начисляет Weekly Cup Points;
-- обновляет aggregate fields.
-
-### `tournament-lifecycle`
-
-- создаёт/активирует/закрывает Tournament;
-- orchestrates finalization.
-
-### `rating-finalization`
-
-- выполняет Global Rating calculation;
-- создаёт Rating History.
-
----
-
-## 20.2 Scheduling baseline
-
-Точные intervals являются configuration и могут меняться.
-
-Initial operational baseline:
-
-```text
-fixture-sync:
-  periodic, several times per day
-
-odds-sync:
-  periodic for eligible current/upcoming fixtures
-
-result-sync:
-  every few minutes for fixtures past expected finish
-
-settlement:
-  immediately after new FINISHED result or frequent short interval
-
-tournament-lifecycle:
-  frequent lightweight check, e.g. every minute
-
-rating-finalization:
-  triggered/check after tournament becomes finalizable
+``` text
+retry
+process restart
+duplicate timer invocation
+temporary provider/network failure
 ```
 
-API-Football quota должен ограничивать external polling frequency.
+Exact polling intervals are configuration/operations, not architectural
+product rules.
 
----
+------------------------------------------------------------------------
 
-# 21. Sports Provider Integration
-
-Provider:
-
-```text
-API-Football / API-Sports
-```
-
-Provider-specific code располагается:
-
-```text
-src/lib/sports-api/
-```
-
-Domain modules не должны зависеть от raw provider response structures.
-
-Использовать adapter:
-
-```text
-API-Football response
-        ↓
-SportsProviderAdapter
-        ↓
-internal DTO/domain model
-```
-
-Это позволит в будущем заменить provider без переписывания Prediction/Tournament logic.
-
----
-
-## 21.1 Football Asset Discovery Manifest
-
-Логотипы команд и соревнований проходят отдельный review/import pipeline.
-Discovery source для MVP:
-
-```text
-API-Football / API-Sports
-```
-
-Но API-Football IDs являются только provider-specific mapping values. Они не
-являются canonical identity Goalstery и не используются как filenames.
-
-Canonical asset identity принадлежит Goalstery:
-
-```text
-Competition.slug
-Team.slug
-```
-
-Эти поля являются stable reviewed identifiers. Local football assets use:
-
-```text
-/assets/competitions/<Competition.slug>.webp
-/assets/teams/<Team.slug>.webp
-```
-
-`slug` is lowercase ASCII, kebab-case, human-readable, unique within its
-entity type, independent from provider IDs, and must not automatically
-change when display `name` changes.
-
-Frontend и MatchCard получают `slug` из Goalstery API и используют его
-для local asset path resolution. Frontend не
-должен:
-
-- строить asset path из provider ID;
-- строить asset path из provider logo URL;
-- выполнять `slugify(team.name)` at runtime для поиска картинки;
-- обращаться к provider-hosted logo URL напрямую.
-
-Canonical mapping хранится в:
-
-```text
-data/football-assets.manifest.json
-```
-
-Этот файл является source of truth для football asset identity:
-
-```text
-API-Football provider identity
-        ↓
-football-assets.manifest.json
-        ↓
-Goalstery canonicalName + slug
-        ↓
-Team.slug / Competition.slug
-        ↓
-local asset path
-```
-
-Manifest разделяет provider identity, provider display name, Goalstery
-canonical display name, and Goalstery canonical slug. Он не должен
-содержать transient download status, retry counters, HTTP status, or
-timestamp конкретного download run.
-
-Operational reports:
-
-```text
-data/football-assets-download-report.json
-data/football-assets-discovery-report.json
-```
-
-Download report фиксирует конкретный download run: source URLs, local
-paths, status, file format, failures, counters, and run timestamp.
-Discovery report фиксирует provider entities from one discovery run and
-marks known vs unmapped entities with candidate slugs for review. Neither
-report is authoritative for existing canonical slugs.
-
-Asset discovery выполняется command:
-
-```text
-npm run football:assets:discover
-```
-
-Для европейского сезона 2026/27 используется API-Football parameter
-`season=2026`, где `season` — стартовый год сезона.
-
-Asset download выполняется command:
-
-```text
-npm run football:assets:download
-```
-
-Download uses the canonical manifest to resolve filenames. If
-API-Football returns a known provider ID with a changed provider name,
-the canonical slug remains unchanged. If API-Football returns an unknown
-provider entity, tooling must report it as unmapped/new and may propose a
-candidate slug, but must not silently promote it to canonical identity.
-
-Command использует server-side:
-
-```text
-API_FOOTBALL_KEY
-API_FOOTBALL_BASE_URL
-```
-
-и создаёт reviewable manifest:
-
-```text
-data/football-assets.manifest.json
-```
-
-Canonical manifest entries разделяют:
-
-- reviewed Goalstery canonical name/slug;
-- API-Football provider IDs/names;
-- Goalstery local asset path derived from reviewed `slug`.
-
-`provider.logoSourceUrl` не должен leak в frontend API и не является Goalstery
-asset URL.
-
-Canonical asset slug:
-
-```text
-lowercase ASCII
-kebab-case
-human-readable
-without provider ID
-stable across provider changes
-```
-
-Canonical manifest должен быть reviewed перед скачиванием assets и перед записью
-canonical slug/logo metadata в database. Будущая смена sports provider не должна требовать
-изменения asset filenames или frontend URLs.
-
-На discovery этапе запрещено:
-
-- скачивать изображения;
-- писать Team/Competition в database;
-- менять Fixture/Prediction runtime;
-- подключать provider к end-user requests.
-
----
-
-## 21.2 Request budget
-
-Backend ведёт usage telemetry:
-
-```text
-requestsToday
-requestsByEndpoint
-providerErrors
-lastSuccessfulSync
-```
-
-При приближении к quota:
-
-1. прекращаются неважные refresh;
-2. снижается frequency result polling;
-3. Settlement-critical requests имеют приоритет.
-
----
-
-# 22. API Design
+# 18. HTTP API Contract
 
 Base prefix:
 
-```text
+``` text
 /api
 ```
 
-Response payloads используют JSON.
+JSON is the standard payload format.
 
----
+Current implemented authenticated vertical slice:
 
-## 22.1 Suggested endpoints
-
-### Bootstrap
-
-```http
-GET /api/bootstrap
-```
-
-Возвращает минимум данных для запуска TMA:
-
-```text
-user
-activeTournamentSummary
-dailyPredictionUsage
-ratingSummary
-settings
-serverTime
-businessTimezone
-```
-
----
-
-### Predict
-
-```http
-GET /api/fixtures/today
-GET /api/predictions/today
-POST /api/predictions
+``` http
+GET   /api/bootstrap
+GET   /api/fixtures/today
+GET   /api/predictions/today
+POST  /api/predictions
 PATCH /api/predictions/:predictionId
-```
-
----
-
-### Weekly Cup
-
-```http
-GET /api/tournaments/current
-GET /api/tournaments/current/leaderboard
-GET /api/tournaments/current/me
-```
-
-Leaderboard query может принимать:
-
-```text
-top
-aroundMe
-limit
-```
-
----
-
-### Rating
-
-```http
-GET /api/ratings/me
-GET /api/ratings/leaderboard
-GET /api/ratings/history
-```
-
----
-
-### Profile
-
-```http
-GET /api/profile
-GET /api/profile/cups
-GET /api/profile/prizes
-GET /api/profile/achievements
-GET /api/settings
+GET   /api/settings
 PATCH /api/settings
 ```
 
----
+Additional feature endpoints are introduced when their feature contracts
+are implemented; this Technical Spec should not pretend unimplemented
+endpoint sketches are stable contracts.
 
-### Rewarded Ads
+Authenticated endpoints use the approved Telegram auth contract unless
+explicitly superseded.
 
-```http
-POST /api/ads/reward-attempts
-POST /api/ads/reward-callback
+Frontend-supplied business-authoritative values such as these must not
+be trusted:
+
+``` text
+user identity
+points
+probability
+slot type
+tournament id
+business date
+snapshot id
 ```
 
-Конкретный callback contract зависит от Monetag integration.
+A dedicated `API_CONTRACTS.md` may become the detailed endpoint/DTO
+authority; when it exists, endpoint-level schemas should move there
+rather than grow this file.
 
----
+------------------------------------------------------------------------
 
-### Prize
+# 19. API Errors
 
-```http
-GET  /api/prizes
-POST /api/prizes/:prizeId/claim
-```
+Expected failures use one stable machine-readable envelope:
 
----
-
-# 23. API Error Contract
-
-Использовать единый machine-readable формат:
-
-```json
+``` json
 {
   "error": {
-    "code": "DAILY_PREDICTION_LIMIT_REACHED",
-    "message": "Daily prediction limit reached",
+    "code": "PREDICTION_LOCKED",
+    "message": "Prediction is locked",
     "details": {}
   }
 }
 ```
 
-Frontend должен принимать решения по:
+Clients branch on:
 
-```text
+``` text
 error.code
 ```
 
-а не парсить human-readable `message`.
+not localized/human-readable `message`.
 
-Примеры codes:
+Current HTTP policy:
 
-```text
-UNAUTHORIZED
-INVALID_TELEGRAM_INIT_DATA
-NO_ACTIVE_TOURNAMENT
-FIXTURE_NOT_FOUND
-FIXTURE_NOT_OPEN
-FIXTURE_NOT_IN_DAILY_POOL
-PREDICTION_LOCKED
-PREDICTION_ALREADY_EXISTS
-FREE_PREDICTION_LIMIT_REACHED
-DAILY_PREDICTION_LIMIT_REACHED
-REWARDED_AD_REQUIRED
-INVALID_AD_REWARD
-AD_REWARD_ALREADY_CONSUMED
-PRIZE_NOT_CLAIMABLE
-IDEMPOTENCY_CONFLICT
-```
-
----
-
-## 23.1 HTTP Status Policy
-
-Stable mapping:
-
-```text
+``` text
 200 success
-201 created Prediction
-400 malformed request / validation / non-conflict domain rejection
-401 missing, invalid, or expired Telegram initData
+201 created
+400 malformed/validation/non-conflict rejection
+401 missing/invalid/expired auth
 404 missing resource
-409 duplicate Prediction / idempotency conflict
-423 locked Prediction
-429 daily quota or rewarded-ad-required limit response
+409 duplicate/idempotency conflict
+423 locked
+429 quota/reward-required limit response
 500 unexpected server error
 ```
 
-Unexpected errors return the standard error envelope without stack
-traces, database internals, Prisma details, or secrets.
+Unexpected errors must not expose stack traces, Prisma/database
+internals or secrets.
 
-# 23.2 HTTP Auth Contract
+Stable domain/API error codes should be reused rather than inventing
+route-specific variants.
 
-Authenticated endpoints in v0.1:
+Detailed endpoint error matrices belong in the future API contract
+document.
 
-```text
-GET /api/bootstrap
-GET /api/fixtures/today
-GET /api/predictions/today
-POST /api/predictions
-PATCH /api/predictions/:predictionId
-GET /api/settings
-PATCH /api/settings
+------------------------------------------------------------------------
+
+# 20. Input Validation and Security
+
+All external input is runtime-validated on the server.
+
+TypeScript types alone are not runtime validation.
+
+Use the project's established validation approach consistently; do not
+introduce another validation framework without need.
+
+Mandatory security boundaries:
+
+``` text
+server-side Telegram auth
+HTTPS in production
+server-only secrets
+private PostgreSQL exposure
+runtime input validation
+idempotency for critical mutations
+database transactions for quota/points/money-critical workflows
+auditability for Prize/Claim
 ```
 
-All require `X-Telegram-Init-Data`. Frontend-supplied `userId`,
-Telegram user id, username, points, probability, slot type,
-tournament id, business date, and snapshot id are not authoritative.
+Frontend countdowns, local quota state and client-generated values are
+never security/correctness controls.
 
-# 24. Validation
+Rate limiting may reduce abuse but must not be used as a correctness
+invariant.
 
-Все external input валидируется на Backend.
+Without Redis, low-risk single-instance read limiting may be in-process;
+critical mutation correctness remains database/application enforced.
 
-Рекомендуется использовать одну schema-validation library на проекте, например:
+Do not add a production auth bypass.
 
-```text
-Zod
-```
+------------------------------------------------------------------------
 
-Если команда выберет другую library, она должна быть единой для всех API contracts.
+# 21. Observability and Operations
 
-TypeScript type без runtime validation недостаточен.
+Use structured logging.
 
----
+Include relevant identifiers where available:
 
-# 25. Frontend Data Fetching
-
-TanStack Query не используется.
-
-Нужна собственная небольшая server-state layer.
-
-Рекомендуемые принципы:
-
-```text
-apiClient
-request deduplication where useful
-AbortController
-loading/error states
-manual invalidation
-background refresh only where product needs it
-```
-
-Не строить заранее сложную generic caching framework.
-
-For v0.1 frontend API calls use the custom typed client in
-`src/lib/api`. It automatically attaches:
-
-```text
-X-Telegram-Init-Data
-```
-
-from the frontend Telegram boundary and maps the standard API error
-envelope to typed client errors. Do not introduce TanStack Query without
-an explicit architecture decision.
-
-Frontend Telegram Mini App access is isolated in `src/lib/telegram`.
-Components must not read `window.Telegram` directly. The frontend may
-obtain raw `initData` only to forward it to the backend; it must not use
-parsed Telegram user data as authentication authority.
-
-Predict screen uses an app-shell layout. The application viewport itself
-is non-scrolling. Header/status controls and bottom navigation remain
-visible, while the match list is the single vertically scrollable content
-region.
-
-Predict MatchCards are presentation-only React components over the
-existing fixtures/predictions DTOs. They display competition and team
-identity with logos/badges when available; when no logo URL exists in
-the current API data, the frontend uses deterministic fallback badges.
-If a logo URL exists but the image fails to load, the UI must hide the
-broken image and return to the same fallback badge. Future provider logo
-candidates should be imported or assigned to canonical Goalstery
-presentation fields during ingestion; frontend must not depend directly
-on provider-hosted logo URLs or construct logo paths from provider IDs,
-team names, or competition codes.
-
-`Team.slug` and `Competition.slug` are canonical Goalstery presentation
-asset identifiers. Display name and asset identity are separate: UI must
-not slugify names at runtime, and provider IDs must not be used as asset
-identifiers. Local first-party assets use the
-public URL convention:
-
-```text
-/assets/teams/<Team.slug>.webp
-/assets/competitions/<Competition.slug>.webp
-```
-
-`Team.logoUrl` and `Competition.logoUrl` are not part of the football
-runtime contract. MatchCard local football asset resolution uses `slug`.
-Provider logo URLs may exist only inside asset tooling/report data as
-download sources and must not leak into runtime API responses.
-
-The files live under `public/assets/...`. Preferred format for owned
-raster logos is WebP; SVG is acceptable for owned vector assets. Logos
-should use transparent background, approximately square canvas, and
-small internal safe padding. UI must not depend on exact pixel
-resolution and should render logos inside stable badge dimensions with
-`object-fit: contain`.
-
-The domain, API, and database keep the `points` terminology and fields,
-while compact UI scoring values are rendered as trophy icon +
-locale-formatted number. Outcome button display labels are `1`, `X`,
-`2`, but submitted domain values remain `HOME`, `DRAW`, `AWAY`.
-
-Frontend localization is a lightweight typed client-side layer. Supported
-locales are `en`, `ru`, `de`, `es`, `ar`; default and fallback locale is
-`en`. Application URLs are not locale-prefixed because locale is a user
-setting, not routing state. All user-facing UI strings in React
-components must come from translation resources unless there is a
-documented reason to keep a value as data or an identifier. Translation
-resources live client-side and must keep the same typed key contract for
-all supported locales.
-
-Backend returns stable API error codes and does not localize them.
-Frontend maps known API error codes to localized presentation messages
-and falls back to a localized generic error for unknown codes. API error
-codes, enum values, provider IDs, and database identifiers remain
-language-independent.
-
-User-facing numbers and dates/times are formatted through `Intl` with
-the active locale. This is presentation only and does not change the
-Europe/London business-time rules. Arabic locale requires RTL: the
-client updates root `lang` and `dir` (`ar` -> `rtl`, all other supported
-locales -> `ltr`). UI that depends on text direction should use CSS
-logical properties such as `margin-inline`, `padding-inline`,
-`inset-inline`, `border-inline`, and `text-align: start/end`. Dynamic
-mixed-direction content such as team and competition names must be
-bidi-safe, for example by using `dir="auto"` on the dynamic text node.
-RTL layout must not change domain semantics: `HOME`, `DRAW`, and `AWAY`
-remain the same submitted outcome values regardless of visual direction.
-
-Theme is controlled by persisted `appearance` with modes `system`,
-`light`, and `dark`. The client applies the effective theme to the root
-with `data-theme="light"` or `data-theme="dark"`. In `system` mode it
-follows `prefers-color-scheme` and updates when the OS preference
-changes; explicit `light` or `dark` overrides system preference. Existing
-and new UI must use semantic CSS theme tokens for surfaces, text,
-borders, accent, warning, danger, disabled, and focus states. New UI
-components must not hardcode light-only colors without a documented
-reason.
-
-Development outside Telegram may use `NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA`
-or the browser localStorage key:
-
-```text
-sports_prediction_dev_init_data
-```
-
-This is development-only. The backend still validates the signed
-`initData` with `TELEGRAM_BOT_TOKEN`; there is no production auth bypass.
-
-Generate local development `initData` with:
-
-```text
-npm run telegram:dev-init-data
-```
-
-The command signs a deterministic development Telegram user with the
-server-side `TELEGRAM_BOT_TOKEN`. The generated value can be copied to:
-
-```text
-NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA=<generated initData>
-```
-
-in `.env.local`. Because `NEXT_PUBLIC_*` values are bundled for the
-browser by Next.js, restart `npm run dev` after changing this value.
-
-Optional local write mode:
-
-```text
-npm run telegram:dev-init-data -- --write
-```
-
-This updates only `NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA` in `.env.local`.
-It must not copy secrets into `.env.local`.
-
----
-
-## 25.1 Data ownership
-
-Server state:
-
-```text
-fixtures
-predictions
-tournament
-leaderboard
-rating
-profile
-```
-
-не должен считаться authoritative в Zustand.
-
-Zustand используется прежде всего для client/UI state:
-
-```text
-selectedLeagueFilter
-activePredictTab
-openModal
-pendingRewardedPrediction
-onboardingState
-temporary UI preferences
-```
-
-Допускается хранить snapshot server data в store для удобства, но backend остаётся source of truth.
-
----
-
-# 26. Revalidation / Refresh
-
-Нет необходимости в WebSocket v0.1.
-
-Baseline:
-
-- Predict refresh при app focus/manual action;
-- My Picks periodic refresh для unresolved matches;
-- Leaderboard refresh после Settlement-related events и при открытии Cup;
-- Rating меняется только после Weekly Cup finalization;
-- Profile загружается on demand.
-
-Если real-time usage станет важным, первым кандидатом является SSE/WebSocket, но это не MVP requirement.
-
----
-
-# 27. Security
-
-## 27.1 Mandatory
-
-- Telegram `initData` server validation.
-- HTTPS only.
-- Secrets только server-side.
-- Sports API key не попадает frontend bundle.
-- PostgreSQL не открыт публично.
-- Nginx exposes only required web ports.
-- Input validation.
-- Rate limiting для mutation endpoints.
-- Idempotency.
-- Audit logs для Prize/Claim.
-- Database transactions для money/points/quota-critical operations.
-
----
-
-## 27.2 Prediction integrity
-
-Backend проверяет:
-
-```text
-now < fixture.kickoffAt
-```
-
-на момент transaction.
-
-Frontend countdown не является security control.
-
----
-
-## 27.3 Anti-abuse baseline
-
-MVP собирает telemetry для:
-
-- many accounts/device patterns where observable;
-- abnormal Rewarded Ad completion;
-- repeated failed idempotency;
-- impossible request rates;
-- suspicious Prize Claim changes.
-
-Сложный anti-fraud engine не входит в v0.1.
-
----
-
-# 28. Rate Limiting
-
-Даже без Redis должен существовать basic rate limiting.
-
-На одном VPS допустим in-process limiter для low-risk read endpoints.
-
-Для critical mutation protection предпочтительны DB-enforced invariants и при необходимости PostgreSQL-backed limiting.
-
-Нельзя полагаться на in-memory limiter для correctness.
-
----
-
-# 29. Logging and Observability
-
-Использовать structured logging.
-
-Каждый log event должен по возможности иметь:
-
-```text
+``` text
 requestId
 userId
 tournamentId
@@ -1868,298 +895,129 @@ operation
 errorCode
 ```
 
-Не логировать Telegram `initData` целиком.
+Never log full Telegram initData or secrets.
 
----
+Worker operational logs should make it possible to determine:
 
-## 29.1 Worker logs
-
-Для каждого Worker:
-
-```text
-startedAt
-finishedAt
+``` text
+start/end
 duration
-itemsProcessed
-itemsUpdated
-providerRequests
+items processed/updated
+provider requests
 errors
 ```
 
-Systemd journal является первым operational log store MVP.
+MVP operational log store may be systemd journal.
 
----
+Health/diagnostic capability should cover at least application/database
+health and enough worker/provider freshness information to diagnose
+ingestion failures.
 
-## 29.2 Health endpoints
+Exact health endpoint shape is implementation-level unless exposed as a
+stable external contract.
 
-Добавить:
+------------------------------------------------------------------------
 
-```http
-GET /api/health
+# 22. Database Operations
+
+PostgreSQL runs in Docker for the current deployment model.
+
+Required operational properties:
+
+``` text
+persistent volume
+non-default strong credentials
+non-public exposure where practical
+automatic restart
+healthcheck
+backups
 ```
 
-Минимум:
+Backups begin in MVP:
 
-```text
-app status
-database connectivity
-version/build identifier
+``` text
+regular pg_dump or equivalent
+multiple retained generations
+storage outside the sole database volume
+periodic restore verification
+production backup before risky schema migration
 ```
 
-Отдельный internal diagnostic script может проверять:
+Prisma migration policy:
 
-- Sports API last sync;
-- active Tournament;
-- unresolved Fixture;
-- Worker freshness.
-
----
-
-# 30. Deployment
-
-## 30.1 Nginx
-
-Nginx:
-
-- terminates HTTPS;
-- reverse proxies to local Next.js port;
-- sets forwarding headers;
-- optionally handles compression/static cache where safe.
-
----
-
-## 30.2 Next.js systemd service
-
-Conceptual:
-
-```text
-sports-app.service
+``` text
+development → prisma migrate dev
+production  → prisma migrate deploy
 ```
 
-Responsibilities:
+Field-level schema, constraints and indexes belong in `DB_SCHEMA.md`.
 
-```text
-npm run start
-restart on failure
-environment file
-working directory
-dedicated Unix user
+------------------------------------------------------------------------
+
+# 23. Environment Configuration
+
+Configuration is environment-driven.
+
+Representative groups:
+
+``` text
+App
+Database
+Telegram
+Sports Provider
+Rewarded Ads
+TON
+Business Time
 ```
 
----
+Current examples include:
 
-## 30.3 Worker services/timers
-
-Examples:
-
-```text
-sports-fixture-sync.service
-sports-fixture-sync.timer
-
-sports-result-sync.service
-sports-result-sync.timer
-
-sports-settlement.service
-sports-settlement.timer
-
-sports-tournament-lifecycle.service
-sports-tournament-lifecycle.timer
-```
-
-При объединении Worker command названия могут измениться.
-
----
-
-# 31. PostgreSQL Docker
-
-PostgreSQL запускается через Docker Compose либо equivalent Docker setup.
-
-Минимальные требования:
-
-- persistent volume;
-- non-default strong password;
-- bind only to local/private interface where possible;
-- automatic restart;
-- healthcheck;
-- backups.
-
-Пример topology:
-
-```text
-Next.js host process
-      │
-      └── localhost/private Docker bridge
-              │
-              ▼
-         PostgreSQL
-```
-
----
-
-# 32. Database Backups
-
-С самого MVP нужны автоматические backups.
-
-Baseline:
-
-- регулярный `pg_dump`;
-- retention нескольких поколений;
-- backup хранится вне единственного PostgreSQL volume;
-- периодическая проверка restore procedure.
-
-Перед schema migration production backup обязателен.
-
----
-
-# 33. Prisma Migration Policy
-
-Использовать Prisma Migrations.
-
-Development:
-
-```text
-prisma migrate dev
-```
-
-Production:
-
-```text
-prisma migrate deploy
-```
-
-Нельзя использовать destructive schema push на production как обычный deployment mechanism.
-
----
-
-# 34. Environment Configuration
-
-Пример env groups:
-
-```text
-# App
+``` text
 NODE_ENV
 APP_URL
-
-# Database
 DATABASE_URL
 
-# Telegram
 TELEGRAM_BOT_TOKEN
 TELEGRAM_INIT_DATA_MAX_AGE_SECONDS
-NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA
 
-# Sports
 API_FOOTBALL_KEY
 API_FOOTBALL_BASE_URL
 
-# Monetag
-MONETAG_...
-
-# TON
-TON_NETWORK
-TON_...
-
-# Business
 BUSINESS_TIMEZONE=Europe/London
 ```
 
-Secrets не хранятся в git.
+Development-only public Telegram initData configuration may exist
+according to the frontend/dev tooling contract.
 
----
+Secrets are never committed to git or copied into public browser
+environment variables.
 
-# 35. Development Seed
+------------------------------------------------------------------------
 
-Local UI development without API-Football may use:
+# 24. Development Tooling
 
-```text
-npm run db:seed:dev
+Development may use deterministic local seed data and signed development
+Telegram initData.
+
+These tools must:
+
+``` text
+refuse unsafe production use where applicable
+not call production external providers unless explicitly intended
+not create real TON payout state
+remain deterministic/re-runnable where designed
 ```
 
-The seed is development-only and must refuse `NODE_ENV=production`.
-It creates deterministic demo data for the current Europe/London
-business day:
+Exact commands and step-by-step local workflow belong in development
+documentation/scripts rather than this Technical Spec.
 
-```text
-active Tournament
-supported active Competitions
-Teams
-10 today Fixtures across supported MVP competitions
-published OutcomeSnapshots calculated from deterministic development odds
-```
+------------------------------------------------------------------------
 
-The seed must be safe to re-run. It does not create production data,
-does not call API-Football, does not simulate Monetag success, and does
-not create TON state.
+# 25. Performance and Scaling
 
-Manual local Predict workflow:
+v0.1 intentionally optimizes for a simple single-VPS architecture:
 
-```text
-1. configure TELEGRAM_BOT_TOKEN
-2. npm run db:seed:dev
-3. npm run telegram:dev-init-data
-4. copy NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA to .env.local
-5. npm run dev
-6. open http://localhost:3000
-```
-
----
-
-# 36. Testing Strategy
-
-## 35.1 Unit tests
-
-Обязательно для:
-
-```text
-scoring formula
-odds normalization
-business-day calculation
-prediction quota rules
-fixture eligibility
-rating calculations
-tie-break implementation once defined
-```
-
----
-
-## 35.2 Integration tests
-
-С реальной PostgreSQL test database:
-
-```text
-createPrediction transaction
-concurrent Prediction attempts
-AdReward one-time consumption
-settlement idempotency
-TournamentParticipant aggregate updates
-RatingHistory uniqueness
-PrizeClaim transitions
-```
-
----
-
-## 35.3 Concurrency tests
-
-Отдельно проверить:
-
-```text
-two simultaneous 8th-prediction requests
-same AdReward consumed twice
-two settlement workers
-duplicate rating-finalization run
-duplicate PrizeClaim request
-```
-
----
-
-# 37. Performance Principles
-
-Сразу строим architecture, допускающую рост, но без premature distributed systems.
-
-v0.1:
-
-```text
-1 VPS
+``` text
 1 Next.js application
 1 PostgreSQL
 multiple Worker processes
@@ -2168,28 +1026,11 @@ no Redis
 no message broker
 ```
 
-Переход к:
+Scale only from measured need.
 
-```text
-Redis
-queue
-separate API service
-read replicas
-multiple app instances
-dedicated leaderboard service
-```
+Potential future split boundaries include:
 
-должен выполняться по измеренной нагрузке.
-
-Domain boundaries должны позволять такой split без переписывания business rules.
-
----
-
-# 38. Scaling Boundaries
-
-Компоненты, которые должны быть отделимы в будущем:
-
-```text
+``` text
 Sports ingestion
 Settlement
 Leaderboard
@@ -2198,38 +1039,52 @@ Ad verification
 Prize payout
 ```
 
-Именно поэтому они не должны быть tightly coupled с React/Route Handler code.
+Core domain/application logic must remain sufficiently decoupled from
+React/Route Handlers/provider payloads to permit future separation
+without rewriting business rules.
 
----
+Do not pre-build distributed-system infrastructure for hypothetical
+scale.
 
-# 39. Open Technical Decisions
+------------------------------------------------------------------------
 
-До Implementation Freeze необходимо дополнительно зафиксировать:
+# 26. Open Technical Decisions
 
-1. точные `Weekly Cup startsAt/endsAt` в `Europe/London`;
-2. official Leaderboard Tie Breakers;
-3. Fixture policy для:
-   - POSTPONED;
-   - CANCELLED;
-   - ABANDONED;
-   - RESCHEDULED;
-4. конкретный Odds Source/Bookmaker selection внутри API-Football;
-5. когда именно публикуется immutable `OutcomeSnapshot`;
-6. точную server/session implementation после Telegram `initData`;
-7. Monetag reward verification contract;
-8. точную Global Rating `expectedPercentile` implementation после simulation;
-9. exact notification architecture;
-10. TON wallet format/validation и manual payout operational procedure.
+Authoritative tracked Open Decisions belong in:
 
----
+``` text
+docs/DECISIONS.md
+```
 
-# 40. Explicit Non-Goals v0.1
+Do not maintain a second authoritative list here.
 
-Не добавлять без отдельного product/technical decision:
+Technical areas that may still require explicit resolution before
+affected implementation include, depending on current Decision register:
 
-```text
+``` text
+exact Weekly Cup boundary
+fixture disruption policy
+future Goalstery probability model and required data sources
+probability/snapshot publication policy after model design
+Monetag verification contract
+rating calibration / expected-percentile details
+exact Prize Distribution by winning rank
+notification architecture
+TON wallet validation / payout operating procedure
+```
+
+If implementation depends on an unresolved decision, follow `AGENTS.md`:
+stop and ask rather than silently choose.
+
+------------------------------------------------------------------------
+
+# 27. Explicit Non-Goals v0.1
+
+Without an approved architecture/product change, do not introduce:
+
+``` text
 Redis
-Kafka/RabbitMQ
+Kafka / RabbitMQ
 microservices
 Kubernetes
 GraphQL
@@ -2238,90 +1093,63 @@ separate auth provider
 email/password accounts
 automatic smart-contract payouts
 complex admin panel
-live betting/prediction
+live/in-play Prediction
 ```
 
----
+------------------------------------------------------------------------
 
-# 40. Implementation Order
+# 28. Technical Acceptance
 
-Рекомендуемый порядок реализации:
+The v0.1 technical architecture is compliant when:
 
-```text
-1. Project foundation
-2. Prisma/PostgreSQL
-3. Telegram Auth
-4. Tournament lifecycle
-5. Fixture + OutcomeSnapshot ingestion
-6. Predict API + quota transaction
-7. Predict UI
-8. Settlement
-9. Weekly Cup leaderboard
-10. Rewarded Ads
-11. Global Rating
-12. Profile
-13. PrizeClaim/manual payout flow
-14. Observability / hardening
+``` text
+frontend is not authoritative for auth/quota/kickoff/scoring/prize state
+critical Prediction mutations are atomic
+Rewarded entitlement cannot be consumed twice
+Settlement is retry-safe
+Rating finalization is retry-safe
+published scoring evidence remains immutable
+business time uses Europe/London correctly
+Leaderboard relies on maintained aggregates
+Workers reuse application/domain logic without self-HTTP
+external sports provider is adapter-isolated
+API uses stable typed errors
+PostgreSQL has migrations/backups
+Accepted decisions are respected
+Open Decisions are not silently resolved
 ```
 
----
+------------------------------------------------------------------------
 
-# 41. Technical Acceptance Criteria v0.1
+# 29. Technical Spec Maintenance
 
-Архитектура соответствует этому Technical Spec, если:
+This document owns:
 
-- frontend не доверяется для auth, quota, kickoff lock, points или payout state;
-- все critical Prediction operations атомарны;
-- один `AdReward` нельзя использовать дважды;
-- Settlement можно безопасно повторить;
-- Rating Finalization можно безопасно повторить;
-- published `OutcomeSnapshot` не изменяется;
-- all timestamps хранятся UTC, product calendar работает через `Europe/London`;
-- Leaderboard использует `TournamentParticipant` aggregates;
-- Workers используют shared domain logic без self-HTTP;
-- API имеет единый error contract;
-- Sports Provider изолирован adapter layer;
-- PostgreSQL имеет backups и Prisma migrations;
-- приложение может быть разделено на отдельные services в будущем без переписывания core domain rules.
-
----
-
-# 42. Architecture Summary
-
-```text
-Telegram Mini App
-      │
-      ▼
-     Nginx
-      │
-      ▼
-Next.js App Router
-      │
-      ├── React / TypeScript / CSS Modules
-      ├── Route Handlers /api/*
-      ├── Zustand UI state
-      │
-      ▼
-Domain / Service Layer
-      │
-      ├── Predictions
-      ├── Tournaments
-      ├── Fixtures
-      ├── Ratings
-      ├── Ads
-      └── Prizes
-      │
-      ├─────────────► API-Football
-      │
-      ▼
-Prisma
-      │
-      ▼
-PostgreSQL (Docker)
-
-Separate Node.js Workers
-      │
-      └── reuse same Domain / Service Layer
+``` text
+backend architecture
+runtime/deployment architecture
+application/domain boundaries
+worker responsibilities
+external integration boundaries
+security architecture
+idempotency architecture
+operational principles
+scaling boundaries
 ```
 
-**Основной архитектурный принцип:** PostgreSQL и Backend являются source of truth для gameplay. Frontend отображает состояние и инициирует действия, но не определяет auth, quota, Tournament eligibility, scoring, Settlement или Prize state.
+It does not own:
+
+``` text
+product rules               → PRODUCT_SPEC.md
+database field definitions  → DB_SCHEMA.md / schema.prisma
+frontend architecture       → FRONTEND_ARCHITECTURE.md
+visual system               → DESIGN_SYSTEM.md / component specs
+test matrix                 → TESTING_SPEC.md
+accepted/open decisions     → DECISIONS.md
+```
+
+Do not grow this file by copying those documents into it.
+
+If an Accepted decision conflicts with this Technical Spec, follow the
+conflict/change policy in `AGENTS.md`; do not silently rewrite either
+source.

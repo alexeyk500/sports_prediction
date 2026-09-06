@@ -1,652 +1,836 @@
-TELEGRAM MINI APP • PRODUCT SPECIFICATION
-
-Sports Prediction Tournament
+# Goalstery — Product Specification
 
 **Product Spec v0.1**
 
-Продуктовые требования, бизнес-правила, UI states и программная модель
-MVP
+Продуктовые требования, user-facing behavior и бизнес-правила MVP.
 
-| **Статус**    | Рабочая базовая спецификация                |
-|---------------|---------------------------------------------|
-| **Дата**      | 4 сентября 2026                             |
-| **Платформа** | Telegram Mini App                           |
-| **Язык**      | Описание — русский; code entities — English |
+| | |
+|---|---|
+| **Status** | Working baseline specification |
+| **Platform** | Telegram Mini App |
+| **Language** | Описание — русский; code entities — English |
 
-# 1. Определение продукта
+Этот документ является product/domain source of truth. Архитектурные, database, testing и visual implementation details принадлежат соответствующим специализированным specs и не должны дублироваться здесь.
 
-Бесплатный еженедельный турнир футбольных прогнозистов внутри Telegram.
-Пользователь выбирает исходы матчей 1X2, получает Tournament Points в
-зависимости от рыночной вероятности исхода, соревнуется в Weekly Cup за
-заранее объявленный призовой фонд в TON и формирует долгосрочный Global
-Rating.
+---
 
-**•** Позиционирование: бесплатный турнир спортивных прогнозистов, а не
-букмекерский продукт со ставкой участника.
+# 1. Product Definition
 
-**•** Нет deposit, stake, покупки Prediction, конвертируемых Points,
-P2P-передачи Points или выплаты по модели odds × stake.
+Goalstery — бесплатный еженедельный турнир футбольных прогнозистов внутри Telegram.
 
-**•** Победители определяются результатами совокупности Prediction, а не
-случайным розыгрышем.
+Пользователь:
 
-**•** Для призов в Telegram Mini App предполагается TON.
+```text
+выбирает исходы матчей 1X2
+→ получает Tournament Points в зависимости от вероятности исхода
+→ соревнуется в Weekly Cup
+→ может получить заранее объявленный Prize в TON
+→ формирует долгосрочный Global Rating
+```
 
-# 2. Основные продуктовые циклы
+Product boundary:
 
-| **Цикл**   | **Период**                 | **Назначение**                                                   |
-|------------|----------------------------|------------------------------------------------------------------|
-| Daily Loop | Каждый календарный день    | Новый Match Pool, 3 Free Predictions + до 5 Rewarded Predictions |
-| Weekly Cup | Неделя                     | Турнир, Leaderboard и TON prizes                                 |
-| Long-term  | Несколько турниров/сезонов | Global Rating, League, Profile, Career                           |
+```text
+free-to-play
+no deposit
+no stake
+no paid entry
+no Prediction purchase
+no convertible/transferable Points
+no odds × stake payout
+no random prize lottery
+```
 
-# 3. Weekly Cup — правила
+Победители определяются совокупностью Prediction.
 
-**•** В каждый момент существует один Active Weekly Cup.
+TON используется для заранее определённых Tournament prizes.
 
-**•** Weekly Cup запускается по фиксированному недельному расписанию
-независимо от количества участников.
+---
 
-**•** После завершения текущего Weekly Cup следующий начинается сразу.
+# 2. Product Loops
 
-**•** Отдельной регистрации нет: первая принятая Prediction
-автоматически создаёт Tournament Participation.
+| Loop | Period | Purpose |
+|---|---|---|
+| Daily | Calendar day | Match Pool, 3 Free + up to 5 Rewarded Predictions |
+| Weekly Cup | Week | Tournament, Leaderboard, TON prizes |
+| Long-term | Multiple Cups | Global Rating, League, Profile, Career |
 
-**•** Присоединиться можно в любой момент недели. Late-entry
-compensation отсутствует.
+---
 
-**•** Неиспользованные Daily Prediction Slots не переносятся.
+# 3. Weekly Cup
 
-**•** Tournament Points обнуляются при старте нового Weekly Cup.
+В каждый момент существует один Active Weekly Cup.
 
-**•** Prize Pool и Prize Distribution фиксируются до открытия турнира и
-не меняются внутри него.
+Weekly Cups идут непрерывно:
 
-**•** Первый эксперимент: ориентир около 100 Players и 10 TON Prize
-Pool; 100 Players не является условием старта.
+```text
+current Cup ends
+→ next Cup starts
+```
 
-## 3.1. Начальное распределение Prize Pool
+Rules:
 
-| **Place** | **Prize** |
-|-----------|-----------|
-| \#1       | 4 TON     |
-| \#2       | 2.5 TON   |
-| \#3       | 1.5 TON   |
-| \#4       | 1 TON     |
-| \#5       | 1 TON     |
+- Cup запускается по недельному расписанию независимо от participants count.
+- Отдельной регистрации нет.
+- Первая valid Prediction автоматически создаёт Tournament Participation.
+- User может присоединиться в любой момент недели.
+- Late-entry compensation отсутствует.
+- Daily Prediction Slots не переносятся между business days.
+- Tournament Points обнуляются при старте нового Cup.
+- Prize Pool фиксируется до открытия Cup и не меняется внутри него.
+- Exact Prize Distribution по местам для MVP будет спроектирована позднее и не должна молча выводиться из текущего примера/implementation.
 
-# 4. Daily Prediction Rules
+Первый эксперимент: ориентир около 100 Players и 10 TON Prize Pool. Количество Players не является условием старта.
 
-**•** Для создания новой Prediction доступны только Fixture, kickoffAt
-которых приходится на текущий календарный день.
+## 3.1 Prize Distribution
 
-**•** Prediction на завтрашние и более поздние Fixture заранее сделать
-нельзя.
+Exact Prize Distribution по winning places для MVP пока не утверждена.
 
-**•** В начале календарного дня пользователь получает
-FREE_PREDICTION_LIMIT = 3.
+До отдельного решения нельзя считать конкретные rank → amount значения частью authoritative product contract.
 
-**•** Через Rewarded Ad можно разблокировать REWARDED_PREDICTION_LIMIT =
-5 дополнительных Prediction.
+Первый эксперимент сохраняет ориентир:
 
-**•** DAILY_PREDICTION_LIMIT = 8.
+```text
+Prize Pool ≈ 10 TON
+```
 
-**•** Rewarded Ad открывает право сохранить конкретную выбранную
-Prediction и не создаёт отдельный Ticket/Token.
+но распределение Prize Pool между местами будет разработано позднее.
 
-**•** Сделанные Prediction остаются в My Picks после kickoff и после
-Settlement.
+Точная weekly boundary определяется отдельным approved decision.
 
-**•** До `kickoffAt` пользователь может изменить `selectedOutcome` уже
-сделанного Prediction без расходования дополнительного Daily Slot.
+---
 
-**•** Точная backend-граница для редактирования Prediction:
-`now < fixture.kickoffAt` — изменение разрешено; `now >=
-fixture.kickoffAt` — Prediction становится неизменяемым и backend
-возвращает `PREDICTION_LOCKED`.
+# 4. Daily Predictions
 
-**•** Возможность редактирования существующего Prediction до
-`kickoffAt` не зависит от `Fixture.status === OPEN`.
+Canonical business timezone:
 
-**•** При изменении Prediction `slotType` не меняется, Daily Prediction
-Usage не увеличивается, Rewarded `AdReward` повторно не потребляется.
+```text
+Europe/London
+```
 
-**•** В момент kickoffAt Prediction становится LOCKED на Backend
-независимо от состояния клиента и задержек Sports API.
+Daily Match Pool и Daily Prediction quota используют London calendar day.
 
-# 5. Match Pool и соревнования
+Limits:
 
-**•** MVP Competitions: Premier League, La Liga, Serie A, Bundesliga,
-Ligue 1, UEFA Champions League, UEFA Europa League.
+```text
+FREE_PREDICTION_LIMIT = 3
+REWARDED_PREDICTION_LIMIT = 5
+DAILY_PREDICTION_LIMIT =
+  FREE_PREDICTION_LIMIT + REWARDED_PREDICTION_LIMIT // currently 8
+```
 
-**•** В Daily Match Pool включаются все подходящие Fixture этих
-соревнований текущего дня; искусственного лимита на League нет.
+These are centralized product/domain configuration constants. Application/UI logic must not scatter literal `3`, `5` or `8` as independent quota rules. Changing the configured limits later must be a deliberate synchronized product/code/test change.
 
-**•** Fixture становится Eligible только при наличии валидного Pre-match
-1X2 Odds Snapshot, из которого можно зафиксировать Scoring Snapshot.
+Rules:
 
-**•** Ориентир для активной полной недели: примерно 50–70+ Eligible
-Fixtures, в зависимости от календаря.
+- New Prediction доступна только для Fixture текущего London calendar day.
+- На завтрашние и более поздние Fixture заранее прогнозировать нельзя.
+- Unused slots не переносятся.
+- Rewarded Ad даёт право сохранить конкретную intended Prediction; отдельного user-facing Ticket/Token нет.
+- Prediction остаются в My Picks после kickoff и Settlement.
+- При 8/8 новые Prediction блокируются до следующего London business day.
+
+## 4.1 Editing
+
+Existing Prediction можно изменить строго по правилу:
+
+```text
+now < fixture.kickoffAt
+→ edit allowed
+
+now >= fixture.kickoffAt
+→ PREDICTION_LOCKED
+```
+
+Editing до kickoff не зависит от:
+
+```text
+Fixture.status === OPEN
+```
+
+При edit:
+
+```text
+selectedOutcome may change
+slotType does not change
+DailyPredictionUsage does not increase
+predictionsCount does not increase
+Rewarded AdReward is not consumed again
+original scoring snapshot remains attached
+```
+
+Backend remains authoritative regardless of client state or Sports API delay.
+
+---
+
+# 5. Daily Match Pool
+
+MVP competitions:
+
+1. Premier League
+2. La Liga
+3. Serie A
+4. Bundesliga
+5. Ligue 1
+6. UEFA Champions League
+7. UEFA Europa League
+
+В Daily Match Pool входят все eligible Fixture этих competitions текущего London calendar day.
+
+Искусственного лимита Fixture на Competition нет.
+
+Fixture eligible для новой Prediction только при наличии опубликованного valid pre-match 1X2 Scoring Snapshot и выполнении остальных product rules.
+
+Ориентир полной активной недели: примерно 50–70+ eligible Fixture в зависимости от календаря.
+
+---
 
 # 6. Scoring v1
 
-Bookmaker Odds преобразуются в Implied Probability и нормализуются для
-удаления Overround. Для каждого Outcome вычисляются Tournament Points:
+Для каждого 1X2 Outcome используется normalized probability `p`.
 
-**points = clamp(round(6.5 / p), 7, 50)**
+Tournament Points:
 
-**•** p — normalizedProbability в диапазоне 0..1.
+```text
+points = clamp(round(6.5 / p), 7, 50)
+```
 
-**•** Correct Prediction: начисляются зафиксированные displayedPoints.
+Equivalent implementation:
 
-**•** Incorrect Prediction: 0 Points.
+```ts
+Math.round(
+  Math.min(50, Math.max(7, 6.5 / probability))
+)
+```
 
-**•** Отрицательных Points, Streak Multiplier и дополнительных
-Tournament Score Bonus в v0.1 нет.
+Rules:
 
-**•** В domain, API и database это значение остаётся Points. В
-пользовательском UI Goalstery compact scoring value визуально
-представляется как trophy icon + numeric value, без переименования
-backend fields или scoring formula.
+```text
+Correct Prediction   → fixed potential/displayed Points
+Incorrect Prediction → 0 Points
+```
 
-**•** Scoring Snapshot фиксируется до публикации Fixture и после этого
-не меняется.
+Нет:
 
-**•** Для каждого Outcome сохраняется scoringVersion.
+```text
+negative Points
+Streak Multiplier
+additional Tournament Score Bonus
+```
 
-**•** MAX_POINTS = 50 намеренно снижает Expected Value экстремальных
-Longshot и ограничивает влияние единичного сверхредкого исхода.
+Scoring Snapshot immutable после публикации.
 
-| **normalizedProbability** | **displayedPoints** |
-|---------------------------|---------------------|
-| 75%                       | 9                   |
-| 65%                       | 10                  |
-| 55%                       | 12                  |
-| 45%                       | 14                  |
-| 35%                       | 19                  |
-| 25%                       | 26                  |
-| 20%                       | 33                  |
-| 15%                       | 43                  |
-| ≤13%                      | 50 (cap)            |
+Prediction сохраняет scoring evidence исходного snapshot. Edit selectedOutcome не переводит Prediction на более новый snapshot.
 
-# 7. Fixture Lifecycle и Settlement
+Scoring имеет versioned semantics через `scoringVersion`.
 
-**DRAFT → OPEN → LOCKED → LIVE → FINISHED → SETTLED**
+`MAX_POINTS = 50` ограничивает влияние единичного экстремального longshot.
 
-| **FixtureStatus** | **Смысл**                                                      |
-|-------------------|----------------------------------------------------------------|
-| DRAFT             | Fixture получен, но Scoring Snapshot ещё не опубликован.       |
-| OPEN              | Fixture доступен и принимает Prediction.                       |
-| LOCKED            | Наступил kickoffAt; новые/изменённые Prediction запрещены.     |
-| LIVE              | Матч идёт; Prediction имеет Pending Result.                    |
-| FINISHED          | Получен подтверждённый Final Result.                           |
-| SETTLED           | Prediction рассчитаны, Points начислены, Leaderboard обновлён. |
+| Probability | Points |
+|---:|---:|
+| 75% | 9 |
+| 65% | 10 |
+| 55% | 12 |
+| 45% | 14 |
+| 35% | 19 |
+| 25% | 26 |
+| 20% | 33 |
+| 15% | 43 |
+| ≤13% | 50 cap |
 
-**•** Result Worker начинает проверку ориентировочно через 105–110 минут
-после kickoffAt.
+В domain/API/database значение называется `Points`.
 
-**•** Неразрешённые группы матчей проверяются примерно раз в 5 минут до
-получения FT.
+В compact UI scoring value представляется как:
 
-**•** Fixture группируются по kickoff/expectedFinish window, чтобы
-минимизировать Sports API Requests.
+```text
+trophy icon + numeric value
+```
 
-**•** До Settlement UI показывает нейтральный Pending State.
+Это presentation metaphor, а не переименование domain concept.
 
-**•** После Settlement Points и Weekly Leaderboard обновляются сразу.
+Detailed numeric persistence/rounding rules belong in `docs/DB_SCHEMA.md` / technical specs.
+
+---
+
+# 7. Fixture and Prediction Result Experience
+
+High-level Fixture lifecycle:
+
+```text
+DRAFT → OPEN → LOCKED → LIVE → FINISHED → SETTLED
+```
+
+| Status | Product meaning |
+|---|---|
+| DRAFT | Fixture ещё не опубликован для Prediction |
+| OPEN | Fixture доступен для new Prediction |
+| LOCKED | Kickoff boundary reached |
+| LIVE | Match in progress; Prediction result pending |
+| FINISHED | Final result received |
+| SETTLED | Prediction results/Points applied |
+
+Important:
+
+Existing Prediction editability определяется kickoff rule из §4.1, а не `Fixture.status === OPEN`.
+
+До Settlement UI показывает neutral Pending state.
+
+После Settlement UI отражает earned Points и актуальное Tournament state.
+
+Worker polling/timing/batching mechanics принадлежат `docs/TECH_SPEC.md`.
+
+Policy для postponed/cancelled/abandoned/rescheduled Fixture остаётся Open Decision.
+
+---
 
 # 8. Information Architecture
 
-| **BottomNavigationItem** | **Задача**                                          |
-|--------------------------|-----------------------------------------------------|
-| Predict                  | Сегодняшние Fixture, создание Prediction, My Picks. |
-| Cup                      | Текущий Weekly Cup, Prize Zone, Leaderboard.        |
-| Rating                   | Global Rating и долгосрочный competitive status.    |
-| Profile                  | Career, History, Achievements, Prizes.              |
+Bottom Navigation:
 
-Отдельного Settings item в Bottom Navigation нет. Settings открывается
-из Profile.
+| Item | Purpose |
+|---|---|
+| Predict | Today's Fixtures, Prediction, My Picks |
+| Cup | Current Weekly Cup, Prize Zone, Leaderboard |
+| Rating | Global Rating and competitive status |
+| Profile | Career, History, Achievements, Prizes |
 
-# 9. Screen: Predict
+Settings не является отдельным Bottom Navigation item и открывается из Profile.
 
-**•** Predict — Default Landing Screen при обычном запуске приложения.
+Predict — default landing screen при обычном запуске.
 
-**•** Верх: компактный WeeklyCupSummary — Prize Pool, endsAt,
-currentRank, tournamentPoints, pointsToPrizeZone.
+---
 
-**•** DailyQuota показывает использованные/оставшиеся Free и Rewarded
-Prediction.
+# 9. Predict Screen
 
-**•** Tabs: Available / My Picks.
+Predict должен давать быстрый путь от открытия приложения до Prediction.
 
-**•** LeagueFilter использует Chips для семи Competition.
+Core content:
 
-**•** Available Fixtures сортируются прежде всего по kickoffAt.
+```text
+Weekly Cup summary
+Daily quota
+Available / My Picks
+Competition filter
+Fixture cards
+```
 
-**•** MatchCard показывает Competition identity, Team identities,
-kickoff time и outcome buttons `1 / X / 2` для HOME / DRAW / AWAY.
-Scoring value в outcome buttons отображается как trophy icon + numeric
-value. Основной UI не имитирует букмекерские Odds.
+Available Fixtures сортируются прежде всего по `kickoffAt`.
 
-**•** MatchCard использует competition/team badges или logos, когда они
-доступны. Missing logos должны иметь graceful fallback badge. Это
-presentation-only и не меняет scoring/domain rules.
+MatchCard показывает:
 
-**•** Tap по Outcome сразу вызывает createPrediction(); Confirmation
-Modal отсутствует.
+```text
+Competition identity
+home Team identity
+away Team identity
+kickoff time
+1 / X / 2 outcomes
+trophy + numeric scoring value
+```
 
-**•** До `kickoffAt` действие Change вызывает `updatePrediction()` и не
-увеличивает Daily Usage, не меняет `slotType` и не потребляет Rewarded
-`AdReward` повторно.
+Presentation mapping:
 
-**•** После 3 Free Prediction tap по следующему Outcome открывает
-RewardedPredictionSheet для конкретного Fixture/Outcome.
+```text
+HOME → 1
+DRAW → X
+AWAY → 2
+```
 
-**•** После успешного rewarded completion Backend автоматически
-сохраняет intended Prediction.
+Основной UI не имитирует bookmaker odds interface.
 
-**•** При 8/8 создание новых Prediction блокируется до Daily Reset, но
-Fixture остаются видимыми.
+Competition/team logos используются при наличии canonical local asset; missing asset имеет graceful fallback.
 
-**•** My Picks показывает OPEN/LOCKED/LIVE/SETTLED Prediction, Daily
-Points и Accuracy.
+Outcome tap:
 
-# 10. Screen: Weekly Cup
+```text
+eligible FREE slot
+→ create Prediction immediately
+```
 
-**•** WeeklyCupHeader: cupNumber, prizePoolTon, endsAt,
-participantsCount.
+Confirmation modal отсутствует.
 
-**•** UserTournamentSummary: rank, points, predictionsCount, accuracy,
-rankDeltaToday, pointsToPrizeZone.
+Когда Free quota исчерпана:
 
-**•** PrizeDistribution — компактный блок.
+```text
+Outcome tap
+→ Rewarded Prediction flow for that intended Fixture/Outcome
+```
 
-**•** Leaderboard показывает Top Players и Rank Neighborhood
-пользователя.
+Rewarded Ad не запускается автоматически.
 
-**•** StickyUserRank остаётся над Bottom Navigation при scroll.
+После verified rewarded completion Backend сохраняет intended Prediction согласно product rules.
 
-**•** Вне Prize Zone показываем pointsToPrizeZone и CTA → Predict.
+My Picks показывает relevant OPEN/LOCKED/LIVE/SETTLED Prediction и summary metrics.
 
-**•** В Prize Zone показываем currentPrize, pointsToNextRank и
-leadOverNextRank.
+Exact visual contract belongs in design specs.
 
-**•** Если Tournament Participation ещё нет: NOT_PARTICIPATING и CTA →
-первая Prediction. Кнопки Join нет.
+---
 
-**•** История прошлых Weekly Cup хранится в Profile, а не в основном Cup
-Screen.
+# 10. Weekly Cup Screen
 
-# 11. Screen: Global Rating
+Core information:
 
-Global Rating оценивает качество прогнозирования, а не накопленную
-активность. Weekly Cup и Global Rating намеренно используют разные
-критерии.
+```text
+Cup identity
+Prize Pool
+endsAt
+participants count
+User rank
+Tournament Points
+predictions count
+accuracy
+Prize Zone status/gap
+Prize Distribution
+Leaderboard
+user rank neighborhood
+```
 
-**•** Global Rating пересчитывается только после завершения Weekly Cup.
+Если User ещё не участвует:
 
-**•** Для Rating Qualification необходимо MIN_RATING_PREDICTIONS = 10
-Prediction за Weekly Cup.
+```text
+NOT_PARTICIPATING
+→ CTA to first Prediction
+```
 
-**•** До первого Qualified Cup пользователь имеет RatingStatus =
-UNRANKED.
+Отдельной Join button нет.
 
-**•** Rating Screen показывает globalRank, ratingValue, leagueDivision,
-percentile и progressToNextDivision.
+Вне Prize Zone UI показывает progress/gap и CTA к Predict.
 
-**•** Global Leaderboard показывает Leaders и Rank Neighborhood
-пользователя.
+В Prize Zone UI показывает current Prize и competitive gaps.
 
-**•** Current Cup block показывает текущий Tournament Result и время до
-следующего Rating Update.
+История прошлых Weekly Cups находится в Profile.
 
-**•** Recent Rating History показывает Cup, performancePercentile и
-ratingDelta.
+---
 
-**•** Friends Leaderboard — V2.
+# 11. Global Rating
 
-## 11.1. Rating Performance Model
+Global Rating оценивает качество Prediction, а не накопленную активность.
 
-Для каждой Prediction i:
+Weekly Cup score и Global Rating намеренно являются разными competitive metrics.
 
-**Eᵢ = pᵢ × pointsᵢ Varᵢ = pᵢ(1 − pᵢ) × pointsᵢ²**
+Rating пересчитывается после завершения Weekly Cup.
 
-Для Weekly Cup рассчитывается risk-adjusted performance:
+Qualification:
 
-**Z = (ActualPoints − ExpectedPoints) / √ΣVarᵢ**
+```text
+MIN_RATING_PREDICTIONS = 10
+```
 
-**•** Qualified Players ранжируются по Z, а не по raw Tournament Points.
+До первого Qualified Cup:
 
-**•** Так количество Prediction само по себе не создаёт Global Rating, а
-выбор Favorites/Underdogs учитывается через Variance.
+```text
+RatingStatus = UNRANKED
+```
 
-**•** Место в Z-distribution преобразуется в actualPercentile.
+Rating Screen показывает:
 
-**•** expectedPercentile рассчитывается из ratingValue игрока
-относительно Rating Distribution квалифицированного Field по Elo-style
-expectation.
+```text
+globalRank
+ratingValue
+leagueDivision
+percentile
+progressToNextDivision
+current Cup rating progress
+recent Rating History
+```
 
-**•** ratingDelta = K × (actualPercentile − expectedPercentile).
+Friends Leaderboard — V2.
 
-**•** Первые 5 Qualified Cups: K_PROVISIONAL = 120.
+## 11.1 Performance Model
 
-**•** Далее: K_ESTABLISHED = 80.
+For Prediction `i`:
 
-**•** Внутренний initialRating = 1500; до первого Qualified Cup он
-пользователю не показывается.
+```text
+E_i   = p_i × points_i
+Var_i = p_i × (1 - p_i) × points_i²
+```
 
-## 11.2. League Thresholds — provisional
+For qualified Cup:
 
-| **ratingValue** | **leagueDivision** |
-|-----------------|--------------------|
-| \<1200          | BRONZE_III         |
-| 1200            | BRONZE_II          |
-| 1300            | BRONZE_I           |
-| 1400            | SILVER_III         |
-| 1450            | SILVER_II          |
-| 1500            | SILVER_I           |
-| 1550            | GOLD_III           |
-| 1650            | GOLD_II            |
-| 1750            | GOLD_I             |
-| 1850            | PLATINUM_III       |
-| 1925            | PLATINUM_II        |
-| 2000            | PLATINUM_I         |
-| 2075            | DIAMOND_III        |
-| 2150            | DIAMOND_II         |
-| 2225            | DIAMOND_I          |
-| 2300            | MASTER             |
-| 2450+           | LEGEND             |
+```text
+Z =
+(ActualPoints - ExpectedPoints)
+/
+sqrt(sum Var_i)
+```
 
-Пороги требуют Simulation/Calibration до окончательной фиксации.
+Qualified Players ранжируются по `Z`.
 
-## 11.3. Rating Seasons
+Position in qualified Z distribution → `actualPercentile`.
 
-**•** Кандидат: SEASON_CUP_COUNT = 12 Weekly Cups (~3 месяца).
+Exact `expectedPercentile` model пока не утверждена. Она будет разработана позднее вместе с mathematical/rating calibration work и не должна быть выведена из implementation по умолчанию.
 
-**•** После Season сохраняется SeasonResult и выполняется Soft Reset к
-1500.
+Rating update:
 
-**•** Кандидат: newRating = 1500 + (oldRating − 1500) × 0.5.
+```text
+ratingDelta =
+K × (actualPercentile - expectedPercentile)
+```
 
-**•** Season можно активировать после MVP, если для первого релиза нужна
-меньшая операционная сложность.
+```text
+first 5 Qualified Cups → K = 120
+afterwards             → K = 80
+```
 
-# 12. Screen: Profile
+Internal initial rating:
 
-**•** Telegram avatar/name/username используются напрямую; отдельная
-Profile Registration не нужна.
+```text
+1500
+```
 
-**•** ProfileHeader: leagueDivision, ratingValue, globalRank,
-percentile.
+Он скрыт до первого Qualified Cup.
 
-**•** CareerStats: cupsPlayed, predictionsCount, accuracy,
-bestPredictionPoints.
+## 11.2 League Thresholds
 
-**•** TournamentResults: winsCount, podiumsCount, top10Count,
-totalTonWon.
+Current thresholds:
 
-**•** PredictionStats: correctCount, accuracy, bestPredictionPoints,
-bestCorrectStreak, avgWinningPickPoints, optional bestCompetition.
+| ratingValue | leagueDivision |
+|---:|---|
+| <1200 | BRONZE_III |
+| 1200 | BRONZE_II |
+| 1300 | BRONZE_I |
+| 1400 | SILVER_III |
+| 1450 | SILVER_II |
+| 1500 | SILVER_I |
+| 1550 | GOLD_III |
+| 1650 | GOLD_II |
+| 1750 | GOLD_I |
+| 1850 | PLATINUM_III |
+| 1925 | PLATINUM_II |
+| 2000 | PLATINUM_I |
+| 2075 | DIAMOND_III |
+| 2150 | DIAMOND_II |
+| 2225 | DIAMOND_I |
+| 2300 | MASTER |
+| 2450+ | LEGEND |
 
-**•** Achievement не влияет на Tournament Points и Global Rating.
+**Documentation note:** исходная Product Spec помечала эти thresholds как `provisional` и требующие Simulation/Calibration. Если `docs/DECISIONS.md` фиксирует их как Accepted, это apparent documentation conflict и должно быть отдельно разрешено до изменения статуса thresholds.
 
-**•** CupHistory содержит summary прошлых Weekly Cup.
+## 11.3 Rating Seasons
 
-**•** PrizeHistory показывает Prize и ClaimStatus.
+Rating Seasons не зафиксированы как MVP behavior.
 
-**•** Wallet не запрашивается до появления реальной Prize Claim.
+Candidate concept:
 
-**•** ShareProfile создаёт Telegram share-card.
+```text
+SEASON_CUP_COUNT = 12
+soft reset toward 1500
+candidate reset:
+1500 + (oldRating - 1500) × 0.5
+```
 
-**•** Settings открывается из Profile.
+Это не должно реализовываться как approved MVP rule без отдельного решения.
 
-**•** Settings позволяют выбрать язык интерфейса: English (`en`),
-Русский (`ru`), Deutsch (`de`), Español (`es`), العربية (`ar`).
+---
 
-**•** Settings позволяют выбрать Appearance: `system`, `light`, `dark`.
+# 12. Profile and Settings
 
-## 12.1. Achievement v0.1
+Profile uses Telegram identity; отдельная Profile Registration не нужна.
 
-| **achievementCode** | **Condition**                             |
-|---------------------|-------------------------------------------|
-| FIRST_PICK          | Первая Prediction                         |
-| FIRST_WIN           | Первая Correct Prediction                 |
-| ON_FIRE             | 5 Correct Prediction подряд               |
-| GIANT_KILLER        | Correct Prediction с displayedPoints ≥ 40 |
-| SHARPSHOOTER        | 10 Correct Prediction за один день        |
-| CHAMPION            | Победа в Weekly Cup                       |
-| ELITE               | Global Rank ≤ 100                         |
-| MASTER              | Достигнут League = MASTER                 |
+Profile may include:
 
-# 13. First Run и Progressive Onboarding
+```text
+league/rating status
+CareerStats
+TournamentResults
+PredictionStats
+Achievements
+CupHistory
+PrizeHistory
+ShareProfile
+Settings entry
+```
 
-Цель: от первого открытия Mini App до первой Prediction — ориентировочно
-20–30 секунд. Механики объясняются в момент, когда становятся
-релевантными.
+Achievement не влияет на Tournament Points или Global Rating.
 
-| **Trigger**              | **Onboarding Message**                                       |
-|--------------------------|--------------------------------------------------------------|
-| FIRST_LAUNCH             | Free-to-play Weekly Cup, Prize Pool, 3 Free Predictions/day. |
-| FIRST_MATCH_VIEW         | More unlikely = more points.                                 |
-| FIRST_PREDICTION_CREATED | Prediction автоматически включила пользователя в Weekly Cup. |
-| FREE_LIMIT_REACHED       | Можно разблокировать до 5 Rewarded Predictions.              |
-| FIRST_PREDICTION_SETTLED | Как Points меняют Weekly Leaderboard.                        |
-| RATING_PROGRESS          | Нужно 10 Prediction для Rating Qualification.                |
-| FIRST_CUP_FINISHED       | Rating Delta и Promotion/Demotion.                           |
-| FIRST_PRIZE              | TON Wallet Connection и Claim.                               |
+Wallet не запрашивается до реальной Prize Claim.
 
-**•** До первой Prediction не запрашиваются Wallet, email, phone или
-favorite leagues.
+Supported UI locales:
 
-**•** После третьей Free Prediction Rewarded Ad не запускается
-автоматически.
+```text
+en
+ru
+de
+es
+ar
+```
 
-**•** Подробное объяснение Scoring доступно через Info Sheet; формула
-6.5/p в обычном UI не показывается.
+Appearance:
 
-# 14. UI State Matrix
+```text
+system
+light
+dark
+```
 
-| **Area**   | **State**            | **Поведение**                                                            |
-|------------|----------------------|--------------------------------------------------------------------------|
-| Predict    | NO_ELIGIBLE_FIXTURES | Сообщить, что сегодня нет доступных матчей; My Picks остаётся доступным. |
-| Predict    | FREE_AVAILABLE       | One-tap Prediction.                                                      |
-| Predict    | REWARDED_REQUIRED    | Outcome tap → RewardedPredictionSheet.                                   |
-| Predict    | DAILY_LIMIT_REACHED  | Блокировать новые Prediction; показать Daily Reset Countdown.            |
-| Prediction | OPEN                 | Можно изменить selectedOutcome.                                          |
-| Prediction | LOCKED_OR_LIVE       | Изменение запрещено; ResultStatus = PENDING.                             |
-| Prediction | SETTLED_CORRECT      | Показать earnedPoints и rank movement.                                   |
-| Prediction | SETTLED_INCORRECT    | 0 Points; нейтральный текст без “you lost”.                              |
-| Cup        | NOT_PARTICIPATING    | CTA → первая Prediction.                                                 |
-| Cup        | ACTIVE               | Rank, Points, Prize Gap, Leaderboard.                                    |
-| Cup        | IN_PRIZE_ZONE        | Current Prize и competitive gaps.                                        |
-| Cup        | FINISHED_WINNER      | Final Result, Prize Claim, Next Cup CTA.                                 |
-| Cup        | FINISHED_NON_WINNER  | Final Result, Rating Delta, Next Cup CTA.                                |
-| Rating     | UNRANKED             | Progress до 10 Prediction.                                               |
-| Rating     | RANKED               | Rank, League, Percentile, Next Threshold.                                |
-| Profile    | NEW_USER             | Не показывать стену нулей; акцент на Current Cup и Progress.             |
-| Wallet     | NOT_REQUIRED         | Не запрашивать Connection.                                               |
-| Wallet     | CLAIM_REQUIRED       | TON Connect + Prize Claim.                                               |
+## 12.1 Achievement v0.1
 
-# 15. Data Model — программные сущности верхнего уровня
+| Code | Condition |
+|---|---|
+| FIRST_PICK | First Prediction |
+| FIRST_WIN | First Correct Prediction |
+| ON_FIRE | 5 Correct Predictions in a row |
+| GIANT_KILLER | Correct Prediction with Points ≥ 40 |
+| SHARPSHOOTER | Correct Predictions equal current `DAILY_PREDICTION_LIMIT` in one day (currently 8) |
+| CHAMPION | Weekly Cup win |
+| ELITE | Global Rank ≤ 100 |
+| MASTER | League = MASTER |
 
-Подробная DB Schema будет отдельным Technical Spec. В Product Spec
-фиксируются названия основных Domain Entities, чтобы Codex и Backend
-использовали единый словарь.
+---
 
-| **Entity**            | **Назначение**                                   |
-|-----------------------|--------------------------------------------------|
-| User                  | Telegram user и продуктовый профиль.             |
-| Tournament            | Weekly Cup configuration и lifecycle.            |
-| TournamentParticipant | Участие User в Tournament и агрегаты Weekly Cup. |
-| Fixture               | Спортивное событие и lifecycle.                  |
-| OutcomeSnapshot       | 1X2 probability/points snapshot для Fixture.     |
-| Prediction            | Выбранный User Outcome для Fixture.              |
-| DailyPredictionUsage  | Free/Rewarded usage User по calendarDay.         |
-| RatingProfile         | Текущий Global Rating и League.                  |
-| RatingHistory         | Изменение Rating после Qualified Cup.            |
-| Achievement           | Каталог достижений.                              |
-| UserAchievement       | Полученные User achievements.                    |
-| Prize                 | Призовое обязательство по Tournament.            |
-| PrizeClaim            | TON claim/payment state.                         |
-| AdReward              | Подтверждённый Rewarded Ad unlock.               |
+# 13. Progressive Onboarding
 
-# 16. Sports Data Architecture
+Goal: first launch → first Prediction in approximately 20–30 seconds.
 
-**•** Preferred Provider для MVP: API-Football / API-Sports, после
-технической проверки quota и endpoint behavior.
+Explain mechanics when they become relevant.
 
-**•** Frontend никогда не вызывает Sports Provider напрямую.
+| Trigger | Message |
+|---|---|
+| FIRST_LAUNCH | Free-to-play Weekly Cup, Prize Pool, 3 Free/day |
+| FIRST_MATCH_VIEW | More unlikely outcome = more Points |
+| FIRST_PREDICTION_CREATED | Prediction automatically joined current Cup |
+| FREE_LIMIT_REACHED | Up to 5 Rewarded Predictions available |
+| FIRST_PREDICTION_SETTLED | Points affect Weekly Leaderboard |
+| RATING_PROGRESS | 10 Predictions required for Rating qualification |
+| FIRST_CUP_FINISHED | Rating Delta and League movement |
+| FIRST_PRIZE | TON wallet and Prize Claim |
 
-**•** Backend Worker получает Fixtures/Odds/Results, сохраняет Snapshot
-в DB и отдаёт данные всем Users через Application API.
+Before first Prediction do not request:
 
-**•** Sports API load зависит прежде всего от количества Fixture, а не
-от количества Users.
+```text
+wallet
+email
+phone
+favorite leagues
+```
 
-**•** Fixture хранит providerFixtureId, competitionCode, homeTeam,
-awayTeam, kickoffAt, fixtureStatus.
+After third Free Prediction do not auto-launch rewarded advertising.
 
-**•** OutcomeSnapshot хранит rawOdds, normalizedProbability,
-displayedPoints, snapshotAt, scoringVersion.
+Detailed scoring explanation may be available via Info UI; formula `6.5 / p` is not part of normal primary UI.
 
-**•** Backend ведёт requestBudgetCounter и при приближении к quota
-снижает polling frequency.
+---
 
-# 17. Monetization v0.1
+# 14. Core UI States
 
-**•** Основная монетизация MVP: Rewarded Ads для Prediction \#4–#8
-текущего дня.
+| Area | State | Product behavior |
+|---|---|---|
+| Predict | NO_ELIGIBLE_FIXTURES | Explain no available matches today; My Picks remains accessible |
+| Predict | FREE_AVAILABLE | One-tap Prediction |
+| Predict | REWARDED_REQUIRED | Outcome → rewarded flow |
+| Predict | DAILY_LIMIT_REACHED | Block new Prediction until daily reset |
+| Prediction | OPEN | selectedOutcome editable before kickoff |
+| Prediction | LOCKED_OR_LIVE | Edit forbidden; result Pending |
+| Prediction | SETTLED_CORRECT | earnedPoints and relevant movement |
+| Prediction | SETTLED_INCORRECT | 0 Points; neutral wording |
+| Cup | NOT_PARTICIPATING | CTA → first Prediction |
+| Cup | ACTIVE | Rank, Points, Prize gap, Leaderboard |
+| Cup | IN_PRIZE_ZONE | Current Prize and competitive gaps |
+| Cup | FINISHED_WINNER | Final result, Prize Claim, next Cup |
+| Cup | FINISHED_NON_WINNER | Final result, Rating Delta, next Cup |
+| Rating | UNRANKED | Qualification progress |
+| Rating | RANKED | Rank, League, Percentile, next threshold |
+| Profile | NEW_USER | Avoid wall of zeros; emphasize current progress |
+| Wallet | NOT_REQUIRED | Do not request connection |
+| Wallet | CLAIM_REQUIRED | TON connection + Prize Claim |
 
-**•** Prediction \#1–#3 всегда Free.
+Detailed component geometry and visual states belong in design documentation.
 
-**•** AdReward считается валидным только после verified completion.
+---
 
-**•** Нет Internal Currency, purchasable Prediction Balance или
-transferable Reward Asset.
+# 15. Monetization
 
-**•** Нет Forced Ad при запуске приложения и автоматического Ad после
-третьей Prediction.
+MVP monetization:
 
-**•** Первые Weekly Cup могут быть убыточными; ключевая задача —
-проверить Retention и Unit Economics.
+```text
+Prediction #1–#3 → Free
+Prediction #4–#8 → may require Rewarded Ad
+```
 
-# 18. TON Prize Flow
+Rewarded entitlement is valid only after verified completion.
 
-**•** prizePoolTon и Prize Distribution фиксируются до Tournament Start.
+No:
 
-**•** Final Leaderboard фиксируется после Settlement всех Fixture,
-которые согласно Tournament Rules входят в Cup.
+```text
+Internal Currency
+purchasable Prediction Balance
+transferable Reward Asset
+forced launch ad
+automatic ad after third Prediction
+```
 
-**•** Wallet запрашивается только у Prize Winner при необходимости
-Claim.
+Initial Cups may be unprofitable; MVP validates retention and unit economics.
 
-**•** Минимальные PrizeClaimStatus: UNCLAIMED, CLAIM_PENDING, PAID,
-FAILED.
+Exact ad-provider verification mechanics belong in technical/integration specs and unresolved decisions.
 
-**•** Конкретный Payout Mechanism (server-side transfer или Claim Smart
-Contract) в v0.1 не фиксируется.
+---
 
-# 19. Product Language
+# 16. TON Prize Flow
 
-| **Использовать**                       | **Не использовать как основной UI**              |
-|----------------------------------------|--------------------------------------------------|
-| Prediction / прогноз                   | Bet / ставка                                     |
-| Points / очки                          | Stake                                            |
-| Market Probability / вероятность рынка | Bookmaker Odds / коэффициент как главный элемент |
-| Tournament / Weekly Cup                | Lottery / betting pool                           |
-| Prize / Prize Pool                     | Выигрыш ставки                                   |
-| Rating / League                        | Cash balance                                     |
+Prize Pool is fixed before Tournament starts.
 
-# 20. MVP Analytics
+Exact Prize Distribution by winning rank is intentionally deferred and must not be treated as approved until separately designed.
 
-**•** activationFirstPredictionRate
+Final Leaderboard is fixed after all Tournament-relevant Fixture are settled according to approved Tournament rules.
 
-**•** predictionsPerDAU и predictionsPerCup
+Wallet is requested only when a Prize Winner needs to claim a Prize.
 
-**•** freePredictionUsageDistribution
+Minimum claim states:
 
-**•** rewardedOfferRate / rewardedStartRate / rewardedCompletionRate
+```text
+UNCLAIMED
+CLAIM_PENDING
+PAID
+FAILED
+```
 
-**•** D1 / D3 / D7 Retention
+MVP uses a Prize/PrizeClaim flow with manual TON payout by an operator.
 
-**•** weeklyCupParticipationRate и weeklyCupCompletionRate
+The operator verifies the submitted wallet, performs the TON transfer manually, records the transaction reference/hash, and marks the claim `PAID`.
 
-**•** ratingQualificationRate
+Automatic server-side or smart-contract payout is not part of the current MVP.
 
-**•** leaderboardRevisitRate / profileRevisitRate
+Prize amounts are domain monetary values; exact persistence representation belongs in `DB_SCHEMA.md`.
 
-**•** revenuePerActiveUser / rewardedRevenuePerImpression
+---
 
-**•** prizeCostToAdRevenueRatio
+# 17. Product Language
 
-**•** shareProfileRate и referredOpenRate после появления Referral
-Attribution
+| Prefer | Avoid as primary UI |
+|---|---|
+| Prediction / прогноз | Bet / ставка |
+| Points / очки | Stake |
+| Market Probability / вероятность | Bookmaker Odds as main UI element |
+| Tournament / Weekly Cup | Lottery / betting pool |
+| Prize / Prize Pool | Bet winnings |
+| Rating / League | Cash balance |
 
-# 21. Open Decisions перед Implementation Freeze
+Product visual/language framing must remain skill-competition oriented rather than casino/betting oriented.
 
-**•** TOURNAMENT_TIMEZONE и точные weekly startsAt/endsAt.
+---
 
-**•** Что означает calendarDay для Daily Quota и Match Eligibility:
-Tournament Timezone или User Timezone.
+# 18. MVP Analytics
 
-**•** Leaderboard Tie Breakers.
+Core product metrics:
 
-**•** Policy для POSTPONED / CANCELLED / ABANDONED / RESCHEDULED
-Fixture.
+```text
+activationFirstPredictionRate
+predictionsPerDAU
+predictionsPerCup
+freePredictionUsageDistribution
+rewardedOfferRate
+rewardedStartRate
+rewardedCompletionRate
+D1 / D3 / D7 Retention
+weeklyCupParticipationRate
+weeklyCupCompletionRate
+ratingQualificationRate
+leaderboardRevisitRate
+profileRevisitRate
+revenuePerActiveUser
+rewardedRevenuePerImpression
+prizeCostToAdRevenueRatio
+shareProfileRate
+referredOpenRate
+```
 
-**•** Выбор конкретного Bookmaker/Odds Source и snapshotAt.
+Metrics requiring not-yet-implemented features become relevant only when those features exist.
 
-**•** Финальная реализация expectedPercentile и Simulation Calibration
-Global Rating.
+---
 
-**•** Входит ли Season в первый MVP Release.
+# 19. Open Product Decisions
 
-**•** TON Payout/Claim architecture.
+Authoritative tracked Open Decisions belong in:
 
-**•** Anti-abuse: Multi-accounting, Telegram Identity, Ad Reward
-Verification, suspicious behavior.
+```text
+docs/DECISIONS.md
+```
 
-**•** Notifications policy.
+Do not maintain a second authoritative open-decision list here.
 
-**•** Legal Review: tournament mechanics, advertising, TON prizes,
-Terms, Privacy, jurisdiction/age restrictions.
+Product areas known to require explicit resolution before affected behavior is implemented include, as applicable:
 
-**•** Publisher Policy выбранной Ad Network для sports prediction
-product с real prizes.
+```text
+exact Weekly Cup boundary
+postponed/cancelled/abandoned/rescheduled Fixture policy
+Goalstery mathematical outcome model
+exact Prize Distribution by winning rank
+Global Rating expected-percentile model / calibration
+```
 
-# 22. Out of Scope — MVP
+Other unresolved implementation/product questions discovered during development must be surfaced according to `AGENTS.md` and, when accepted for tracking, added to `docs/DECISIONS.md`.
 
-**•** Deposits и Paid Entry.
+Do not silently resolve them in code.
 
-**•** Покупка Prediction через TON, Telegram Stars или fiat.
+---
 
-**•** Tradable Tickets/Tokens и Withdrawal Tournament Points.
+# 20. Out of Scope — MVP
 
-**•** Live/In-play Prediction.
+```text
+Deposits
+Paid Entry
+Prediction purchase via TON / Telegram Stars / fiat
+Tradable Tickets/Tokens
+Tournament Points withdrawal
+Live/In-play Prediction
+full Match Center
+lineups/injuries/H2H/xG/news/AI analysis
+additional competitions without approved scope change
+Friends Leaderboard
+special League-gated Tournament
+complex Achievement rewards/cosmetics
+full historical Prediction drill-down
+Subscription/Premium Analytics
+```
 
-**•** Полный Match Center: lineups, injuries, H2H, xG, news, AI
-analysis.
+---
 
-**•** Дополнительные League/Conference League без доказанной
-необходимости.
+# 21. MVP Acceptance
 
-**•** Friends Leaderboard и специальные League-gated Tournament.
+MVP is product-complete when a new Telegram User can:
 
-**•** Сложные Achievement Rewards/Cosmetics.
+```text
+open Mini App
+→ understand current Weekly Cup
+→ make first Free Prediction quickly
+→ return for Settlement and Leaderboard movement
+→ optionally unlock up to five Rewarded Predictions/day
+→ finish Cup with understandable Tournament Result
+→ receive Global Rating update when qualified
+→ connect TON wallet only if a Prize actually requires claim
+```
 
-**•** Полный Historical Prediction Drill-down.
+Primary Loop:
 
-**•** Subscription/Premium Analytics.
+```text
+Open
+→ Predict Today
+→ Settlement
+→ Weekly Cup Movement
+→ Global Rating
+→ Repeat
+```
 
-# 23. MVP Acceptance Summary
+---
 
-MVP считается продуктово цельным, если новый Telegram User может открыть
-Mini App, за несколько секунд понять текущий Weekly Cup, сделать первую
-Free Prediction, вернуться за Settlement и движением в Leaderboard, при
-желании разблокировать до пяти дополнительных Daily Prediction через
-Rewarded Ads, завершить неделю с понятным Tournament Result и Global
-Rating Update и подключить TON Wallet только в случае фактически
-заработанного Prize.
+# 22. Product Spec Maintenance
 
-**Primary Loop:** Open → Predict Today → Settlement → Weekly Cup
-Movement → Global Rating → Repeat.
+This document owns product behavior, not implementation detail.
+
+Do not add here unless product-facing/domain-relevant:
+
+```text
+Prisma field definitions
+SQL constraints
+worker polling intervals
+HTTP handler structure
+provider request budgeting
+CSS geometry
+component file structure
+test harness details
+deployment details
+```
+
+Those belong in their dedicated authoritative docs.
+
+If an Accepted decision constrains this Product Spec, follow `AGENTS.md` decision policy.
+
+Do not silently rewrite product behavior to match implementation.

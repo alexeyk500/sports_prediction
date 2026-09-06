@@ -35,6 +35,9 @@ export function MatchCard({
 }: MatchCardProps) {
   const { t, locale } = useTranslation();
   const editable = prediction ? prediction.editable : true;
+  const showLockedStatus = prediction !== undefined && !editable;
+  const showFixtureStatus = prediction === undefined && fixture.status !== "OPEN";
+  const showStatusRow = showLockedStatus || showFixtureStatus || pending;
 
   return (
     <article className={styles.fixtureCard}>
@@ -60,18 +63,18 @@ export function MatchCard({
           />
         ))}
       </div>
-      <div className={styles.fixtureStatus}>
-        {prediction ? (
-          <span>
-            {editable
-              ? t("predict.status.selected", { outcome: outcomeLabel(prediction.selectedOutcome) })
-              : t("predict.status.lockedAfterKickoff")}
-          </span>
-        ) : (
-          <span>{fixtureStatusLabel(fixture.status)}</span>
-        )}
-        {pending ? <span>{t("predict.status.saving")}</span> : null}
-      </div>
+      {showStatusRow ? (
+        <div className={styles.fixtureStatus}>
+          {showLockedStatus ? (
+            <span className={styles.statusItem}>
+              <LockIcon />
+              <span>{t("predict.status.lockedAfterKickoff")}</span>
+            </span>
+          ) : null}
+          {showFixtureStatus ? <span>{fixtureStatusLabel(fixture.status)}</span> : null}
+          {pending ? <span>{t("predict.status.saving")}</span> : null}
+        </div>
+      ) : null}
       {rewardRequired ? (
         <div className={styles.rewardPlaceholder}>
           <strong>{t("predict.reward.title")}</strong>
@@ -206,6 +209,14 @@ function PredictionOutcomeButton({
       <span className={styles.outcomeCode}>{outcomeDisplayLabel(outcome)}</span>
       <TrophyValue value={points} />
     </button>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg className={styles.statusIcon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Zm-7-2a2 2 0 1 1 4 0v2h-4V7Zm3 8.73V17h-2v-1.27a2 2 0 1 1 2 0Z" />
+    </svg>
   );
 }
 
