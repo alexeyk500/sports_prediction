@@ -5,6 +5,7 @@ import { GET as getTodayFixtures } from "@/app/api/fixtures/today/route";
 import { POST as postPrediction } from "@/app/api/predictions/route";
 import { GET as getTodayPredictions } from "@/app/api/predictions/today/route";
 import { PATCH as patchPrediction } from "@/app/api/predictions/[predictionId]/route";
+import { GET as getSettings, PATCH as patchSettings } from "@/app/api/settings/route";
 import { createTestPrismaClient } from "../helpers/prisma-test-client";
 import {
   attachTestScoringSnapshot,
@@ -85,6 +86,50 @@ describe("Telegram auth HTTP vertical slice", () => {
     expect(await prisma.user.count({ where: { telegramUserId: BigInt(telegramUserId) } })).toBe(1);
   });
 
+  it("initializes locale from supported Telegram language and falls back for unsupported language", async () => {
+    const ruResponse = await getBootstrap(
+      createApiRequest("/api/bootstrap", signedInitData({ id: "777000111230", language_code: "ru-RU" })),
+    );
+    const ruBody = await responseJson(ruResponse) as { settings: { locale: string; appearance: string } };
+    const fallbackResponse = await getBootstrap(
+      createApiRequest("/api/bootstrap", signedInitData({ id: "777000111231", language_code: "fr" })),
+    );
+    const fallbackBody = await responseJson(fallbackResponse) as { settings: { locale: string; appearance: string } };
+
+    expect(ruResponse.status).toBe(200);
+    expect(ruBody.settings).toMatchObject({ locale: "ru", appearance: "system" });
+    expect(fallbackResponse.status).toBe(200);
+    expect(fallbackBody.settings).toMatchObject({ locale: "en", appearance: "system" });
+  });
+
+  it("does not overwrite manual locale during later Telegram profile sync", async () => {
+    const telegramUserId = "777000111232";
+    const firstInitData = signedInitData({ id: telegramUserId, language_code: "ru" });
+    const firstResponse = await getBootstrap(createApiRequest("/api/bootstrap", firstInitData));
+
+    expect(firstResponse.status).toBe(200);
+
+    const updatedSettingsResponse = await patchSettings(
+      createApiRequest("/api/settings", firstInitData, {
+        method: "PATCH",
+        body: { locale: "de" },
+      }),
+    );
+
+    expect(updatedSettingsResponse.status).toBe(200);
+
+    const secondInitData = signedInitData({ id: telegramUserId, language_code: "es" });
+    const secondResponse = await getBootstrap(createApiRequest("/api/bootstrap", secondInitData));
+    const secondBody = await responseJson(secondResponse) as {
+      user: { languageCode: string };
+      settings: { locale: string };
+    };
+
+    expect(secondResponse.status).toBe(200);
+    expect(secondBody.user.languageCode).toBe("es");
+    expect(secondBody.settings.locale).toBe("de");
+  });
+
   it("rejects invalid Telegram auth", async () => {
     const response = await getBootstrap(createApiRequest("/api/bootstrap", "auth_date=1&hash=bad"));
     const body = await responseJson(response) as { error: { code: string } };
@@ -101,12 +146,14 @@ describe("Telegram auth HTTP vertical slice", () => {
       currentTournament: { prizePoolNanoTon: string } | null;
       dailyPredictionUsage: { freeUsed: number; rewardedUsed: number; totalUsed: number };
       rating: null | { rating: number };
+      settings: { locale: string; appearance: string };
     };
 
     expect(zeroResponse.status).toBe(200);
     expect(zeroBody.currentTournament).toMatchObject({ prizePoolNanoTon: "123000000000" });
     expect(zeroBody.dailyPredictionUsage).toMatchObject({ freeUsed: 0, rewardedUsed: 0, totalUsed: 0 });
     expect(zeroBody.rating).toBeNull();
+    expect(zeroBody.settings).toMatchObject({ locale: "en", appearance: "system" });
 
     await prisma.dailyPredictionUsage.create({
       data: {
@@ -135,6 +182,101 @@ describe("Telegram auth HTTP vertical slice", () => {
     expect(existingBody.rating).toMatchObject({ rating: 1512, league: "BRONZE_III", qualifiedCupsCount: 1 });
   });
 
+  it("reads and updates settings for the authenticated user", async () => {
+    const initData = signedInitData({ id: "777000111233" });
+    const initialResponse = await getSettings(createApiRequest("/api/settings", initData));
+    const initialBody = await responseJson(initialResponse) as { locale: string; appearance: string };
+
+    expect(initialResponse.status).toBe(200);
+    expect(initialBody).toMatchObject({ locale: "en", appearance: "system" });
+
+    const localeResponse = await patchSettings(
+      createApiRequest("/api/settings", initData, {
+        method: "PATCH",
+        body: { locale: "ar" },
+      }),
+    );
+    const localeBody = await responseJson(localeResponse) as { locale: string; appearance: string };
+
+    expect(localeResponse.status).toBe(200);
+    expect(localeBody).toMatchObject({ locale: "ar", appearance: "system" });
+
+    const appearanceResponse = await patchSettings(
+      createApiRequest("/api/settings", initData, {
+        method: "PATCH",
+        body: { appearance: "dark" },
+      }),
+    );
+    const appearanceBody = await responseJson(appearanceResponse) as { locale: string; appearance: string };
+
+    expect(appearanceResponse.status).toBe(200);
+    expect(appearanceBody).toMatchObject({ locale: "ar", appearance: "dark" });
+  });
+
+  it("rejects unsupported settings values", async () => {
+    const initData = signedInitData({ id: "777000111234" });
+    const invalidLocale = await patchSettings(
+      createApiRequest("/api/settings", initData, {
+        method: "PATCH",
+        body: { locale: "fr" },
+      }),
+    );
+    const invalidAppearance = await patchSettings(
+      createApiRequest("/api/settings", initData, {
+        method: "PATCH",
+        body: { appearance: "sepia" },
+      }),
+    );
+    const invalidLocaleBody = await responseJson(invalidLocale) as { error: { code: string } };
+    const invalidAppearanceBody = await responseJson(invalidAppearance) as { error: { code: string } };
+
+    expect(invalidLocale.status).toBe(400);
+    expect(invalidLocaleBody.error.code).toBe("VALIDATION_ERROR");
+    expect(invalidAppearance.status).toBe(400);
+    expect(invalidAppearanceBody.error.code).toBe("VALIDATION_ERROR");
+  });
+
+  it("enforces canonical slug uniqueness for teams and competitions", async () => {
+    const competitionSlug = uniqueTestKey("shared-competition-slug").replace(/_/g, "-");
+    const teamSlug = uniqueTestKey("shared-team-slug").replace(/_/g, "-");
+
+    await prisma.competition.create({
+      data: {
+        providerCompetitionId: uniqueTestKey("competition_provider"),
+        code: uniqueTestKey("COMPETITION_CODE"),
+        name: "Competition A",
+        slug: competitionSlug,
+      },
+    });
+    await prisma.team.create({
+      data: {
+        providerTeamId: uniqueTestKey("team_provider"),
+        name: "Team A",
+        slug: teamSlug,
+      },
+    });
+
+    await expect(
+      prisma.competition.create({
+        data: {
+          providerCompetitionId: uniqueTestKey("competition_provider"),
+          code: uniqueTestKey("COMPETITION_CODE"),
+          name: "Competition B",
+          slug: competitionSlug,
+        },
+      }),
+    ).rejects.toMatchObject({ code: "P2002" });
+    await expect(
+      prisma.team.create({
+        data: {
+          providerTeamId: uniqueTestKey("team_provider"),
+          name: "Team B",
+          slug: teamSlug,
+        },
+      }),
+    ).rejects.toMatchObject({ code: "P2002" });
+  });
+
   it("returns today's displayable fixtures and excludes tomorrow, inactive, and unsupported competitions", async () => {
     const initData = signedInitData({ id: "777000111224" });
     const todayRange = getBusinessDayRangeUtc(getBusinessDate(new Date()));
@@ -145,6 +287,20 @@ describe("Telegram auth HTTP vertical slice", () => {
       competitionId: activeCompetition.id,
       kickoffAt: new Date(todayRange.startUtc.getTime() + 12 * 60 * 60 * 1000),
     });
+    await Promise.all([
+      prisma.competition.update({
+        where: { id: activeCompetition.id },
+        data: { logoUrl: "/assets/competitions/la-liga.webp", slug: "la-liga" },
+      }),
+      prisma.team.update({
+        where: { id: includedFixture.homeTeamId },
+        data: { logoUrl: "/assets/teams/home-test.webp", slug: "home-test" },
+      }),
+      prisma.team.update({
+        where: { id: includedFixture.awayTeamId },
+        data: { logoUrl: "/assets/teams/away-test.webp", slug: "away-test" },
+      }),
+    ]);
     const tomorrowFixture = await createTestFixture(prisma, {
       competitionId: activeCompetition.id,
       kickoffAt: new Date(todayRange.endUtc.getTime() + 60 * 60 * 1000),
@@ -167,7 +323,13 @@ describe("Telegram auth HTTP vertical slice", () => {
 
     const response = await getTodayFixtures(createApiRequest("/api/fixtures/today", initData));
     const body = await responseJson(response) as {
-      fixtures: Array<{ id: string; outcomes: { home: { points: number }; draw: { points: number }; away: { points: number } } }>;
+      fixtures: Array<{
+        id: string;
+        competition: { slug: string; logoUrl: string | null };
+        homeTeam: { slug: string; logoUrl: string | null };
+        awayTeam: { slug: string; logoUrl: string | null };
+        outcomes: { home: { points: number }; draw: { points: number }; away: { points: number } };
+      }>;
     };
 
     expect(response.status).toBe(200);
@@ -179,6 +341,11 @@ describe("Telegram auth HTTP vertical slice", () => {
       home: { points: 13 },
       draw: { points: 24 },
       away: { points: 27 },
+    });
+    expect(body.fixtures.find((fixture) => fixture.id === includedFixture.id)).toMatchObject({
+      competition: { slug: "la-liga", logoUrl: "/assets/competitions/la-liga.webp" },
+      homeTeam: { slug: "home-test", logoUrl: "/assets/teams/home-test.webp" },
+      awayTeam: { slug: "away-test", logoUrl: "/assets/teams/away-test.webp" },
     });
   });
 

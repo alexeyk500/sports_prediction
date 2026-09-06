@@ -5,8 +5,8 @@ import type { PredictionDto, PredictionOutcome } from "@/lib/api/types";
 
 export type PredictActionResult =
   | { status: "created" | "updated" }
-  | { status: "reward-required"; message: string }
-  | { status: "locked"; message: string };
+  | { status: "reward-required" }
+  | { status: "locked" };
 
 export interface SelectOutcomeInput {
   apiClient: Pick<ApiClient, "createPrediction" | "updatePrediction">;
@@ -19,7 +19,7 @@ export interface SelectOutcomeInput {
 export async function selectOutcome(input: SelectOutcomeInput): Promise<PredictActionResult> {
   if (input.existingPrediction) {
     if (!input.existingPrediction.editable) {
-      return { status: "locked", message: "This match has started." };
+      return { status: "locked" };
     }
 
     try {
@@ -31,7 +31,7 @@ export async function selectOutcome(input: SelectOutcomeInput): Promise<PredictA
       return { status: "updated" };
     } catch (error) {
       if (error instanceof ApiClientError && error.code === "PREDICTION_LOCKED") {
-        return { status: "locked", message: "This match has started." };
+        return { status: "locked" };
       }
 
       throw error;
@@ -48,7 +48,7 @@ export async function selectOutcome(input: SelectOutcomeInput): Promise<PredictA
     return { status: "created" };
   } catch (error) {
     if (error instanceof ApiClientError && error.code === "REWARDED_AD_REQUIRED") {
-      return { status: "reward-required", message: "Watch ad to unlock prediction." };
+      return { status: "reward-required" };
     }
 
     throw error;

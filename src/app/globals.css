@@ -1,13 +1,61 @@
 :root {
   color-scheme: light;
+  --color-app-bg: #f4f7fb;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #f8fafc;
+  --color-text: #111827;
+  --color-text-secondary: #253244;
+  --color-muted: #64748b;
+  --color-border: #d7dde6;
+  --color-border-strong: #cbd5e1;
+  --color-accent: #126b5a;
+  --color-accent-contrast: #ffffff;
+  --color-accent-soft: #e7f5ef;
+  --color-accent-text: #0f513f;
+  --color-warning-bg: #fff7df;
+  --color-warning-border: #f3c969;
+  --color-warning-text: #664b00;
+  --color-danger-bg: #fff1f2;
+  --color-danger-border: #f4b4b4;
+  --color-danger-text: #8a1f2d;
+  --color-focus: #0f766e;
+  --shadow-card: 0 10px 28px rgb(15 23 42 / 7%);
+  --shadow-nav: 0 -8px 24px rgb(15 23 42 / 8%);
   font-family:
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  background: #f8fafc;
-  color: #111827;
+  background: var(--color-app-bg);
+  color: var(--color-text);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-app-bg: #0f172a;
+  --color-surface: #172033;
+  --color-surface-elevated: #1e293b;
+  --color-text: #f8fafc;
+  --color-text-secondary: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-border: #334155;
+  --color-border-strong: #475569;
+  --color-accent: #2dd4bf;
+  --color-accent-contrast: #042f2e;
+  --color-accent-soft: #134e4a;
+  --color-accent-text: #ccfbf1;
+  --color-warning-bg: #3d2f08;
+  --color-warning-border: #b7791f;
+  --color-warning-text: #fde68a;
+  --color-danger-bg: #3f121c;
+  --color-danger-border: #be123c;
+  --color-danger-text: #fecdd3;
+  --color-focus: #5eead4;
+  --shadow-card: 0 14px 30px rgb(0 0 0 / 22%);
+  --shadow-nav: 0 -8px 24px rgb(0 0 0 / 28%);
+  background: var(--color-app-bg);
+  color: var(--color-text);
 }
 
 * {
@@ -23,6 +71,8 @@ body {
 
 body {
   min-width: 320px;
+  background: var(--color-app-bg);
+  color: var(--color-text);
 }
 
 button {
@@ -31,4 +81,10 @@ button {
 
 button:not(:disabled) {
   cursor: pointer;
+}
+
+button:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
 }

@@ -144,6 +144,11 @@ Bookmaker Odds преобразуются в Implied Probability и нормал
 **•** Отрицательных Points, Streak Multiplier и дополнительных
 Tournament Score Bonus в v0.1 нет.
 
+**•** В domain, API и database это значение остаётся Points. В
+пользовательском UI Goalstery compact scoring value визуально
+представляется как trophy icon + numeric value, без переименования
+backend fields или scoring formula.
+
 **•** Scoring Snapshot фиксируется до публикации Fixture и после этого
 не меняется.
 
@@ -218,10 +223,14 @@ Prediction.
 
 **•** Available Fixtures сортируются прежде всего по kickoffAt.
 
-**•** MatchCard показывает Team, marketProbability и displayedPoints;
-основной UI не имитирует букмекерские 1/X/2 Odds.
+**•** MatchCard показывает Competition identity, Team identities,
+kickoff time и outcome buttons `1 / X / 2` для HOME / DRAW / AWAY.
+Scoring value в outcome buttons отображается как trophy icon + numeric
+value. Основной UI не имитирует букмекерские Odds.
 
-**•** displayedPoints визуально приоритетнее marketProbability.
+**•** MatchCard использует competition/team badges или logos, когда они
+доступны. Missing logos должны иметь graceful fallback badge. Это
+presentation-only и не меняет scoring/domain rules.
 
 **•** Tap по Outcome сразу вызывает createPrediction(); Confirmation
 Modal отсутствует.
@@ -390,6 +399,11 @@ bestCorrectStreak, avgWinningPickPoints, optional bestCompetition.
 **•** ShareProfile создаёт Telegram share-card.
 
 **•** Settings открывается из Profile.
+
+**•** Settings позволяют выбрать язык интерфейса: English (`en`),
+Русский (`ru`), Deutsch (`de`), Español (`es`), العربية (`ar`).
+
+**•** Settings позволяют выбрать Appearance: `system`, `light`, `dark`.
 
 ## 12.1. Achievement v0.1
 

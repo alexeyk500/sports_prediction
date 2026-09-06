@@ -1,0 +1,64 @@
+.screen {
+  height: 100%;
+  overflow: auto;
+  padding-block: calc(24px + env(safe-area-inset-top)) 16px;
+  padding-inline: 16px;
+  background: var(--color-app-bg);
+  color: var(--color-text);
+}
+
+.header {
+  margin-block-end: 16px;
+}
+
+.header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.header p {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.settingsPanel {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--color-surface);
+}
+
+.settingsPanel h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  margin-block-start: 14px;
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.field select {
+  min-height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding-inline: 10px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.error {
+  margin-block: 0 12px;
+  margin-inline: 0;
+  border: 1px solid var(--color-danger-border);
+  border-radius: 8px;
+  padding-block: 10px;
+  padding-inline: 12px;
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}

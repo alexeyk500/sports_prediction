@@ -7,6 +7,7 @@ import type {
   PredictionOutcome,
   TodayFixturesResponse,
   TodayPredictionsResponse,
+  UserSettingsDto,
 } from "./types";
 
 export class ApiClientError extends Error {
@@ -49,6 +50,17 @@ export class ApiClient {
 
   getTodayPredictions(): Promise<TodayPredictionsResponse> {
     return this.request("/api/predictions/today");
+  }
+
+  getSettings(): Promise<UserSettingsDto> {
+    return this.request("/api/settings");
+  }
+
+  updateSettings(input: Partial<UserSettingsDto>): Promise<UserSettingsDto> {
+    return this.request("/api/settings", {
+      method: "PATCH",
+      body: input,
+    });
   }
 
   createPrediction(input: {

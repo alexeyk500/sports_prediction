@@ -1,4 +1,6 @@
 export type PredictionOutcome = "HOME" | "DRAW" | "AWAY";
+export type SupportedLocale = "en" | "ru" | "de" | "es" | "ar";
+export type AppearanceMode = "system" | "light" | "dark";
 
 export interface ApiErrorEnvelope {
   error: {
@@ -6,6 +8,11 @@ export interface ApiErrorEnvelope {
     message: string;
     details: Record<string, unknown>;
   };
+}
+
+export interface UserSettingsDto {
+  locale: SupportedLocale;
+  appearance: AppearanceMode;
 }
 
 export interface BootstrapResponse {
@@ -25,6 +32,7 @@ export interface BootstrapResponse {
     prizePoolNanoTon: string;
   } | null;
   dailyPredictionUsage: DailyPredictionUsageDto;
+  settings: UserSettingsDto;
   rating: {
     rating: number;
     league: string;
@@ -56,16 +64,22 @@ export interface TodayFixtureDto {
     id: string;
     code: string;
     name: string;
+    slug: string;
+    logoUrl: string | null;
   };
   homeTeam: {
     id: string;
     name: string;
+    slug: string;
     shortName: string | null;
+    logoUrl: string | null;
   };
   awayTeam: {
     id: string;
     name: string;
+    slug: string;
     shortName: string | null;
+    logoUrl: string | null;
   };
   status: string;
   outcomes: Record<Lowercase<PredictionOutcome>, { points: number }>;

@@ -2,32 +2,32 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ApiClient, ApiClientError } from "@/lib/api/client";
+import { messageForApiError } from "@/lib/api/error-presentation";
 import type {
   BootstrapResponse,
   PredictionDto,
   PredictionOutcome,
   TodayFixtureDto,
 } from "@/lib/api/types";
+import { formatLocalizedNumber } from "@/lib/i18n/format";
+import { useTranslation } from "@/lib/i18n/use-translation";
 import { getTelegramInitData, initializeTelegramWebApp } from "@/lib/telegram/client";
 import { useBootstrapStore } from "@/stores/bootstrap-store";
+import { MatchCard, MyPickCard } from "./MatchCard";
 import { selectOutcome, type PredictActionResult } from "./predict-actions";
 import styles from "./PredictScreen.module.css";
 
 type ActiveTab = "available" | "my-picks";
+type KnownFixtureStatus = "DRAFT" | "OPEN" | "LOCKED" | "LIVE" | "FINISHED" | "SETTLED";
 
 interface PredictState {
   fixtures: TodayFixtureDto[];
   predictions: PredictionDto[];
 }
 
-const outcomeLabels: Record<PredictionOutcome, string> = {
-  HOME: "HOME",
-  DRAW: "DRAW",
-  AWAY: "AWAY",
-};
-
 export function PredictScreen() {
   const { bootstrap, setBootstrap } = useBootstrapStore();
+  const { t, locale } = useTranslation();
   const apiClient = useMemo(() => new ApiClient({ getTelegramInitData }), []);
   const [state, setState] = useState<PredictState>({ fixtures: [], predictions: [] });
   const [activeTab, setActiveTab] = useState<ActiveTab>("available");
@@ -57,10 +57,10 @@ export function PredictScreen() {
     load()
       .catch((error: unknown) => {
         logPredictLoadError(error);
-        setErrorMessage(messageForError(error));
+        setErrorMessage(messageForApiError(error, locale));
       })
       .finally(() => setIsLoading(false));
-  }, [load]);
+  }, [load, locale]);
 
   const predictionsByFixture = useMemo(
     () => new Map(state.predictions.map((prediction) => [prediction.fixtureId, prediction])),
@@ -87,7 +87,7 @@ export function PredictScreen() {
 
       await handleActionResult(result, fixtureId);
     } catch (error) {
-      setErrorMessage(messageForError(error));
+      setErrorMessage(messageForApiError(error, locale));
     } finally {
       setPendingFixtureId(null);
     }
@@ -100,7 +100,7 @@ export function PredictScreen() {
     }
 
     if (result.status === "locked") {
-      setErrorMessage(result.message);
+      setErrorMessage(t("errors.PREDICTION_LOCKED"));
       await refreshPredictionsOnly();
       return;
     }
@@ -117,15 +117,15 @@ export function PredictScreen() {
   }
 
   if (isLoading) {
-    return <main className={styles.centerState}>Loading today&apos;s matches...</main>;
+    return <main className={styles.centerState}>{t("predict.loading")}</main>;
   }
 
   if (!bootstrap) {
     return (
       <main className={styles.centerState}>
         <section className={styles.statePanel}>
-          <h1>Predict</h1>
-          <p>{errorMessage ?? "Authentication is required."}</p>
+          <h1>{t("predict.title")}</h1>
+          <p>{errorMessage ?? t("predict.authRequired")}</p>
         </section>
       </main>
     );
@@ -137,24 +137,24 @@ export function PredictScreen() {
         <Header bootstrap={bootstrap} />
         {errorMessage ? <div className={styles.errorBanner}>{errorMessage}</div> : null}
         <Quota usage={bootstrap.dailyPredictionUsage} />
-        <div className={styles.tabs} role="tablist" aria-label="Predict views">
+        <div className={styles.tabs} role="tablist" aria-label={t("predict.tabs.ariaLabel")}>
           <button
             className={activeTab === "available" ? styles.activeTab : styles.tab}
             type="button"
             onClick={() => setActiveTab("available")}
           >
-            Available
+            {t("predict.tabs.available")}
           </button>
           <button
             className={activeTab === "my-picks" ? styles.activeTab : styles.tab}
             type="button"
             onClick={() => setActiveTab("my-picks")}
           >
-            My Picks
+            {t("predict.tabs.myPicks")}
           </button>
         </div>
       </div>
-      <div className={styles.scrollArea}>
+      <div className={styles.scrollArea} data-ui="predict-scroll-area">
         {activeTab === "available" ? (
           <FixtureList
             fixtures={state.fixtures}
@@ -172,25 +172,39 @@ export function PredictScreen() {
 }
 
 function Header({ bootstrap }: { bootstrap: BootstrapResponse }) {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.header}>
       <div>
-        <p className={styles.kicker}>Weekly Cup</p>
-        <h1>Predict</h1>
+        <p className={styles.kicker}>{t("predict.weeklyCup")}</p>
+        <h1>{t("predict.title")}</h1>
       </div>
-      <div className={styles.userBadge}>
-        {bootstrap.user.firstName ?? bootstrap.user.username ?? `User ${bootstrap.user.telegramUserId}`}
+      <div className={styles.userBadge} dir="auto">
+        {bootstrap.user.firstName ??
+          bootstrap.user.username ??
+          t("common.userFallback", { id: bootstrap.user.telegramUserId })}
       </div>
     </section>
   );
 }
 
 function Quota({ usage }: { usage: BootstrapResponse["dailyPredictionUsage"] }) {
+  const { t, locale } = useTranslation();
+  const values = {
+    freeUsed: formatLocalizedNumber(locale, usage.freeUsed),
+    freeLimit: formatLocalizedNumber(locale, usage.freeLimit),
+    rewardedUsed: formatLocalizedNumber(locale, usage.rewardedUsed),
+    rewardedLimit: formatLocalizedNumber(locale, usage.rewardedLimit),
+    totalUsed: formatLocalizedNumber(locale, usage.totalUsed),
+    totalLimit: formatLocalizedNumber(locale, usage.totalLimit),
+  };
+
   return (
     <section className={styles.quota}>
-      <span>Free predictions: {usage.freeUsed} / {usage.freeLimit}</span>
-      <span>Rewarded predictions: {usage.rewardedUsed} / {usage.rewardedLimit}</span>
-      <span>Total: {usage.totalUsed} / {usage.totalLimit}</span>
+      <span>{t("predict.quota.free", { used: values.freeUsed, limit: values.freeLimit })}</span>
+      <span>{t("predict.quota.rewarded", { used: values.rewardedUsed, limit: values.rewardedLimit })}</span>
+      <span>{t("predict.quota.total", { used: values.totalUsed, limit: values.totalLimit })}</span>
     </section>
   );
 }
@@ -208,8 +222,10 @@ function FixtureList({
   rewardPromptFixtureId: string | null;
   onSelectOutcome: (fixtureId: string, selectedOutcome: PredictionOutcome) => Promise<void>;
 }) {
+  const { t } = useTranslation();
+
   if (fixtures.length === 0) {
-    return <section className={styles.statePanel}>No available matches today.</section>;
+    return <section className={styles.statePanel}>{t("predict.empty.available")}</section>;
   }
 
   return (
@@ -241,47 +257,18 @@ function FixtureCard({
   rewardRequired: boolean;
   onSelectOutcome: (fixtureId: string, selectedOutcome: PredictionOutcome) => Promise<void>;
 }) {
-  const editable = prediction ? prediction.editable : true;
+  const { t } = useTranslation();
 
   return (
-    <article className={styles.fixtureCard}>
-      <div className={styles.fixtureMeta}>
-        <span>{fixture.competition.name}</span>
-        <time dateTime={fixture.kickoffAt}>{formatKickoff(fixture.kickoffAt)}</time>
-      </div>
-      <div className={styles.teams}>
-        <span>{fixture.homeTeam.name}</span>
-        <span>{fixture.awayTeam.name}</span>
-      </div>
-      <div className={styles.outcomes}>
-        {(["HOME", "DRAW", "AWAY"] as const).map((outcome) => (
-          <button
-            key={outcome}
-            type="button"
-            className={prediction?.selectedOutcome === outcome ? styles.selectedOutcome : styles.outcomeButton}
-            disabled={pending || !editable}
-            onClick={() => void onSelectOutcome(fixture.id, outcome)}
-          >
-            <span>{outcomeLabels[outcome]}</span>
-            <strong>{pointsForOutcome(fixture, outcome)} pts</strong>
-          </button>
-        ))}
-      </div>
-      <div className={styles.fixtureStatus}>
-        {prediction ? (
-          <span>{editable ? `Selected ${prediction.selectedOutcome}` : "Locked after kickoff"}</span>
-        ) : (
-          <span>{fixture.status}</span>
-        )}
-        {pending ? <span>Saving...</span> : null}
-      </div>
-      {rewardRequired ? (
-        <div className={styles.rewardPlaceholder}>
-          <strong>Watch ad to unlock prediction</strong>
-          <span>Rewarded ads are not connected in this development stage.</span>
-        </div>
-      ) : null}
-    </article>
+    <MatchCard
+      fixture={fixture}
+      prediction={prediction}
+      pending={pending}
+      rewardRequired={rewardRequired}
+      onSelectOutcome={onSelectOutcome}
+      fixtureStatusLabel={(status) => fixtureStatusLabel(t, status)}
+      outcomeLabel={(outcome) => outcomeLabel(t, outcome)}
+    />
   );
 }
 
@@ -294,10 +281,11 @@ function MyPicks({
   fixtures: TodayFixtureDto[];
   onSelectOutcome: (fixtureId: string, selectedOutcome: PredictionOutcome) => Promise<void>;
 }) {
+  const { t } = useTranslation();
   const fixturesById = new Map(fixtures.map((fixture) => [fixture.id, fixture]));
 
   if (predictions.length === 0) {
-    return <section className={styles.statePanel}>No picks yet.</section>;
+    return <section className={styles.statePanel}>{t("predict.empty.myPicks")}</section>;
   }
 
   return (
@@ -306,73 +294,34 @@ function MyPicks({
         const fixture = fixturesById.get(prediction.fixtureId);
 
         return (
-          <article key={prediction.id} className={styles.fixtureCard}>
-            <div className={styles.fixtureMeta}>
-              <span>{fixture?.competition.name ?? "Fixture"}</span>
-              <time dateTime={prediction.kickoffAt}>{formatKickoff(prediction.kickoffAt)}</time>
-            </div>
-            <div className={styles.pickRow}>
-              <strong>{prediction.selectedOutcome}</strong>
-              <span>{prediction.potentialPoints} pts</span>
-              <span>{prediction.slotType}</span>
-              <span>{prediction.editable ? "Editable" : "Locked"}</span>
-            </div>
-            {fixture && prediction.editable ? (
-              <div className={styles.outcomes}>
-                {(["HOME", "DRAW", "AWAY"] as const).map((outcome) => (
-                  <button
-                    key={outcome}
-                    type="button"
-                    className={prediction.selectedOutcome === outcome ? styles.selectedOutcome : styles.outcomeButton}
-                    onClick={() => void onSelectOutcome(fixture.id, outcome)}
-                  >
-                    <span>{outcome}</span>
-                    <strong>{pointsForOutcome(fixture, outcome)} pts</strong>
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </article>
+          <MyPickCard
+            key={prediction.id}
+            prediction={prediction}
+            fixture={fixture}
+            onSelectOutcome={onSelectOutcome}
+            outcomeLabel={(outcome) => outcomeLabel(t, outcome)}
+            slotLabel={(slotType) => slotLabel(t, slotType)}
+          />
         );
       })}
     </section>
   );
 }
 
-function pointsForOutcome(fixture: TodayFixtureDto, outcome: PredictionOutcome): number {
-  switch (outcome) {
-    case "HOME":
-      return fixture.outcomes.home.points;
-    case "DRAW":
-      return fixture.outcomes.draw.points;
-    case "AWAY":
-      return fixture.outcomes.away.points;
-  }
+function outcomeLabel(t: ReturnType<typeof useTranslation>["t"], outcome: PredictionOutcome): string {
+  return t(`predict.outcomes.${outcome}`);
 }
 
-function formatKickoff(kickoffAt: string): string {
-  return new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    day: "2-digit",
-    month: "short",
-  }).format(new Date(kickoffAt));
+function slotLabel(t: ReturnType<typeof useTranslation>["t"], slotType: PredictionDto["slotType"]): string {
+  return t(`predict.slot.${slotType}`);
 }
 
-function messageForError(error: unknown): string {
-  if (error instanceof ApiClientError) {
-    if (process.env.NODE_ENV === "development") {
-      return `${error.code}${error.endpoint ? ` at ${error.endpoint}` : ""}: ${error.message}`;
-    }
+function fixtureStatusLabel(t: ReturnType<typeof useTranslation>["t"], status: string): string {
+  return isKnownFixtureStatus(status) ? t(`predict.fixtureStatus.${status}`) : status;
+}
 
-    if (error.code === "MISSING_TELEGRAM_INIT_DATA") {
-      return "Open this app in Telegram or configure development initData.";
-    }
-
-    return error.message;
-  }
-
-  return "Something went wrong.";
+function isKnownFixtureStatus(status: string): status is KnownFixtureStatus {
+  return ["DRAFT", "OPEN", "LOCKED", "LIVE", "FINISHED", "SETTLED"].includes(status);
 }
 
 function logPredictLoadError(error: unknown): void {

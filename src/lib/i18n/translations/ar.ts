@@ -1,0 +1,113 @@
+import type { TranslationShape } from "../i18n";
+
+export const ar = {
+  common: {
+    brand: "Goalstery",
+    userFallback: "مستخدم {id}",
+    trophyCount: "{count} كؤوس",
+  },
+  navigation: {
+    predict: "التوقعات",
+    cup: "الكأس",
+    rating: "التصنيف",
+    profile: "الملف",
+    ariaLabel: "التنقل الرئيسي",
+    placeholder: "هذا القسم غير متاح في هذه المرحلة.",
+  },
+  predict: {
+    title: "التوقعات",
+    weeklyCup: "كأس الأسبوع",
+    loading: "جار تحميل مباريات اليوم...",
+    authRequired: "يلزم تسجيل الدخول.",
+    tabs: {
+      available: "المتاحة",
+      myPicks: "اختياراتي",
+      ariaLabel: "عروض التوقعات",
+    },
+    quota: {
+      free: "التوقعات المجانية: {used} / {limit}",
+      rewarded: "توقعات المكافأة: {used} / {limit}",
+      total: "الإجمالي: {used} / {limit}",
+    },
+    empty: {
+      available: "لا توجد مباريات متاحة اليوم.",
+      myPicks: "لا توجد اختيارات بعد.",
+    },
+    outcomes: {
+      HOME: "صاحب الأرض",
+      DRAW: "تعادل",
+      AWAY: "الضيف",
+    },
+    status: {
+      selected: "تم الاختيار: {outcome}",
+      lockedAfterKickoff: "مغلق بعد البداية",
+      saving: "جار الحفظ...",
+      editable: "قابل للتعديل",
+      locked: "مغلق",
+      fixtureFallback: "مباراة",
+    },
+    fixtureStatus: {
+      DRAFT: "مسودة",
+      OPEN: "مفتوحة",
+      LOCKED: "مغلقة",
+      LIVE: "مباشرة",
+      FINISHED: "انتهت",
+      SETTLED: "محسوبة",
+    },
+    slot: {
+      FREE: "مجاني",
+      REWARDED: "مكافأة",
+    },
+    reward: {
+      title: "شاهد إعلانا لفتح التوقع",
+      body: "إعلانات المكافأة غير متصلة في مرحلة التطوير هذه.",
+    },
+    aria: {
+      selectOutcome: "اختر {outcome}، {trophyValue}، في مباراة {homeTeam} ضد {awayTeam}",
+    },
+  },
+  profile: {
+    title: "الملف الشخصي",
+    stagePlaceholder: "السجل والجوائز غير متاحة في هذه المرحلة.",
+    settingsTitle: "الإعدادات",
+    languageLabel: "اللغة",
+    appearanceLabel: "المظهر",
+    saveError: "تعذر حفظ الإعدادات.",
+  },
+  errors: {
+    generic: "حدث خطأ ما.",
+    missingTelegramInitData: "افتح التطبيق في Telegram أو اضبط development initData.",
+    network: "فشل طلب الشبكة.",
+    invalidApiResponse: "تعذرت قراءة استجابة الخادم.",
+    PREDICTION_LOCKED: "بدأت هذه المباراة.",
+    DAILY_PREDICTION_LIMIT_REACHED: "وصلت إلى الحد اليومي للتوقعات.",
+    FREE_PREDICTION_LIMIT_REACHED: "انتهت التوقعات المجانية.",
+    REWARDED_AD_REQUIRED: "شاهد إعلانا لفتح التوقع.",
+    FIXTURE_NOT_IN_DAILY_POOL: "هذه المباراة غير متاحة اليوم.",
+    FIXTURE_NOT_FOUND: "تعذر العثور على هذه المباراة.",
+    FIXTURE_NOT_OPEN: "هذه المباراة غير مفتوحة للتوقعات.",
+    FIXTURE_LOCKED: "هذه المباراة مغلقة.",
+    FIXTURE_SCORING_SNAPSHOT_MISSING: "احتمالات التوقع لهذه المباراة غير جاهزة بعد.",
+    COMPETITION_NOT_SUPPORTED: "هذه البطولة غير مدعومة.",
+    COMPETITION_INACTIVE: "هذه البطولة غير نشطة.",
+    PREDICTION_ALREADY_EXISTS: "لديك اختيار لهذه المباراة بالفعل.",
+    PREDICTION_NOT_FOUND: "تعذر العثور على هذا الاختيار.",
+    INVALID_AD_REWARD: "لا يمكن استخدام مكافأة الإعلان هذه.",
+    AD_REWARD_ALREADY_CONSUMED: "استُخدمت مكافأة الإعلان هذه بالفعل.",
+    IDEMPOTENCY_CONFLICT: "استُخدم هذا الطلب لاختيار آخر بالفعل.",
+  },
+  settings: {
+    locales: {
+      en: "English",
+      ru: "Русский",
+      de: "Deutsch",
+      es: "Español",
+      ar: "العربية",
+    },
+    appearance: {
+      system: "النظام",
+      light: "فاتح",
+      dark: "داكن",
+    },
+  },
+} as const satisfies TranslationShape;

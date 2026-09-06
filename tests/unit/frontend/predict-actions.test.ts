@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { ApiClientError } from "@/lib/api/client";
 import { selectOutcome } from "@/components/predict/predict-actions";
+import { PREDICTION_OUTCOME_ORDER } from "@/components/predict/predict-outcomes";
 import type { PredictionDto } from "@/lib/api/types";
 
 const editablePrediction: PredictionDto = {
@@ -16,6 +17,10 @@ const editablePrediction: PredictionDto = {
 };
 
 describe("Predict screen outcome actions", () => {
+  it("keeps domain outcome order independent of document direction", () => {
+    expect(PREDICTION_OUTCOME_ORDER).toEqual(["HOME", "DRAW", "AWAY"]);
+  });
+
   it("creates a free prediction when no prediction exists", async () => {
     const createPrediction = vi.fn().mockResolvedValue({});
     const updatePrediction = vi.fn().mockResolvedValue({});

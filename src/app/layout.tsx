@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sports Prediction Tournament",
-  description: "Telegram Mini App for weekly sports prediction tournaments.",
+  title: "Goalstery",
+  description: "Goalstery Telegram Mini App.",
 };
 
 export default function RootLayout({

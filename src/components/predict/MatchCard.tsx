@@ -1,0 +1,271 @@
+"use client";
+
+import { useState } from "react";
+import type { PredictionDto, PredictionOutcome, TodayFixtureDto } from "@/lib/api/types";
+import { formatKickoffTime, formatLocalizedNumber } from "@/lib/i18n/format";
+import { useTranslation } from "@/lib/i18n/use-translation";
+import { PREDICTION_OUTCOME_ORDER } from "./predict-outcomes";
+import {
+  getCompetitionBadge,
+  getTeamBadge,
+  outcomeDisplayLabel,
+  trophyAriaValues,
+  type VisualBadge,
+} from "./match-card-presentation";
+import styles from "./PredictScreen.module.css";
+
+interface MatchCardProps {
+  fixture: TodayFixtureDto;
+  prediction?: PredictionDto;
+  pending: boolean;
+  rewardRequired: boolean;
+  onSelectOutcome: (fixtureId: string, selectedOutcome: PredictionOutcome) => Promise<void>;
+  fixtureStatusLabel: (status: string) => string;
+  outcomeLabel: (outcome: PredictionOutcome) => string;
+}
+
+export function MatchCard({
+  fixture,
+  prediction,
+  pending,
+  rewardRequired,
+  onSelectOutcome,
+  fixtureStatusLabel,
+  outcomeLabel,
+}: MatchCardProps) {
+  const { t, locale } = useTranslation();
+  const editable = prediction ? prediction.editable : true;
+
+  return (
+    <article className={styles.fixtureCard}>
+      <div className={styles.fixtureMeta}>
+        <LeagueBadge badge={getCompetitionBadge(fixture.competition)} />
+        <time dateTime={fixture.kickoffAt}>{formatKickoffTime(locale, fixture.kickoffAt)}</time>
+      </div>
+      <div className={styles.matchup}>
+        <TeamIdentity badge={getTeamBadge(fixture.homeTeam)} name={fixture.homeTeam.name} align="start" />
+        <span className={styles.versus}>VS</span>
+        <TeamIdentity badge={getTeamBadge(fixture.awayTeam)} name={fixture.awayTeam.name} align="end" />
+      </div>
+      <div className={styles.outcomes}>
+        {PREDICTION_OUTCOME_ORDER.map((outcome) => (
+          <PredictionOutcomeButton
+            key={outcome}
+            fixture={fixture}
+            outcome={outcome}
+            selected={prediction?.selectedOutcome === outcome}
+            disabled={pending || !editable}
+            onSelectOutcome={onSelectOutcome}
+            outcomeLabel={outcomeLabel(outcome)}
+          />
+        ))}
+      </div>
+      <div className={styles.fixtureStatus}>
+        {prediction ? (
+          <span>
+            {editable
+              ? t("predict.status.selected", { outcome: outcomeLabel(prediction.selectedOutcome) })
+              : t("predict.status.lockedAfterKickoff")}
+          </span>
+        ) : (
+          <span>{fixtureStatusLabel(fixture.status)}</span>
+        )}
+        {pending ? <span>{t("predict.status.saving")}</span> : null}
+      </div>
+      {rewardRequired ? (
+        <div className={styles.rewardPlaceholder}>
+          <strong>{t("predict.reward.title")}</strong>
+          <span>{t("predict.reward.body")}</span>
+        </div>
+      ) : null}
+    </article>
+  );
+}
+
+interface MyPickCardProps {
+  prediction: PredictionDto;
+  fixture?: TodayFixtureDto;
+  onSelectOutcome: (fixtureId: string, selectedOutcome: PredictionOutcome) => Promise<void>;
+  outcomeLabel: (outcome: PredictionOutcome) => string;
+  slotLabel: (slotType: PredictionDto["slotType"]) => string;
+}
+
+export function MyPickCard({
+  prediction,
+  fixture,
+  onSelectOutcome,
+  outcomeLabel,
+  slotLabel,
+}: MyPickCardProps) {
+  const { t, locale } = useTranslation();
+
+  return (
+    <article className={styles.fixtureCard}>
+      <div className={styles.fixtureMeta}>
+        {fixture ? (
+          <LeagueBadge badge={getCompetitionBadge(fixture.competition)} />
+        ) : (
+          <span dir="auto">{t("predict.status.fixtureFallback")}</span>
+        )}
+        <time dateTime={prediction.kickoffAt}>{formatKickoffTime(locale, prediction.kickoffAt)}</time>
+      </div>
+      {fixture ? (
+        <div className={styles.matchup}>
+          <TeamIdentity badge={getTeamBadge(fixture.homeTeam)} name={fixture.homeTeam.name} align="start" />
+          <span className={styles.versus}>VS</span>
+          <TeamIdentity badge={getTeamBadge(fixture.awayTeam)} name={fixture.awayTeam.name} align="end" />
+        </div>
+      ) : null}
+      <div className={styles.pickRow}>
+        <strong>{outcomeLabel(prediction.selectedOutcome)}</strong>
+        <TrophyValue value={prediction.potentialPoints} />
+        <span>{slotLabel(prediction.slotType)}</span>
+        <span>{prediction.editable ? t("predict.status.editable") : t("predict.status.locked")}</span>
+      </div>
+      {fixture && prediction.editable ? (
+        <div className={styles.outcomes}>
+          {PREDICTION_OUTCOME_ORDER.map((outcome) => (
+            <PredictionOutcomeButton
+              key={outcome}
+              fixture={fixture}
+              outcome={outcome}
+              selected={prediction.selectedOutcome === outcome}
+              disabled={false}
+              onSelectOutcome={onSelectOutcome}
+              outcomeLabel={outcomeLabel(outcome)}
+            />
+          ))}
+        </div>
+      ) : null}
+    </article>
+  );
+}
+
+function LeagueBadge({ badge }: { badge: VisualBadge }) {
+  return (
+    <span className={styles.leagueIdentity}>
+      <Badge badge={badge} size="small" />
+      <span dir="auto">{badge.label}</span>
+    </span>
+  );
+}
+
+function TeamIdentity({
+  badge,
+  name,
+  align,
+}: {
+  badge: VisualBadge;
+  name: string;
+  align: "start" | "end";
+}) {
+  return (
+    <span className={align === "start" ? styles.teamIdentityStart : styles.teamIdentityEnd}>
+      {align === "start" ? <Badge badge={badge} size="large" /> : null}
+      <span className={styles.teamName} dir="auto">
+        {name}
+      </span>
+      {align === "end" ? <Badge badge={badge} size="large" /> : null}
+    </span>
+  );
+}
+
+function PredictionOutcomeButton({
+  fixture,
+  outcome,
+  selected,
+  disabled,
+  onSelectOutcome,
+  outcomeLabel,
+}: {
+  fixture: TodayFixtureDto;
+  outcome: PredictionOutcome;
+  selected: boolean;
+  disabled: boolean;
+  onSelectOutcome: (fixtureId: string, selectedOutcome: PredictionOutcome) => Promise<void>;
+  outcomeLabel: string;
+}) {
+  const { t, locale } = useTranslation();
+  const points = pointsForOutcome(fixture, outcome);
+
+  return (
+    <button
+      type="button"
+      className={selected ? styles.selectedOutcome : styles.outcomeButton}
+      disabled={disabled}
+      aria-pressed={selected}
+      aria-label={t("predict.aria.selectOutcome", {
+        outcome: outcomeLabel,
+        trophyValue: t("common.trophyCount", trophyAriaValues(locale, points)),
+        homeTeam: fixture.homeTeam.name,
+        awayTeam: fixture.awayTeam.name,
+      })}
+      data-outcome={outcome}
+      onClick={() => void onSelectOutcome(fixture.id, outcome)}
+    >
+      <span className={styles.outcomeCode}>{outcomeDisplayLabel(outcome)}</span>
+      <TrophyValue value={points} />
+    </button>
+  );
+}
+
+function TrophyValue({ value }: { value: number }) {
+  const { locale } = useTranslation();
+
+  return (
+    <span className={styles.trophyValue}>
+      <TrophyIcon />
+      <span data-ui="trophy-value">{formatLocalizedNumber(locale, value)}</span>
+    </span>
+  );
+}
+
+function TrophyIcon() {
+  return (
+    <svg className={styles.trophyIcon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M7 4h10v3h3a1 1 0 0 1 1 1v1a5 5 0 0 1-5 5h-.24A6.02 6.02 0 0 1 13 16.92V19h3v2H8v-2h3v-2.08A6.02 6.02 0 0 1 8.24 14H8a5 5 0 0 1-5-5V8a1 1 0 0 1 1-1h3V4Zm10 5v2.82A3 3 0 0 0 19 9h-2ZM5 9a3 3 0 0 0 2 2.82V9H5Z" />
+    </svg>
+  );
+}
+
+function Badge({ badge, size }: { badge: VisualBadge; size: "small" | "large" }) {
+  const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null);
+  const badgeClass = size === "small" ? styles.badgeSmall : styles.badgeLarge;
+  const dataUi = size === "small" ? "league-badge" : "team-badge";
+  const logoFailed = badge.logoUrl !== undefined && failedLogoUrl === badge.logoUrl;
+
+  if (badge.logoUrl && !logoFailed) {
+    return (
+      <span className={`${badgeClass} ${styles.badgeLogo}`} aria-hidden="true" data-ui={dataUi}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- Tiny badge logos need native onError fallback for canonical local/CDN asset URLs. */}
+        <img src={badge.logoUrl} alt="" onError={() => setFailedLogoUrl(badge.logoUrl ?? null)} />
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className={`${badgeClass} ${styles[`badgeTone${capitalizeTone(badge.tone)}`]}`}
+      aria-hidden="true"
+      data-ui={dataUi}
+      data-logo-fallback="true"
+    >
+      {badge.initials}
+    </span>
+  );
+}
+
+function pointsForOutcome(fixture: TodayFixtureDto, outcome: PredictionOutcome): number {
+  switch (outcome) {
+    case "HOME":
+      return fixture.outcomes.home.points;
+    case "DRAW":
+      return fixture.outcomes.draw.points;
+    case "AWAY":
+      return fixture.outcomes.away.points;
+  }
+}
+
+function capitalizeTone(tone: VisualBadge["tone"]): Capitalize<VisualBadge["tone"]> {
+  return `${tone[0].toUpperCase()}${tone.slice(1)}` as Capitalize<VisualBadge["tone"]>;
+}

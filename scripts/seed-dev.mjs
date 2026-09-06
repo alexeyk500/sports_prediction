@@ -1,5 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
+import { readFileSync } from "node:fs";
 import {
   calculatePredictionPointsCore,
   normalizeOneXTwoOddsCore,
@@ -25,37 +26,43 @@ const prisma = new PrismaClient({
 });
 
 const supportedCompetitions = [
-  { code: "EPL", name: "Premier League" },
-  { code: "LALIGA", name: "La Liga" },
-  { code: "SERIE_A", name: "Serie A" },
-  { code: "BUNDESLIGA", name: "Bundesliga" },
-  { code: "LIGUE_1", name: "Ligue 1" },
-  { code: "UCL", name: "UEFA Champions League" },
-  { code: "UEL", name: "UEFA Europa League" },
+  { code: "EPL", name: "Premier League", apiFootballLeagueId: 39 },
+  { code: "LALIGA", name: "La Liga", apiFootballLeagueId: 140 },
+  { code: "SERIE_A", name: "Serie A", apiFootballLeagueId: 135 },
+  { code: "BUNDESLIGA", name: "Bundesliga", apiFootballLeagueId: 78 },
+  { code: "LIGUE_1", name: "Ligue 1", apiFootballLeagueId: 61 },
+  { code: "UCL", name: "UEFA Champions League", apiFootballLeagueId: 2 },
+  { code: "UEL", name: "UEFA Europa League", apiFootballLeagueId: 3 },
 ];
 
 const teams = [
-  ["dev-arsenal", "Arsenal"],
-  ["dev-chelsea", "Chelsea"],
-  ["dev-barcelona", "Barcelona"],
-  ["dev-valencia", "Valencia"],
-  ["dev-milan", "Milan"],
-  ["dev-roma", "Roma"],
-  ["dev-bayern", "Bayern Munich"],
-  ["dev-dortmund", "Dortmund"],
-  ["dev-psg", "Paris SG"],
-  ["dev-lyon", "Lyon"],
-  ["dev-inter", "Inter"],
-  ["dev-napoli", "Napoli"],
-  ["dev-atletico", "Atletico Madrid"],
-  ["dev-sevilla", "Sevilla"],
-  ["dev-leverkusen", "Leverkusen"],
-  ["dev-leipzig", "Leipzig"],
-  ["dev-marseille", "Marseille"],
-  ["dev-lille", "Lille"],
-  ["dev-benfica", "Benfica"],
-  ["dev-ajax", "Ajax"],
+  { providerTeamId: "dev-arsenal", name: "Arsenal", apiFootballTeamId: 42 },
+  { providerTeamId: "dev-chelsea", name: "Chelsea", apiFootballTeamId: 49 },
+  { providerTeamId: "dev-barcelona", name: "Barcelona", apiFootballTeamId: 529 },
+  { providerTeamId: "dev-valencia", name: "Valencia", apiFootballTeamId: 532 },
+  { providerTeamId: "dev-milan", name: "Milan", apiFootballTeamId: 489 },
+  { providerTeamId: "dev-roma", name: "Roma", apiFootballTeamId: 497 },
+  { providerTeamId: "dev-bayern", name: "Bayern Munich", apiFootballTeamId: 157 },
+  { providerTeamId: "dev-dortmund", name: "Dortmund", apiFootballTeamId: 165 },
+  { providerTeamId: "dev-psg", name: "Paris SG", apiFootballTeamId: 85 },
+  { providerTeamId: "dev-lyon", name: "Lyon", apiFootballTeamId: 80 },
+  { providerTeamId: "dev-inter", name: "Inter", apiFootballTeamId: 505 },
+  { providerTeamId: "dev-napoli", name: "Napoli", apiFootballTeamId: 492 },
+  { providerTeamId: "dev-atletico", name: "Atletico Madrid", apiFootballTeamId: 530 },
+  { providerTeamId: "dev-sevilla", name: "Sevilla", apiFootballTeamId: 536 },
+  { providerTeamId: "dev-leverkusen", name: "Leverkusen", apiFootballTeamId: 168 },
+  { providerTeamId: "dev-leipzig", name: "Leipzig", apiFootballTeamId: 173 },
+  { providerTeamId: "dev-marseille", name: "Marseille", apiFootballTeamId: 81 },
+  { providerTeamId: "dev-lille", name: "Lille", apiFootballTeamId: 79 },
+  { providerTeamId: "dev-benfica", name: "Benfica", apiFootballTeamId: 211 },
+  { providerTeamId: "dev-ajax", name: "Ajax", apiFootballTeamId: 194 },
 ];
+
+const assetReport = loadAssetDownloadReport();
+const competitionSlugsByApiFootballId = new Map(
+  assetReport.competitions.map((competition) => [competition.provider.leagueId, competition.slug]),
+);
+const teamSlugsByApiFootballId = new Map(assetReport.teams.map((team) => [team.provider.teamId, team.slug]));
 
 try {
   const now = new Date();
@@ -81,23 +88,34 @@ try {
   });
 
   for (const competition of supportedCompetitions) {
+    const slug = competitionSlugsByApiFootballId.get(competition.apiFootballLeagueId);
+    if (!slug) {
+      throw new Error(`Missing asset slug for competition ${competition.name} (${competition.apiFootballLeagueId}).`);
+    }
+
     await prisma.competition.upsert({
       where: { code: competition.code },
-      update: { name: competition.name, isActive: true },
+      update: { name: competition.name, slug, isActive: true },
       create: {
         providerCompetitionId: `dev-${competition.code}`,
         code: competition.code,
         name: competition.name,
+        slug,
         isActive: true,
       },
     });
   }
 
-  for (const [providerTeamId, name] of teams) {
+  for (const team of teams) {
+    const slug = teamSlugsByApiFootballId.get(team.apiFootballTeamId);
+    if (!slug) {
+      throw new Error(`Missing asset slug for team ${team.name} (${team.apiFootballTeamId}).`);
+    }
+
     await prisma.team.upsert({
-      where: { providerTeamId },
-      update: { name },
-      create: { providerTeamId, name },
+      where: { providerTeamId: team.providerTeamId },
+      update: { name: team.name, slug },
+      create: { providerTeamId: team.providerTeamId, name: team.name, slug },
     });
   }
 
@@ -111,9 +129,9 @@ try {
   );
   const teamsByProviderId = new Map(
     await Promise.all(
-      teams.map(async ([providerTeamId]) => [
-        providerTeamId,
-        await prisma.team.findUniqueOrThrow({ where: { providerTeamId } }),
+      teams.map(async (team) => [
+        team.providerTeamId,
+        await prisma.team.findUniqueOrThrow({ where: { providerTeamId: team.providerTeamId } }),
       ]),
     ),
   );
@@ -164,6 +182,17 @@ try {
   );
 } finally {
   await prisma.$disconnect();
+}
+
+function loadAssetDownloadReport() {
+  try {
+    return JSON.parse(readFileSync("data/football-assets-download-report.json", "utf8"));
+  } catch (error) {
+    throw new Error(
+      "Development seed requires data/football-assets-download-report.json to assign canonical asset slugs. Run npm run football:assets:download first.",
+      { cause: error },
+    );
+  }
 }
 
 async function upsertFixtureWithSnapshot(input) {

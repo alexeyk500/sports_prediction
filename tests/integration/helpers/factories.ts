@@ -11,6 +11,10 @@ export function uniqueTestKey(prefix: string): string {
   return `${prefix}_${randomUUID()}_${sequence}`;
 }
 
+export function uniqueTestSlug(prefix: string): string {
+  return uniqueTestKey(prefix).replace(/_/g, "-").toLowerCase();
+}
+
 export function uniqueTournamentNumber(): number {
   tournamentNumber += 1;
   return (process.pid % 100_000) * 10_000 + tournamentNumber;
@@ -60,6 +64,7 @@ export async function createTestCompetition(
         providerCompetitionId: key,
         code,
         name: code,
+        slug: uniqueTestSlug("competition-slug"),
         isActive: overrides.isActive ?? true,
       },
     });
@@ -70,6 +75,7 @@ export async function createTestCompetition(
       providerCompetitionId: key,
       code,
       name: key,
+      slug: uniqueTestSlug("competition-slug"),
       isActive: overrides.isActive ?? true,
     },
   });
@@ -91,12 +97,14 @@ export async function createTestTeams(prisma: PrismaClient) {
       data: {
         providerTeamId: homeKey,
         name: homeKey,
+        slug: uniqueTestSlug("home-team-slug"),
       },
     }),
     prisma.team.create({
       data: {
         providerTeamId: awayKey,
         name: awayKey,
+        slug: uniqueTestSlug("away-team-slug"),
       },
     }),
   ]);

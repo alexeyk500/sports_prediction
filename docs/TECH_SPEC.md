@@ -297,6 +297,20 @@ return internal user context
 
 `telegramUserId` должен быть unique.
 
+User settings are persisted on `User`:
+
+```text
+locale: en | ru | de | es | ar
+appearance: system | light | dark
+```
+
+Default `locale` is `en`. On first User creation only, Telegram
+`language_code` may initialize `locale` when it maps to a supported
+locale, for example `ru` or `ru-RU` -> `ru`; unsupported language codes
+fall back to `en`. Later Telegram profile sync updates raw
+`languageCode` metadata but must not overwrite the manual `locale`
+preference. Default `appearance` is `system`.
+
 ---
 
 ## 5.3 Session strategy
@@ -1215,7 +1229,106 @@ internal DTO/domain model
 
 ---
 
-## 21.1 Request budget
+## 21.1 Football Asset Discovery Manifest
+
+Логотипы команд и соревнований проходят отдельный review/import pipeline.
+Discovery source для MVP:
+
+```text
+API-Football / API-Sports
+```
+
+Но API-Football IDs являются только provider-specific mapping values. Они не
+являются canonical identity Goalstery и не используются как filenames.
+
+Canonical asset identity принадлежит Goalstery:
+
+```text
+Competition.slug
+Team.slug
+```
+
+Эти поля являются stable reviewed identifiers. Local football assets use:
+
+```text
+/assets/competitions/<Competition.slug>.webp
+/assets/teams/<Team.slug>.webp
+```
+
+`slug` is lowercase ASCII, kebab-case, human-readable, unique within its
+entity type, independent from provider IDs, and must not automatically
+change when display `name` changes.
+
+Frontend и MatchCard получают `slug` из Goalstery API и используют его
+для local asset path resolution. Frontend не
+должен:
+
+- строить asset path из provider ID;
+- строить asset path из provider logo URL;
+- выполнять `slugify(team.name)` at runtime для поиска картинки;
+- обращаться к provider-hosted logo URL напрямую.
+
+Asset discovery выполняется command:
+
+```text
+npm run football:assets:discover
+```
+
+Для европейского сезона 2026/27 используется API-Football parameter:
+
+```text
+season=2026
+```
+
+где `season` — стартовый год сезона.
+
+Command использует server-side:
+
+```text
+API_FOOTBALL_KEY
+API_FOOTBALL_BASE_URL
+```
+
+и создаёт reviewable manifest:
+
+```text
+data/football-assets.manifest.json
+```
+
+Manifest разделяет:
+
+- reviewed Goalstery canonical name/slug;
+- API-Football provider IDs/names;
+- optional `provider.logoSourceUrl` как источник для будущего download/import;
+- Goalstery `asset.logoUrl`, derived from reviewed `slug`.
+
+`provider.logoSourceUrl` не должен leak в frontend API и не является Goalstery
+asset URL.
+
+Canonical asset slug:
+
+```text
+lowercase ASCII
+kebab-case
+human-readable
+without provider ID
+stable across provider changes
+```
+
+Discovery manifest должен быть reviewed перед скачиванием assets и перед записью
+canonical slug/logo metadata в database. Будущая смена sports provider не должна требовать
+изменения asset filenames или frontend URLs.
+
+На discovery этапе запрещено:
+
+- скачивать изображения;
+- писать Team/Competition в database;
+- менять Fixture/Prediction runtime;
+- подключать provider к end-user requests.
+
+---
+
+## 21.2 Request budget
 
 Backend ведёт usage telemetry:
 
@@ -1261,6 +1374,7 @@ user
 activeTournamentSummary
 dailyPredictionUsage
 ratingSummary
+settings
 serverTime
 businessTimezone
 ```
@@ -1313,6 +1427,8 @@ GET /api/profile
 GET /api/profile/cups
 GET /api/profile/prizes
 GET /api/profile/achievements
+GET /api/settings
+PATCH /api/settings
 ```
 
 ---
@@ -1410,6 +1526,8 @@ GET /api/fixtures/today
 GET /api/predictions/today
 POST /api/predictions
 PATCH /api/predictions/:predictionId
+GET /api/settings
+PATCH /api/settings
 ```
 
 All require `X-Telegram-Init-Data`. Frontend-supplied `userId`,
@@ -1471,6 +1589,81 @@ Predict screen uses an app-shell layout. The application viewport itself
 is non-scrolling. Header/status controls and bottom navigation remain
 visible, while the match list is the single vertically scrollable content
 region.
+
+Predict MatchCards are presentation-only React components over the
+existing fixtures/predictions DTOs. They display competition and team
+identity with logos/badges when available; when no logo URL exists in
+the current API data, the frontend uses deterministic fallback badges.
+If a logo URL exists but the image fails to load, the UI must hide the
+broken image and return to the same fallback badge. Future provider logo
+candidates should be imported or assigned to canonical Goalstery
+presentation fields during ingestion; frontend must not depend directly
+on provider-hosted logo URLs or construct logo paths from provider IDs,
+team names, or competition codes.
+
+`Team.slug` and `Competition.slug` are canonical Goalstery presentation
+asset identifiers. Display name and asset identity are separate: UI must
+not slugify names at runtime, and provider IDs must not be used as asset
+identifiers. Local first-party assets use the
+public URL convention:
+
+```text
+/assets/teams/<Team.slug>.webp
+/assets/competitions/<Competition.slug>.webp
+```
+
+`Team.logoUrl` and `Competition.logoUrl` remain nullable compatibility
+presentation fields until a later cleanup decision, but MatchCard local
+football asset resolution uses `slug`.
+
+The files live under `public/assets/...`. Preferred format for owned
+raster logos is WebP; SVG is acceptable for owned vector assets. Logos
+should use transparent background, approximately square canvas, and
+small internal safe padding. UI must not depend on exact pixel
+resolution and should render logos inside stable badge dimensions with
+`object-fit: contain`.
+
+The domain, API, and database keep the `points` terminology and fields,
+while compact UI scoring values are rendered as trophy icon +
+locale-formatted number. Outcome button display labels are `1`, `X`,
+`2`, but submitted domain values remain `HOME`, `DRAW`, `AWAY`.
+
+Frontend localization is a lightweight typed client-side layer. Supported
+locales are `en`, `ru`, `de`, `es`, `ar`; default and fallback locale is
+`en`. Application URLs are not locale-prefixed because locale is a user
+setting, not routing state. All user-facing UI strings in React
+components must come from translation resources unless there is a
+documented reason to keep a value as data or an identifier. Translation
+resources live client-side and must keep the same typed key contract for
+all supported locales.
+
+Backend returns stable API error codes and does not localize them.
+Frontend maps known API error codes to localized presentation messages
+and falls back to a localized generic error for unknown codes. API error
+codes, enum values, provider IDs, and database identifiers remain
+language-independent.
+
+User-facing numbers and dates/times are formatted through `Intl` with
+the active locale. This is presentation only and does not change the
+Europe/London business-time rules. Arabic locale requires RTL: the
+client updates root `lang` and `dir` (`ar` -> `rtl`, all other supported
+locales -> `ltr`). UI that depends on text direction should use CSS
+logical properties such as `margin-inline`, `padding-inline`,
+`inset-inline`, `border-inline`, and `text-align: start/end`. Dynamic
+mixed-direction content such as team and competition names must be
+bidi-safe, for example by using `dir="auto"` on the dynamic text node.
+RTL layout must not change domain semantics: `HOME`, `DRAW`, and `AWAY`
+remain the same submitted outcome values regardless of visual direction.
+
+Theme is controlled by persisted `appearance` with modes `system`,
+`light`, and `dark`. The client applies the effective theme to the root
+with `data-theme="light"` or `data-theme="dark"`. In `system` mode it
+follows `prefers-color-scheme` and updates when the OS preference
+changes; explicit `light` or `dark` overrides system preference. Existing
+and new UI must use semantic CSS theme tokens for surfaces, text,
+borders, accent, warning, danger, disabled, and focus states. New UI
+components must not hardcode light-only colors without a documented
+reason.
 
 Development outside Telegram may use `NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA`
 or the browser localStorage key:

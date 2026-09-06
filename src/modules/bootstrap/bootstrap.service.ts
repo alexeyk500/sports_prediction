@@ -22,6 +22,10 @@ export interface BootstrapDto {
     lastName: string | null;
     languageCode: string | null;
   };
+  settings: {
+    locale: string;
+    appearance: string;
+  };
   currentTournament: {
     id: string;
     number: number;
@@ -77,6 +81,10 @@ export async function getBootstrap(
       firstName: user.firstName,
       lastName: user.lastName,
       languageCode: user.languageCode,
+    },
+    settings: {
+      locale: user.locale,
+      appearance: user.appearance,
     },
     currentTournament: tournament
       ? {

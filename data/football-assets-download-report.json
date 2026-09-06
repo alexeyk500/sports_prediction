@@ -1,0 +1,4055 @@
+{
+  "schemaVersion": 1,
+  "provider": "api-football",
+  "season": 2024,
+  "generatedAt": "2026-09-06T11:44:44.675Z",
+  "format": "webp",
+  "competitions": [
+    {
+      "goalsteryCode": "EPL",
+      "name": "Premier League",
+      "slug": "premier-league",
+      "provider": {
+        "leagueId": 39,
+        "name": "Premier League",
+        "country": "England",
+        "type": "League",
+        "logoSourceUrl": "https://media.api-sports.io/football/leagues/39.png"
+      },
+      "asset": {
+        "filename": "premier-league.webp",
+        "logoUrl": "/assets/competitions/premier-league.webp",
+        "localPath": "public/assets/competitions/premier-league.webp"
+      },
+      "teamsDiscovered": 20,
+      "downloadStatus": "downloaded",
+      "error": null
+    },
+    {
+      "goalsteryCode": "LALIGA",
+      "name": "La Liga",
+      "slug": "la-liga",
+      "provider": {
+        "leagueId": 140,
+        "name": "La Liga",
+        "country": "Spain",
+        "type": "League",
+        "logoSourceUrl": "https://media.api-sports.io/football/leagues/140.png"
+      },
+      "asset": {
+        "filename": "la-liga.webp",
+        "logoUrl": "/assets/competitions/la-liga.webp",
+        "localPath": "public/assets/competitions/la-liga.webp"
+      },
+      "teamsDiscovered": 20,
+      "downloadStatus": "downloaded",
+      "error": null
+    },
+    {
+      "goalsteryCode": "SERIE_A",
+      "name": "Serie A",
+      "slug": "serie-a",
+      "provider": {
+        "leagueId": 135,
+        "name": "Serie A",
+        "country": "Italy",
+        "type": "League",
+        "logoSourceUrl": "https://media.api-sports.io/football/leagues/135.png"
+      },
+      "asset": {
+        "filename": "serie-a.webp",
+        "logoUrl": "/assets/competitions/serie-a.webp",
+        "localPath": "public/assets/competitions/serie-a.webp"
+      },
+      "teamsDiscovered": 20,
+      "downloadStatus": "downloaded",
+      "error": null
+    },
+    {
+      "goalsteryCode": "BUNDESLIGA",
+      "name": "Bundesliga",
+      "slug": "bundesliga",
+      "provider": {
+        "leagueId": 78,
+        "name": "Bundesliga",
+        "country": "Germany",
+        "type": "League",
+        "logoSourceUrl": "https://media.api-sports.io/football/leagues/78.png"
+      },
+      "asset": {
+        "filename": "bundesliga.webp",
+        "logoUrl": "/assets/competitions/bundesliga.webp",
+        "localPath": "public/assets/competitions/bundesliga.webp"
+      },
+      "teamsDiscovered": 19,
+      "downloadStatus": "downloaded",
+      "error": null
+    },
+    {
+      "goalsteryCode": "LIGUE_1",
+      "name": "Ligue 1",
+      "slug": "ligue-1",
+      "provider": {
+        "leagueId": 61,
+        "name": "Ligue 1",
+        "country": "France",
+        "type": "League",
+        "logoSourceUrl": "https://media.api-sports.io/football/leagues/61.png"
+      },
+      "asset": {
+        "filename": "ligue-1.webp",
+        "logoUrl": "/assets/competitions/ligue-1.webp",
+        "localPath": "public/assets/competitions/ligue-1.webp"
+      },
+      "teamsDiscovered": 19,
+      "downloadStatus": "downloaded",
+      "error": null
+    },
+    {
+      "goalsteryCode": "UCL",
+      "name": "UEFA Champions League",
+      "slug": "uefa-champions-league",
+      "provider": {
+        "leagueId": 2,
+        "name": "UEFA Champions League",
+        "country": "World",
+        "type": "Cup",
+        "logoSourceUrl": "https://media.api-sports.io/football/leagues/2.png"
+      },
+      "asset": {
+        "filename": "uefa-champions-league.webp",
+        "logoUrl": "/assets/competitions/uefa-champions-league.webp",
+        "localPath": "public/assets/competitions/uefa-champions-league.webp"
+      },
+      "teamsDiscovered": 81,
+      "downloadStatus": "downloaded",
+      "error": null
+    },
+    {
+      "goalsteryCode": "UEL",
+      "name": "UEFA Europa League",
+      "slug": "uefa-europa-league",
+      "provider": {
+        "leagueId": 3,
+        "name": "UEFA Europa League",
+        "country": "World",
+        "type": "Cup",
+        "logoSourceUrl": "https://media.api-sports.io/football/leagues/3.png"
+      },
+      "asset": {
+        "filename": "uefa-europa-league.webp",
+        "logoUrl": "/assets/competitions/uefa-europa-league.webp",
+        "localPath": "public/assets/competitions/uefa-europa-league.webp"
+      },
+      "teamsDiscovered": 76,
+      "downloadStatus": "downloaded",
+      "error": null
+    }
+  ],
+  "teams": [
+    {
+      "name": "1. FC Heidenheim",
+      "slug": "1-fc-heidenheim",
+      "provider": {
+        "teamId": 180,
+        "name": "1. FC Heidenheim",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/180.png"
+      },
+      "asset": {
+        "filename": "1-fc-heidenheim.webp",
+        "logoUrl": "/assets/teams/1-fc-heidenheim.webp",
+        "localPath": "public/assets/teams/1-fc-heidenheim.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "1899 Hoffenheim",
+      "slug": "1899-hoffenheim",
+      "provider": {
+        "teamId": 167,
+        "name": "1899 Hoffenheim",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/167.png"
+      },
+      "asset": {
+        "filename": "1899-hoffenheim.webp",
+        "logoUrl": "/assets/teams/1899-hoffenheim.webp",
+        "localPath": "public/assets/teams/1899-hoffenheim.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "AC Milan",
+      "slug": "ac-milan",
+      "provider": {
+        "teamId": 489,
+        "name": "AC Milan",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/489.png"
+      },
+      "asset": {
+        "filename": "ac-milan.webp",
+        "logoUrl": "/assets/teams/ac-milan.webp",
+        "localPath": "public/assets/teams/ac-milan.webp"
+      },
+      "competitions": [
+        "SERIE_A",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Ajax",
+      "slug": "ajax",
+      "provider": {
+        "teamId": 194,
+        "name": "Ajax",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/194.png"
+      },
+      "asset": {
+        "filename": "ajax.webp",
+        "logoUrl": "/assets/teams/ajax.webp",
+        "localPath": "public/assets/teams/ajax.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Alaves",
+      "slug": "alaves",
+      "provider": {
+        "teamId": 542,
+        "name": "Alaves",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/542.png"
+      },
+      "asset": {
+        "filename": "alaves.webp",
+        "logoUrl": "/assets/teams/alaves.webp",
+        "localPath": "public/assets/teams/alaves.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Anderlecht",
+      "slug": "anderlecht",
+      "provider": {
+        "teamId": 554,
+        "name": "Anderlecht",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/554.png"
+      },
+      "asset": {
+        "filename": "anderlecht.webp",
+        "logoUrl": "/assets/teams/anderlecht.webp",
+        "localPath": "public/assets/teams/anderlecht.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Angers",
+      "slug": "angers",
+      "provider": {
+        "teamId": 77,
+        "name": "Angers",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/77.png"
+      },
+      "asset": {
+        "filename": "angers.webp",
+        "logoUrl": "/assets/teams/angers.webp",
+        "localPath": "public/assets/teams/angers.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Apoel Nicosia",
+      "slug": "apoel-nicosia",
+      "provider": {
+        "teamId": 2247,
+        "name": "Apoel Nicosia",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/2247.png"
+      },
+      "asset": {
+        "filename": "apoel-nicosia.webp",
+        "logoUrl": "/assets/teams/apoel-nicosia.webp",
+        "localPath": "public/assets/teams/apoel-nicosia.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Arsenal",
+      "slug": "arsenal",
+      "provider": {
+        "teamId": 42,
+        "name": "Arsenal",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "asset": {
+        "filename": "arsenal.webp",
+        "logoUrl": "/assets/teams/arsenal.webp",
+        "localPath": "public/assets/teams/arsenal.webp"
+      },
+      "competitions": [
+        "EPL",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "AS Roma",
+      "slug": "as-roma",
+      "provider": {
+        "teamId": 497,
+        "name": "AS Roma",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/497.png"
+      },
+      "asset": {
+        "filename": "as-roma.webp",
+        "logoUrl": "/assets/teams/as-roma.webp",
+        "localPath": "public/assets/teams/as-roma.webp"
+      },
+      "competitions": [
+        "SERIE_A",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Aston Villa",
+      "slug": "aston-villa",
+      "provider": {
+        "teamId": 66,
+        "name": "Aston Villa",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/66.png"
+      },
+      "asset": {
+        "filename": "aston-villa.webp",
+        "logoUrl": "/assets/teams/aston-villa.webp",
+        "localPath": "public/assets/teams/aston-villa.webp"
+      },
+      "competitions": [
+        "EPL",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Atalanta",
+      "slug": "atalanta",
+      "provider": {
+        "teamId": 499,
+        "name": "Atalanta",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/499.png"
+      },
+      "asset": {
+        "filename": "atalanta.webp",
+        "logoUrl": "/assets/teams/atalanta.webp",
+        "localPath": "public/assets/teams/atalanta.webp"
+      },
+      "competitions": [
+        "SERIE_A",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Athletic Club",
+      "slug": "athletic-club",
+      "provider": {
+        "teamId": 531,
+        "name": "Athletic Club",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/531.png"
+      },
+      "asset": {
+        "filename": "athletic-club.webp",
+        "logoUrl": "/assets/teams/athletic-club.webp",
+        "localPath": "public/assets/teams/athletic-club.webp"
+      },
+      "competitions": [
+        "LALIGA",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Atletico Madrid",
+      "slug": "atletico-madrid",
+      "provider": {
+        "teamId": 530,
+        "name": "Atletico Madrid",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/530.png"
+      },
+      "asset": {
+        "filename": "atletico-madrid.webp",
+        "logoUrl": "/assets/teams/atletico-madrid.webp",
+        "localPath": "public/assets/teams/atletico-madrid.webp"
+      },
+      "competitions": [
+        "LALIGA",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Auxerre",
+      "slug": "auxerre",
+      "provider": {
+        "teamId": 108,
+        "name": "Auxerre",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/108.png"
+      },
+      "asset": {
+        "filename": "auxerre.webp",
+        "logoUrl": "/assets/teams/auxerre.webp",
+        "localPath": "public/assets/teams/auxerre.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "AZ Alkmaar",
+      "slug": "az-alkmaar",
+      "provider": {
+        "teamId": 201,
+        "name": "AZ Alkmaar",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/201.png"
+      },
+      "asset": {
+        "filename": "az-alkmaar.webp",
+        "logoUrl": "/assets/teams/az-alkmaar.webp",
+        "localPath": "public/assets/teams/az-alkmaar.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Ballkani",
+      "slug": "ballkani",
+      "provider": {
+        "teamId": 12733,
+        "name": "Ballkani",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/12733.png"
+      },
+      "asset": {
+        "filename": "ballkani.webp",
+        "logoUrl": "/assets/teams/ballkani.webp",
+        "localPath": "public/assets/teams/ballkani.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Barcelona",
+      "slug": "barcelona",
+      "provider": {
+        "teamId": 529,
+        "name": "Barcelona",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/529.png"
+      },
+      "asset": {
+        "filename": "barcelona.webp",
+        "logoUrl": "/assets/teams/barcelona.webp",
+        "localPath": "public/assets/teams/barcelona.webp"
+      },
+      "competitions": [
+        "LALIGA",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Bayer Leverkusen",
+      "slug": "bayer-leverkusen",
+      "provider": {
+        "teamId": 168,
+        "name": "Bayer Leverkusen",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/168.png"
+      },
+      "asset": {
+        "filename": "bayer-leverkusen.webp",
+        "logoUrl": "/assets/teams/bayer-leverkusen.webp",
+        "localPath": "public/assets/teams/bayer-leverkusen.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Bayern München",
+      "slug": "bayern-munchen",
+      "provider": {
+        "teamId": 157,
+        "name": "Bayern München",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/157.png"
+      },
+      "asset": {
+        "filename": "bayern-munchen.webp",
+        "logoUrl": "/assets/teams/bayern-munchen.webp",
+        "localPath": "public/assets/teams/bayern-munchen.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Benfica",
+      "slug": "benfica",
+      "provider": {
+        "teamId": 211,
+        "name": "Benfica",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/211.png"
+      },
+      "asset": {
+        "filename": "benfica.webp",
+        "logoUrl": "/assets/teams/benfica.webp",
+        "localPath": "public/assets/teams/benfica.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Beşiktaş",
+      "slug": "besiktas",
+      "provider": {
+        "teamId": 549,
+        "name": "Beşiktaş",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/549.png"
+      },
+      "asset": {
+        "filename": "besiktas.webp",
+        "logoUrl": "/assets/teams/besiktas.webp",
+        "localPath": "public/assets/teams/besiktas.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Bodo/Glimt",
+      "slug": "bodo-glimt",
+      "provider": {
+        "teamId": 327,
+        "name": "Bodo/Glimt",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/327.png"
+      },
+      "asset": {
+        "filename": "bodo-glimt.webp",
+        "logoUrl": "/assets/teams/bodo-glimt.webp",
+        "localPath": "public/assets/teams/bodo-glimt.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Bologna",
+      "slug": "bologna",
+      "provider": {
+        "teamId": 500,
+        "name": "Bologna",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/500.png"
+      },
+      "asset": {
+        "filename": "bologna.webp",
+        "logoUrl": "/assets/teams/bologna.webp",
+        "localPath": "public/assets/teams/bologna.webp"
+      },
+      "competitions": [
+        "SERIE_A",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Borac Banja Luka",
+      "slug": "borac-banja-luka",
+      "provider": {
+        "teamId": 3364,
+        "name": "Borac Banja Luka",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/3364.png"
+      },
+      "asset": {
+        "filename": "borac-banja-luka.webp",
+        "logoUrl": "/assets/teams/borac-banja-luka.webp",
+        "localPath": "public/assets/teams/borac-banja-luka.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Borussia Dortmund",
+      "slug": "borussia-dortmund",
+      "provider": {
+        "teamId": 165,
+        "name": "Borussia Dortmund",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/165.png"
+      },
+      "asset": {
+        "filename": "borussia-dortmund.webp",
+        "logoUrl": "/assets/teams/borussia-dortmund.webp",
+        "localPath": "public/assets/teams/borussia-dortmund.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Borussia Mönchengladbach",
+      "slug": "borussia-monchengladbach",
+      "provider": {
+        "teamId": 163,
+        "name": "Borussia Mönchengladbach",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/163.png"
+      },
+      "asset": {
+        "filename": "borussia-monchengladbach.webp",
+        "logoUrl": "/assets/teams/borussia-monchengladbach.webp",
+        "localPath": "public/assets/teams/borussia-monchengladbach.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Botev Plovdiv",
+      "slug": "botev-plovdiv",
+      "provider": {
+        "teamId": 634,
+        "name": "Botev Plovdiv",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/634.png"
+      },
+      "asset": {
+        "filename": "botev-plovdiv.webp",
+        "logoUrl": "/assets/teams/botev-plovdiv.webp",
+        "localPath": "public/assets/teams/botev-plovdiv.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Bournemouth",
+      "slug": "bournemouth",
+      "provider": {
+        "teamId": 35,
+        "name": "Bournemouth",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/35.png"
+      },
+      "asset": {
+        "filename": "bournemouth.webp",
+        "logoUrl": "/assets/teams/bournemouth.webp",
+        "localPath": "public/assets/teams/bournemouth.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Brentford",
+      "slug": "brentford",
+      "provider": {
+        "teamId": 55,
+        "name": "Brentford",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/55.png"
+      },
+      "asset": {
+        "filename": "brentford.webp",
+        "logoUrl": "/assets/teams/brentford.webp",
+        "localPath": "public/assets/teams/brentford.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Brighton",
+      "slug": "brighton",
+      "provider": {
+        "teamId": 51,
+        "name": "Brighton",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/51.png"
+      },
+      "asset": {
+        "filename": "brighton.webp",
+        "logoUrl": "/assets/teams/brighton.webp",
+        "localPath": "public/assets/teams/brighton.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "BSC Young Boys",
+      "slug": "bsc-young-boys",
+      "provider": {
+        "teamId": 565,
+        "name": "BSC Young Boys",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/565.png"
+      },
+      "asset": {
+        "filename": "bsc-young-boys.webp",
+        "logoUrl": "/assets/teams/bsc-young-boys.webp",
+        "localPath": "public/assets/teams/bsc-young-boys.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Cagliari",
+      "slug": "cagliari",
+      "provider": {
+        "teamId": 490,
+        "name": "Cagliari",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/490.png"
+      },
+      "asset": {
+        "filename": "cagliari.webp",
+        "logoUrl": "/assets/teams/cagliari.webp",
+        "localPath": "public/assets/teams/cagliari.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Celje",
+      "slug": "celje",
+      "provider": {
+        "teamId": 4360,
+        "name": "Celje",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/4360.png"
+      },
+      "asset": {
+        "filename": "celje.webp",
+        "logoUrl": "/assets/teams/celje.webp",
+        "localPath": "public/assets/teams/celje.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Celta Vigo",
+      "slug": "celta-vigo",
+      "provider": {
+        "teamId": 538,
+        "name": "Celta Vigo",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/538.png"
+      },
+      "asset": {
+        "filename": "celta-vigo.webp",
+        "logoUrl": "/assets/teams/celta-vigo.webp",
+        "localPath": "public/assets/teams/celta-vigo.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Celtic",
+      "slug": "celtic",
+      "provider": {
+        "teamId": 247,
+        "name": "Celtic",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/247.png"
+      },
+      "asset": {
+        "filename": "celtic.webp",
+        "logoUrl": "/assets/teams/celtic.webp",
+        "localPath": "public/assets/teams/celtic.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Cercle Brugge",
+      "slug": "cercle-brugge",
+      "provider": {
+        "teamId": 741,
+        "name": "Cercle Brugge",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/741.png"
+      },
+      "asset": {
+        "filename": "cercle-brugge.webp",
+        "logoUrl": "/assets/teams/cercle-brugge.webp",
+        "localPath": "public/assets/teams/cercle-brugge.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Chelsea",
+      "slug": "chelsea",
+      "provider": {
+        "teamId": 49,
+        "name": "Chelsea",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/49.png"
+      },
+      "asset": {
+        "filename": "chelsea.webp",
+        "logoUrl": "/assets/teams/chelsea.webp",
+        "localPath": "public/assets/teams/chelsea.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Club Brugge KV",
+      "slug": "club-brugge-kv",
+      "provider": {
+        "teamId": 569,
+        "name": "Club Brugge KV",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/569.png"
+      },
+      "asset": {
+        "filename": "club-brugge-kv.webp",
+        "logoUrl": "/assets/teams/club-brugge-kv.webp",
+        "localPath": "public/assets/teams/club-brugge-kv.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Como",
+      "slug": "como",
+      "provider": {
+        "teamId": 895,
+        "name": "Como",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/895.png"
+      },
+      "asset": {
+        "filename": "como.webp",
+        "logoUrl": "/assets/teams/como.webp",
+        "localPath": "public/assets/teams/como.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Corvinul Hunedoara",
+      "slug": "corvinul-hunedoara",
+      "provider": {
+        "teamId": 20034,
+        "name": "Corvinul Hunedoara",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/20034.png"
+      },
+      "asset": {
+        "filename": "corvinul-hunedoara.webp",
+        "logoUrl": "/assets/teams/corvinul-hunedoara.webp",
+        "localPath": "public/assets/teams/corvinul-hunedoara.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Crystal Palace",
+      "slug": "crystal-palace",
+      "provider": {
+        "teamId": 52,
+        "name": "Crystal Palace",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "asset": {
+        "filename": "crystal-palace.webp",
+        "logoUrl": "/assets/teams/crystal-palace.webp",
+        "localPath": "public/assets/teams/crystal-palace.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Dečić",
+      "slug": "decic",
+      "provider": {
+        "teamId": 3745,
+        "name": "Dečić",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/3745.png"
+      },
+      "asset": {
+        "filename": "decic.webp",
+        "logoUrl": "/assets/teams/decic.webp",
+        "localPath": "public/assets/teams/decic.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Dinamo Batumi",
+      "slug": "dinamo-batumi",
+      "provider": {
+        "teamId": 705,
+        "name": "Dinamo Batumi",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/705.png"
+      },
+      "asset": {
+        "filename": "dinamo-batumi.webp",
+        "logoUrl": "/assets/teams/dinamo-batumi.webp",
+        "localPath": "public/assets/teams/dinamo-batumi.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Dinamo Minsk",
+      "slug": "dinamo-minsk",
+      "provider": {
+        "teamId": 394,
+        "name": "Dinamo Minsk",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/394.png"
+      },
+      "asset": {
+        "filename": "dinamo-minsk.webp",
+        "logoUrl": "/assets/teams/dinamo-minsk.webp",
+        "localPath": "public/assets/teams/dinamo-minsk.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Dinamo Zagreb",
+      "slug": "dinamo-zagreb",
+      "provider": {
+        "teamId": 620,
+        "name": "Dinamo Zagreb",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/620.png"
+      },
+      "asset": {
+        "filename": "dinamo-zagreb.webp",
+        "logoUrl": "/assets/teams/dinamo-zagreb.webp",
+        "localPath": "public/assets/teams/dinamo-zagreb.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Dynamo Kyiv",
+      "slug": "dynamo-kyiv",
+      "provider": {
+        "teamId": 572,
+        "name": "Dynamo Kyiv",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/572.png"
+      },
+      "asset": {
+        "filename": "dynamo-kyiv.webp",
+        "logoUrl": "/assets/teams/dynamo-kyiv.webp",
+        "localPath": "public/assets/teams/dynamo-kyiv.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Egnatia Rrogozhinë",
+      "slug": "egnatia-rrogozhine",
+      "provider": {
+        "teamId": 3327,
+        "name": "Egnatia Rrogozhinë",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/3327.png"
+      },
+      "asset": {
+        "filename": "egnatia-rrogozhine.webp",
+        "logoUrl": "/assets/teams/egnatia-rrogozhine.webp",
+        "localPath": "public/assets/teams/egnatia-rrogozhine.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Eintracht Frankfurt",
+      "slug": "eintracht-frankfurt",
+      "provider": {
+        "teamId": 169,
+        "name": "Eintracht Frankfurt",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/169.png"
+      },
+      "asset": {
+        "filename": "eintracht-frankfurt.webp",
+        "logoUrl": "/assets/teams/eintracht-frankfurt.webp",
+        "localPath": "public/assets/teams/eintracht-frankfurt.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Empoli",
+      "slug": "empoli",
+      "provider": {
+        "teamId": 511,
+        "name": "Empoli",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/511.png"
+      },
+      "asset": {
+        "filename": "empoli.webp",
+        "logoUrl": "/assets/teams/empoli.webp",
+        "localPath": "public/assets/teams/empoli.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Espanyol",
+      "slug": "espanyol",
+      "provider": {
+        "teamId": 540,
+        "name": "Espanyol",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/540.png"
+      },
+      "asset": {
+        "filename": "espanyol.webp",
+        "logoUrl": "/assets/teams/espanyol.webp",
+        "localPath": "public/assets/teams/espanyol.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Everton",
+      "slug": "everton",
+      "provider": {
+        "teamId": 45,
+        "name": "Everton",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/45.png"
+      },
+      "asset": {
+        "filename": "everton.webp",
+        "logoUrl": "/assets/teams/everton.webp",
+        "localPath": "public/assets/teams/everton.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "FC Augsburg",
+      "slug": "fc-augsburg",
+      "provider": {
+        "teamId": 170,
+        "name": "FC Augsburg",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/170.png"
+      },
+      "asset": {
+        "filename": "fc-augsburg.webp",
+        "logoUrl": "/assets/teams/fc-augsburg.webp",
+        "localPath": "public/assets/teams/fc-augsburg.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "FC Differdange 03",
+      "slug": "fc-differdange-03",
+      "provider": {
+        "teamId": 684,
+        "name": "FC Differdange 03",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/684.png"
+      },
+      "asset": {
+        "filename": "fc-differdange-03.webp",
+        "logoUrl": "/assets/teams/fc-differdange-03.webp",
+        "localPath": "public/assets/teams/fc-differdange-03.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "FC Lugano",
+      "slug": "fc-lugano",
+      "provider": {
+        "teamId": 606,
+        "name": "FC Lugano",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/606.png"
+      },
+      "asset": {
+        "filename": "fc-lugano.webp",
+        "logoUrl": "/assets/teams/fc-lugano.webp",
+        "localPath": "public/assets/teams/fc-lugano.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "FC Midtjylland",
+      "slug": "fc-midtjylland",
+      "provider": {
+        "teamId": 397,
+        "name": "FC Midtjylland",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/397.png"
+      },
+      "asset": {
+        "filename": "fc-midtjylland.webp",
+        "logoUrl": "/assets/teams/fc-midtjylland.webp",
+        "localPath": "public/assets/teams/fc-midtjylland.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "FC Porto",
+      "slug": "fc-porto",
+      "provider": {
+        "teamId": 212,
+        "name": "FC Porto",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/212.png"
+      },
+      "asset": {
+        "filename": "fc-porto.webp",
+        "logoUrl": "/assets/teams/fc-porto.webp",
+        "localPath": "public/assets/teams/fc-porto.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "FC St. Pauli",
+      "slug": "fc-st-pauli",
+      "provider": {
+        "teamId": 186,
+        "name": "FC St. Pauli",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/186.png"
+      },
+      "asset": {
+        "filename": "fc-st-pauli.webp",
+        "logoUrl": "/assets/teams/fc-st-pauli.webp",
+        "localPath": "public/assets/teams/fc-st-pauli.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "FCSB",
+      "slug": "fcsb",
+      "provider": {
+        "teamId": 559,
+        "name": "FCSB",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/559.png"
+      },
+      "asset": {
+        "filename": "fcsb.webp",
+        "logoUrl": "/assets/teams/fcsb.webp",
+        "localPath": "public/assets/teams/fcsb.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Fenerbahçe",
+      "slug": "fenerbahce",
+      "provider": {
+        "teamId": 611,
+        "name": "Fenerbahçe",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/611.png"
+      },
+      "asset": {
+        "filename": "fenerbahce.webp",
+        "logoUrl": "/assets/teams/fenerbahce.webp",
+        "localPath": "public/assets/teams/fenerbahce.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Ferencvarosi TC",
+      "slug": "ferencvarosi-tc",
+      "provider": {
+        "teamId": 651,
+        "name": "Ferencvarosi TC",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/651.png"
+      },
+      "asset": {
+        "filename": "ferencvarosi-tc.webp",
+        "logoUrl": "/assets/teams/ferencvarosi-tc.webp",
+        "localPath": "public/assets/teams/ferencvarosi-tc.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Feyenoord",
+      "slug": "feyenoord",
+      "provider": {
+        "teamId": 209,
+        "name": "Feyenoord",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/209.png"
+      },
+      "asset": {
+        "filename": "feyenoord.webp",
+        "logoUrl": "/assets/teams/feyenoord.webp",
+        "localPath": "public/assets/teams/feyenoord.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Fiorentina",
+      "slug": "fiorentina",
+      "provider": {
+        "teamId": 502,
+        "name": "Fiorentina",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/502.png"
+      },
+      "asset": {
+        "filename": "fiorentina.webp",
+        "logoUrl": "/assets/teams/fiorentina.webp",
+        "localPath": "public/assets/teams/fiorentina.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "FK Crvena Zvezda",
+      "slug": "fk-crvena-zvezda",
+      "provider": {
+        "teamId": 598,
+        "name": "FK Crvena Zvezda",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/598.png"
+      },
+      "asset": {
+        "filename": "fk-crvena-zvezda.webp",
+        "logoUrl": "/assets/teams/fk-crvena-zvezda.webp",
+        "localPath": "public/assets/teams/fk-crvena-zvezda.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "FK Partizan",
+      "slug": "fk-partizan",
+      "provider": {
+        "teamId": 573,
+        "name": "FK Partizan",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/573.png"
+      },
+      "asset": {
+        "filename": "fk-partizan.webp",
+        "logoUrl": "/assets/teams/fk-partizan.webp",
+        "localPath": "public/assets/teams/fk-partizan.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "FK Tobol Kostanay",
+      "slug": "fk-tobol-kostanay",
+      "provider": {
+        "teamId": 2259,
+        "name": "FK Tobol Kostanay",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/2259.png"
+      },
+      "asset": {
+        "filename": "fk-tobol-kostanay.webp",
+        "logoUrl": "/assets/teams/fk-tobol-kostanay.webp",
+        "localPath": "public/assets/teams/fk-tobol-kostanay.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Flora Tallinn",
+      "slug": "flora-tallinn",
+      "provider": {
+        "teamId": 687,
+        "name": "Flora Tallinn",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/687.png"
+      },
+      "asset": {
+        "filename": "flora-tallinn.webp",
+        "logoUrl": "/assets/teams/flora-tallinn.webp",
+        "localPath": "public/assets/teams/flora-tallinn.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "FSV Mainz 05",
+      "slug": "fsv-mainz-05",
+      "provider": {
+        "teamId": 164,
+        "name": "FSV Mainz 05",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/164.png"
+      },
+      "asset": {
+        "filename": "fsv-mainz-05.webp",
+        "logoUrl": "/assets/teams/fsv-mainz-05.webp",
+        "localPath": "public/assets/teams/fsv-mainz-05.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Fulham",
+      "slug": "fulham",
+      "provider": {
+        "teamId": 36,
+        "name": "Fulham",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/36.png"
+      },
+      "asset": {
+        "filename": "fulham.webp",
+        "logoUrl": "/assets/teams/fulham.webp",
+        "localPath": "public/assets/teams/fulham.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Galatasaray",
+      "slug": "galatasaray",
+      "provider": {
+        "teamId": 645,
+        "name": "Galatasaray",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/645.png"
+      },
+      "asset": {
+        "filename": "galatasaray.webp",
+        "logoUrl": "/assets/teams/galatasaray.webp",
+        "localPath": "public/assets/teams/galatasaray.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Genoa",
+      "slug": "genoa",
+      "provider": {
+        "teamId": 495,
+        "name": "Genoa",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/495.png"
+      },
+      "asset": {
+        "filename": "genoa.webp",
+        "logoUrl": "/assets/teams/genoa.webp",
+        "localPath": "public/assets/teams/genoa.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Getafe",
+      "slug": "getafe",
+      "provider": {
+        "teamId": 546,
+        "name": "Getafe",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/546.png"
+      },
+      "asset": {
+        "filename": "getafe.webp",
+        "logoUrl": "/assets/teams/getafe.webp",
+        "localPath": "public/assets/teams/getafe.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Girona",
+      "slug": "girona",
+      "provider": {
+        "teamId": 547,
+        "name": "Girona",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/547.png"
+      },
+      "asset": {
+        "filename": "girona.webp",
+        "logoUrl": "/assets/teams/girona.webp",
+        "localPath": "public/assets/teams/girona.webp"
+      },
+      "competitions": [
+        "LALIGA",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Hamrun Spartans",
+      "slug": "hamrun-spartans",
+      "provider": {
+        "teamId": 4626,
+        "name": "Hamrun Spartans",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/4626.png"
+      },
+      "asset": {
+        "filename": "hamrun-spartans.webp",
+        "logoUrl": "/assets/teams/hamrun-spartans.webp",
+        "localPath": "public/assets/teams/hamrun-spartans.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Heart Of Midlothian",
+      "slug": "heart-of-midlothian",
+      "provider": {
+        "teamId": 254,
+        "name": "Heart Of Midlothian",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/254.png"
+      },
+      "asset": {
+        "filename": "heart-of-midlothian.webp",
+        "logoUrl": "/assets/teams/heart-of-midlothian.webp",
+        "localPath": "public/assets/teams/heart-of-midlothian.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Hellas Verona",
+      "slug": "hellas-verona",
+      "provider": {
+        "teamId": 504,
+        "name": "Hellas Verona",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/504.png"
+      },
+      "asset": {
+        "filename": "hellas-verona.webp",
+        "logoUrl": "/assets/teams/hellas-verona.webp",
+        "localPath": "public/assets/teams/hellas-verona.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "HJK Helsinki",
+      "slug": "hjk-helsinki",
+      "provider": {
+        "teamId": 649,
+        "name": "HJK Helsinki",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/649.png"
+      },
+      "asset": {
+        "filename": "hjk-helsinki.webp",
+        "logoUrl": "/assets/teams/hjk-helsinki.webp",
+        "localPath": "public/assets/teams/hjk-helsinki.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "HNK Rijeka",
+      "slug": "hnk-rijeka",
+      "provider": {
+        "teamId": 561,
+        "name": "HNK Rijeka",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/561.png"
+      },
+      "asset": {
+        "filename": "hnk-rijeka.webp",
+        "logoUrl": "/assets/teams/hnk-rijeka.webp",
+        "localPath": "public/assets/teams/hnk-rijeka.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Holstein Kiel",
+      "slug": "holstein-kiel",
+      "provider": {
+        "teamId": 191,
+        "name": "Holstein Kiel",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/191.png"
+      },
+      "asset": {
+        "filename": "holstein-kiel.webp",
+        "logoUrl": "/assets/teams/holstein-kiel.webp",
+        "localPath": "public/assets/teams/holstein-kiel.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "IF Elfsborg",
+      "slug": "if-elfsborg",
+      "provider": {
+        "teamId": 372,
+        "name": "IF Elfsborg",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/372.png"
+      },
+      "asset": {
+        "filename": "if-elfsborg.webp",
+        "logoUrl": "/assets/teams/if-elfsborg.webp",
+        "localPath": "public/assets/teams/if-elfsborg.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Inter",
+      "slug": "inter",
+      "provider": {
+        "teamId": 505,
+        "name": "Inter",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/505.png"
+      },
+      "asset": {
+        "filename": "inter.webp",
+        "logoUrl": "/assets/teams/inter.webp",
+        "localPath": "public/assets/teams/inter.webp"
+      },
+      "competitions": [
+        "SERIE_A",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Ipswich",
+      "slug": "ipswich",
+      "provider": {
+        "teamId": 57,
+        "name": "Ipswich",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/57.png"
+      },
+      "asset": {
+        "filename": "ipswich.webp",
+        "logoUrl": "/assets/teams/ipswich.webp",
+        "localPath": "public/assets/teams/ipswich.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Jagiellonia",
+      "slug": "jagiellonia",
+      "provider": {
+        "teamId": 336,
+        "name": "Jagiellonia",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/336.png"
+      },
+      "asset": {
+        "filename": "jagiellonia.webp",
+        "logoUrl": "/assets/teams/jagiellonia.webp",
+        "localPath": "public/assets/teams/jagiellonia.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Juventus",
+      "slug": "juventus",
+      "provider": {
+        "teamId": 496,
+        "name": "Juventus",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/496.png"
+      },
+      "asset": {
+        "filename": "juventus.webp",
+        "logoUrl": "/assets/teams/juventus.webp",
+        "localPath": "public/assets/teams/juventus.webp"
+      },
+      "competitions": [
+        "SERIE_A",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "KI Klaksvik",
+      "slug": "ki-klaksvik",
+      "provider": {
+        "teamId": 701,
+        "name": "KI Klaksvik",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/701.png"
+      },
+      "asset": {
+        "filename": "ki-klaksvik.webp",
+        "logoUrl": "/assets/teams/ki-klaksvik.webp",
+        "localPath": "public/assets/teams/ki-klaksvik.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Kilmarnock",
+      "slug": "kilmarnock",
+      "provider": {
+        "teamId": 250,
+        "name": "Kilmarnock",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/250.png"
+      },
+      "asset": {
+        "filename": "kilmarnock.webp",
+        "logoUrl": "/assets/teams/kilmarnock.webp",
+        "localPath": "public/assets/teams/kilmarnock.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Kryvbas KR",
+      "slug": "kryvbas-kr",
+      "provider": {
+        "teamId": 6489,
+        "name": "Kryvbas KR",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/6489.png"
+      },
+      "asset": {
+        "filename": "kryvbas-kr.webp",
+        "logoUrl": "/assets/teams/kryvbas-kr.webp",
+        "localPath": "public/assets/teams/kryvbas-kr.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Larne",
+      "slug": "larne",
+      "provider": {
+        "teamId": 5354,
+        "name": "Larne",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/5354.png"
+      },
+      "asset": {
+        "filename": "larne.webp",
+        "logoUrl": "/assets/teams/larne.webp",
+        "localPath": "public/assets/teams/larne.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Las Palmas",
+      "slug": "las-palmas",
+      "provider": {
+        "teamId": 534,
+        "name": "Las Palmas",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/534.png"
+      },
+      "asset": {
+        "filename": "las-palmas.webp",
+        "logoUrl": "/assets/teams/las-palmas.webp",
+        "localPath": "public/assets/teams/las-palmas.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Lask Linz",
+      "slug": "lask-linz",
+      "provider": {
+        "teamId": 1026,
+        "name": "Lask Linz",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/1026.png"
+      },
+      "asset": {
+        "filename": "lask-linz.webp",
+        "logoUrl": "/assets/teams/lask-linz.webp",
+        "localPath": "public/assets/teams/lask-linz.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Lazio",
+      "slug": "lazio",
+      "provider": {
+        "teamId": 487,
+        "name": "Lazio",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/487.png"
+      },
+      "asset": {
+        "filename": "lazio.webp",
+        "logoUrl": "/assets/teams/lazio.webp",
+        "localPath": "public/assets/teams/lazio.webp"
+      },
+      "competitions": [
+        "SERIE_A",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Le Havre",
+      "slug": "le-havre",
+      "provider": {
+        "teamId": 111,
+        "name": "Le Havre",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/111.png"
+      },
+      "asset": {
+        "filename": "le-havre.webp",
+        "logoUrl": "/assets/teams/le-havre.webp",
+        "localPath": "public/assets/teams/le-havre.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Lecce",
+      "slug": "lecce",
+      "provider": {
+        "teamId": 867,
+        "name": "Lecce",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/867.png"
+      },
+      "asset": {
+        "filename": "lecce.webp",
+        "logoUrl": "/assets/teams/lecce.webp",
+        "localPath": "public/assets/teams/lecce.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Leganes",
+      "slug": "leganes",
+      "provider": {
+        "teamId": 537,
+        "name": "Leganes",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/537.png"
+      },
+      "asset": {
+        "filename": "leganes.webp",
+        "logoUrl": "/assets/teams/leganes.webp",
+        "localPath": "public/assets/teams/leganes.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Leicester",
+      "slug": "leicester",
+      "provider": {
+        "teamId": 46,
+        "name": "Leicester",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/46.png"
+      },
+      "asset": {
+        "filename": "leicester.webp",
+        "logoUrl": "/assets/teams/leicester.webp",
+        "localPath": "public/assets/teams/leicester.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Lens",
+      "slug": "lens",
+      "provider": {
+        "teamId": 116,
+        "name": "Lens",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/116.png"
+      },
+      "asset": {
+        "filename": "lens.webp",
+        "logoUrl": "/assets/teams/lens.webp",
+        "localPath": "public/assets/teams/lens.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Lille",
+      "slug": "lille",
+      "provider": {
+        "teamId": 79,
+        "name": "Lille",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/79.png"
+      },
+      "asset": {
+        "filename": "lille.webp",
+        "logoUrl": "/assets/teams/lille.webp",
+        "localPath": "public/assets/teams/lille.webp"
+      },
+      "competitions": [
+        "LIGUE_1",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Lincoln Red Imps FC",
+      "slug": "lincoln-red-imps-fc",
+      "provider": {
+        "teamId": 667,
+        "name": "Lincoln Red Imps FC",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/667.png"
+      },
+      "asset": {
+        "filename": "lincoln-red-imps-fc.webp",
+        "logoUrl": "/assets/teams/lincoln-red-imps-fc.webp",
+        "localPath": "public/assets/teams/lincoln-red-imps-fc.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Liverpool",
+      "slug": "liverpool",
+      "provider": {
+        "teamId": 40,
+        "name": "Liverpool",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/40.png"
+      },
+      "asset": {
+        "filename": "liverpool.webp",
+        "logoUrl": "/assets/teams/liverpool.webp",
+        "localPath": "public/assets/teams/liverpool.webp"
+      },
+      "competitions": [
+        "EPL",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Llapi",
+      "slug": "llapi",
+      "provider": {
+        "teamId": 14395,
+        "name": "Llapi",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/14395.png"
+      },
+      "asset": {
+        "filename": "llapi.webp",
+        "logoUrl": "/assets/teams/llapi.webp",
+        "localPath": "public/assets/teams/llapi.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Ludogorets",
+      "slug": "ludogorets",
+      "provider": {
+        "teamId": 566,
+        "name": "Ludogorets",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/566.png"
+      },
+      "asset": {
+        "filename": "ludogorets.webp",
+        "logoUrl": "/assets/teams/ludogorets.webp",
+        "localPath": "public/assets/teams/ludogorets.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Lyon",
+      "slug": "lyon",
+      "provider": {
+        "teamId": 80,
+        "name": "Lyon",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/80.png"
+      },
+      "asset": {
+        "filename": "lyon.webp",
+        "logoUrl": "/assets/teams/lyon.webp",
+        "localPath": "public/assets/teams/lyon.webp"
+      },
+      "competitions": [
+        "LIGUE_1",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Maccabi Petah Tikva",
+      "slug": "maccabi-petah-tikva",
+      "provider": {
+        "teamId": 4495,
+        "name": "Maccabi Petah Tikva",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/4495.png"
+      },
+      "asset": {
+        "filename": "maccabi-petah-tikva.webp",
+        "logoUrl": "/assets/teams/maccabi-petah-tikva.webp",
+        "localPath": "public/assets/teams/maccabi-petah-tikva.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Maccabi Tel Aviv",
+      "slug": "maccabi-tel-aviv",
+      "provider": {
+        "teamId": 604,
+        "name": "Maccabi Tel Aviv",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/604.png"
+      },
+      "asset": {
+        "filename": "maccabi-tel-aviv.webp",
+        "logoUrl": "/assets/teams/maccabi-tel-aviv.webp",
+        "localPath": "public/assets/teams/maccabi-tel-aviv.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Mallorca",
+      "slug": "mallorca",
+      "provider": {
+        "teamId": 798,
+        "name": "Mallorca",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/798.png"
+      },
+      "asset": {
+        "filename": "mallorca.webp",
+        "logoUrl": "/assets/teams/mallorca.webp",
+        "localPath": "public/assets/teams/mallorca.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Malmo FF",
+      "slug": "malmo-ff",
+      "provider": {
+        "teamId": 375,
+        "name": "Malmo FF",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/375.png"
+      },
+      "asset": {
+        "filename": "malmo-ff.webp",
+        "logoUrl": "/assets/teams/malmo-ff.webp",
+        "localPath": "public/assets/teams/malmo-ff.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Manchester City",
+      "slug": "manchester-city",
+      "provider": {
+        "teamId": 50,
+        "name": "Manchester City",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/50.png"
+      },
+      "asset": {
+        "filename": "manchester-city.webp",
+        "logoUrl": "/assets/teams/manchester-city.webp",
+        "localPath": "public/assets/teams/manchester-city.webp"
+      },
+      "competitions": [
+        "EPL",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Manchester United",
+      "slug": "manchester-united",
+      "provider": {
+        "teamId": 33,
+        "name": "Manchester United",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/33.png"
+      },
+      "asset": {
+        "filename": "manchester-united.webp",
+        "logoUrl": "/assets/teams/manchester-united.webp",
+        "localPath": "public/assets/teams/manchester-united.webp"
+      },
+      "competitions": [
+        "EPL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Maribor",
+      "slug": "maribor",
+      "provider": {
+        "teamId": 552,
+        "name": "Maribor",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/552.png"
+      },
+      "asset": {
+        "filename": "maribor.webp",
+        "logoUrl": "/assets/teams/maribor.webp",
+        "localPath": "public/assets/teams/maribor.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Marseille",
+      "slug": "marseille",
+      "provider": {
+        "teamId": 81,
+        "name": "Marseille",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/81.png"
+      },
+      "asset": {
+        "filename": "marseille.webp",
+        "logoUrl": "/assets/teams/marseille.webp",
+        "localPath": "public/assets/teams/marseille.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Metz",
+      "slug": "metz",
+      "provider": {
+        "teamId": 112,
+        "name": "Metz",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/112.png"
+      },
+      "asset": {
+        "filename": "metz.webp",
+        "logoUrl": "/assets/teams/metz.webp",
+        "localPath": "public/assets/teams/metz.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Molde",
+      "slug": "molde",
+      "provider": {
+        "teamId": 329,
+        "name": "Molde",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/329.png"
+      },
+      "asset": {
+        "filename": "molde.webp",
+        "logoUrl": "/assets/teams/molde.webp",
+        "localPath": "public/assets/teams/molde.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Monaco",
+      "slug": "monaco",
+      "provider": {
+        "teamId": 91,
+        "name": "Monaco",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/91.png"
+      },
+      "asset": {
+        "filename": "monaco.webp",
+        "logoUrl": "/assets/teams/monaco.webp",
+        "localPath": "public/assets/teams/monaco.webp"
+      },
+      "competitions": [
+        "LIGUE_1",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Montpellier",
+      "slug": "montpellier",
+      "provider": {
+        "teamId": 82,
+        "name": "Montpellier",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/82.png"
+      },
+      "asset": {
+        "filename": "montpellier.webp",
+        "logoUrl": "/assets/teams/montpellier.webp",
+        "localPath": "public/assets/teams/montpellier.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Monza",
+      "slug": "monza",
+      "provider": {
+        "teamId": 1579,
+        "name": "Monza",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/1579.png"
+      },
+      "asset": {
+        "filename": "monza.webp",
+        "logoUrl": "/assets/teams/monza.webp",
+        "localPath": "public/assets/teams/monza.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Nantes",
+      "slug": "nantes",
+      "provider": {
+        "teamId": 83,
+        "name": "Nantes",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/83.png"
+      },
+      "asset": {
+        "filename": "nantes.webp",
+        "logoUrl": "/assets/teams/nantes.webp",
+        "localPath": "public/assets/teams/nantes.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Napoli",
+      "slug": "napoli",
+      "provider": {
+        "teamId": 492,
+        "name": "Napoli",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/492.png"
+      },
+      "asset": {
+        "filename": "napoli.webp",
+        "logoUrl": "/assets/teams/napoli.webp",
+        "localPath": "public/assets/teams/napoli.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Newcastle",
+      "slug": "newcastle",
+      "provider": {
+        "teamId": 34,
+        "name": "Newcastle",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/34.png"
+      },
+      "asset": {
+        "filename": "newcastle.webp",
+        "logoUrl": "/assets/teams/newcastle.webp",
+        "localPath": "public/assets/teams/newcastle.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Nice",
+      "slug": "nice",
+      "provider": {
+        "teamId": 84,
+        "name": "Nice",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/84.png"
+      },
+      "asset": {
+        "filename": "nice.webp",
+        "logoUrl": "/assets/teams/nice.webp",
+        "localPath": "public/assets/teams/nice.webp"
+      },
+      "competitions": [
+        "LIGUE_1",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Nottingham Forest",
+      "slug": "nottingham-forest",
+      "provider": {
+        "teamId": 65,
+        "name": "Nottingham Forest",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/65.png"
+      },
+      "asset": {
+        "filename": "nottingham-forest.webp",
+        "logoUrl": "/assets/teams/nottingham-forest.webp",
+        "localPath": "public/assets/teams/nottingham-forest.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Olympiakos Piraeus",
+      "slug": "olympiakos-piraeus",
+      "provider": {
+        "teamId": 553,
+        "name": "Olympiakos Piraeus",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/553.png"
+      },
+      "asset": {
+        "filename": "olympiakos-piraeus.webp",
+        "logoUrl": "/assets/teams/olympiakos-piraeus.webp",
+        "localPath": "public/assets/teams/olympiakos-piraeus.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Ordabasy",
+      "slug": "ordabasy",
+      "provider": {
+        "teamId": 692,
+        "name": "Ordabasy",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/692.png"
+      },
+      "asset": {
+        "filename": "ordabasy.webp",
+        "logoUrl": "/assets/teams/ordabasy.webp",
+        "localPath": "public/assets/teams/ordabasy.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Osasuna",
+      "slug": "osasuna",
+      "provider": {
+        "teamId": 727,
+        "name": "Osasuna",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/727.png"
+      },
+      "asset": {
+        "filename": "osasuna.webp",
+        "logoUrl": "/assets/teams/osasuna.webp",
+        "localPath": "public/assets/teams/osasuna.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Pafos",
+      "slug": "pafos",
+      "provider": {
+        "teamId": 3403,
+        "name": "Pafos",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/3403.png"
+      },
+      "asset": {
+        "filename": "pafos.webp",
+        "logoUrl": "/assets/teams/pafos.webp",
+        "localPath": "public/assets/teams/pafos.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Paks",
+      "slug": "paks",
+      "provider": {
+        "teamId": 2390,
+        "name": "Paks",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/2390.png"
+      },
+      "asset": {
+        "filename": "paks.webp",
+        "logoUrl": "/assets/teams/paks.webp",
+        "localPath": "public/assets/teams/paks.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Panathinaikos",
+      "slug": "panathinaikos",
+      "provider": {
+        "teamId": 617,
+        "name": "Panathinaikos",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/617.png"
+      },
+      "asset": {
+        "filename": "panathinaikos.webp",
+        "logoUrl": "/assets/teams/panathinaikos.webp",
+        "localPath": "public/assets/teams/panathinaikos.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Panevėžys",
+      "slug": "panevezys",
+      "provider": {
+        "teamId": 3874,
+        "name": "Panevėžys",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/3874.png"
+      },
+      "asset": {
+        "filename": "panevezys.webp",
+        "logoUrl": "/assets/teams/panevezys.webp",
+        "localPath": "public/assets/teams/panevezys.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "PAOK",
+      "slug": "paok",
+      "provider": {
+        "teamId": 619,
+        "name": "PAOK",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/619.png"
+      },
+      "asset": {
+        "filename": "paok.webp",
+        "logoUrl": "/assets/teams/paok.webp",
+        "localPath": "public/assets/teams/paok.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Paris Saint Germain",
+      "slug": "paris-saint-germain",
+      "provider": {
+        "teamId": 85,
+        "name": "Paris Saint Germain",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/85.png"
+      },
+      "asset": {
+        "filename": "paris-saint-germain.webp",
+        "logoUrl": "/assets/teams/paris-saint-germain.webp",
+        "localPath": "public/assets/teams/paris-saint-germain.webp"
+      },
+      "competitions": [
+        "LIGUE_1",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Parma",
+      "slug": "parma",
+      "provider": {
+        "teamId": 523,
+        "name": "Parma",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/523.png"
+      },
+      "asset": {
+        "filename": "parma.webp",
+        "logoUrl": "/assets/teams/parma.webp",
+        "localPath": "public/assets/teams/parma.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Petrocub",
+      "slug": "petrocub",
+      "provider": {
+        "teamId": 2271,
+        "name": "Petrocub",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/2271.png"
+      },
+      "asset": {
+        "filename": "petrocub.webp",
+        "logoUrl": "/assets/teams/petrocub.webp",
+        "localPath": "public/assets/teams/petrocub.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Plzen",
+      "slug": "plzen",
+      "provider": {
+        "teamId": 567,
+        "name": "Plzen",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/567.png"
+      },
+      "asset": {
+        "filename": "plzen.webp",
+        "logoUrl": "/assets/teams/plzen.webp",
+        "localPath": "public/assets/teams/plzen.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "PSV Eindhoven",
+      "slug": "psv-eindhoven",
+      "provider": {
+        "teamId": 197,
+        "name": "PSV Eindhoven",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/197.png"
+      },
+      "asset": {
+        "filename": "psv-eindhoven.webp",
+        "logoUrl": "/assets/teams/psv-eindhoven.webp",
+        "localPath": "public/assets/teams/psv-eindhoven.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Pyunik Yerevan",
+      "slug": "pyunik-yerevan",
+      "provider": {
+        "teamId": 709,
+        "name": "Pyunik Yerevan",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/709.png"
+      },
+      "asset": {
+        "filename": "pyunik-yerevan.webp",
+        "logoUrl": "/assets/teams/pyunik-yerevan.webp",
+        "localPath": "public/assets/teams/pyunik-yerevan.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Qarabag",
+      "slug": "qarabag",
+      "provider": {
+        "teamId": 556,
+        "name": "Qarabag",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/556.png"
+      },
+      "asset": {
+        "filename": "qarabag.webp",
+        "logoUrl": "/assets/teams/qarabag.webp",
+        "localPath": "public/assets/teams/qarabag.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Rangers",
+      "slug": "rangers",
+      "provider": {
+        "teamId": 257,
+        "name": "Rangers",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/257.png"
+      },
+      "asset": {
+        "filename": "rangers.webp",
+        "logoUrl": "/assets/teams/rangers.webp",
+        "localPath": "public/assets/teams/rangers.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Rapid Vienna",
+      "slug": "rapid-vienna",
+      "provider": {
+        "teamId": 781,
+        "name": "Rapid Vienna",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/781.png"
+      },
+      "asset": {
+        "filename": "rapid-vienna.webp",
+        "logoUrl": "/assets/teams/rapid-vienna.webp",
+        "localPath": "public/assets/teams/rapid-vienna.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Rayo Vallecano",
+      "slug": "rayo-vallecano",
+      "provider": {
+        "teamId": 728,
+        "name": "Rayo Vallecano",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/728.png"
+      },
+      "asset": {
+        "filename": "rayo-vallecano.webp",
+        "logoUrl": "/assets/teams/rayo-vallecano.webp",
+        "localPath": "public/assets/teams/rayo-vallecano.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "RB Leipzig",
+      "slug": "rb-leipzig",
+      "provider": {
+        "teamId": 173,
+        "name": "RB Leipzig",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/173.png"
+      },
+      "asset": {
+        "filename": "rb-leipzig.webp",
+        "logoUrl": "/assets/teams/rb-leipzig.webp",
+        "localPath": "public/assets/teams/rb-leipzig.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Real Betis",
+      "slug": "real-betis",
+      "provider": {
+        "teamId": 543,
+        "name": "Real Betis",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/543.png"
+      },
+      "asset": {
+        "filename": "real-betis.webp",
+        "logoUrl": "/assets/teams/real-betis.webp",
+        "localPath": "public/assets/teams/real-betis.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Real Madrid",
+      "slug": "real-madrid",
+      "provider": {
+        "teamId": 541,
+        "name": "Real Madrid",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/541.png"
+      },
+      "asset": {
+        "filename": "real-madrid.webp",
+        "logoUrl": "/assets/teams/real-madrid.webp",
+        "localPath": "public/assets/teams/real-madrid.webp"
+      },
+      "competitions": [
+        "LALIGA",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Real Sociedad",
+      "slug": "real-sociedad",
+      "provider": {
+        "teamId": 548,
+        "name": "Real Sociedad",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/548.png"
+      },
+      "asset": {
+        "filename": "real-sociedad.webp",
+        "logoUrl": "/assets/teams/real-sociedad.webp",
+        "localPath": "public/assets/teams/real-sociedad.webp"
+      },
+      "competitions": [
+        "LALIGA",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Red Bull Salzburg",
+      "slug": "red-bull-salzburg",
+      "provider": {
+        "teamId": 571,
+        "name": "Red Bull Salzburg",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/571.png"
+      },
+      "asset": {
+        "filename": "red-bull-salzburg.webp",
+        "logoUrl": "/assets/teams/red-bull-salzburg.webp",
+        "localPath": "public/assets/teams/red-bull-salzburg.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Reims",
+      "slug": "reims",
+      "provider": {
+        "teamId": 93,
+        "name": "Reims",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/93.png"
+      },
+      "asset": {
+        "filename": "reims.webp",
+        "logoUrl": "/assets/teams/reims.webp",
+        "localPath": "public/assets/teams/reims.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Rennes",
+      "slug": "rennes",
+      "provider": {
+        "teamId": 94,
+        "name": "Rennes",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/94.png"
+      },
+      "asset": {
+        "filename": "rennes.webp",
+        "logoUrl": "/assets/teams/rennes.webp",
+        "localPath": "public/assets/teams/rennes.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Rīgas FS",
+      "slug": "rigas-fs",
+      "provider": {
+        "teamId": 4160,
+        "name": "Rīgas FS",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/4160.png"
+      },
+      "asset": {
+        "filename": "rigas-fs.webp",
+        "logoUrl": "/assets/teams/rigas-fs.webp",
+        "localPath": "public/assets/teams/rigas-fs.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Ružomberok",
+      "slug": "ruzomberok",
+      "provider": {
+        "teamId": 3549,
+        "name": "Ružomberok",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/3549.png"
+      },
+      "asset": {
+        "filename": "ruzomberok.webp",
+        "logoUrl": "/assets/teams/ruzomberok.webp",
+        "localPath": "public/assets/teams/ruzomberok.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Saint Etienne",
+      "slug": "saint-etienne",
+      "provider": {
+        "teamId": 1063,
+        "name": "Saint Etienne",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/1063.png"
+      },
+      "asset": {
+        "filename": "saint-etienne.webp",
+        "logoUrl": "/assets/teams/saint-etienne.webp",
+        "localPath": "public/assets/teams/saint-etienne.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "SC Braga",
+      "slug": "sc-braga",
+      "provider": {
+        "teamId": 217,
+        "name": "SC Braga",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/217.png"
+      },
+      "asset": {
+        "filename": "sc-braga.webp",
+        "logoUrl": "/assets/teams/sc-braga.webp",
+        "localPath": "public/assets/teams/sc-braga.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "SC Freiburg",
+      "slug": "sc-freiburg",
+      "provider": {
+        "teamId": 160,
+        "name": "SC Freiburg",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/160.png"
+      },
+      "asset": {
+        "filename": "sc-freiburg.webp",
+        "logoUrl": "/assets/teams/sc-freiburg.webp",
+        "localPath": "public/assets/teams/sc-freiburg.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Servette FC",
+      "slug": "servette-fc",
+      "provider": {
+        "teamId": 2184,
+        "name": "Servette FC",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/2184.png"
+      },
+      "asset": {
+        "filename": "servette-fc.webp",
+        "logoUrl": "/assets/teams/servette-fc.webp",
+        "localPath": "public/assets/teams/servette-fc.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Sevilla",
+      "slug": "sevilla",
+      "provider": {
+        "teamId": 536,
+        "name": "Sevilla",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/536.png"
+      },
+      "asset": {
+        "filename": "sevilla.webp",
+        "logoUrl": "/assets/teams/sevilla.webp",
+        "localPath": "public/assets/teams/sevilla.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Shakhtar Donetsk",
+      "slug": "shakhtar-donetsk",
+      "provider": {
+        "teamId": 550,
+        "name": "Shakhtar Donetsk",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/550.png"
+      },
+      "asset": {
+        "filename": "shakhtar-donetsk.webp",
+        "logoUrl": "/assets/teams/shakhtar-donetsk.webp",
+        "localPath": "public/assets/teams/shakhtar-donetsk.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Shamrock Rovers",
+      "slug": "shamrock-rovers",
+      "provider": {
+        "teamId": 652,
+        "name": "Shamrock Rovers",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/652.png"
+      },
+      "asset": {
+        "filename": "shamrock-rovers.webp",
+        "logoUrl": "/assets/teams/shamrock-rovers.webp",
+        "localPath": "public/assets/teams/shamrock-rovers.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Sheriff Tiraspol",
+      "slug": "sheriff-tiraspol",
+      "provider": {
+        "teamId": 568,
+        "name": "Sheriff Tiraspol",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/568.png"
+      },
+      "asset": {
+        "filename": "sheriff-tiraspol.webp",
+        "logoUrl": "/assets/teams/sheriff-tiraspol.webp",
+        "localPath": "public/assets/teams/sheriff-tiraspol.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Silkeborg",
+      "slug": "silkeborg",
+      "provider": {
+        "teamId": 2073,
+        "name": "Silkeborg",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/2073.png"
+      },
+      "asset": {
+        "filename": "silkeborg.webp",
+        "logoUrl": "/assets/teams/silkeborg.webp",
+        "localPath": "public/assets/teams/silkeborg.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Slavia Praha",
+      "slug": "slavia-praha",
+      "provider": {
+        "teamId": 560,
+        "name": "Slavia Praha",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/560.png"
+      },
+      "asset": {
+        "filename": "slavia-praha.webp",
+        "logoUrl": "/assets/teams/slavia-praha.webp",
+        "localPath": "public/assets/teams/slavia-praha.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Slovan Bratislava",
+      "slug": "slovan-bratislava",
+      "provider": {
+        "teamId": 656,
+        "name": "Slovan Bratislava",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/656.png"
+      },
+      "asset": {
+        "filename": "slovan-bratislava.webp",
+        "logoUrl": "/assets/teams/slovan-bratislava.webp",
+        "localPath": "public/assets/teams/slovan-bratislava.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Southampton",
+      "slug": "southampton",
+      "provider": {
+        "teamId": 41,
+        "name": "Southampton",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/41.png"
+      },
+      "asset": {
+        "filename": "southampton.webp",
+        "logoUrl": "/assets/teams/southampton.webp",
+        "localPath": "public/assets/teams/southampton.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Sparta Praha",
+      "slug": "sparta-praha",
+      "provider": {
+        "teamId": 628,
+        "name": "Sparta Praha",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/628.png"
+      },
+      "asset": {
+        "filename": "sparta-praha.webp",
+        "logoUrl": "/assets/teams/sparta-praha.webp",
+        "localPath": "public/assets/teams/sparta-praha.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Sporting CP",
+      "slug": "sporting-cp",
+      "provider": {
+        "teamId": 228,
+        "name": "Sporting CP",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/228.png"
+      },
+      "asset": {
+        "filename": "sporting-cp.webp",
+        "logoUrl": "/assets/teams/sporting-cp.webp",
+        "localPath": "public/assets/teams/sporting-cp.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Stade Brestois 29",
+      "slug": "stade-brestois-29",
+      "provider": {
+        "teamId": 106,
+        "name": "Stade Brestois 29",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/106.png"
+      },
+      "asset": {
+        "filename": "stade-brestois-29.webp",
+        "logoUrl": "/assets/teams/stade-brestois-29.webp",
+        "localPath": "public/assets/teams/stade-brestois-29.webp"
+      },
+      "competitions": [
+        "LIGUE_1",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Strasbourg",
+      "slug": "strasbourg",
+      "provider": {
+        "teamId": 95,
+        "name": "Strasbourg",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/95.png"
+      },
+      "asset": {
+        "filename": "strasbourg.webp",
+        "logoUrl": "/assets/teams/strasbourg.webp",
+        "localPath": "public/assets/teams/strasbourg.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Struga",
+      "slug": "struga",
+      "provider": {
+        "teamId": 4346,
+        "name": "Struga",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/4346.png"
+      },
+      "asset": {
+        "filename": "struga.webp",
+        "logoUrl": "/assets/teams/struga.webp",
+        "localPath": "public/assets/teams/struga.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Sturm Graz",
+      "slug": "sturm-graz",
+      "provider": {
+        "teamId": 637,
+        "name": "Sturm Graz",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/637.png"
+      },
+      "asset": {
+        "filename": "sturm-graz.webp",
+        "logoUrl": "/assets/teams/sturm-graz.webp",
+        "localPath": "public/assets/teams/sturm-graz.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "SV Elversberg",
+      "slug": "sv-elversberg",
+      "provider": {
+        "teamId": 1660,
+        "name": "SV Elversberg",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/1660.png"
+      },
+      "asset": {
+        "filename": "sv-elversberg.webp",
+        "logoUrl": "/assets/teams/sv-elversberg.webp",
+        "localPath": "public/assets/teams/sv-elversberg.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "The New Saints",
+      "slug": "the-new-saints",
+      "provider": {
+        "teamId": 354,
+        "name": "The New Saints",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/354.png"
+      },
+      "asset": {
+        "filename": "the-new-saints.webp",
+        "logoUrl": "/assets/teams/the-new-saints.webp",
+        "localPath": "public/assets/teams/the-new-saints.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Torino",
+      "slug": "torino",
+      "provider": {
+        "teamId": 503,
+        "name": "Torino",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/503.png"
+      },
+      "asset": {
+        "filename": "torino.webp",
+        "logoUrl": "/assets/teams/torino.webp",
+        "localPath": "public/assets/teams/torino.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Tottenham",
+      "slug": "tottenham",
+      "provider": {
+        "teamId": 47,
+        "name": "Tottenham",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/47.png"
+      },
+      "asset": {
+        "filename": "tottenham.webp",
+        "logoUrl": "/assets/teams/tottenham.webp",
+        "localPath": "public/assets/teams/tottenham.webp"
+      },
+      "competitions": [
+        "EPL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Toulouse",
+      "slug": "toulouse",
+      "provider": {
+        "teamId": 96,
+        "name": "Toulouse",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/96.png"
+      },
+      "asset": {
+        "filename": "toulouse.webp",
+        "logoUrl": "/assets/teams/toulouse.webp",
+        "localPath": "public/assets/teams/toulouse.webp"
+      },
+      "competitions": [
+        "LIGUE_1"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Trabzonspor",
+      "slug": "trabzonspor",
+      "provider": {
+        "teamId": 998,
+        "name": "Trabzonspor",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/998.png"
+      },
+      "asset": {
+        "filename": "trabzonspor.webp",
+        "logoUrl": "/assets/teams/trabzonspor.webp",
+        "localPath": "public/assets/teams/trabzonspor.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "TSC Backa Topola",
+      "slug": "tsc-backa-topola",
+      "provider": {
+        "teamId": 2646,
+        "name": "TSC Backa Topola",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/2646.png"
+      },
+      "asset": {
+        "filename": "tsc-backa-topola.webp",
+        "logoUrl": "/assets/teams/tsc-backa-topola.webp",
+        "localPath": "public/assets/teams/tsc-backa-topola.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Twente",
+      "slug": "twente",
+      "provider": {
+        "teamId": 415,
+        "name": "Twente",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/415.png"
+      },
+      "asset": {
+        "filename": "twente.webp",
+        "logoUrl": "/assets/teams/twente.webp",
+        "localPath": "public/assets/teams/twente.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Udinese",
+      "slug": "udinese",
+      "provider": {
+        "teamId": 494,
+        "name": "Udinese",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/494.png"
+      },
+      "asset": {
+        "filename": "udinese.webp",
+        "logoUrl": "/assets/teams/udinese.webp",
+        "localPath": "public/assets/teams/udinese.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "UE Santa Coloma",
+      "slug": "ue-santa-coloma",
+      "provider": {
+        "teamId": 703,
+        "name": "UE Santa Coloma",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/703.png"
+      },
+      "asset": {
+        "filename": "ue-santa-coloma.webp",
+        "logoUrl": "/assets/teams/ue-santa-coloma.webp",
+        "localPath": "public/assets/teams/ue-santa-coloma.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Union Berlin",
+      "slug": "union-berlin",
+      "provider": {
+        "teamId": 182,
+        "name": "Union Berlin",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/182.png"
+      },
+      "asset": {
+        "filename": "union-berlin.webp",
+        "logoUrl": "/assets/teams/union-berlin.webp",
+        "localPath": "public/assets/teams/union-berlin.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Union St. Gilloise",
+      "slug": "union-st-gilloise",
+      "provider": {
+        "teamId": 1393,
+        "name": "Union St. Gilloise",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/1393.png"
+      },
+      "asset": {
+        "filename": "union-st-gilloise.webp",
+        "logoUrl": "/assets/teams/union-st-gilloise.webp",
+        "localPath": "public/assets/teams/union-st-gilloise.webp"
+      },
+      "competitions": [
+        "UCL",
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "Valencia",
+      "slug": "valencia",
+      "provider": {
+        "teamId": 532,
+        "name": "Valencia",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/532.png"
+      },
+      "asset": {
+        "filename": "valencia.webp",
+        "logoUrl": "/assets/teams/valencia.webp",
+        "localPath": "public/assets/teams/valencia.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Valladolid",
+      "slug": "valladolid",
+      "provider": {
+        "teamId": 720,
+        "name": "Valladolid",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/720.png"
+      },
+      "asset": {
+        "filename": "valladolid.webp",
+        "logoUrl": "/assets/teams/valladolid.webp",
+        "localPath": "public/assets/teams/valladolid.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Venezia",
+      "slug": "venezia",
+      "provider": {
+        "teamId": 517,
+        "name": "Venezia",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/517.png"
+      },
+      "asset": {
+        "filename": "venezia.webp",
+        "logoUrl": "/assets/teams/venezia.webp",
+        "localPath": "public/assets/teams/venezia.webp"
+      },
+      "competitions": [
+        "SERIE_A"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "VfB Stuttgart",
+      "slug": "vfb-stuttgart",
+      "provider": {
+        "teamId": 172,
+        "name": "VfB Stuttgart",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/172.png"
+      },
+      "asset": {
+        "filename": "vfb-stuttgart.webp",
+        "logoUrl": "/assets/teams/vfb-stuttgart.webp",
+        "localPath": "public/assets/teams/vfb-stuttgart.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA",
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 1,
+      "error": null
+    },
+    {
+      "name": "VfL Bochum",
+      "slug": "vfl-bochum",
+      "provider": {
+        "teamId": 176,
+        "name": "VfL Bochum",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/176.png"
+      },
+      "asset": {
+        "filename": "vfl-bochum.webp",
+        "logoUrl": "/assets/teams/vfl-bochum.webp",
+        "localPath": "public/assets/teams/vfl-bochum.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "VfL Wolfsburg",
+      "slug": "vfl-wolfsburg",
+      "provider": {
+        "teamId": 161,
+        "name": "VfL Wolfsburg",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/161.png"
+      },
+      "asset": {
+        "filename": "vfl-wolfsburg.webp",
+        "logoUrl": "/assets/teams/vfl-wolfsburg.webp",
+        "localPath": "public/assets/teams/vfl-wolfsburg.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Vikingur Reykjavik",
+      "slug": "vikingur-reykjavik",
+      "provider": {
+        "teamId": 278,
+        "name": "Vikingur Reykjavik",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/278.png"
+      },
+      "asset": {
+        "filename": "vikingur-reykjavik.webp",
+        "logoUrl": "/assets/teams/vikingur-reykjavik.webp",
+        "localPath": "public/assets/teams/vikingur-reykjavik.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Villarreal",
+      "slug": "villarreal",
+      "provider": {
+        "teamId": 533,
+        "name": "Villarreal",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/533.png"
+      },
+      "asset": {
+        "filename": "villarreal.webp",
+        "logoUrl": "/assets/teams/villarreal.webp",
+        "localPath": "public/assets/teams/villarreal.webp"
+      },
+      "competitions": [
+        "LALIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Virtus",
+      "slug": "virtus",
+      "provider": {
+        "teamId": 5308,
+        "name": "Virtus",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/5308.png"
+      },
+      "asset": {
+        "filename": "virtus.webp",
+        "logoUrl": "/assets/teams/virtus.webp",
+        "localPath": "public/assets/teams/virtus.webp"
+      },
+      "competitions": [
+        "UCL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Vojvodina",
+      "slug": "vojvodina",
+      "provider": {
+        "teamId": 702,
+        "name": "Vojvodina",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/702.png"
+      },
+      "asset": {
+        "filename": "vojvodina.webp",
+        "logoUrl": "/assets/teams/vojvodina.webp",
+        "localPath": "public/assets/teams/vojvodina.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Werder Bremen",
+      "slug": "werder-bremen",
+      "provider": {
+        "teamId": 162,
+        "name": "Werder Bremen",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/162.png"
+      },
+      "asset": {
+        "filename": "werder-bremen.webp",
+        "logoUrl": "/assets/teams/werder-bremen.webp",
+        "localPath": "public/assets/teams/werder-bremen.webp"
+      },
+      "competitions": [
+        "BUNDESLIGA"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "West Ham",
+      "slug": "west-ham",
+      "provider": {
+        "teamId": 48,
+        "name": "West Ham",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/48.png"
+      },
+      "asset": {
+        "filename": "west-ham.webp",
+        "logoUrl": "/assets/teams/west-ham.webp",
+        "localPath": "public/assets/teams/west-ham.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Wisla Krakow",
+      "slug": "wisla-krakow",
+      "provider": {
+        "teamId": 338,
+        "name": "Wisla Krakow",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/338.png"
+      },
+      "asset": {
+        "filename": "wisla-krakow.webp",
+        "logoUrl": "/assets/teams/wisla-krakow.webp",
+        "localPath": "public/assets/teams/wisla-krakow.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Wolves",
+      "slug": "wolves",
+      "provider": {
+        "teamId": 39,
+        "name": "Wolves",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/39.png"
+      },
+      "asset": {
+        "filename": "wolves.webp",
+        "logoUrl": "/assets/teams/wolves.webp",
+        "localPath": "public/assets/teams/wolves.webp"
+      },
+      "competitions": [
+        "EPL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    },
+    {
+      "name": "Zira",
+      "slug": "zira",
+      "provider": {
+        "teamId": 648,
+        "name": "Zira",
+        "logoSourceUrl": "https://media.api-sports.io/football/teams/648.png"
+      },
+      "asset": {
+        "filename": "zira.webp",
+        "logoUrl": "/assets/teams/zira.webp",
+        "localPath": "public/assets/teams/zira.webp"
+      },
+      "competitions": [
+        "UEL"
+      ],
+      "downloadStatus": "downloaded",
+      "skippedDuplicateCount": 0,
+      "error": null
+    }
+  ],
+  "warnings": []
+}

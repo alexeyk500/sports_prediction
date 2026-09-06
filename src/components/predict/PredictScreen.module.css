@@ -4,8 +4,10 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  padding: calc(16px + env(safe-area-inset-top)) 16px 0;
-  background: #f4f7fb;
+  padding-block-start: calc(16px + env(safe-area-inset-top));
+  padding-inline: 16px;
+  background: var(--color-app-bg);
+  color: var(--color-text);
 }
 
 .centerState {
@@ -13,8 +15,10 @@
   height: 100%;
   place-items: center;
   overflow: hidden;
-  padding: calc(16px + env(safe-area-inset-top)) 16px 16px;
-  background: #f4f7fb;
+  padding-block: calc(16px + env(safe-area-inset-top)) 16px;
+  padding-inline: 16px;
+  background: var(--color-app-bg);
+  color: var(--color-text);
 }
 
 .topArea {
@@ -26,7 +30,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-block-end: 16px;
 }
 
 .header h1 {
@@ -36,8 +40,9 @@
 }
 
 .kicker {
-  margin: 0 0 4px;
-  color: #526070;
+  margin-block: 0 4px;
+  margin-inline: 0;
+  color: var(--color-muted);
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
@@ -46,11 +51,12 @@
 .userBadge {
   max-width: 45%;
   overflow: hidden;
-  border: 1px solid #d7dde6;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: 8px 10px;
-  background: #fff;
-  color: #253244;
+  padding-block: 8px;
+  padding-inline: 10px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
   font-size: 13px;
   font-weight: 700;
   text-overflow: ellipsis;
@@ -61,12 +67,12 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
-  margin-bottom: 16px;
-  border: 1px solid #d7dde6;
+  margin-block-end: 16px;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 12px;
-  background: #fff;
-  color: #253244;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
   font-size: 14px;
   font-weight: 650;
 }
@@ -75,24 +81,24 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 12px;
+  margin-block-end: 12px;
 }
 
 .tab,
 .activeTab {
   min-height: 44px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--color-border-strong);
   border-radius: 8px;
-  background: #fff;
-  color: #334155;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
   font: inherit;
   font-weight: 700;
 }
 
 .activeTab {
-  border-color: #126b5a;
-  background: #126b5a;
-  color: #fff;
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
 }
 
 .scrollArea {
@@ -100,7 +106,7 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding-bottom: 16px;
+  padding-block-end: 16px;
   scrollbar-gutter: stable;
 }
 
@@ -111,10 +117,12 @@
 
 .fixtureCard,
 .statePanel {
-  border: 1px solid #d7dde6;
-  border-radius: 8px;
-  padding: 14px;
-  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  padding: 16px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
 }
 
 .fixtureMeta,
@@ -124,89 +132,253 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  color: #64748b;
+  color: var(--color-muted);
   font-size: 13px;
+}
+
+.fixtureMeta {
+  font-weight: 750;
+}
+
+.fixtureMeta > span,
+.fixtureStatus > span,
+.pickRow > span,
+.pickRow > strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .teams {
   display: grid;
   gap: 6px;
-  margin: 12px 0;
-  color: #111827;
+  margin-block: 12px;
+  margin-inline: 0;
+  color: var(--color-text);
   font-size: 18px;
   font-weight: 800;
+}
+
+.teams span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  unicode-bidi: plaintext;
+}
+
+.leagueIdentity {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.leagueIdentity > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.matchup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  margin-block: 16px;
+  margin-inline: 0;
+}
+
+.teamIdentityStart,
+.teamIdentityEnd {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.teamIdentityEnd {
+  justify-content: flex-end;
+}
+
+.teamName {
+  min-width: 0;
+  color: var(--color-text);
+  font-size: 17px;
+  font-weight: 850;
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+  unicode-bidi: plaintext;
+}
+
+.versus {
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.badgeSmall,
+.badgeLarge {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-accent-contrast);
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.badgeSmall {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  font-size: 10px;
+}
+
+.badgeLarge {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.badgeTonePurple {
+  background: linear-gradient(135deg, #5b21b6, #a855f7);
+}
+
+.badgeToneBlue {
+  background: linear-gradient(135deg, #1d4ed8, #38bdf8);
+}
+
+.badgeToneRed {
+  background: linear-gradient(135deg, #b91c1c, #fb7185);
+}
+
+.badgeToneGreen {
+  background: linear-gradient(135deg, #047857, #34d399);
+}
+
+.badgeToneGold {
+  background: linear-gradient(135deg, #b45309, #facc15);
+  color: #1f2937;
+}
+
+.badgeToneCyan {
+  background: linear-gradient(135deg, #0e7490, #67e8f9);
+  color: #06202a;
+}
+
+.badgeToneSlate {
+  background: linear-gradient(135deg, #475569, #94a3b8);
+}
+
+.badgeLogo {
+  background-color: var(--color-surface-elevated);
+}
+
+.badgeLogo img {
+  display: block;
+  width: 84%;
+  height: 84%;
+  object-fit: contain;
 }
 
 .outcomes {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  margin: 12px 0;
+  margin-block: 12px;
+  margin-inline: 0;
+  direction: ltr;
 }
 
 .outcomeButton,
 .selectedOutcome {
   min-height: 58px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--color-border-strong);
   border-radius: 8px;
-  background: #f8fafc;
-  color: #1f2937;
+  background: var(--color-surface-elevated);
+  color: var(--color-text-secondary);
   font: inherit;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px transparent;
 }
 
 .outcomeButton:disabled,
 .selectedOutcome:disabled {
   cursor: not-allowed;
-  opacity: 0.55;
+  color: var(--color-muted);
+  opacity: 0.62;
 }
 
-.outcomeButton span,
-.selectedOutcome span,
-.outcomeButton strong,
-.selectedOutcome strong {
+.outcomeCode,
+.trophyValue {
   display: block;
 }
 
-.outcomeButton span,
-.selectedOutcome span {
-  font-size: 12px;
-  font-weight: 800;
+.outcomeCode {
+  color: var(--color-text);
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
 }
 
-.outcomeButton strong,
-.selectedOutcome strong {
-  margin-top: 4px;
+.trophyValue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-block-start: 8px;
   font-size: 15px;
+  font-weight: 850;
+  direction: ltr;
+}
+
+.trophyIcon {
+  width: 17px;
+  height: 17px;
+  fill: var(--color-accent);
 }
 
 .selectedOutcome {
-  border-color: #126b5a;
-  background: #e7f5ef;
-  color: #0f513f;
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-text);
+  box-shadow: inset 0 0 0 2px var(--color-accent);
+}
+
+.selectedOutcome .outcomeCode {
+  color: var(--color-accent-text);
+}
+
+.selectedOutcome .trophyIcon {
+  fill: var(--color-accent-text);
 }
 
 .rewardPlaceholder,
 .errorBanner {
-  margin-top: 10px;
+  margin-block-start: 10px;
   border-radius: 8px;
-  padding: 10px 12px;
+  padding-block: 10px;
+  padding-inline: 12px;
 }
 
 .rewardPlaceholder {
-  border: 1px solid #f3c969;
-  background: #fff7df;
-  color: #664b00;
+  border: 1px solid var(--color-warning-border);
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
 }
 
 .rewardPlaceholder span {
   display: block;
-  margin-top: 4px;
+  margin-block-start: 4px;
   font-size: 13px;
 }
 
 .errorBanner {
-  margin-bottom: 12px;
-  border: 1px solid #f4b4b4;
-  background: #fff1f2;
-  color: #8a1f2d;
+  margin-block-end: 12px;
+  border: 1px solid var(--color-danger-border);
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
 }

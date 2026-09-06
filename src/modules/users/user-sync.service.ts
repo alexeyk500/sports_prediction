@@ -1,4 +1,5 @@
 import type { PrismaClient, User } from "@prisma/client";
+import { normalizeTelegramLanguageCode } from "@/lib/i18n/locales";
 import type { TelegramInitDataUser } from "@/lib/telegram/init-data";
 
 export interface UserSyncDependencies {
@@ -25,6 +26,8 @@ export async function syncTelegramUser(
       firstName: telegramUser.firstName ?? null,
       lastName: telegramUser.lastName ?? null,
       languageCode: telegramUser.languageCode ?? null,
+      locale: normalizeTelegramLanguageCode(telegramUser.languageCode),
+      appearance: "system",
     },
   });
 }

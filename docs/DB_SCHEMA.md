@@ -281,6 +281,28 @@ enum RatingLeague {
 }
 ```
 
+## 3.9 UserLocale
+
+```ts
+enum UserLocale {
+  en
+  ru
+  de
+  es
+  ar
+}
+```
+
+## 3.10 UserAppearance
+
+```ts
+enum UserAppearance {
+  system
+  light
+  dark
+}
+```
+
 ---
 
 # 4. User
@@ -298,6 +320,8 @@ username
 firstName
 lastName
 languageCode
+locale
+appearance
 isDeleted
 deletedAt
 createdAt
@@ -313,6 +337,8 @@ username         VARCHAR NULL
 firstName        VARCHAR NULL
 lastName         VARCHAR NULL
 languageCode     VARCHAR NULL
+locale           UserLocale NOT NULL DEFAULT en
+appearance       UserAppearance NOT NULL DEFAULT system
 isDeleted        BOOLEAN NOT NULL DEFAULT false
 deletedAt        TIMESTAMPTZ NULL
 createdAt        TIMESTAMPTZ NOT NULL
@@ -322,6 +348,11 @@ updatedAt        TIMESTAMPTZ NOT NULL
 `telegramUserId` следует хранить как `BIGINT`.
 
 Frontend не является source of truth для Telegram profile fields.
+
+`languageCode` хранит raw Telegram profile metadata. `locale` хранит
+user language preference and must not be overwritten by later Telegram
+profile sync after creation. `appearance` stores user-selected theme
+mode.
 
 ---
 
@@ -369,6 +400,7 @@ id
 providerCompetitionId
 code
 name
+slug
 country
 logoUrl
 isActive
@@ -382,6 +414,7 @@ Recommended:
 providerCompetitionId VARCHAR NOT NULL
 code                  VARCHAR UNIQUE NOT NULL
 name                  VARCHAR NOT NULL
+slug                  VARCHAR UNIQUE NOT NULL
 country               VARCHAR NULL
 logoUrl               TEXT NULL
 isActive              BOOLEAN NOT NULL DEFAULT true
@@ -401,6 +434,21 @@ UEL
 
 `code` является internal stable identifier.
 
+`slug` is a canonical Goalstery asset identifier. It is lowercase ASCII
+kebab-case, human-readable, unique within Competition, independent from
+provider IDs, and must not automatically change when display `name`
+changes. Local competition logo assets use:
+
+```text
+/assets/competitions/<Competition.slug>.webp
+```
+
+`logoUrl` is a nullable canonical Goalstery presentation asset URL/path,
+not a provider-specific logo URL. It may point to a local public asset
+such as `/assets/competitions/premier-league.webp` or, later, an
+approved CDN URL. Missing values are valid and must render with a
+frontend fallback badge.
+
 ---
 
 ## 5.3 Constraints
@@ -408,6 +456,7 @@ UEL
 ```text
 UNIQUE(code)
 UNIQUE(providerCompetitionId)
+UNIQUE(slug)
 ```
 
 Если provider IDs потенциально зависят от provider, schema может быть расширена `provider + providerCompetitionId`.
@@ -422,6 +471,7 @@ UNIQUE(providerCompetitionId)
 id
 providerTeamId
 name
+slug
 shortName
 country
 logoUrl
@@ -431,12 +481,27 @@ updatedAt
 
 `country` допускается nullable.
 
+`slug` is a canonical Goalstery asset identifier. It is lowercase ASCII
+kebab-case, human-readable, unique within Team, independent from provider
+IDs, and must not automatically change when display `name` changes. Local
+team logo assets use:
+
+```text
+/assets/teams/<Team.slug>.webp
+```
+
+`logoUrl` is a nullable canonical Goalstery presentation asset URL/path,
+not a provider-specific logo URL. It may point to a local public asset
+such as `/assets/teams/arsenal.webp` or, later, an approved CDN URL.
+Missing values are valid and must render with a frontend fallback badge.
+
 ---
 
 ## 6.2 Constraints
 
 ```text
 UNIQUE(providerTeamId)
+UNIQUE(slug)
 ```
 
 При добавлении нескольких sports providers uniqueness должен быть scoped provider name.

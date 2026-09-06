@@ -21,6 +21,8 @@
     "db:test:reset": "node --env-file=.env scripts/reset-test-database.mjs && node --env-file=.env scripts/run-with-test-database.mjs prisma migrate deploy",
     "db:seed:dev": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env scripts/seed-dev.mjs",
     "telegram:dev-init-data": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env scripts/generate-telegram-dev-init-data.mjs",
+    "football:assets:discover": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env scripts/discover-football-assets.mjs",
+    "football:assets:download": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env scripts/download-football-assets.mjs",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
     "db:logs": "docker compose logs -f postgres"

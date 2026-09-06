@@ -1,0 +1,113 @@
+import type { TranslationShape } from "../i18n";
+
+export const es = {
+  common: {
+    brand: "Goalstery",
+    userFallback: "Usuario {id}",
+    trophyCount: "{count} trofeos",
+  },
+  navigation: {
+    predict: "Pronosticar",
+    cup: "Copa",
+    rating: "Rating",
+    profile: "Perfil",
+    ariaLabel: "Navegación principal",
+    placeholder: "Esta sección no está implementada en esta etapa.",
+  },
+  predict: {
+    title: "Pronosticar",
+    weeklyCup: "Copa semanal",
+    loading: "Cargando partidos de hoy...",
+    authRequired: "Se requiere autenticación.",
+    tabs: {
+      available: "Disponibles",
+      myPicks: "Mis picks",
+      ariaLabel: "Vistas de pronosticos",
+    },
+    quota: {
+      free: "Pronosticos gratis: {used} / {limit}",
+      rewarded: "Con recompensa: {used} / {limit}",
+      total: "Total: {used} / {limit}",
+    },
+    empty: {
+      available: "No hay partidos disponibles hoy.",
+      myPicks: "Aun no tienes picks.",
+    },
+    outcomes: {
+      HOME: "Local",
+      DRAW: "Empate",
+      AWAY: "Visitante",
+    },
+    status: {
+      selected: "Elegido: {outcome}",
+      lockedAfterKickoff: "Bloqueado tras el inicio",
+      saving: "Guardando...",
+      editable: "Editable",
+      locked: "Bloqueado",
+      fixtureFallback: "Partido",
+    },
+    fixtureStatus: {
+      DRAFT: "Borrador",
+      OPEN: "Abierto",
+      LOCKED: "Bloqueado",
+      LIVE: "En vivo",
+      FINISHED: "Finalizado",
+      SETTLED: "Calculado",
+    },
+    slot: {
+      FREE: "Gratis",
+      REWARDED: "Recompensa",
+    },
+    reward: {
+      title: "Mira un anuncio para desbloquear el pronóstico",
+      body: "Los anuncios con recompensa aún no están conectados en esta etapa.",
+    },
+    aria: {
+      selectOutcome: "Elegir {outcome}, {trophyValue}, para {homeTeam} vs {awayTeam}",
+    },
+  },
+  profile: {
+    title: "Perfil",
+    stagePlaceholder: "La carrera y el historial de premios no están implementados en esta etapa.",
+    settingsTitle: "Ajustes",
+    languageLabel: "Idioma",
+    appearanceLabel: "Apariencia",
+    saveError: "No se pudieron guardar los ajustes.",
+  },
+  errors: {
+    generic: "Algo salió mal.",
+    missingTelegramInitData: "Abre la app en Telegram o configura development initData.",
+    network: "La solicitud de red fallo.",
+    invalidApiResponse: "No se pudo leer la respuesta del servidor.",
+    PREDICTION_LOCKED: "Este partido ya comenzó.",
+    DAILY_PREDICTION_LIMIT_REACHED: "Límite diario de pronósticos alcanzado.",
+    FREE_PREDICTION_LIMIT_REACHED: "Se agotaron los pronósticos gratis.",
+    REWARDED_AD_REQUIRED: "Mira un anuncio para desbloquear el pronóstico.",
+    FIXTURE_NOT_IN_DAILY_POOL: "Este partido no está disponible hoy.",
+    FIXTURE_NOT_FOUND: "No se encontró este partido.",
+    FIXTURE_NOT_OPEN: "Este partido no está abierto para pronósticos.",
+    FIXTURE_LOCKED: "Este partido está bloqueado.",
+    FIXTURE_SCORING_SNAPSHOT_MISSING: "Las cuotas para pronosticar este partido aún no están listas.",
+    COMPETITION_NOT_SUPPORTED: "Esta competición no está admitida.",
+    COMPETITION_INACTIVE: "Esta competición no está activa.",
+    PREDICTION_ALREADY_EXISTS: "Ya hiciste un pick para este partido.",
+    PREDICTION_NOT_FOUND: "No se encontró este pick.",
+    INVALID_AD_REWARD: "Esta recompensa de anuncio no se puede usar.",
+    AD_REWARD_ALREADY_CONSUMED: "Esta recompensa de anuncio ya se usó.",
+    IDEMPOTENCY_CONFLICT: "Esta solicitud ya se usó para otro pick.",
+  },
+  settings: {
+    locales: {
+      en: "English",
+      ru: "Русский",
+      de: "Deutsch",
+      es: "Español",
+      ar: "العربية",
+    },
+    appearance: {
+      system: "Sistema",
+      light: "Claro",
+      dark: "Oscuro",
+    },
+  },
+} as const satisfies TranslationShape;

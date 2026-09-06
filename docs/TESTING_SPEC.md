@@ -148,7 +148,28 @@ API contract tests
 Worker tests
 Migration tests
 Smoke tests
+Frontend i18n/theme tests
 ```
+
+User settings tests must cover initial locale from supported Telegram
+`language_code`, fallback to `en` for unsupported Telegram languages,
+manual locale preference not being overwritten by later Telegram sync,
+`GET /api/settings`, partial `PATCH /api/settings`, validation rejection
+for unsupported locale/appearance, and bootstrap returning settings.
+Frontend tests must cover translation fallback, known translation keys,
+complete dictionary contracts for all supported locales, interpolation
+for dynamic UI values, locale-aware number/date/time formatting, known
+API error code presentation, unknown API error fallback, locale direction
+(`ar` -> RTL, others -> LTR), and effective theme resolution for
+`system`, forced `light`, and forced `dark`.
+
+Browser or headless sanity checks for localized UI should cover the
+supported locales in light and dark themes where practical. Checks should
+verify that the Predict screen opens with seeded fixtures, page-level
+scroll and horizontal overflow are absent, the match list remains the
+single vertical scroll region, bottom navigation remains visible, Arabic
+sets root `lang="ar"` and `dir="rtl"`, mixed-direction team names remain
+usable, and dark mode applies the dark semantic token palette.
 
 ---
 
