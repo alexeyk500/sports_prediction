@@ -1,15 +1,22 @@
 import { mkdir, writeFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import {
   API_FOOTBALL_ASSET_DISCOVERY_SEASON,
-  API_FOOTBALL_ASSET_MANIFEST_PATH,
   SUPPORTED_ASSET_DISCOVERY_COMPETITIONS,
-  buildFootballAssetsManifest,
-  summarizeFootballAssetsManifest,
+  slugifyAssetName,
 } from "../src/lib/sports-api/assets/asset-discovery.ts";
+import {
+  FOOTBALL_ASSETS_MANIFEST_PATH,
+  resolveCompetitionAssetIdentity,
+  resolveTeamAssetIdentity,
+  validateFootballAssetsManifest,
+} from "../src/lib/sports-api/assets/asset-manifest.ts";
 
 const apiKey = process.env.API_FOOTBALL_KEY;
 const baseUrl = (process.env.API_FOOTBALL_BASE_URL || "https://v3.football.api-sports.io").replace(/\/+$/, "");
+const DISCOVERY_REPORT_PATH = "data/football-assets-discovery-report.json";
+const assetManifest = loadCanonicalManifest();
 
 if (process.env.NODE_ENV === "production") {
   console.error("Refusing to run football asset discovery with NODE_ENV=production.");
@@ -23,14 +30,14 @@ if (!apiKey) {
 }
 
 try {
-  const manifest = await discoverFootballAssets();
-  const manifestPath = path.resolve(process.cwd(), API_FOOTBALL_ASSET_MANIFEST_PATH);
+  const report = await discoverFootballAssets();
+  const reportPath = path.resolve(process.cwd(), DISCOVERY_REPORT_PATH);
 
-  await mkdir(path.dirname(manifestPath), { recursive: true });
-  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  await mkdir(path.dirname(reportPath), { recursive: true });
+  await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
 
-  printSummary(manifest);
-  console.log(`Manifest written: ${API_FOOTBALL_ASSET_MANIFEST_PATH}`);
+  printSummary(report);
+  console.log(`Discovery report written: ${DISCOVERY_REPORT_PATH}`);
 } catch (error) {
   const message = error instanceof Error ? error.message : "Unknown football asset discovery error.";
   console.error(message);
@@ -38,28 +45,53 @@ try {
 }
 
 async function discoverFootballAssets() {
-  const providerLeagues = [];
-  const providerTeams = [];
+  const report = {
+    schemaVersion: 1,
+    provider: "api-football",
+    season: API_FOOTBALL_ASSET_DISCOVERY_SEASON,
+    generatedAt: new Date().toISOString(),
+    competitions: [],
+    teams: [],
+  };
 
   for (const competition of SUPPORTED_ASSET_DISCOVERY_COMPETITIONS) {
     const league = await resolveLeague(competition);
-    providerLeagues.push(league);
+    const competitionIdentity = league.providerLeagueId
+      ? resolveCompetitionAssetIdentity(assetManifest, league.providerLeagueId)
+      : null;
+
+    report.competitions.push({
+      goalsteryCode: competition.goalsteryCode,
+      providerLeagueId: league.providerLeagueId,
+      providerName: league.providerName,
+      canonicalName:
+        competitionIdentity?.status === "mapped" ? competitionIdentity.canonicalName : null,
+      slug: competitionIdentity?.status === "mapped" ? competitionIdentity.slug : null,
+      candidateSlug: slugifyAssetName(competition.name),
+      status: competitionIdentity?.status ?? "unmapped",
+      availableForSeason: league.availableForSeason,
+    });
 
     if (!league.providerLeagueId) {
       continue;
     }
 
     const teams = await fetchTeamsForLeague(competition.goalsteryCode, league.providerLeagueId);
-    providerTeams.push(...teams);
+    for (const team of teams) {
+      const identity = team.providerTeamId ? resolveTeamAssetIdentity(assetManifest, team.providerTeamId) : null;
+      report.teams.push({
+        competitionCode: team.competitionCode,
+        providerTeamId: team.providerTeamId,
+        providerName: team.providerName,
+        canonicalName: identity?.status === "mapped" ? identity.canonicalName : null,
+        slug: identity?.status === "mapped" ? identity.slug : null,
+        candidateSlug: team.providerName ? slugifyAssetName(team.providerName) : null,
+        status: identity?.status ?? "unmapped",
+      });
+    }
   }
 
-  return buildFootballAssetsManifest({
-    season: API_FOOTBALL_ASSET_DISCOVERY_SEASON,
-    generatedAt: new Date().toISOString(),
-    requestedCompetitions: SUPPORTED_ASSET_DISCOVERY_COMPETITIONS,
-    providerLeagues,
-    providerTeams,
-  });
+  return report;
 }
 
 async function resolveLeague(competition) {
@@ -161,37 +193,50 @@ function stringOrNull(value) {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
-function printSummary(manifest) {
-  const summary = summarizeFootballAssetsManifest(manifest);
+function loadCanonicalManifest() {
+  try {
+    const manifest = JSON.parse(readFileSync(FOOTBALL_ASSETS_MANIFEST_PATH, "utf8"));
+    const validation = validateFootballAssetsManifest(manifest);
+    if (!validation.valid) {
+      throw new Error(`Canonical football assets manifest is invalid: ${JSON.stringify(validation.issues)}`);
+    }
+
+    return manifest;
+  } catch (error) {
+    throw new Error(
+      `Football asset discovery requires ${FOOTBALL_ASSETS_MANIFEST_PATH}. Build/review it before discovery comparison.`,
+      { cause: error },
+    );
+  }
+}
+
+function printSummary(report) {
+  const uniqueMappedTeams = new Set(
+    report.teams
+      .filter((team) => team.providerTeamId !== null && team.status === "mapped")
+      .map((team) => team.providerTeamId),
+  );
+  const uniqueUnmappedTeams = new Set(
+    report.teams
+      .filter((team) => team.providerTeamId !== null && team.status === "unmapped")
+      .map((team) => team.providerTeamId),
+  );
 
   console.log("Football asset discovery complete.");
-  console.log(`Season: ${manifest.season}`);
+  console.log(`Season: ${report.season}`);
   console.log("Provider: API-Football");
-  console.log(`Competitions discovered: ${summary.competitionsDiscovered} / ${summary.competitionsRequested}`);
-  console.log(`Unique teams: ${summary.uniqueTeams}`);
-  console.log(`Competition memberships: ${summary.competitionMemberships}`);
-  console.log(`Teams appearing in multiple competitions: ${summary.teamsInMultipleCompetitions.length}`);
-  console.log(`Missing logo sources: ${summary.missingLogoSources}`);
-  console.log(`Slug collisions: ${summary.slugCollisions}`);
-  console.log(`Warnings: ${summary.warnings}`);
-  console.log(`Errors: ${summary.errors}`);
+  console.log(`Competitions discovered: ${report.competitions.filter((competition) => competition.providerLeagueId !== null).length} / ${report.competitions.length}`);
+  console.log(`Mapped competitions: ${report.competitions.filter((competition) => competition.status === "mapped").length}`);
+  console.log(`Unmapped competitions: ${report.competitions.filter((competition) => competition.status === "unmapped").length}`);
+  console.log(`Mapped unique teams: ${uniqueMappedTeams.size}`);
+  console.log(`Unmapped unique teams: ${uniqueUnmappedTeams.size}`);
   console.table(
-    summary.competitionBreakdown.map((competition) => ({
-      competition: competition.name,
-      code: competition.code,
-      teams: competition.teams,
+    report.competitions.map((competition) => ({
+      competition: competition.providerName,
+      code: competition.goalsteryCode,
+      leagueId: competition.providerLeagueId,
+      status: competition.status,
       availableForSeason: competition.availableForSeason,
     })),
   );
-
-  if (summary.teamsInMultipleCompetitions.length > 0) {
-    console.log("Teams in multiple supported competitions:");
-    console.table(
-      summary.teamsInMultipleCompetitions.map((team) => ({
-        team: team.name,
-        slug: team.slug,
-        competitions: team.competitions.join(", "),
-      })),
-    );
-  }
 }

@@ -32,7 +32,6 @@ describe("match card presentation", () => {
         code: "EPL",
         name: "Premier League",
         slug: "premier-league",
-        logoUrl: null,
       }),
     ).toMatchObject({
       label: "Premier League",
@@ -46,7 +45,6 @@ describe("match card presentation", () => {
         code: "UNKNOWN",
         name: "Open Cup",
         slug: "open-cup",
-        logoUrl: null,
       }),
     ).toMatchObject({
       tone: "slate",
@@ -61,7 +59,6 @@ describe("match card presentation", () => {
         code: "EPL",
         name: "Renamed League",
         slug: "premier-league",
-        logoUrl: "/assets/competitions/provider-ignored.webp",
       }),
     ).toMatchObject({
       initials: "RL",
@@ -76,7 +73,6 @@ describe("match card presentation", () => {
         name: "Manchester City",
         slug: "manchester-city",
         shortName: null,
-        logoUrl: null,
       }),
     ).toMatchObject({
       label: "Manchester City",
@@ -93,7 +89,6 @@ describe("match card presentation", () => {
         name: "Bayern München",
         slug: "bayern-munchen",
         shortName: null,
-        logoUrl: "/assets/teams/provider-ignored.webp",
       }),
     ).toMatchObject({
       logoUrl: "/assets/teams/bayern-munchen.webp",

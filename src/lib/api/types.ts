@@ -65,21 +65,18 @@ export interface TodayFixtureDto {
     code: string;
     name: string;
     slug: string;
-    logoUrl: string | null;
   };
   homeTeam: {
     id: string;
     name: string;
     slug: string;
     shortName: string | null;
-    logoUrl: string | null;
   };
   awayTeam: {
     id: string;
     name: string;
     slug: string;
     shortName: string | null;
-    logoUrl: string | null;
   };
   status: string;
   outcomes: Record<Lowercase<PredictionOutcome>, { points: number }>;

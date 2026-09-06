@@ -290,15 +290,15 @@ describe("Telegram auth HTTP vertical slice", () => {
     await Promise.all([
       prisma.competition.update({
         where: { id: activeCompetition.id },
-        data: { logoUrl: "/assets/competitions/la-liga.webp", slug: "la-liga" },
+        data: { slug: "la-liga" },
       }),
       prisma.team.update({
         where: { id: includedFixture.homeTeamId },
-        data: { logoUrl: "/assets/teams/home-test.webp", slug: "home-test" },
+        data: { slug: "home-test" },
       }),
       prisma.team.update({
         where: { id: includedFixture.awayTeamId },
-        data: { logoUrl: "/assets/teams/away-test.webp", slug: "away-test" },
+        data: { slug: "away-test" },
       }),
     ]);
     const tomorrowFixture = await createTestFixture(prisma, {
@@ -325,9 +325,9 @@ describe("Telegram auth HTTP vertical slice", () => {
     const body = await responseJson(response) as {
       fixtures: Array<{
         id: string;
-        competition: { slug: string; logoUrl: string | null };
-        homeTeam: { slug: string; logoUrl: string | null };
-        awayTeam: { slug: string; logoUrl: string | null };
+        competition: { slug: string };
+        homeTeam: { slug: string };
+        awayTeam: { slug: string };
         outcomes: { home: { points: number }; draw: { points: number }; away: { points: number } };
       }>;
     };
@@ -343,10 +343,14 @@ describe("Telegram auth HTTP vertical slice", () => {
       away: { points: 27 },
     });
     expect(body.fixtures.find((fixture) => fixture.id === includedFixture.id)).toMatchObject({
-      competition: { slug: "la-liga", logoUrl: "/assets/competitions/la-liga.webp" },
-      homeTeam: { slug: "home-test", logoUrl: "/assets/teams/home-test.webp" },
-      awayTeam: { slug: "away-test", logoUrl: "/assets/teams/away-test.webp" },
+      competition: { slug: "la-liga" },
+      homeTeam: { slug: "home-test" },
+      awayTeam: { slug: "away-test" },
     });
+    const includedDto = body.fixtures.find((fixture) => fixture.id === includedFixture.id);
+    expect(includedDto?.competition).not.toHaveProperty("logoUrl");
+    expect(includedDto?.homeTeam).not.toHaveProperty("logoUrl");
+    expect(includedDto?.awayTeam).not.toHaveProperty("logoUrl");
   });
 
   it("creates and updates Prediction through HTTP without trusting client user identity", async () => {

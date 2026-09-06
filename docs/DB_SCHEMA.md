@@ -402,7 +402,6 @@ code
 name
 slug
 country
-logoUrl
 isActive
 createdAt
 updatedAt
@@ -416,7 +415,6 @@ code                  VARCHAR UNIQUE NOT NULL
 name                  VARCHAR NOT NULL
 slug                  VARCHAR UNIQUE NOT NULL
 country               VARCHAR NULL
-logoUrl               TEXT NULL
 isActive              BOOLEAN NOT NULL DEFAULT true
 ```
 
@@ -443,11 +441,9 @@ changes. Local competition logo assets use:
 /assets/competitions/<Competition.slug>.webp
 ```
 
-`logoUrl` is a nullable canonical Goalstery presentation asset URL/path,
-not a provider-specific logo URL. It may point to a local public asset
-such as `/assets/competitions/premier-league.webp` or, later, an
-approved CDN URL. Missing values are valid and must render with a
-frontend fallback badge.
+`slug` is assigned from the reviewed football asset manifest / ingestion
+boundary. It must not be derived by frontend runtime from display `name`,
+provider ID, or provider logo URL.
 
 ---
 
@@ -474,7 +470,6 @@ name
 slug
 shortName
 country
-logoUrl
 createdAt
 updatedAt
 ```
@@ -490,10 +485,9 @@ team logo assets use:
 /assets/teams/<Team.slug>.webp
 ```
 
-`logoUrl` is a nullable canonical Goalstery presentation asset URL/path,
-not a provider-specific logo URL. It may point to a local public asset
-such as `/assets/teams/arsenal.webp` or, later, an approved CDN URL.
-Missing values are valid and must render with a frontend fallback badge.
+`slug` is assigned from the reviewed football asset manifest / ingestion
+boundary. It must not be derived by frontend runtime from display `name`,
+provider ID, or provider logo URL.
 
 ---
 

@@ -5,9 +5,14 @@ import sharp from "sharp";
 import {
   SUPPORTED_ASSET_DISCOVERY_COMPETITIONS,
   competitionAssetLogoUrl,
-  slugifyAssetName,
   teamAssetLogoUrl,
 } from "../src/lib/sports-api/assets/asset-discovery.ts";
+import {
+  FOOTBALL_ASSETS_MANIFEST_PATH,
+  resolveCompetitionAssetIdentity,
+  resolveTeamAssetIdentity,
+  validateFootballAssetsManifest,
+} from "../src/lib/sports-api/assets/asset-manifest.ts";
 
 const API_FOOTBALL_ASSET_DOWNLOAD_SEASON = 2024;
 const DOWNLOAD_REPORT_PATH = "data/football-assets-download-report.json";
@@ -15,7 +20,7 @@ const API_FOOTBALL_MIN_REQUEST_INTERVAL_MS = 6500;
 const API_FOOTBALL_RATE_LIMIT_RETRY_MS = 65000;
 const apiKey = process.env.API_FOOTBALL_KEY;
 const baseUrl = (process.env.API_FOOTBALL_BASE_URL || "https://v3.football.api-sports.io").replace(/\/+$/, "");
-const existingReport = loadExistingDownloadReport();
+const assetManifest = loadCanonicalManifest();
 let lastApiFootballRequestAt = 0;
 
 if (process.env.NODE_ENV === "production") {
@@ -51,6 +56,8 @@ async function downloadFootballAssets() {
     format: "webp",
     competitions: [],
     teams: [],
+    unmappedCompetitions: [],
+    unmappedTeams: [],
     warnings: [],
   };
 
@@ -63,7 +70,40 @@ async function downloadFootballAssets() {
 
   for (const competition of SUPPORTED_ASSET_DISCOVERY_COMPETITIONS) {
     const league = await resolveLeague(competition);
-    const competitionSlug = canonicalCompetitionSlug(competition, league.providerLeagueId);
+    if (!league.providerLeagueId) {
+      report.warnings.push({
+        severity: "error",
+        code: "MISSING_LEAGUE_ID",
+        message: `Provider league ID is missing for ${competition.name}.`,
+        details: { goalsteryCode: competition.goalsteryCode },
+      });
+      report.unmappedCompetitions.push({
+        goalsteryCode: competition.goalsteryCode,
+        providerName: league.providerName,
+        providerLeagueId: null,
+        reason: "missing_provider_league_id",
+      });
+      continue;
+    }
+
+    const competitionIdentity = resolveCompetitionAssetIdentity(assetManifest, league.providerLeagueId);
+    if (competitionIdentity.status === "unmapped") {
+      report.unmappedCompetitions.push({
+        goalsteryCode: competition.goalsteryCode,
+        providerName: league.providerName,
+        providerLeagueId: league.providerLeagueId,
+        reason: "provider_league_not_in_manifest",
+      });
+      report.warnings.push({
+        severity: "warning",
+        code: "UNMAPPED_COMPETITION",
+        message: `Provider league ${league.providerLeagueId} is not mapped in canonical asset manifest.`,
+        details: { goalsteryCode: competition.goalsteryCode, providerLeagueId: league.providerLeagueId },
+      });
+      continue;
+    }
+
+    const competitionSlug = competitionIdentity.slug;
     const existingCompetitionCode = competitionSlugToCode.get(competitionSlug);
     if (existingCompetitionCode && existingCompetitionCode !== competition.goalsteryCode) {
       report.warnings.push({
@@ -96,19 +136,6 @@ async function downloadFootballAssets() {
       downloadStatus: "pending",
       error: null,
     };
-
-    if (!league.providerLeagueId) {
-      competitionEntry.downloadStatus = "failed";
-      competitionEntry.error = "Missing provider league ID.";
-      report.warnings.push({
-        severity: "error",
-        code: "MISSING_LEAGUE_ID",
-        message: `Provider league ID is missing for ${competition.name}.`,
-        details: { goalsteryCode: competition.goalsteryCode },
-      });
-      report.competitions.push(competitionEntry);
-      continue;
-    }
 
     if (!league.providerLogoSourceUrl) {
       competitionEntry.downloadStatus = "missing_logo";
@@ -161,7 +188,25 @@ async function downloadFootballAssets() {
         continue;
       }
 
-      const teamSlug = canonicalTeamSlug(team);
+      const teamIdentity = resolveTeamAssetIdentity(assetManifest, team.providerTeamId);
+      if (teamIdentity.status === "unmapped") {
+        report.unmappedTeams.push({
+          competitionCode: competition.goalsteryCode,
+          providerTeamId: team.providerTeamId,
+          providerName: team.providerName,
+          candidateSlug: null,
+          reason: "provider_team_not_in_manifest",
+        });
+        report.warnings.push({
+          severity: "warning",
+          code: "UNMAPPED_TEAM",
+          message: `Provider team ${team.providerTeamId} is not mapped in canonical asset manifest.`,
+          details: { competitionCode: competition.goalsteryCode, providerTeamId: team.providerTeamId },
+        });
+        continue;
+      }
+
+      const teamSlug = teamIdentity.slug;
       const existingProviderId = teamSlugToProviderId.get(teamSlug);
       if (existingProviderId !== undefined && existingProviderId !== team.providerTeamId) {
         report.warnings.push({
@@ -396,32 +441,21 @@ function stringOrNull(value) {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
-function loadExistingDownloadReport() {
+function loadCanonicalManifest() {
   try {
-    return JSON.parse(readFileSync("data/football-assets-download-report.json", "utf8"));
-  } catch {
-    return null;
+    const manifest = JSON.parse(readFileSync(FOOTBALL_ASSETS_MANIFEST_PATH, "utf8"));
+    const validation = validateFootballAssetsManifest(manifest);
+    if (!validation.valid) {
+      throw new Error(`Canonical football assets manifest is invalid: ${JSON.stringify(validation.issues)}`);
+    }
+
+    return manifest;
+  } catch (error) {
+    throw new Error(
+      `Football asset download requires ${FOOTBALL_ASSETS_MANIFEST_PATH}. Build/review it before downloading assets.`,
+      { cause: error },
+    );
   }
-}
-
-function canonicalCompetitionSlug(competition, providerLeagueId) {
-  const existingCompetition = existingReport?.competitions?.find(
-    (entry) =>
-      entry?.goalsteryCode === competition.goalsteryCode ||
-      (providerLeagueId !== null && entry?.provider?.leagueId === providerLeagueId),
-  );
-
-  return typeof existingCompetition?.slug === "string" && existingCompetition.slug.length > 0
-    ? existingCompetition.slug
-    : slugifyAssetName(competition.name);
-}
-
-function canonicalTeamSlug(team) {
-  const existingTeam = existingReport?.teams?.find((entry) => entry?.provider?.teamId === team.providerTeamId);
-
-  return typeof existingTeam?.slug === "string" && existingTeam.slug.length > 0
-    ? existingTeam.slug
-    : slugifyAssetName(team.providerName);
 }
 
 function printSummary(report) {
@@ -446,6 +480,8 @@ function printSummary(report) {
   console.log(`Team logos failed: ${failedTeams.length}`);
   console.log(`Team logos missing source URL: ${missingTeamLogos.length}`);
   console.log(`Slug collisions: ${slugCollisions}`);
+  console.log(`Unmapped competitions: ${report.unmappedCompetitions.length}`);
+  console.log(`Unmapped teams: ${report.unmappedTeams.length}`);
   console.table(
     report.competitions.map((competition) => ({
       competition: competition.name,

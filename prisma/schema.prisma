@@ -129,7 +129,6 @@ model Competition {
   name                  String
   slug                  String   @unique
   country               String?
-  logoUrl               String?  @db.Text
   isActive              Boolean  @default(true)
   createdAt             DateTime @default(now()) @db.Timestamptz(6)
   updatedAt             DateTime @updatedAt @db.Timestamptz(6)
@@ -146,7 +145,6 @@ model Team {
   slug           String   @unique
   shortName      String?
   country        String?
-  logoUrl        String?  @db.Text
   createdAt      DateTime @default(now()) @db.Timestamptz(6)
   updatedAt      DateTime @updatedAt @db.Timestamptz(6)
 

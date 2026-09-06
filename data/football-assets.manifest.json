@@ -1,0 +1,1401 @@
+{
+  "version": 1,
+  "provider": "api-football",
+  "competitions": [
+    {
+      "provider": "api-football",
+      "providerLeagueId": 39,
+      "providerName": "Premier League",
+      "canonicalName": "Premier League",
+      "slug": "premier-league"
+    },
+    {
+      "provider": "api-football",
+      "providerLeagueId": 140,
+      "providerName": "La Liga",
+      "canonicalName": "La Liga",
+      "slug": "la-liga"
+    },
+    {
+      "provider": "api-football",
+      "providerLeagueId": 135,
+      "providerName": "Serie A",
+      "canonicalName": "Serie A",
+      "slug": "serie-a"
+    },
+    {
+      "provider": "api-football",
+      "providerLeagueId": 78,
+      "providerName": "Bundesliga",
+      "canonicalName": "Bundesliga",
+      "slug": "bundesliga"
+    },
+    {
+      "provider": "api-football",
+      "providerLeagueId": 61,
+      "providerName": "Ligue 1",
+      "canonicalName": "Ligue 1",
+      "slug": "ligue-1"
+    },
+    {
+      "provider": "api-football",
+      "providerLeagueId": 2,
+      "providerName": "UEFA Champions League",
+      "canonicalName": "UEFA Champions League",
+      "slug": "uefa-champions-league"
+    },
+    {
+      "provider": "api-football",
+      "providerLeagueId": 3,
+      "providerName": "UEFA Europa League",
+      "canonicalName": "UEFA Europa League",
+      "slug": "uefa-europa-league"
+    }
+  ],
+  "teams": [
+    {
+      "provider": "api-football",
+      "providerTeamId": 180,
+      "providerName": "1. FC Heidenheim",
+      "canonicalName": "1. FC Heidenheim",
+      "slug": "1-fc-heidenheim"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 167,
+      "providerName": "1899 Hoffenheim",
+      "canonicalName": "1899 Hoffenheim",
+      "slug": "1899-hoffenheim"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 489,
+      "providerName": "AC Milan",
+      "canonicalName": "AC Milan",
+      "slug": "ac-milan"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 194,
+      "providerName": "Ajax",
+      "canonicalName": "Ajax",
+      "slug": "ajax"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 542,
+      "providerName": "Alaves",
+      "canonicalName": "Alaves",
+      "slug": "alaves"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 554,
+      "providerName": "Anderlecht",
+      "canonicalName": "Anderlecht",
+      "slug": "anderlecht"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 77,
+      "providerName": "Angers",
+      "canonicalName": "Angers",
+      "slug": "angers"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 2247,
+      "providerName": "Apoel Nicosia",
+      "canonicalName": "Apoel Nicosia",
+      "slug": "apoel-nicosia"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 42,
+      "providerName": "Arsenal",
+      "canonicalName": "Arsenal",
+      "slug": "arsenal"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 497,
+      "providerName": "AS Roma",
+      "canonicalName": "AS Roma",
+      "slug": "as-roma"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 66,
+      "providerName": "Aston Villa",
+      "canonicalName": "Aston Villa",
+      "slug": "aston-villa"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 499,
+      "providerName": "Atalanta",
+      "canonicalName": "Atalanta",
+      "slug": "atalanta"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 531,
+      "providerName": "Athletic Club",
+      "canonicalName": "Athletic Club",
+      "slug": "athletic-club"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 530,
+      "providerName": "Atletico Madrid",
+      "canonicalName": "Atletico Madrid",
+      "slug": "atletico-madrid"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 108,
+      "providerName": "Auxerre",
+      "canonicalName": "Auxerre",
+      "slug": "auxerre"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 201,
+      "providerName": "AZ Alkmaar",
+      "canonicalName": "AZ Alkmaar",
+      "slug": "az-alkmaar"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 12733,
+      "providerName": "Ballkani",
+      "canonicalName": "Ballkani",
+      "slug": "ballkani"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 529,
+      "providerName": "Barcelona",
+      "canonicalName": "Barcelona",
+      "slug": "barcelona"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 168,
+      "providerName": "Bayer Leverkusen",
+      "canonicalName": "Bayer Leverkusen",
+      "slug": "bayer-leverkusen"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 157,
+      "providerName": "Bayern München",
+      "canonicalName": "Bayern München",
+      "slug": "bayern-munchen"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 211,
+      "providerName": "Benfica",
+      "canonicalName": "Benfica",
+      "slug": "benfica"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 549,
+      "providerName": "Beşiktaş",
+      "canonicalName": "Beşiktaş",
+      "slug": "besiktas"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 327,
+      "providerName": "Bodo/Glimt",
+      "canonicalName": "Bodo/Glimt",
+      "slug": "bodo-glimt"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 500,
+      "providerName": "Bologna",
+      "canonicalName": "Bologna",
+      "slug": "bologna"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 3364,
+      "providerName": "Borac Banja Luka",
+      "canonicalName": "Borac Banja Luka",
+      "slug": "borac-banja-luka"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 165,
+      "providerName": "Borussia Dortmund",
+      "canonicalName": "Borussia Dortmund",
+      "slug": "borussia-dortmund"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 163,
+      "providerName": "Borussia Mönchengladbach",
+      "canonicalName": "Borussia Mönchengladbach",
+      "slug": "borussia-monchengladbach"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 634,
+      "providerName": "Botev Plovdiv",
+      "canonicalName": "Botev Plovdiv",
+      "slug": "botev-plovdiv"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 35,
+      "providerName": "Bournemouth",
+      "canonicalName": "Bournemouth",
+      "slug": "bournemouth"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 55,
+      "providerName": "Brentford",
+      "canonicalName": "Brentford",
+      "slug": "brentford"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 51,
+      "providerName": "Brighton",
+      "canonicalName": "Brighton",
+      "slug": "brighton"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 565,
+      "providerName": "BSC Young Boys",
+      "canonicalName": "BSC Young Boys",
+      "slug": "bsc-young-boys"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 490,
+      "providerName": "Cagliari",
+      "canonicalName": "Cagliari",
+      "slug": "cagliari"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 4360,
+      "providerName": "Celje",
+      "canonicalName": "Celje",
+      "slug": "celje"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 538,
+      "providerName": "Celta Vigo",
+      "canonicalName": "Celta Vigo",
+      "slug": "celta-vigo"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 247,
+      "providerName": "Celtic",
+      "canonicalName": "Celtic",
+      "slug": "celtic"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 741,
+      "providerName": "Cercle Brugge",
+      "canonicalName": "Cercle Brugge",
+      "slug": "cercle-brugge"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 49,
+      "providerName": "Chelsea",
+      "canonicalName": "Chelsea",
+      "slug": "chelsea"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 569,
+      "providerName": "Club Brugge KV",
+      "canonicalName": "Club Brugge KV",
+      "slug": "club-brugge-kv"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 895,
+      "providerName": "Como",
+      "canonicalName": "Como",
+      "slug": "como"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 20034,
+      "providerName": "Corvinul Hunedoara",
+      "canonicalName": "Corvinul Hunedoara",
+      "slug": "corvinul-hunedoara"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 52,
+      "providerName": "Crystal Palace",
+      "canonicalName": "Crystal Palace",
+      "slug": "crystal-palace"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 3745,
+      "providerName": "Dečić",
+      "canonicalName": "Dečić",
+      "slug": "decic"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 705,
+      "providerName": "Dinamo Batumi",
+      "canonicalName": "Dinamo Batumi",
+      "slug": "dinamo-batumi"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 394,
+      "providerName": "Dinamo Minsk",
+      "canonicalName": "Dinamo Minsk",
+      "slug": "dinamo-minsk"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 620,
+      "providerName": "Dinamo Zagreb",
+      "canonicalName": "Dinamo Zagreb",
+      "slug": "dinamo-zagreb"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 572,
+      "providerName": "Dynamo Kyiv",
+      "canonicalName": "Dynamo Kyiv",
+      "slug": "dynamo-kyiv"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 3327,
+      "providerName": "Egnatia Rrogozhinë",
+      "canonicalName": "Egnatia Rrogozhinë",
+      "slug": "egnatia-rrogozhine"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 169,
+      "providerName": "Eintracht Frankfurt",
+      "canonicalName": "Eintracht Frankfurt",
+      "slug": "eintracht-frankfurt"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 511,
+      "providerName": "Empoli",
+      "canonicalName": "Empoli",
+      "slug": "empoli"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 540,
+      "providerName": "Espanyol",
+      "canonicalName": "Espanyol",
+      "slug": "espanyol"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 45,
+      "providerName": "Everton",
+      "canonicalName": "Everton",
+      "slug": "everton"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 170,
+      "providerName": "FC Augsburg",
+      "canonicalName": "FC Augsburg",
+      "slug": "fc-augsburg"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 684,
+      "providerName": "FC Differdange 03",
+      "canonicalName": "FC Differdange 03",
+      "slug": "fc-differdange-03"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 606,
+      "providerName": "FC Lugano",
+      "canonicalName": "FC Lugano",
+      "slug": "fc-lugano"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 397,
+      "providerName": "FC Midtjylland",
+      "canonicalName": "FC Midtjylland",
+      "slug": "fc-midtjylland"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 212,
+      "providerName": "FC Porto",
+      "canonicalName": "FC Porto",
+      "slug": "fc-porto"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 186,
+      "providerName": "FC St. Pauli",
+      "canonicalName": "FC St. Pauli",
+      "slug": "fc-st-pauli"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 559,
+      "providerName": "FCSB",
+      "canonicalName": "FCSB",
+      "slug": "fcsb"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 611,
+      "providerName": "Fenerbahçe",
+      "canonicalName": "Fenerbahçe",
+      "slug": "fenerbahce"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 651,
+      "providerName": "Ferencvarosi TC",
+      "canonicalName": "Ferencvarosi TC",
+      "slug": "ferencvarosi-tc"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 209,
+      "providerName": "Feyenoord",
+      "canonicalName": "Feyenoord",
+      "slug": "feyenoord"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 502,
+      "providerName": "Fiorentina",
+      "canonicalName": "Fiorentina",
+      "slug": "fiorentina"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 598,
+      "providerName": "FK Crvena Zvezda",
+      "canonicalName": "FK Crvena Zvezda",
+      "slug": "fk-crvena-zvezda"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 573,
+      "providerName": "FK Partizan",
+      "canonicalName": "FK Partizan",
+      "slug": "fk-partizan"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 2259,
+      "providerName": "FK Tobol Kostanay",
+      "canonicalName": "FK Tobol Kostanay",
+      "slug": "fk-tobol-kostanay"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 687,
+      "providerName": "Flora Tallinn",
+      "canonicalName": "Flora Tallinn",
+      "slug": "flora-tallinn"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 164,
+      "providerName": "FSV Mainz 05",
+      "canonicalName": "FSV Mainz 05",
+      "slug": "fsv-mainz-05"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 36,
+      "providerName": "Fulham",
+      "canonicalName": "Fulham",
+      "slug": "fulham"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 645,
+      "providerName": "Galatasaray",
+      "canonicalName": "Galatasaray",
+      "slug": "galatasaray"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 495,
+      "providerName": "Genoa",
+      "canonicalName": "Genoa",
+      "slug": "genoa"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 546,
+      "providerName": "Getafe",
+      "canonicalName": "Getafe",
+      "slug": "getafe"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 547,
+      "providerName": "Girona",
+      "canonicalName": "Girona",
+      "slug": "girona"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 4626,
+      "providerName": "Hamrun Spartans",
+      "canonicalName": "Hamrun Spartans",
+      "slug": "hamrun-spartans"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 254,
+      "providerName": "Heart Of Midlothian",
+      "canonicalName": "Heart Of Midlothian",
+      "slug": "heart-of-midlothian"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 504,
+      "providerName": "Hellas Verona",
+      "canonicalName": "Hellas Verona",
+      "slug": "hellas-verona"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 649,
+      "providerName": "HJK Helsinki",
+      "canonicalName": "HJK Helsinki",
+      "slug": "hjk-helsinki"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 561,
+      "providerName": "HNK Rijeka",
+      "canonicalName": "HNK Rijeka",
+      "slug": "hnk-rijeka"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 191,
+      "providerName": "Holstein Kiel",
+      "canonicalName": "Holstein Kiel",
+      "slug": "holstein-kiel"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 372,
+      "providerName": "IF Elfsborg",
+      "canonicalName": "IF Elfsborg",
+      "slug": "if-elfsborg"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 505,
+      "providerName": "Inter",
+      "canonicalName": "Inter",
+      "slug": "inter"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 57,
+      "providerName": "Ipswich",
+      "canonicalName": "Ipswich",
+      "slug": "ipswich"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 336,
+      "providerName": "Jagiellonia",
+      "canonicalName": "Jagiellonia",
+      "slug": "jagiellonia"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 496,
+      "providerName": "Juventus",
+      "canonicalName": "Juventus",
+      "slug": "juventus"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 701,
+      "providerName": "KI Klaksvik",
+      "canonicalName": "KI Klaksvik",
+      "slug": "ki-klaksvik"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 250,
+      "providerName": "Kilmarnock",
+      "canonicalName": "Kilmarnock",
+      "slug": "kilmarnock"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 6489,
+      "providerName": "Kryvbas KR",
+      "canonicalName": "Kryvbas KR",
+      "slug": "kryvbas-kr"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 5354,
+      "providerName": "Larne",
+      "canonicalName": "Larne",
+      "slug": "larne"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 534,
+      "providerName": "Las Palmas",
+      "canonicalName": "Las Palmas",
+      "slug": "las-palmas"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 1026,
+      "providerName": "Lask Linz",
+      "canonicalName": "Lask Linz",
+      "slug": "lask-linz"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 487,
+      "providerName": "Lazio",
+      "canonicalName": "Lazio",
+      "slug": "lazio"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 111,
+      "providerName": "Le Havre",
+      "canonicalName": "Le Havre",
+      "slug": "le-havre"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 867,
+      "providerName": "Lecce",
+      "canonicalName": "Lecce",
+      "slug": "lecce"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 537,
+      "providerName": "Leganes",
+      "canonicalName": "Leganes",
+      "slug": "leganes"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 46,
+      "providerName": "Leicester",
+      "canonicalName": "Leicester",
+      "slug": "leicester"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 116,
+      "providerName": "Lens",
+      "canonicalName": "Lens",
+      "slug": "lens"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 79,
+      "providerName": "Lille",
+      "canonicalName": "Lille",
+      "slug": "lille"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 667,
+      "providerName": "Lincoln Red Imps FC",
+      "canonicalName": "Lincoln Red Imps FC",
+      "slug": "lincoln-red-imps-fc"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 40,
+      "providerName": "Liverpool",
+      "canonicalName": "Liverpool",
+      "slug": "liverpool"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 14395,
+      "providerName": "Llapi",
+      "canonicalName": "Llapi",
+      "slug": "llapi"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 566,
+      "providerName": "Ludogorets",
+      "canonicalName": "Ludogorets",
+      "slug": "ludogorets"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 80,
+      "providerName": "Lyon",
+      "canonicalName": "Lyon",
+      "slug": "lyon"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 4495,
+      "providerName": "Maccabi Petah Tikva",
+      "canonicalName": "Maccabi Petah Tikva",
+      "slug": "maccabi-petah-tikva"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 604,
+      "providerName": "Maccabi Tel Aviv",
+      "canonicalName": "Maccabi Tel Aviv",
+      "slug": "maccabi-tel-aviv"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 798,
+      "providerName": "Mallorca",
+      "canonicalName": "Mallorca",
+      "slug": "mallorca"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 375,
+      "providerName": "Malmo FF",
+      "canonicalName": "Malmo FF",
+      "slug": "malmo-ff"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 50,
+      "providerName": "Manchester City",
+      "canonicalName": "Manchester City",
+      "slug": "manchester-city"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 33,
+      "providerName": "Manchester United",
+      "canonicalName": "Manchester United",
+      "slug": "manchester-united"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 552,
+      "providerName": "Maribor",
+      "canonicalName": "Maribor",
+      "slug": "maribor"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 81,
+      "providerName": "Marseille",
+      "canonicalName": "Marseille",
+      "slug": "marseille"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 112,
+      "providerName": "Metz",
+      "canonicalName": "Metz",
+      "slug": "metz"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 329,
+      "providerName": "Molde",
+      "canonicalName": "Molde",
+      "slug": "molde"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 91,
+      "providerName": "Monaco",
+      "canonicalName": "Monaco",
+      "slug": "monaco"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 82,
+      "providerName": "Montpellier",
+      "canonicalName": "Montpellier",
+      "slug": "montpellier"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 1579,
+      "providerName": "Monza",
+      "canonicalName": "Monza",
+      "slug": "monza"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 83,
+      "providerName": "Nantes",
+      "canonicalName": "Nantes",
+      "slug": "nantes"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 492,
+      "providerName": "Napoli",
+      "canonicalName": "Napoli",
+      "slug": "napoli"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 34,
+      "providerName": "Newcastle",
+      "canonicalName": "Newcastle",
+      "slug": "newcastle"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 84,
+      "providerName": "Nice",
+      "canonicalName": "Nice",
+      "slug": "nice"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 65,
+      "providerName": "Nottingham Forest",
+      "canonicalName": "Nottingham Forest",
+      "slug": "nottingham-forest"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 553,
+      "providerName": "Olympiakos Piraeus",
+      "canonicalName": "Olympiakos Piraeus",
+      "slug": "olympiakos-piraeus"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 692,
+      "providerName": "Ordabasy",
+      "canonicalName": "Ordabasy",
+      "slug": "ordabasy"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 727,
+      "providerName": "Osasuna",
+      "canonicalName": "Osasuna",
+      "slug": "osasuna"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 3403,
+      "providerName": "Pafos",
+      "canonicalName": "Pafos",
+      "slug": "pafos"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 2390,
+      "providerName": "Paks",
+      "canonicalName": "Paks",
+      "slug": "paks"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 617,
+      "providerName": "Panathinaikos",
+      "canonicalName": "Panathinaikos",
+      "slug": "panathinaikos"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 3874,
+      "providerName": "Panevėžys",
+      "canonicalName": "Panevėžys",
+      "slug": "panevezys"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 619,
+      "providerName": "PAOK",
+      "canonicalName": "PAOK",
+      "slug": "paok"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 85,
+      "providerName": "Paris Saint Germain",
+      "canonicalName": "Paris Saint Germain",
+      "slug": "paris-saint-germain"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 523,
+      "providerName": "Parma",
+      "canonicalName": "Parma",
+      "slug": "parma"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 2271,
+      "providerName": "Petrocub",
+      "canonicalName": "Petrocub",
+      "slug": "petrocub"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 567,
+      "providerName": "Plzen",
+      "canonicalName": "Plzen",
+      "slug": "plzen"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 197,
+      "providerName": "PSV Eindhoven",
+      "canonicalName": "PSV Eindhoven",
+      "slug": "psv-eindhoven"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 709,
+      "providerName": "Pyunik Yerevan",
+      "canonicalName": "Pyunik Yerevan",
+      "slug": "pyunik-yerevan"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 556,
+      "providerName": "Qarabag",
+      "canonicalName": "Qarabag",
+      "slug": "qarabag"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 257,
+      "providerName": "Rangers",
+      "canonicalName": "Rangers",
+      "slug": "rangers"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 781,
+      "providerName": "Rapid Vienna",
+      "canonicalName": "Rapid Vienna",
+      "slug": "rapid-vienna"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 728,
+      "providerName": "Rayo Vallecano",
+      "canonicalName": "Rayo Vallecano",
+      "slug": "rayo-vallecano"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 173,
+      "providerName": "RB Leipzig",
+      "canonicalName": "RB Leipzig",
+      "slug": "rb-leipzig"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 543,
+      "providerName": "Real Betis",
+      "canonicalName": "Real Betis",
+      "slug": "real-betis"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 541,
+      "providerName": "Real Madrid",
+      "canonicalName": "Real Madrid",
+      "slug": "real-madrid"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 548,
+      "providerName": "Real Sociedad",
+      "canonicalName": "Real Sociedad",
+      "slug": "real-sociedad"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 571,
+      "providerName": "Red Bull Salzburg",
+      "canonicalName": "Red Bull Salzburg",
+      "slug": "red-bull-salzburg"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 93,
+      "providerName": "Reims",
+      "canonicalName": "Reims",
+      "slug": "reims"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 94,
+      "providerName": "Rennes",
+      "canonicalName": "Rennes",
+      "slug": "rennes"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 4160,
+      "providerName": "Rīgas FS",
+      "canonicalName": "Rīgas FS",
+      "slug": "rigas-fs"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 3549,
+      "providerName": "Ružomberok",
+      "canonicalName": "Ružomberok",
+      "slug": "ruzomberok"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 1063,
+      "providerName": "Saint Etienne",
+      "canonicalName": "Saint Etienne",
+      "slug": "saint-etienne"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 217,
+      "providerName": "SC Braga",
+      "canonicalName": "SC Braga",
+      "slug": "sc-braga"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 160,
+      "providerName": "SC Freiburg",
+      "canonicalName": "SC Freiburg",
+      "slug": "sc-freiburg"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 2184,
+      "providerName": "Servette FC",
+      "canonicalName": "Servette FC",
+      "slug": "servette-fc"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 536,
+      "providerName": "Sevilla",
+      "canonicalName": "Sevilla",
+      "slug": "sevilla"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 550,
+      "providerName": "Shakhtar Donetsk",
+      "canonicalName": "Shakhtar Donetsk",
+      "slug": "shakhtar-donetsk"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 652,
+      "providerName": "Shamrock Rovers",
+      "canonicalName": "Shamrock Rovers",
+      "slug": "shamrock-rovers"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 568,
+      "providerName": "Sheriff Tiraspol",
+      "canonicalName": "Sheriff Tiraspol",
+      "slug": "sheriff-tiraspol"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 2073,
+      "providerName": "Silkeborg",
+      "canonicalName": "Silkeborg",
+      "slug": "silkeborg"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 560,
+      "providerName": "Slavia Praha",
+      "canonicalName": "Slavia Praha",
+      "slug": "slavia-praha"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 656,
+      "providerName": "Slovan Bratislava",
+      "canonicalName": "Slovan Bratislava",
+      "slug": "slovan-bratislava"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 41,
+      "providerName": "Southampton",
+      "canonicalName": "Southampton",
+      "slug": "southampton"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 628,
+      "providerName": "Sparta Praha",
+      "canonicalName": "Sparta Praha",
+      "slug": "sparta-praha"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 228,
+      "providerName": "Sporting CP",
+      "canonicalName": "Sporting CP",
+      "slug": "sporting-cp"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 106,
+      "providerName": "Stade Brestois 29",
+      "canonicalName": "Stade Brestois 29",
+      "slug": "stade-brestois-29"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 95,
+      "providerName": "Strasbourg",
+      "canonicalName": "Strasbourg",
+      "slug": "strasbourg"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 4346,
+      "providerName": "Struga",
+      "canonicalName": "Struga",
+      "slug": "struga"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 637,
+      "providerName": "Sturm Graz",
+      "canonicalName": "Sturm Graz",
+      "slug": "sturm-graz"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 1660,
+      "providerName": "SV Elversberg",
+      "canonicalName": "SV Elversberg",
+      "slug": "sv-elversberg"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 354,
+      "providerName": "The New Saints",
+      "canonicalName": "The New Saints",
+      "slug": "the-new-saints"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 503,
+      "providerName": "Torino",
+      "canonicalName": "Torino",
+      "slug": "torino"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 47,
+      "providerName": "Tottenham",
+      "canonicalName": "Tottenham",
+      "slug": "tottenham"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 96,
+      "providerName": "Toulouse",
+      "canonicalName": "Toulouse",
+      "slug": "toulouse"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 998,
+      "providerName": "Trabzonspor",
+      "canonicalName": "Trabzonspor",
+      "slug": "trabzonspor"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 2646,
+      "providerName": "TSC Backa Topola",
+      "canonicalName": "TSC Backa Topola",
+      "slug": "tsc-backa-topola"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 415,
+      "providerName": "Twente",
+      "canonicalName": "Twente",
+      "slug": "twente"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 494,
+      "providerName": "Udinese",
+      "canonicalName": "Udinese",
+      "slug": "udinese"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 703,
+      "providerName": "UE Santa Coloma",
+      "canonicalName": "UE Santa Coloma",
+      "slug": "ue-santa-coloma"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 182,
+      "providerName": "Union Berlin",
+      "canonicalName": "Union Berlin",
+      "slug": "union-berlin"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 1393,
+      "providerName": "Union St. Gilloise",
+      "canonicalName": "Union St. Gilloise",
+      "slug": "union-st-gilloise"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 532,
+      "providerName": "Valencia",
+      "canonicalName": "Valencia",
+      "slug": "valencia"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 720,
+      "providerName": "Valladolid",
+      "canonicalName": "Valladolid",
+      "slug": "valladolid"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 517,
+      "providerName": "Venezia",
+      "canonicalName": "Venezia",
+      "slug": "venezia"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 172,
+      "providerName": "VfB Stuttgart",
+      "canonicalName": "VfB Stuttgart",
+      "slug": "vfb-stuttgart"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 176,
+      "providerName": "VfL Bochum",
+      "canonicalName": "VfL Bochum",
+      "slug": "vfl-bochum"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 161,
+      "providerName": "VfL Wolfsburg",
+      "canonicalName": "VfL Wolfsburg",
+      "slug": "vfl-wolfsburg"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 278,
+      "providerName": "Vikingur Reykjavik",
+      "canonicalName": "Vikingur Reykjavik",
+      "slug": "vikingur-reykjavik"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 533,
+      "providerName": "Villarreal",
+      "canonicalName": "Villarreal",
+      "slug": "villarreal"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 5308,
+      "providerName": "Virtus",
+      "canonicalName": "Virtus",
+      "slug": "virtus"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 702,
+      "providerName": "Vojvodina",
+      "canonicalName": "Vojvodina",
+      "slug": "vojvodina"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 162,
+      "providerName": "Werder Bremen",
+      "canonicalName": "Werder Bremen",
+      "slug": "werder-bremen"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 48,
+      "providerName": "West Ham",
+      "canonicalName": "West Ham",
+      "slug": "west-ham"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 338,
+      "providerName": "Wisla Krakow",
+      "canonicalName": "Wisla Krakow",
+      "slug": "wisla-krakow"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 39,
+      "providerName": "Wolves",
+      "canonicalName": "Wolves",
+      "slug": "wolves"
+    },
+    {
+      "provider": "api-football",
+      "providerTeamId": 648,
+      "providerName": "Zira",
+      "canonicalName": "Zira",
+      "slug": "zira"
+    }
+  ]
+}

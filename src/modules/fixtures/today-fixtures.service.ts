@@ -16,21 +16,18 @@ export interface TodayFixtureDto {
     code: string;
     name: string;
     slug: string;
-    logoUrl: string | null;
   };
   homeTeam: {
     id: string;
     name: string;
     slug: string;
     shortName: string | null;
-    logoUrl: string | null;
   };
   awayTeam: {
     id: string;
     name: string;
     slug: string;
     shortName: string | null;
-    logoUrl: string | null;
   };
   status: FixtureStatus;
   outcomes: {
@@ -85,21 +82,18 @@ export async function getTodayFixtures(
                 code: fixture.competition.code,
                 name: fixture.competition.name,
                 slug: fixture.competition.slug,
-                logoUrl: fixture.competition.logoUrl,
               },
               homeTeam: {
                 id: fixture.homeTeam.id,
                 name: fixture.homeTeam.name,
                 slug: fixture.homeTeam.slug,
                 shortName: fixture.homeTeam.shortName,
-                logoUrl: fixture.homeTeam.logoUrl,
               },
               awayTeam: {
                 id: fixture.awayTeam.id,
                 name: fixture.awayTeam.name,
                 slug: fixture.awayTeam.slug,
                 shortName: fixture.awayTeam.shortName,
-                logoUrl: fixture.awayTeam.logoUrl,
               },
               status: fixture.status,
               outcomes: {

@@ -171,6 +171,13 @@ single vertical scroll region, bottom navigation remains visible, Arabic
 sets root `lang="ar"` and `dir="rtl"`, mixed-direction team names remain
 usable, and dark mode applies the dark semantic token palette.
 
+Football asset manifest tests must validate that
+`data/football-assets.manifest.json` keeps unique provider IDs, unique
+canonical slugs, lowercase ASCII kebab-case slug format, non-empty
+provider/canonical names, explicit unmapped handling, and local asset
+path existence when validating downloaded assets. Unit tests must not
+require live API-Football network access.
+
 ---
 
 # 4. Tooling

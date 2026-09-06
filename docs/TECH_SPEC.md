@@ -1268,19 +1268,64 @@ Frontend и MatchCard получают `slug` из Goalstery API и исполь
 - выполнять `slugify(team.name)` at runtime для поиска картинки;
 - обращаться к provider-hosted logo URL напрямую.
 
+Canonical mapping хранится в:
+
+```text
+data/football-assets.manifest.json
+```
+
+Этот файл является source of truth для football asset identity:
+
+```text
+API-Football provider identity
+        ↓
+football-assets.manifest.json
+        ↓
+Goalstery canonicalName + slug
+        ↓
+Team.slug / Competition.slug
+        ↓
+local asset path
+```
+
+Manifest разделяет provider identity, provider display name, Goalstery
+canonical display name, and Goalstery canonical slug. Он не должен
+содержать transient download status, retry counters, HTTP status, or
+timestamp конкретного download run.
+
+Operational reports:
+
+```text
+data/football-assets-download-report.json
+data/football-assets-discovery-report.json
+```
+
+Download report фиксирует конкретный download run: source URLs, local
+paths, status, file format, failures, counters, and run timestamp.
+Discovery report фиксирует provider entities from one discovery run and
+marks known vs unmapped entities with candidate slugs for review. Neither
+report is authoritative for existing canonical slugs.
+
 Asset discovery выполняется command:
 
 ```text
 npm run football:assets:discover
 ```
 
-Для европейского сезона 2026/27 используется API-Football parameter:
+Для европейского сезона 2026/27 используется API-Football parameter
+`season=2026`, где `season` — стартовый год сезона.
+
+Asset download выполняется command:
 
 ```text
-season=2026
+npm run football:assets:download
 ```
 
-где `season` — стартовый год сезона.
+Download uses the canonical manifest to resolve filenames. If
+API-Football returns a known provider ID with a changed provider name,
+the canonical slug remains unchanged. If API-Football returns an unknown
+provider entity, tooling must report it as unmapped/new and may propose a
+candidate slug, but must not silently promote it to canonical identity.
 
 Command использует server-side:
 
@@ -1295,12 +1340,11 @@ API_FOOTBALL_BASE_URL
 data/football-assets.manifest.json
 ```
 
-Manifest разделяет:
+Canonical manifest entries разделяют:
 
 - reviewed Goalstery canonical name/slug;
 - API-Football provider IDs/names;
-- optional `provider.logoSourceUrl` как источник для будущего download/import;
-- Goalstery `asset.logoUrl`, derived from reviewed `slug`.
+- Goalstery local asset path derived from reviewed `slug`.
 
 `provider.logoSourceUrl` не должен leak в frontend API и не является Goalstery
 asset URL.
@@ -1315,7 +1359,7 @@ without provider ID
 stable across provider changes
 ```
 
-Discovery manifest должен быть reviewed перед скачиванием assets и перед записью
+Canonical manifest должен быть reviewed перед скачиванием assets и перед записью
 canonical slug/logo metadata в database. Будущая смена sports provider не должна требовать
 изменения asset filenames или frontend URLs.
 
@@ -1612,9 +1656,10 @@ public URL convention:
 /assets/competitions/<Competition.slug>.webp
 ```
 
-`Team.logoUrl` and `Competition.logoUrl` remain nullable compatibility
-presentation fields until a later cleanup decision, but MatchCard local
-football asset resolution uses `slug`.
+`Team.logoUrl` and `Competition.logoUrl` are not part of the football
+runtime contract. MatchCard local football asset resolution uses `slug`.
+Provider logo URLs may exist only inside asset tooling/report data as
+download sources and must not leak into runtime API responses.
 
 The files live under `public/assets/...`. Preferred format for owned
 raster logos is WebP; SVG is acceptable for owned vector assets. Logos

@@ -58,11 +58,11 @@ const teams = [
   { providerTeamId: "dev-ajax", name: "Ajax", apiFootballTeamId: 194 },
 ];
 
-const assetReport = loadAssetDownloadReport();
+const assetManifest = loadAssetManifest();
 const competitionSlugsByApiFootballId = new Map(
-  assetReport.competitions.map((competition) => [competition.provider.leagueId, competition.slug]),
+  assetManifest.competitions.map((competition) => [competition.providerLeagueId, competition.slug]),
 );
-const teamSlugsByApiFootballId = new Map(assetReport.teams.map((team) => [team.provider.teamId, team.slug]));
+const teamSlugsByApiFootballId = new Map(assetManifest.teams.map((team) => [team.providerTeamId, team.slug]));
 
 try {
   const now = new Date();
@@ -184,12 +184,12 @@ try {
   await prisma.$disconnect();
 }
 
-function loadAssetDownloadReport() {
+function loadAssetManifest() {
   try {
-    return JSON.parse(readFileSync("data/football-assets-download-report.json", "utf8"));
+    return JSON.parse(readFileSync("data/football-assets.manifest.json", "utf8"));
   } catch (error) {
     throw new Error(
-      "Development seed requires data/football-assets-download-report.json to assign canonical asset slugs. Run npm run football:assets:download first.",
+      "Development seed requires data/football-assets.manifest.json to assign canonical asset slugs. Run npm run football:assets:manifest:build first.",
       { cause: error },
     );
   }
