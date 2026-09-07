@@ -1,3 +1,8 @@
+.stack {
+  display: grid;
+  gap: 14px;
+}
+
 .leaderboard {
   display: grid;
   gap: 11px;
@@ -10,7 +15,12 @@
   box-shadow: var(--shadow-card);
 }
 
-.leaderboard h2 {
+.heading {
+  display: grid;
+  gap: 4px;
+}
+
+.heading h2 {
   margin: 0;
   color: var(--color-text);
   font-size: 20px;
@@ -18,13 +28,18 @@
   line-height: 1.15;
 }
 
+.heading p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
 .leaderboardHeader {
   display: grid;
   grid-template-columns: 36px minmax(0, 1fr) 92px 58px;
   gap: 8px;
-}
-
-.leaderboardHeader {
   color: var(--color-muted);
   font-size: 12px;
   font-weight: 650;
@@ -35,9 +50,39 @@
   text-align: end;
 }
 
-.rows {
+.paginationState {
   display: grid;
-  gap: 6px;
+  gap: 8px;
+  justify-items: center;
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.paginationState button,
+.fullLeaderboardButton {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: 13px;
+  padding-block: 10px;
+  padding-inline: 14px;
+  background: var(--color-surface-elevated);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 760;
+}
+
+.paginationState button:focus-visible,
+.fullLeaderboardButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.loadSentinel {
+  width: 100%;
+  height: 1px;
 }
 
 @media (max-width: 370px) {

@@ -44,12 +44,13 @@ export interface BootstrapResponse {
 }
 
 export interface CupLeaderboardRowDto {
-  id: string;
+  userId: string;
   rank: number;
-  playerName: string;
-  correctPredictions: number;
-  wrongPredictions: number;
-  predictionsCount: number;
+  displayName: string;
+  avatarUrl: string | null;
+  correct: number;
+  wrong: number;
+  totalPredictions: number;
   points: number;
   isCurrentUser: boolean;
   telegramUrl: string | null;
@@ -57,8 +58,21 @@ export interface CupLeaderboardRowDto {
 
 export interface CurrentCupSummaryDto {
   participantCount: number;
-  leaderboardRows: CupLeaderboardRowDto[];
-  pinnedCurrentUserRow: CupLeaderboardRowDto | null;
+  currentUserRow: CupLeaderboardRowDto | null;
+}
+
+export type CupLeaderboardModeDto = "top" | "all";
+
+export interface CupLeaderboardPageResponse {
+  items: CupLeaderboardRowDto[];
+  nextCursor: string | null;
+  totalParticipants: number;
+}
+
+export interface CupAroundMeLeaderboardResponse {
+  items: CupLeaderboardRowDto[];
+  currentUserRank: number | null;
+  totalParticipants: number;
 }
 
 export interface DailyPredictionUsageDto {

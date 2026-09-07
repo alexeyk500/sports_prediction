@@ -64,7 +64,9 @@ const competitionSlugsByApiFootballId = new Map(
 );
 const teamSlugsByApiFootballId = new Map(assetManifest.teams.map((team) => [team.providerTeamId, team.slug]));
 
-const devPlayers = [
+const requestedLeaderboardSize = parseDevLeaderboardSize(process.env.DEV_SEED_LEADERBOARD_SIZE);
+
+const baseDevPlayers = [
   { telegramUserId: 900000001n, username: "dev_user", firstName: "Dev", lastName: "User", languageCode: "en", targetPoints: 38 },
   { telegramUserId: 900100001n, username: "GoalHunter", firstName: "Max", lastName: "Volkov", languageCode: "en", targetPoints: 65 },
   { telegramUserId: 900100002n, username: "footking", firstName: "Leo", lastName: "Morgan", languageCode: "en", targetPoints: 64 },
@@ -116,6 +118,8 @@ const devPlayers = [
   { telegramUserId: 900100048n, username: "tapin", firstName: "George", lastName: "Moore", languageCode: "en", targetPoints: 0 },
   { telegramUserId: 900100049n, username: "lateRun", firstName: "Ahmed", lastName: "Hassan", languageCode: "ar", targetPoints: 0 },
 ];
+
+const devPlayers = buildDevPlayers(baseDevPlayers, requestedLeaderboardSize);
 
 try {
   const now = new Date();
@@ -225,6 +229,11 @@ try {
     });
   }
 
+  await cleanupSeedTournamentRows({
+    tournamentId: tournament.id,
+    activeUserIds: devUsers.map((user) => user.id),
+  });
+
   await seedCupPredictions({
     tournamentId: tournament.id,
     users: devUsers,
@@ -272,6 +281,103 @@ function loadAssetManifest() {
       { cause: error },
     );
   }
+}
+
+function parseDevLeaderboardSize(value) {
+  if (!value) {
+    return 50;
+  }
+
+  const parsed = Number.parseInt(value, 10);
+
+  if (!Number.isInteger(parsed) || parsed < 50) {
+    return 50;
+  }
+
+  return Math.min(parsed, 1_000);
+}
+
+function buildDevPlayers(players, requestedSize) {
+  if (requestedSize <= players.length) {
+    return players;
+  }
+
+  const extraPlayersNeeded = requestedSize - players.length;
+  const extraPlayersAboveDevUser = requestedSize >= 1_000 ? 788 : Math.max(0, Math.floor(extraPlayersNeeded * 0.68));
+  const firstNames = [
+    "Kirill",
+    "Elena",
+    "Ruslan",
+    "Andrey",
+    "Tatyana",
+    "Dmitry",
+    "Marta",
+    "Sergey",
+    "Vlad",
+    "Anya",
+    "Anton",
+    "Sofia",
+    "Nikolai",
+    "Irene",
+    "Denis",
+    "Yaroslav",
+  ];
+  const lastNames = [
+    "Moroz",
+    "Sokol",
+    "Kravtsov",
+    "Belova",
+    "Smirnov",
+    "Kane",
+    "Costa",
+    "Weiss",
+    "Ivanov",
+    "Petrova",
+    "Miller",
+    "Fomin",
+  ];
+  const usernameRoots = [
+    "WestHamFan",
+    "FCDragon",
+    "Dimka77",
+    "topcorner",
+    "matchday",
+    "ultraNorth",
+    "goalwatch",
+    "leftfooter",
+    "pressZone",
+    "awayStand",
+    "boxrunner",
+    "derbyPulse",
+    "netstorm",
+    "latewinner",
+    "citybreak",
+    "xGtempo",
+  ];
+  const locales = ["en", "ru", "de", "es"];
+  const extraPlayers = [];
+
+  for (let index = 0; index < extraPlayersNeeded; index += 1) {
+    const sequence = index + 1;
+    const isAboveDevUser = index < extraPlayersAboveDevUser;
+    const firstName = firstNames[index % firstNames.length];
+    const lastName = lastNames[(index * 3) % lastNames.length];
+    const usernameRoot = usernameRoots[(index * 5) % usernameRoots.length];
+    const targetPoints = isAboveDevUser
+      ? 42 + (index % 12)
+      : Math.max(0, 34 - (index % 34));
+
+    extraPlayers.push({
+      telegramUserId: 901000000n + BigInt(sequence),
+      username: `${usernameRoot}_${String(sequence).padStart(3, "0")}`,
+      firstName,
+      lastName,
+      languageCode: locales[index % locales.length],
+      targetPoints,
+    });
+  }
+
+  return [...players, ...extraPlayers];
 }
 
 async function upsertFixtureWithSnapshot(input) {
@@ -597,6 +703,38 @@ async function seedCupPredictions({ tournamentId, users, fixtures, currentInstan
     }
 
     await syncDailyUsageForUser(user.id, currentInstant);
+  }
+}
+
+async function cleanupSeedTournamentRows({ tournamentId, activeUserIds }) {
+  const seedUsers = await prisma.user.findMany({
+    where: {
+      OR: [
+        { telegramUserId: 900000001n },
+        { telegramUserId: { gte: 900100001n, lte: 900100049n } },
+        { telegramUserId: { gte: 901000001n, lte: 901001000n } },
+      ],
+    },
+    select: { id: true },
+  });
+  const seedUserIds = seedUsers.map((user) => user.id);
+  const activeUserIdSet = new Set(activeUserIds);
+  const obsoleteUserIds = seedUserIds.filter((userId) => !activeUserIdSet.has(userId));
+
+  await prisma.prediction.deleteMany({
+    where: {
+      tournamentId,
+      userId: { in: seedUserIds },
+    },
+  });
+
+  if (obsoleteUserIds.length > 0) {
+    await prisma.tournamentParticipant.deleteMany({
+      where: {
+        tournamentId,
+        userId: { in: obsoleteUserIds },
+      },
+    });
   }
 }
 

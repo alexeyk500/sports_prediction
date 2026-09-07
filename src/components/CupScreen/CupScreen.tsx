@@ -105,6 +105,7 @@ const CupScreen: React.FC<ICupScreenProps> = ({ onMakePrediction }) => {
             bootstrap={bootstrap}
             nowMs={nowMs}
             cup={bootstrap.cup}
+            apiClient={apiClient}
             onMakePrediction={onMakePrediction}
           />
         ) : (

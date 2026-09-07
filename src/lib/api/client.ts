@@ -3,6 +3,9 @@
 import type {
   ApiErrorEnvelope,
   BootstrapResponse,
+  CupAroundMeLeaderboardResponse,
+  CupLeaderboardModeDto,
+  CupLeaderboardPageResponse,
   PredictionMutationResponse,
   PredictionOutcome,
   TodayFixturesResponse,
@@ -50,6 +53,42 @@ export class ApiClient {
 
   getTodayPredictions(): Promise<TodayPredictionsResponse> {
     return this.request("/api/predictions/today");
+  }
+
+  getCupLeaderboard(input: {
+    cupId: string;
+    mode: CupLeaderboardModeDto;
+    limit?: number;
+    cursor?: string | null;
+  }): Promise<CupLeaderboardPageResponse> {
+    const searchParams = new URLSearchParams({
+      mode: input.mode,
+    });
+
+    if (input.limit !== undefined) {
+      searchParams.set("limit", String(input.limit));
+    }
+
+    if (input.cursor) {
+      searchParams.set("cursor", input.cursor);
+    }
+
+    return this.request(`/api/cups/${input.cupId}/leaderboard?${searchParams.toString()}`);
+  }
+
+  getCupLeaderboardAroundMe(input: {
+    cupId: string;
+    radius?: number;
+  }): Promise<CupAroundMeLeaderboardResponse> {
+    const searchParams = new URLSearchParams();
+
+    if (input.radius !== undefined) {
+      searchParams.set("radius", String(input.radius));
+    }
+
+    const queryString = searchParams.toString();
+
+    return this.request(`/api/cups/${input.cupId}/leaderboard/me${queryString ? `?${queryString}` : ""}`);
   }
 
   getSettings(): Promise<UserSettingsDto> {

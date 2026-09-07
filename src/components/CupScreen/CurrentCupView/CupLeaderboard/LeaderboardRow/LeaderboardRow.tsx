@@ -1,4 +1,5 @@
 import type React from "react";
+import { useTranslation } from "@/lib/i18n/use-translation";
 import type { ICupLeaderboardRowModel } from "../leaderboard-types";
 import styles from "./LeaderboardRow.module.css";
 
@@ -8,14 +9,20 @@ interface ILeaderboardRowProps {
 }
 
 const LeaderboardRow: React.FC<ILeaderboardRowProps> = ({ row, pinned = false }) => {
+  const { t } = useTranslation();
+  const rowClassName = pinned || row.isCurrentUser ? styles.pinnedRow : styles.row;
+
   return (
-    <div className={pinned ? styles.pinnedRow : styles.row}>
+    <div className={rowClassName} data-current-user={row.isCurrentUser ? "true" : undefined}>
       <span>{row.rank}</span>
-      {row.telegramUrl ? (
-        <a href={row.telegramUrl}>{row.playerName}</a>
-      ) : (
-        <span className={styles.playerName}>{row.playerName}</span>
-      )}
+      <span className={styles.playerCell}>
+        {row.telegramUrl ? (
+          <a href={row.telegramUrl}>{row.playerName}</a>
+        ) : (
+          <span className={styles.playerName}>{row.playerName}</span>
+        )}
+        {row.isCurrentUser ? <span className={styles.youBadge}>{t("cup.you")}</span> : null}
+      </span>
       <span>
         {row.correctPredictions} / {row.wrongPredictions}
       </span>

@@ -33,6 +33,25 @@
   white-space: nowrap;
 }
 
+.playerCell {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+}
+
+.youBadge {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding-block: 2px;
+  padding-inline: 6px;
+  background: color-mix(in srgb, var(--color-accent) 28%, transparent);
+  color: inherit;
+  font-size: 10px;
+  font-weight: 820;
+  line-height: 1.2;
+}
+
 @media (max-width: 370px) {
   .row,
   .pinnedRow {

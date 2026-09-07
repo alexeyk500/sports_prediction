@@ -54,4 +54,31 @@ describe("frontend API client", () => {
     } satisfies Partial<ApiClientError>);
     expect(calls).toBe(0);
   });
+
+  it("requests Cup leaderboard modes with cursor pagination parameters", async () => {
+    const requestedUrls: string[] = [];
+    const client = new ApiClient({
+      getTelegramInitData: () => "signed-init-data",
+      fetchImpl: async (input) => {
+        requestedUrls.push(String(input));
+        return Response.json({ items: [], nextCursor: null, totalParticipants: 0 });
+      },
+    });
+
+    await client.getCupLeaderboard({
+      cupId: "cup-1",
+      mode: "all",
+      limit: 50,
+      cursor: "50",
+    });
+    await client.getCupLeaderboardAroundMe({
+      cupId: "cup-1",
+      radius: 4,
+    });
+
+    expect(requestedUrls).toEqual([
+      "/api/cups/cup-1/leaderboard?mode=all&limit=50&cursor=50",
+      "/api/cups/cup-1/leaderboard/me?radius=4",
+    ]);
+  });
 });
