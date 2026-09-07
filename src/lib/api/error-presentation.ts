@@ -33,7 +33,8 @@ export function messageForApiError(
     return translate(locale, "errors.generic");
   }
 
-  const includeDiagnostics = options.includeDiagnostics ?? process.env.NODE_ENV === "development";
+  const includeDiagnostics =
+    options.includeDiagnostics ?? process.env.NODE_ENV === "development";
 
   if (includeDiagnostics) {
     return `${error.code}${error.endpoint ? ` at ${error.endpoint}` : ""}: ${error.message}`;

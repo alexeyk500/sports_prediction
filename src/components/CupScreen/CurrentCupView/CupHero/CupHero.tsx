@@ -2,7 +2,12 @@ import type React from "react";
 import type { BootstrapResponse } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import ClockIcon from "./ClockIcon";
-import { formatCountdown, formatDateRange, formatEndDate, formatNanoTon } from "./cup-hero-format";
+import {
+  formatCountdown,
+  formatDateRange,
+  formatEndDate,
+  formatNanoTon,
+} from "./cup-hero-format";
 import styles from "./CupHero.module.css";
 
 interface ICupHeroProps {
@@ -20,15 +25,28 @@ const CupHero: React.FC<ICupHeroProps> = ({ tournament, nowMs, timeZone }) => {
       <div className={styles.heroTitleRow}>
         <div>
           <h2>{t("cup.weeklyCup")}</h2>
-          <p>{formatDateRange(locale, tournament.startsAt, tournament.endsAt, timeZone)}</p>
+          <p>
+            {formatDateRange(
+              locale,
+              tournament.startsAt,
+              tournament.endsAt,
+              timeZone,
+            )}
+          </p>
         </div>
       </div>
       <div className={styles.heroMetrics}>
         <div className={styles.countdownBlock}>
           <ClockIcon className={styles.metricIcon} />
           <div>
-            <strong>{formatCountdown(t, Math.max(0, endsAt.getTime() - nowMs))}</strong>
-            <span>{t("cup.ends", { date: formatEndDate(locale, tournament.endsAt, timeZone) })}</span>
+            <strong>
+              {formatCountdown(t, Math.max(0, endsAt.getTime() - nowMs))}
+            </strong>
+            <span>
+              {t("cup.ends", {
+                date: formatEndDate(locale, tournament.endsAt, timeZone),
+              })}
+            </span>
           </div>
         </div>
         <div className={styles.prizeBlock}>

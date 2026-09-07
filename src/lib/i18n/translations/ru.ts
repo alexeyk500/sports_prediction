@@ -1,7 +1,11 @@
 import type { TranslationShape } from "../i18n";
 
 export const ru = {
-  common: { brand: "Goalstery", userFallback: "Пользователь {id}", trophyCount: "{count} кубков" },
+  common: {
+    brand: "Goalstery",
+    userFallback: "Пользователь {id}",
+    trophyCount: "{count} кубков",
+  },
   navigation: {
     predict: "Прогнозы",
     cup: "Кубок",
@@ -16,7 +20,11 @@ export const ru = {
     weeklyCup: "Недельный кубок",
     loading: "Загружаем матчи на сегодня...",
     authRequired: "Требуется авторизация.",
-    tabs: { available: "Доступные", myPicks: "Мои прогнозы", ariaLabel: "Разделы прогнозов" },
+    tabs: {
+      available: "Доступные",
+      myPicks: "Мои прогнозы",
+      ariaLabel: "Разделы прогнозов",
+    },
     quota: {
       free: "Бесплатные прогнозы: {used} / {limit}",
       rewarded: "За рекламу: {used} / {limit}",
@@ -26,8 +34,15 @@ export const ru = {
       freeCompact: "Бесплатные ({used} / {limit})",
       rewardedCompact: "За рекламу ({used} / {limit})",
     },
-    today: { label: "Сегодня", labelWithDate: "Сегодня · {date}", matchCount: "{count} матчей" },
-    empty: { available: "Сегодня нет доступных матчей.", myPicks: "Прогнозов пока нет." },
+    today: {
+      label: "Сегодня",
+      labelWithDate: "Сегодня · {date}",
+      matchCount: "{count} матчей",
+    },
+    empty: {
+      available: "Сегодня нет доступных матчей.",
+      myPicks: "Прогнозов пока нет.",
+    },
     outcomes: { HOME: "Хозяева", DRAW: "Ничья", AWAY: "Гости" },
     status: {
       selected: "Выбрано: {outcome}",
@@ -52,7 +67,10 @@ export const ru = {
       cta: "Посмотрите рекламу, чтобы открыть ещё прогноз",
       plusOne: "+1",
     },
-    aria: { selectOutcome: "Выбрать {outcome}, {trophyValue}, для {homeTeam} - {awayTeam}" },
+    aria: {
+      selectOutcome:
+        "Выбрать {outcome}, {trophyValue}, для {homeTeam} - {awayTeam}",
+    },
   },
   cup: {
     subtitle: "Соревнуйтесь. Поднимайтесь. Побеждайте вместе.",
@@ -66,16 +84,18 @@ export const ru = {
     unavailable: "—",
     yourPosition: "Ваша позиция",
     positionRank: "Место #{rank}",
-    positionSummary: "{points} очков · прогнозов {predictions} · верно {correct} · неверно {wrong}",
+    positionSummary:
+      "{points} очков · прогнозов {predictions} · верно {correct} · неверно {wrong}",
     positionUnavailableTitle: "Ваша позиция в Кубке ещё не готова",
-    positionUnavailableBody: "Делайте прогнозы, чтобы войти автоматически. Ранг появится, когда будет доступна таблица Кубка.",
+    positionUnavailableBody:
+      "Делайте прогнозы, чтобы войти автоматически. Ранг появится, когда будет доступна таблица Кубка.",
     makePrediction: "Сделать прогноз",
     you: "Вы",
     leaderboard: "Таблица лидеров",
     leaderboardModes: {
-      "top": "Топ-50",
+      top: "Топ-50",
       "around-me": "Рядом со мной",
-      "all": "Все игроки",
+      all: "Все игроки",
       ariaLabel: "Режимы таблицы лидеров",
     },
     leaderboardStates: {
@@ -89,14 +109,25 @@ export const ru = {
       viewFull: "Открыть всю таблицу",
     },
     pastCups: "Прошлые Кубки",
-    tabs: { current: "Текущий Кубок", history: "История", ariaLabel: "Разделы Кубка" },
-    columns: { rank: "#", player: "Игрок", correctWrong: "Верно / Неверно", points: "Очки" },
+    tabs: {
+      current: "Текущий Кубок",
+      history: "История",
+      ariaLabel: "Разделы Кубка",
+    },
+    columns: {
+      rank: "#",
+      player: "Игрок",
+      correctWrong: "Верно / Неверно",
+      points: "Очки",
+    },
     empty: {
       noCurrentCup: "Активный Кубок недоступен.",
       leaderboardTitle: "Таблица пока не готова",
-      leaderboardBody: "Строки игроков появятся, когда будет доступна таблица текущего Кубка.",
+      leaderboardBody:
+        "Строки игроков появятся, когда будет доступна таблица текущего Кубка.",
       historyTitle: "Прошлых Кубков пока нет",
-      historyBody: "Итоги завершённых Кубков появятся здесь, когда будут доступны финальные результаты.",
+      historyBody:
+        "Итоги завершённых Кубков появятся здесь, когда будут доступны финальные результаты.",
     },
   },
   profile: {
@@ -109,7 +140,8 @@ export const ru = {
   },
   errors: {
     generic: "Что-то пошло не так.",
-    missingTelegramInitData: "Откройте приложение в Telegram или настройте development initData.",
+    missingTelegramInitData:
+      "Откройте приложение в Telegram или настройте development initData.",
     network: "Не удалось выполнить сетевой запрос.",
     invalidApiResponse: "Не удалось прочитать ответ сервера.",
     PREDICTION_LOCKED: "Матч уже начался.",
@@ -120,7 +152,8 @@ export const ru = {
     FIXTURE_NOT_FOUND: "Матч не найден.",
     FIXTURE_NOT_OPEN: "Этот матч не открыт для прогнозов.",
     FIXTURE_LOCKED: "Этот матч закрыт.",
-    FIXTURE_SCORING_SNAPSHOT_MISSING: "Коэффициенты для прогноза ещё не готовы.",
+    FIXTURE_SCORING_SNAPSHOT_MISSING:
+      "Коэффициенты для прогноза ещё не готовы.",
     COMPETITION_NOT_SUPPORTED: "Это соревнование не поддерживается.",
     COMPETITION_INACTIVE: "Это соревнование не активно.",
     PREDICTION_ALREADY_EXISTS: "Вы уже сделали прогноз на этот матч.",
@@ -130,7 +163,13 @@ export const ru = {
     IDEMPOTENCY_CONFLICT: "Этот запрос уже использован для другого прогноза.",
   },
   settings: {
-    locales: { en: "English", ru: "Русский", de: "Deutsch", es: "Español", ar: "العربية" },
+    locales: {
+      en: "English",
+      ru: "Русский",
+      de: "Deutsch",
+      es: "Español",
+      ar: "العربية",
+    },
     appearance: { system: "Системная", light: "Светлая", dark: "Тёмная" },
   },
 } as const satisfies TranslationShape;

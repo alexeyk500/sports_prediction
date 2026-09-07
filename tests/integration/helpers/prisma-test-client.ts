@@ -11,13 +11,17 @@ export function requireTestDatabaseUrl(): string {
   const databaseName = new URL(databaseUrl).pathname.replace(/^\//, "");
 
   if (!databaseName.endsWith("_test")) {
-    throw new Error(`Integration tests must run against a test database, got: ${databaseName}`);
+    throw new Error(
+      `Integration tests must run against a test database, got: ${databaseName}`,
+    );
   }
 
   return databaseUrl;
 }
 
-export function createTestPrismaClient(databaseUrl = requireTestDatabaseUrl()): PrismaClient {
+export function createTestPrismaClient(
+  databaseUrl = requireTestDatabaseUrl(),
+): PrismaClient {
   return new PrismaClient({
     adapter: new PrismaPg(databaseUrl),
   });

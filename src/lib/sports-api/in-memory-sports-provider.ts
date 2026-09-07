@@ -32,13 +32,23 @@ export class InMemorySportsProvider implements SportsProvider {
     );
   }
 
-  async getOneXTwoOdds(providerFixtureId: string): Promise<ProviderOneXTwoOdds | null> {
-    return this.data.odds?.find((odds) => odds.providerFixtureId === providerFixtureId) ?? null;
+  async getOneXTwoOdds(
+    providerFixtureId: string,
+  ): Promise<ProviderOneXTwoOdds | null> {
+    return (
+      this.data.odds?.find(
+        (odds) => odds.providerFixtureId === providerFixtureId,
+      ) ?? null
+    );
   }
 
-  async getFixtureResult(providerFixtureId: string): Promise<ProviderFixtureResult | null> {
+  async getFixtureResult(
+    providerFixtureId: string,
+  ): Promise<ProviderFixtureResult | null> {
     return (
-      this.data.results?.find((result) => result.providerFixtureId === providerFixtureId) ?? null
+      this.data.results?.find(
+        (result) => result.providerFixtureId === providerFixtureId,
+      ) ?? null
     );
   }
 }

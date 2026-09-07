@@ -1,11 +1,18 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { getBusinessDate, getBusinessDayRangeUtc, businessDateToDatabaseDate } from "@/lib/time/business-time";
+import {
+  getBusinessDate,
+  getBusinessDayRangeUtc,
+  businessDateToDatabaseDate,
+} from "@/lib/time/business-time";
 import { GET as getBootstrap } from "@/app/api/bootstrap/route";
 import { GET as getTodayFixtures } from "@/app/api/fixtures/today/route";
 import { POST as postPrediction } from "@/app/api/predictions/route";
 import { GET as getTodayPredictions } from "@/app/api/predictions/today/route";
 import { PATCH as patchPrediction } from "@/app/api/predictions/[predictionId]/route";
-import { GET as getSettings, PATCH as patchSettings } from "@/app/api/settings/route";
+import {
+  GET as getSettings,
+  PATCH as patchSettings,
+} from "@/app/api/settings/route";
 import { createTestPrismaClient } from "../helpers/prisma-test-client";
 import {
   attachTestScoringSnapshot,
@@ -57,7 +64,9 @@ describe("Telegram auth HTTP vertical slice", () => {
       last_name: "Initial",
       language_code: "en",
     });
-    const firstResponse = await getBootstrap(createApiRequest("/api/bootstrap", firstInitData));
+    const firstResponse = await getBootstrap(
+      createApiRequest("/api/bootstrap", firstInitData),
+    );
 
     expect(firstResponse.status).toBe(200);
 
@@ -68,8 +77,10 @@ describe("Telegram auth HTTP vertical slice", () => {
       last_name: "Updated",
       language_code: "fr",
     });
-    const secondResponse = await getBootstrap(createApiRequest("/api/bootstrap", secondInitData));
-    const body = await responseJson(secondResponse) as {
+    const secondResponse = await getBootstrap(
+      createApiRequest("/api/bootstrap", secondInitData),
+    );
+    const body = (await responseJson(secondResponse)) as {
       user: {
         username: string;
         lastName: string;
@@ -83,29 +94,54 @@ describe("Telegram auth HTTP vertical slice", () => {
       lastName: "Updated",
       languageCode: "fr",
     });
-    expect(await prisma.user.count({ where: { telegramUserId: BigInt(telegramUserId) } })).toBe(1);
+    expect(
+      await prisma.user.count({
+        where: { telegramUserId: BigInt(telegramUserId) },
+      }),
+    ).toBe(1);
   });
 
   it("initializes locale from supported Telegram language and falls back for unsupported language", async () => {
     const ruResponse = await getBootstrap(
-      createApiRequest("/api/bootstrap", signedInitData({ id: "777000111230", language_code: "ru-RU" })),
+      createApiRequest(
+        "/api/bootstrap",
+        signedInitData({ id: "777000111230", language_code: "ru-RU" }),
+      ),
     );
-    const ruBody = await responseJson(ruResponse) as { settings: { locale: string; appearance: string } };
+    const ruBody = (await responseJson(ruResponse)) as {
+      settings: { locale: string; appearance: string };
+    };
     const fallbackResponse = await getBootstrap(
-      createApiRequest("/api/bootstrap", signedInitData({ id: "777000111231", language_code: "fr" })),
+      createApiRequest(
+        "/api/bootstrap",
+        signedInitData({ id: "777000111231", language_code: "fr" }),
+      ),
     );
-    const fallbackBody = await responseJson(fallbackResponse) as { settings: { locale: string; appearance: string } };
+    const fallbackBody = (await responseJson(fallbackResponse)) as {
+      settings: { locale: string; appearance: string };
+    };
 
     expect(ruResponse.status).toBe(200);
-    expect(ruBody.settings).toMatchObject({ locale: "ru", appearance: "system" });
+    expect(ruBody.settings).toMatchObject({
+      locale: "ru",
+      appearance: "system",
+    });
     expect(fallbackResponse.status).toBe(200);
-    expect(fallbackBody.settings).toMatchObject({ locale: "en", appearance: "system" });
+    expect(fallbackBody.settings).toMatchObject({
+      locale: "en",
+      appearance: "system",
+    });
   });
 
   it("does not overwrite manual locale during later Telegram profile sync", async () => {
     const telegramUserId = "777000111232";
-    const firstInitData = signedInitData({ id: telegramUserId, language_code: "ru" });
-    const firstResponse = await getBootstrap(createApiRequest("/api/bootstrap", firstInitData));
+    const firstInitData = signedInitData({
+      id: telegramUserId,
+      language_code: "ru",
+    });
+    const firstResponse = await getBootstrap(
+      createApiRequest("/api/bootstrap", firstInitData),
+    );
 
     expect(firstResponse.status).toBe(200);
 
@@ -118,9 +154,14 @@ describe("Telegram auth HTTP vertical slice", () => {
 
     expect(updatedSettingsResponse.status).toBe(200);
 
-    const secondInitData = signedInitData({ id: telegramUserId, language_code: "es" });
-    const secondResponse = await getBootstrap(createApiRequest("/api/bootstrap", secondInitData));
-    const secondBody = await responseJson(secondResponse) as {
+    const secondInitData = signedInitData({
+      id: telegramUserId,
+      language_code: "es",
+    });
+    const secondResponse = await getBootstrap(
+      createApiRequest("/api/bootstrap", secondInitData),
+    );
+    const secondBody = (await responseJson(secondResponse)) as {
       user: { languageCode: string };
       settings: { locale: string };
     };
@@ -131,29 +172,49 @@ describe("Telegram auth HTTP vertical slice", () => {
   });
 
   it("rejects invalid Telegram auth", async () => {
-    const response = await getBootstrap(createApiRequest("/api/bootstrap", "auth_date=1&hash=bad"));
-    const body = await responseJson(response) as { error: { code: string } };
+    const response = await getBootstrap(
+      createApiRequest("/api/bootstrap", "auth_date=1&hash=bad"),
+    );
+    const body = (await responseJson(response)) as { error: { code: string } };
 
     expect(response.status).toBe(401);
     expect(body.error.code).toBe("INVALID_TELEGRAM_INIT_DATA");
   });
 
   it("returns bootstrap state with zero and existing daily usage, current tournament, and rating", async () => {
-    const initData = signedInitData({ id: "777000111223", username: "bootstrap_user" });
-    const zeroResponse = await getBootstrap(createApiRequest("/api/bootstrap", initData));
-    const zeroBody = await responseJson(zeroResponse) as {
+    const initData = signedInitData({
+      id: "777000111223",
+      username: "bootstrap_user",
+    });
+    const zeroResponse = await getBootstrap(
+      createApiRequest("/api/bootstrap", initData),
+    );
+    const zeroBody = (await responseJson(zeroResponse)) as {
       user: { id: string; telegramUserId: string };
       currentTournament: { prizePoolNanoTon: string } | null;
-      dailyPredictionUsage: { freeUsed: number; rewardedUsed: number; totalUsed: number };
+      dailyPredictionUsage: {
+        freeUsed: number;
+        rewardedUsed: number;
+        totalUsed: number;
+      };
       rating: null | { rating: number };
       settings: { locale: string; appearance: string };
     };
 
     expect(zeroResponse.status).toBe(200);
-    expect(zeroBody.currentTournament).toMatchObject({ prizePoolNanoTon: "123000000000" });
-    expect(zeroBody.dailyPredictionUsage).toMatchObject({ freeUsed: 0, rewardedUsed: 0, totalUsed: 0 });
+    expect(zeroBody.currentTournament).toMatchObject({
+      prizePoolNanoTon: "123000000000",
+    });
+    expect(zeroBody.dailyPredictionUsage).toMatchObject({
+      freeUsed: 0,
+      rewardedUsed: 0,
+      totalUsed: 0,
+    });
     expect(zeroBody.rating).toBeNull();
-    expect(zeroBody.settings).toMatchObject({ locale: "en", appearance: "system" });
+    expect(zeroBody.settings).toMatchObject({
+      locale: "en",
+      appearance: "system",
+    });
 
     await prisma.dailyPredictionUsage.create({
       data: {
@@ -172,20 +233,39 @@ describe("Telegram auth HTTP vertical slice", () => {
       },
     });
 
-    const existingResponse = await getBootstrap(createApiRequest("/api/bootstrap", initData));
-    const existingBody = await responseJson(existingResponse) as {
-      dailyPredictionUsage: { freeUsed: number; rewardedUsed: number; totalUsed: number };
+    const existingResponse = await getBootstrap(
+      createApiRequest("/api/bootstrap", initData),
+    );
+    const existingBody = (await responseJson(existingResponse)) as {
+      dailyPredictionUsage: {
+        freeUsed: number;
+        rewardedUsed: number;
+        totalUsed: number;
+      };
       rating: { rating: number; league: string; qualifiedCupsCount: number };
     };
 
-    expect(existingBody.dailyPredictionUsage).toMatchObject({ freeUsed: 2, rewardedUsed: 1, totalUsed: 3 });
-    expect(existingBody.rating).toMatchObject({ rating: 1512, league: "BRONZE_III", qualifiedCupsCount: 1 });
+    expect(existingBody.dailyPredictionUsage).toMatchObject({
+      freeUsed: 2,
+      rewardedUsed: 1,
+      totalUsed: 3,
+    });
+    expect(existingBody.rating).toMatchObject({
+      rating: 1512,
+      league: "BRONZE_III",
+      qualifiedCupsCount: 1,
+    });
   });
 
   it("reads and updates settings for the authenticated user", async () => {
     const initData = signedInitData({ id: "777000111233" });
-    const initialResponse = await getSettings(createApiRequest("/api/settings", initData));
-    const initialBody = await responseJson(initialResponse) as { locale: string; appearance: string };
+    const initialResponse = await getSettings(
+      createApiRequest("/api/settings", initData),
+    );
+    const initialBody = (await responseJson(initialResponse)) as {
+      locale: string;
+      appearance: string;
+    };
 
     expect(initialResponse.status).toBe(200);
     expect(initialBody).toMatchObject({ locale: "en", appearance: "system" });
@@ -196,7 +276,10 @@ describe("Telegram auth HTTP vertical slice", () => {
         body: { locale: "ar" },
       }),
     );
-    const localeBody = await responseJson(localeResponse) as { locale: string; appearance: string };
+    const localeBody = (await responseJson(localeResponse)) as {
+      locale: string;
+      appearance: string;
+    };
 
     expect(localeResponse.status).toBe(200);
     expect(localeBody).toMatchObject({ locale: "ar", appearance: "system" });
@@ -207,7 +290,10 @@ describe("Telegram auth HTTP vertical slice", () => {
         body: { appearance: "dark" },
       }),
     );
-    const appearanceBody = await responseJson(appearanceResponse) as { locale: string; appearance: string };
+    const appearanceBody = (await responseJson(appearanceResponse)) as {
+      locale: string;
+      appearance: string;
+    };
 
     expect(appearanceResponse.status).toBe(200);
     expect(appearanceBody).toMatchObject({ locale: "ar", appearance: "dark" });
@@ -227,8 +313,12 @@ describe("Telegram auth HTTP vertical slice", () => {
         body: { appearance: "sepia" },
       }),
     );
-    const invalidLocaleBody = await responseJson(invalidLocale) as { error: { code: string } };
-    const invalidAppearanceBody = await responseJson(invalidAppearance) as { error: { code: string } };
+    const invalidLocaleBody = (await responseJson(invalidLocale)) as {
+      error: { code: string };
+    };
+    const invalidAppearanceBody = (await responseJson(invalidAppearance)) as {
+      error: { code: string };
+    };
 
     expect(invalidLocale.status).toBe(400);
     expect(invalidLocaleBody.error.code).toBe("VALIDATION_ERROR");
@@ -237,7 +327,10 @@ describe("Telegram auth HTTP vertical slice", () => {
   });
 
   it("enforces canonical slug uniqueness for teams and competitions", async () => {
-    const competitionSlug = uniqueTestKey("shared-competition-slug").replace(/_/g, "-");
+    const competitionSlug = uniqueTestKey("shared-competition-slug").replace(
+      /_/g,
+      "-",
+    );
     const teamSlug = uniqueTestKey("shared-team-slug").replace(/_/g, "-");
 
     await prisma.competition.create({
@@ -280,9 +373,17 @@ describe("Telegram auth HTTP vertical slice", () => {
   it("returns today's displayable fixtures and excludes tomorrow, inactive, and unsupported competitions", async () => {
     const initData = signedInitData({ id: "777000111224" });
     const todayRange = getBusinessDayRangeUtc(getBusinessDate(new Date()));
-    const activeCompetition = await createSupportedTestCompetition(prisma, "LALIGA");
-    const inactiveCompetition = await createTestCompetition(prisma, { code: "SERIE_A", isActive: false });
-    const unsupportedCompetition = await createTestCompetition(prisma, { code: uniqueTestKey("UNSUPPORTED") });
+    const activeCompetition = await createSupportedTestCompetition(
+      prisma,
+      "LALIGA",
+    );
+    const inactiveCompetition = await createTestCompetition(prisma, {
+      code: "SERIE_A",
+      isActive: false,
+    });
+    const unsupportedCompetition = await createTestCompetition(prisma, {
+      code: uniqueTestKey("UNSUPPORTED"),
+    });
     const includedFixture = await createTestFixture(prisma, {
       competitionId: activeCompetition.id,
       kickoffAt: new Date(todayRange.startUtc.getTime() + 12 * 60 * 60 * 1000),
@@ -321,33 +422,54 @@ describe("Telegram auth HTTP vertical slice", () => {
       attachTestScoringSnapshot(prisma, unsupportedFixture.id),
     ]);
 
-    const response = await getTodayFixtures(createApiRequest("/api/fixtures/today", initData));
-    const body = await responseJson(response) as {
+    const response = await getTodayFixtures(
+      createApiRequest("/api/fixtures/today", initData),
+    );
+    const body = (await responseJson(response)) as {
       fixtures: Array<{
         id: string;
         competition: { slug: string };
         homeTeam: { slug: string };
         awayTeam: { slug: string };
-        outcomes: { home: { points: number }; draw: { points: number }; away: { points: number } };
+        outcomes: {
+          home: { points: number };
+          draw: { points: number };
+          away: { points: number };
+        };
       }>;
     };
 
     expect(response.status).toBe(200);
-    expect(body.fixtures.map((fixture) => fixture.id)).toContain(includedFixture.id);
-    expect(body.fixtures.map((fixture) => fixture.id)).not.toContain(tomorrowFixture.id);
-    expect(body.fixtures.map((fixture) => fixture.id)).not.toContain(inactiveFixture.id);
-    expect(body.fixtures.map((fixture) => fixture.id)).not.toContain(unsupportedFixture.id);
-    expect(body.fixtures.find((fixture) => fixture.id === includedFixture.id)?.outcomes).toMatchObject({
+    expect(body.fixtures.map((fixture) => fixture.id)).toContain(
+      includedFixture.id,
+    );
+    expect(body.fixtures.map((fixture) => fixture.id)).not.toContain(
+      tomorrowFixture.id,
+    );
+    expect(body.fixtures.map((fixture) => fixture.id)).not.toContain(
+      inactiveFixture.id,
+    );
+    expect(body.fixtures.map((fixture) => fixture.id)).not.toContain(
+      unsupportedFixture.id,
+    );
+    expect(
+      body.fixtures.find((fixture) => fixture.id === includedFixture.id)
+        ?.outcomes,
+    ).toMatchObject({
       home: { points: 13 },
       draw: { points: 24 },
       away: { points: 27 },
     });
-    expect(body.fixtures.find((fixture) => fixture.id === includedFixture.id)).toMatchObject({
+    expect(
+      body.fixtures.find((fixture) => fixture.id === includedFixture.id),
+    ).toMatchObject({
       competition: { slug: "la-liga" },
       homeTeam: { slug: "home-test" },
       awayTeam: { slug: "away-test" },
     });
-    const includedDto = body.fixtures.find((fixture) => fixture.id === includedFixture.id);
+    const includedDto = body.fixtures.find(
+      (fixture) => fixture.id === includedFixture.id,
+    );
     expect(includedDto?.competition).not.toHaveProperty("logoUrl");
     expect(includedDto?.homeTeam).not.toHaveProperty("logoUrl");
     expect(includedDto?.awayTeam).not.toHaveProperty("logoUrl");
@@ -378,29 +500,46 @@ describe("Telegram auth HTTP vertical slice", () => {
         },
       }),
     );
-    const createdBody = await responseJson(createdResponse) as { predictionId: string; userId: string };
+    const createdBody = (await responseJson(createdResponse)) as {
+      predictionId: string;
+      userId: string;
+    };
 
     expect(rejectedImpersonation.status).toBe(400);
     expect(createdResponse.status).toBe(201);
     expect(createdBody.userId).not.toBe(otherUser.id);
 
     const updatedResponse = await patchPrediction(
-      createApiRequest(`/api/predictions/${createdBody.predictionId}`, userInitData, {
-        method: "PATCH",
-        body: { selectedOutcome: "DRAW" },
-      }),
+      createApiRequest(
+        `/api/predictions/${createdBody.predictionId}`,
+        userInitData,
+        {
+          method: "PATCH",
+          body: { selectedOutcome: "DRAW" },
+        },
+      ),
       { params: Promise.resolve({ predictionId: createdBody.predictionId }) },
     );
     const todayPredictionsResponse = await getTodayPredictions(
       createApiRequest("/api/predictions/today", userInitData),
     );
-    const todayPredictionsBody = await responseJson(todayPredictionsResponse) as {
-      predictions: Array<{ id: string; selectedOutcome: string; editable: boolean }>;
+    const todayPredictionsBody = (await responseJson(
+      todayPredictionsResponse,
+    )) as {
+      predictions: Array<{
+        id: string;
+        selectedOutcome: string;
+        editable: boolean;
+      }>;
     };
 
     expect(updatedResponse.status).toBe(200);
     expect(todayPredictionsBody.predictions).toContainEqual(
-      expect.objectContaining({ id: createdBody.predictionId, selectedOutcome: "DRAW", editable: true }),
+      expect.objectContaining({
+        id: createdBody.predictionId,
+        selectedOutcome: "DRAW",
+        editable: true,
+      }),
     );
   });
 
@@ -428,14 +567,20 @@ describe("Telegram auth HTTP vertical slice", () => {
         body: { fixtureId: fourthFixture.id, selectedOutcome: "HOME" },
       }),
     );
-    const rejectedFourthBody = await responseJson(rejectedFourth) as { error: { code: string } };
+    const rejectedFourthBody = (await responseJson(rejectedFourth)) as {
+      error: { code: string };
+    };
 
     expect(rejectedFourth.status).toBe(429);
     expect(rejectedFourthBody.error.code).toBe("REWARDED_AD_REQUIRED");
 
     const reward = await createTestAdReward(
       prisma,
-      (await prisma.user.findUniqueOrThrow({ where: { telegramUserId: 777000111226n } })).id,
+      (
+        await prisma.user.findUniqueOrThrow({
+          where: { telegramUserId: 777000111226n },
+        })
+      ).id,
       { expiresAt: new Date(Date.now() + 60 * 60 * 1000) },
     );
     const rewardedFixture = await createHttpEligibleFixture();
@@ -443,10 +588,16 @@ describe("Telegram auth HTTP vertical slice", () => {
       createApiRequest("/api/predictions", initData, {
         method: "POST",
         idempotencyKey: uniqueTestKey("idem"),
-        body: { fixtureId: rewardedFixture.id, selectedOutcome: "HOME", adRewardId: reward.id },
+        body: {
+          fixtureId: rewardedFixture.id,
+          selectedOutcome: "HOME",
+          adRewardId: reward.id,
+        },
       }),
     );
-    const createdBody = await responseJson(created) as { predictionId: string };
+    const createdBody = (await responseJson(created)) as {
+      predictionId: string;
+    };
 
     await prisma.fixture.update({
       where: { id: rewardedFixture.id },
@@ -454,13 +605,19 @@ describe("Telegram auth HTTP vertical slice", () => {
     });
 
     const locked = await patchPrediction(
-      createApiRequest(`/api/predictions/${createdBody.predictionId}`, initData, {
-        method: "PATCH",
-        body: { selectedOutcome: "AWAY" },
-      }),
+      createApiRequest(
+        `/api/predictions/${createdBody.predictionId}`,
+        initData,
+        {
+          method: "PATCH",
+          body: { selectedOutcome: "AWAY" },
+        },
+      ),
       { params: Promise.resolve({ predictionId: createdBody.predictionId }) },
     );
-    const lockedBody = await responseJson(locked) as { error: { code: string } };
+    const lockedBody = (await responseJson(locked)) as {
+      error: { code: string };
+    };
 
     expect(locked.status).toBe(423);
     expect(lockedBody.error.code).toBe("PREDICTION_LOCKED");
@@ -486,7 +643,12 @@ async function createHttpEligibleFixture() {
   const competition = await createSupportedTestCompetition(prisma, "EPL");
   const fixture = await createTestFixture(prisma, {
     competitionId: competition.id,
-    kickoffAt: new Date(Math.max(Date.now() + 60 * 60 * 1000, todayRange.startUtc.getTime() + 12 * 60 * 60 * 1000)),
+    kickoffAt: new Date(
+      Math.max(
+        Date.now() + 60 * 60 * 1000,
+        todayRange.startUtc.getTime() + 12 * 60 * 60 * 1000,
+      ),
+    ),
   });
 
   await attachTestScoringSnapshot(prisma, fixture.id);

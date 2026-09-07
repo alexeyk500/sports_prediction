@@ -2,14 +2,16 @@
 
 **Database Schema v0.1**
 
-  ------------------------- ---------------------------
-  **Status**                Working database contract
-  **Database**              PostgreSQL
-  **ORM**                   Prisma
-  **Product authority**     `docs/PRODUCT_SPEC.md`
-  **Technical authority**   `docs/TECH_SPEC.md`
-  **Physical schema**       `prisma/schema.prisma`
-  ------------------------- ---------------------------
+---
+
+**Status** Working database contract
+**Database** PostgreSQL
+**ORM** Prisma
+**Product authority** `docs/PRODUCT_SPEC.md`
+**Technical authority** `docs/TECH_SPEC.md`
+**Physical schema** `prisma/schema.prisma`
+
+---
 
 Этот документ определяет persistence model: entities, field semantics,
 relations, constraints, indexes, historical integrity и
@@ -18,7 +20,7 @@ transaction-relevant database invariants.
 Он не должен дублировать product flows, HTTP contracts, frontend
 architecture, worker scheduling или test matrices.
 
-------------------------------------------------------------------------
+---
 
 # 1. Database Conventions
 
@@ -26,19 +28,19 @@ architecture, worker scheduling или test matrices.
 
 Внутренние entity IDs:
 
-``` text
+```text
 UUID
 ```
 
 Prisma convention:
 
-``` prisma
+```prisma
 id String @id @default(uuid()) @db.Uuid
 ```
 
 External identities хранятся отдельно:
 
-``` text
+```text
 telegramUserId
 providerFixtureId
 providerCompetitionId
@@ -51,14 +53,14 @@ Provider IDs не являются Goalstery internal primary keys.
 
 Persistent instants:
 
-``` text
+```text
 PostgreSQL TIMESTAMPTZ
 Prisma DateTime @db.Timestamptz(6)
 ```
 
 Business timezone:
 
-``` text
+```text
 Europe/London
 ```
 
@@ -73,7 +75,7 @@ TON amounts are never binary floating point.
 
 Canonical persistence:
 
-``` text
+```text
 nanoTON
 BIGINT
 Prisma BigInt
@@ -87,7 +89,7 @@ Probability/scoring/rating decimal evidence uses PostgreSQL `NUMERIC`.
 
 Current baseline:
 
-``` text
+```text
 rawOdds               NUMERIC(12,6)
 probability           NUMERIC(10,8)
 ratingPerformanceZ    NUMERIC(12,8)
@@ -104,13 +106,13 @@ business operations.
 
 Default referential policy for historical relations:
 
-``` text
+```text
 ON DELETE RESTRICT
 ```
 
 Avoid cascade deletion for:
 
-``` text
+```text
 Tournament
 TournamentParticipant
 Fixture
@@ -130,11 +132,11 @@ Use `JSONB` only for low-stability provider/operational metadata.
 
 Core gameplay state must remain typed relational fields.
 
-------------------------------------------------------------------------
+---
 
 # 2. Enums
 
-``` text
+```text
 TournamentStatus
   SCHEDULED
   ACTIVE
@@ -211,7 +213,7 @@ UserAppearance
 
 Exact Prisma enum declarations live in `prisma/schema.prisma`.
 
-------------------------------------------------------------------------
+---
 
 # 3. User
 
@@ -219,7 +221,7 @@ Purpose: internal representation of an authenticated Telegram user.
 
 Fields:
 
-``` text
+```text
 id                UUID PK
 telegramUserId    BIGINT UNIQUE NOT NULL
 username          VARCHAR NULL
@@ -236,16 +238,16 @@ updatedAt         TIMESTAMPTZ NOT NULL
 
 Semantics:
 
--   `telegramUserId` is the external Telegram identity.
--   Telegram profile fields are metadata, not frontend authority.
--   `languageCode` stores raw Telegram metadata.
--   `locale` is Goalstery user preference and is not overwritten by
-    later Telegram profile sync.
--   `appearance` stores `system | light | dark`.
+- `telegramUserId` is the external Telegram identity.
+- Telegram profile fields are metadata, not frontend authority.
+- `languageCode` stores raw Telegram metadata.
+- `locale` is Goalstery user preference and is not overwritten by
+  later Telegram profile sync.
+- `appearance` stores `system | light | dark`.
 
 Relations:
 
-``` text
+```text
 TournamentParticipant[]
 Prediction[]
 DailyPredictionUsage[]
@@ -261,7 +263,7 @@ Account deletion must preserve historical integrity. Exact
 anonymization/re-registration behavior remains unresolved until
 explicitly specified.
 
-------------------------------------------------------------------------
+---
 
 # 4. Competition
 
@@ -269,7 +271,7 @@ Purpose: stable Goalstery competition catalog.
 
 Fields:
 
-``` text
+```text
 id                       UUID PK
 providerCompetitionId    VARCHAR NOT NULL
 code                     VARCHAR UNIQUE NOT NULL
@@ -283,7 +285,7 @@ updatedAt                TIMESTAMPTZ NOT NULL
 
 Current codes include:
 
-``` text
+```text
 EPL
 LALIGA
 SERIE_A
@@ -295,7 +297,7 @@ UEL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(code)
 UNIQUE(providerCompetitionId)
 UNIQUE(slug)
@@ -303,7 +305,7 @@ UNIQUE(slug)
 
 `slug` is Goalstery-owned canonical presentation identity:
 
-``` text
+```text
 lowercase ASCII
 kebab-case
 human-readable
@@ -313,7 +315,7 @@ stable when display name changes
 
 Local asset path:
 
-``` text
+```text
 /assets/competitions/<slug>.webp
 ```
 
@@ -322,13 +324,13 @@ Provider identity and canonical asset identity are separate concepts.
 If multi-provider support becomes real, provider identity uniqueness
 must be redesigned/scoped explicitly rather than silently overloaded.
 
-------------------------------------------------------------------------
+---
 
 # 5. Team
 
 Fields:
 
-``` text
+```text
 id              UUID PK
 providerTeamId  VARCHAR NOT NULL
 name            VARCHAR NOT NULL
@@ -341,7 +343,7 @@ updatedAt       TIMESTAMPTZ NOT NULL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(providerTeamId)
 UNIQUE(slug)
 ```
@@ -351,20 +353,20 @@ Competition slug.
 
 Local asset path:
 
-``` text
+```text
 /assets/teams/<slug>.webp
 ```
 
 If multi-provider support becomes real, provider identity uniqueness
 must be explicitly migrated.
 
-------------------------------------------------------------------------
+---
 
 # 6. Tournament
 
 Fields:
 
-``` text
+```text
 id                 UUID PK
 number             INTEGER NOT NULL
 status             TournamentStatus NOT NULL
@@ -377,7 +379,7 @@ updatedAt          TIMESTAMPTZ NOT NULL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(number)
 CHECK(startsAt < endsAt)
 CHECK(prizePoolNanoTon >= 0)
@@ -385,7 +387,7 @@ CHECK(prizePoolNanoTon >= 0)
 
 Indexes:
 
-``` text
+```text
 (status)
 (startsAt)
 (endsAt)
@@ -398,7 +400,7 @@ explicitly adopted.
 
 Exact weekly boundary is not a schema decision.
 
-------------------------------------------------------------------------
+---
 
 # 7. TournamentParticipant
 
@@ -406,7 +408,7 @@ Purpose: User participation plus maintained Weekly Cup aggregates.
 
 Fields:
 
-``` text
+```text
 id                         UUID PK
 tournamentId               UUID FK
 userId                     UUID FK
@@ -422,7 +424,7 @@ updatedAt                  TIMESTAMPTZ NOT NULL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(tournamentId, userId)
 CHECK(tournamentPoints >= 0)
 CHECK(predictionsCount >= 0)
@@ -432,7 +434,7 @@ CHECK(correctPredictionsCount <= predictionsCount)
 
 Indexes:
 
-``` text
+```text
 (tournamentId, tournamentPoints DESC)
 (tournamentId, tournamentPoints DESC, id)
 (userId, tournamentId)
@@ -443,13 +445,13 @@ Indexes:
 The stable final DB sort key is not an official sports tie-breaker.
 Official tie-break rules remain separately decided.
 
-------------------------------------------------------------------------
+---
 
 # 8. Fixture
 
 Fields:
 
-``` text
+```text
 id                    UUID PK
 providerFixtureId     VARCHAR NOT NULL
 competitionId         UUID FK
@@ -468,14 +470,14 @@ updatedAt             TIMESTAMPTZ NOT NULL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(providerFixtureId)
 CHECK(homeTeamId != awayTeamId)
 ```
 
 Indexes:
 
-``` text
+```text
 (kickoffAt)
 (status, kickoffAt)
 (competitionId, kickoffAt)
@@ -484,7 +486,7 @@ Indexes:
 
 Relations:
 
-``` text
+```text
 Competition
 home Team
 away Team
@@ -499,7 +501,7 @@ Provider-specific status remains separate from Goalstery
 Final-state cross-field invariants may be enforced in application/domain
 code where clearer than SQL CHECKs.
 
-------------------------------------------------------------------------
+---
 
 # 9. OutcomeSnapshot
 
@@ -507,7 +509,7 @@ Purpose: immutable scoring/probability evidence published for a Fixture.
 
 Current fields:
 
-``` text
+```text
 id                 UUID PK
 fixtureId          UUID FK
 
@@ -530,7 +532,7 @@ createdAt          TIMESTAMPTZ NOT NULL
 
 Current constraints:
 
-``` text
+```text
 homeProbability > 0
 drawProbability > 0
 awayProbability > 0
@@ -545,7 +547,7 @@ application/domain logic rather than strict SQL equality.
 
 Indexes:
 
-``` text
+```text
 (fixtureId)
 (fixtureId, snapshotAt DESC)
 ```
@@ -564,13 +566,13 @@ expanded merely because the future model direction has been accepted.
 Any model-driven schema migration must be explicitly reconciled with
 product/technical/testing/decision documents first.
 
-------------------------------------------------------------------------
+---
 
 # 10. Prediction
 
 Fields:
 
-``` text
+```text
 id                       UUID PK
 userId                   UUID FK
 tournamentId             UUID FK
@@ -593,7 +595,7 @@ settledAt                TIMESTAMPTZ NULL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(userId, fixtureId)
 CHECK(potentialPoints BETWEEN 7 AND 50)
 CHECK(earnedPoints >= 0)
@@ -601,7 +603,7 @@ CHECK(earnedPoints >= 0)
 
 Indexes:
 
-``` text
+```text
 (userId, createdAt DESC)
 (userId, tournamentId)
 (tournamentId, resultStatus)
@@ -612,7 +614,7 @@ Indexes:
 
 Snapshot semantics:
 
-``` text
+```text
 outcomeSnapshotId
 probabilityAtPrediction
 potentialPoints
@@ -622,7 +624,7 @@ are intentionally retained for historical integrity/auditability.
 
 On pre-kickoff outcome edit:
 
-``` text
+```text
 selectedOutcome changes
 probabilityAtPrediction changes to selected outcome value from SAME snapshot
 potentialPoints changes to selected outcome value from SAME snapshot
@@ -631,7 +633,7 @@ updatedAt changes
 
 but:
 
-``` text
+```text
 outcomeSnapshotId unchanged
 slotType unchanged
 daily quota unchanged
@@ -639,7 +641,7 @@ daily quota unchanged
 
 Settlement invariant:
 
-``` text
+```text
 PENDING   → earnedPoints = 0
 CORRECT   → earnedPoints = potentialPoints
 INCORRECT → earnedPoints = 0
@@ -647,7 +649,7 @@ INCORRECT → earnedPoints = 0
 
 Cross-field settlement consistency is application/domain enforced.
 
-------------------------------------------------------------------------
+---
 
 # 11. DailyPredictionUsage
 
@@ -655,7 +657,7 @@ Purpose: atomic daily quota accounting.
 
 Fields:
 
-``` text
+```text
 id              UUID PK
 userId          UUID FK
 businessDate    DATE NOT NULL
@@ -667,7 +669,7 @@ updatedAt       TIMESTAMPTZ NOT NULL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(userId, businessDate)
 
 CHECK(freeUsed >= 0)
@@ -692,7 +694,7 @@ decision/migration.
 
 Indexes:
 
-``` text
+```text
 (userId, businessDate)
 (businessDate)
 ```
@@ -700,7 +702,7 @@ Indexes:
 These CHECKs intentionally mirror current hard product limits. Product
 changes to quota require synchronized schema migration.
 
-------------------------------------------------------------------------
+---
 
 # 12. AdReward
 
@@ -708,7 +710,7 @@ Purpose: server-controlled one-time rewarded entitlement.
 
 Fields:
 
-``` text
+```text
 id                       UUID PK
 userId                   UUID FK
 provider                 VARCHAR NOT NULL
@@ -725,7 +727,7 @@ metadata                 JSONB NULL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(attemptKey)
 UNIQUE(consumedByPredictionId)
 ```
@@ -733,7 +735,7 @@ UNIQUE(consumedByPredictionId)
 If the selected provider supplies a reliable globally unique event
 identifier, a scoped unique constraint such as:
 
-``` text
+```text
 UNIQUE(provider, providerRewardId)
 ```
 
@@ -741,7 +743,7 @@ may be added for non-null values.
 
 Indexes:
 
-``` text
+```text
 (userId, status, expiresAt)
 (status, expiresAt)
 ```
@@ -752,7 +754,7 @@ correctness transaction.
 Exact provider verification metadata is intentionally not frozen before
 the Monetag contract is approved.
 
-------------------------------------------------------------------------
+---
 
 # 13. RatingProfile
 
@@ -760,7 +762,7 @@ Purpose: current Global Rating state.
 
 Fields:
 
-``` text
+```text
 id                   UUID PK
 userId               UUID FK
 rating               INTEGER NOT NULL DEFAULT 1500
@@ -772,14 +774,14 @@ updatedAt            TIMESTAMPTZ NOT NULL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(userId)
 CHECK(qualifiedCupsCount >= 0)
 ```
 
 Indexes:
 
-``` text
+```text
 (rating DESC)
 (league, rating DESC)
 ```
@@ -791,7 +793,7 @@ Internal rating may exist while visible league is `UNRANKED`.
 League calibration/threshold status is not decided by this schema
 document.
 
-------------------------------------------------------------------------
+---
 
 # 14. RatingHistory
 
@@ -800,7 +802,7 @@ calculation.
 
 Fields:
 
-``` text
+```text
 id                   UUID PK
 userId               UUID FK
 tournamentId         UUID FK
@@ -817,7 +819,7 @@ createdAt            TIMESTAMPTZ NOT NULL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(userId, tournamentId)
 
 CHECK(actualPercentile >= 0 AND actualPercentile <= 1)
@@ -826,7 +828,7 @@ CHECK(expectedPercentile >= 0 AND expectedPercentile <= 1)
 
 Indexes:
 
-``` text
+```text
 (userId, createdAt DESC)
 (tournamentId)
 (tournamentId, performanceZ DESC)
@@ -834,7 +836,7 @@ Indexes:
 
 Rows are immutable after finalization.
 
-------------------------------------------------------------------------
+---
 
 # 15. Achievement
 
@@ -842,7 +844,7 @@ Static achievement catalog.
 
 Fields:
 
-``` text
+```text
 id
 code
 name
@@ -854,7 +856,7 @@ updatedAt
 
 Constraint:
 
-``` text
+```text
 UNIQUE(code)
 ```
 
@@ -863,13 +865,13 @@ UNIQUE(code)
 Current product achievement catalog belongs to `PRODUCT_SPEC.md`, not
 this schema contract.
 
-------------------------------------------------------------------------
+---
 
 # 16. UserAchievement
 
 Fields:
 
-``` text
+```text
 id
 userId
 achievementId
@@ -879,13 +881,13 @@ createdAt
 
 Constraint:
 
-``` text
+```text
 UNIQUE(userId, achievementId)
 ```
 
 Indexes:
 
-``` text
+```text
 (userId, unlockedAt DESC)
 (achievementId)
 ```
@@ -893,7 +895,7 @@ Indexes:
 MVP has no generic achievement-progress persistence unless explicitly
 added later.
 
-------------------------------------------------------------------------
+---
 
 # 17. Prize
 
@@ -901,7 +903,7 @@ Purpose: immutable Tournament award assigned to a rank/User.
 
 Fields:
 
-``` text
+```text
 id               UUID PK
 tournamentId     UUID FK
 userId           UUID FK
@@ -912,7 +914,7 @@ createdAt        TIMESTAMPTZ NOT NULL
 
 Constraints:
 
-``` text
+```text
 UNIQUE(tournamentId, rank)
 UNIQUE(tournamentId, userId)
 CHECK(rank > 0)
@@ -921,7 +923,7 @@ CHECK(amountNanoTon > 0)
 
 Indexes:
 
-``` text
+```text
 (userId, createdAt DESC)
 (tournamentId)
 ```
@@ -937,19 +939,19 @@ Exact rank → amount Prize Distribution is not defined by this schema.
 do not infer a distribution from current code, seed data or historical
 examples.
 
-------------------------------------------------------------------------
+---
 
 # 18. PrizeClaim
 
 Relation:
 
-``` text
+```text
 Prize 1 → 0..1 PrizeClaim
 ```
 
 Fields:
 
-``` text
+```text
 id                 UUID PK
 prizeId            UUID FK
 walletAddress      VARCHAR NULL
@@ -965,7 +967,7 @@ updatedAt          TIMESTAMPTZ NOT NULL
 
 Constraint:
 
-``` text
+```text
 UNIQUE(prizeId)
 ```
 
@@ -975,7 +977,7 @@ transfer support could invalidate such a constraint.
 
 Conceptual state invariants:
 
-``` text
+```text
 UNCLAIMED
   walletAddress may be null
 
@@ -997,7 +999,7 @@ State-machine consistency is primarily application/service enforced.
 
 Exact wallet validation/payout operational fields remain unresolved.
 
-------------------------------------------------------------------------
+---
 
 # 19. IdempotencyRecord
 
@@ -1005,7 +1007,7 @@ Purpose: durable HTTP/business mutation idempotency.
 
 Fields:
 
-``` text
+```text
 id
 userId
 operation
@@ -1019,7 +1021,7 @@ expiresAt
 
 Constraint:
 
-``` text
+```text
 UNIQUE(userId, operation, key)
 ```
 
@@ -1029,7 +1031,7 @@ repeated request and detecting conflicting key reuse.
 Domain-specific worker idempotency additionally relies on constraints
 such as:
 
-``` text
+```text
 Prediction(userId, fixtureId)
 TournamentParticipant(tournamentId, userId)
 RatingHistory(userId, tournamentId)
@@ -1037,11 +1039,11 @@ Prize(tournamentId, rank)
 PrizeClaim(prizeId)
 ```
 
-------------------------------------------------------------------------
+---
 
 # 20. Relationship Summary
 
-``` text
+```text
 User
  ├── 1:N TournamentParticipant
  ├── 1:N Prediction
@@ -1087,7 +1089,7 @@ Prize
 Explicit Prisma relation names are required where one model participates
 in multiple relations between the same model pair, notably:
 
-``` text
+```text
 HomeTeamFixtures
 AwayTeamFixtures
 FixtureSnapshots
@@ -1096,13 +1098,13 @@ FixtureScoringSnapshot
 
 Exact Prisma syntax lives in `schema.prisma`.
 
-------------------------------------------------------------------------
+---
 
 # 21. Critical Uniqueness and Integrity
 
 The physical schema must enforce the currently approved equivalents of:
 
-``` text
+```text
 User.telegramUserId
 
 Competition.code
@@ -1141,7 +1143,7 @@ IdempotencyRecord(userId, operation, key)
 
 Database + application together guarantee:
 
-``` text
+```text
 one User + Fixture → at most one Prediction
 daily quota cannot exceed current limits
 one AdReward cannot unlock multiple Predictions
@@ -1155,7 +1157,7 @@ Current-time invariants such as kickoff lock are enforced
 transactionally in application/domain code because they depend on the
 authoritative Clock.
 
-------------------------------------------------------------------------
+---
 
 # 22. Transaction-Relevant Persistence Boundaries
 
@@ -1165,7 +1167,7 @@ This section defines database effects, not full business workflows.
 
 One transaction must cover the persistence effects needed to atomically:
 
-``` text
+```text
 lock/serialize relevant quota/idempotency state
 validate/read required Fixture/snapshot state
 create TournamentParticipant if absent
@@ -1180,7 +1182,7 @@ persist idempotent result
 
 Transactionally:
 
-``` text
+```text
 load/lock relevant Prediction + Fixture + snapshot
 validate authoritative kickoff rule
 update selectedOutcome
@@ -1194,7 +1196,7 @@ No quota/slot/reward/snapshot identity changes.
 
 Transaction or correctness-preserving chunks:
 
-``` text
+```text
 settle previously unsettled Prediction
 apply participant aggregates exactly once
 persist settled state
@@ -1205,7 +1207,7 @@ eventually mark Fixture SETTLED
 
 Transactionally:
 
-``` text
+```text
 prevent duplicate RatingHistory
 update RatingProfile
 create RatingHistory
@@ -1218,7 +1220,7 @@ Transactionally enforce one PrizeClaim and valid state transition.
 
 Exact orchestration belongs to `TECH_SPEC.md`.
 
-------------------------------------------------------------------------
+---
 
 # 23. Index Strategy
 
@@ -1226,52 +1228,52 @@ Indexes are driven by current primary query paths.
 
 ## Predict
 
-``` text
+```text
 Fixture(status, competitionId, kickoffAt)
 Fixture(kickoffAt)
 ```
 
 ## My Picks
 
-``` text
+```text
 Prediction(userId, createdAt DESC)
 Prediction(userId, tournamentId)
 ```
 
 ## Weekly Cup
 
-``` text
+```text
 TournamentParticipant(tournamentId, tournamentPoints DESC)
 ```
 
 ## Rating
 
-``` text
+```text
 RatingProfile(rating DESC)
 ```
 
 ## Result ingestion
 
-``` text
+```text
 Fixture(status, kickoffAt)
 ```
 
 ## Settlement
 
-``` text
+```text
 Prediction(fixtureId, resultStatus)
 ```
 
 Avoid speculative indexes. Add/change indexes from measured query
 patterns and explain any non-obvious index in schema/migration review.
 
-------------------------------------------------------------------------
+---
 
 # 24. Provider Identity Boundary
 
 Current schema stores direct provider mapping fields:
 
-``` text
+```text
 providerFixtureId
 providerTeamId
 providerCompetitionId
@@ -1284,7 +1286,7 @@ Do not prematurely introduce generic provider mapping tables.
 If multi-provider support becomes a real requirement, explicitly migrate
 to provider-scoped identity, for example:
 
-``` text
+```text
 provider + providerExternalId
 ```
 
@@ -1293,13 +1295,13 @@ or dedicated mapping tables.
 Such migration must preserve Goalstery canonical entity IDs and
 canonical asset slugs.
 
-------------------------------------------------------------------------
+---
 
 # 25. Retention
 
 Current historical retention intent:
 
-``` text
+```text
 Tournament
 TournamentParticipant
 Fixture
@@ -1319,20 +1321,20 @@ Operational/provider raw data may use shorter retention.
 AdReward metadata may use bounded retention subject to analytics/legal
 requirements.
 
-------------------------------------------------------------------------
+---
 
 # 26. Migration and Seed Policy
 
 Schema changes use Prisma Migrations.
 
-``` text
+```text
 development → prisma migrate dev
 production  → prisma migrate deploy
 ```
 
 Destructive production migrations require:
 
-``` text
+```text
 backup
 migration review
 recovery/rollback plan
@@ -1340,7 +1342,7 @@ recovery/rollback plan
 
 Stable catalog seed may include:
 
-``` text
+```text
 Competitions
 Achievements
 ```
@@ -1351,13 +1353,13 @@ tooling, not production catalog semantics.
 `schema.prisma` and migrations must not introduce new
 product/architecture decisions silently.
 
-------------------------------------------------------------------------
+---
 
 # 27. Open Database Decisions
 
 Authoritative Open Decisions belong in:
 
-``` text
+```text
 docs/DECISIONS.md
 ```
 
@@ -1365,7 +1367,7 @@ Do not maintain a competing authoritative list here.
 
 Database areas that may require future explicit resolution include:
 
-``` text
+```text
 official leaderboard tie-break fields/indexes
 fixture disruption representation
 future Goalstery probability-model evidence fields
@@ -1381,13 +1383,13 @@ multi-provider identity mapping
 If a schema change depends on one of these unresolved areas, stop and
 resolve the relevant decision before migration.
 
-------------------------------------------------------------------------
+---
 
 # 28. Schema Acceptance
 
 Database contract is compliant when:
 
-``` text
+```text
 internal PKs are UUID
 external IDs remain separate
 TON uses BigInt nanoTON
@@ -1408,13 +1410,13 @@ critical mutations have transactional/unique-constraint support
 retry/concurrency cannot create duplicate business effects
 ```
 
-------------------------------------------------------------------------
+---
 
 # 29. Schema Maintenance
 
 This document owns:
 
-``` text
+```text
 persistence entities
 field semantics
 relations
@@ -1427,7 +1429,7 @@ transaction-relevant persistence effects
 
 It does not own:
 
-``` text
+```text
 product behavior             → PRODUCT_SPEC.md
 backend/worker orchestration → TECH_SPEC.md
 frontend architecture        → FRONTEND_ARCHITECTURE.md

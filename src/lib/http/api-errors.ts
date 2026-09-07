@@ -14,7 +14,12 @@ export interface ApiErrorBody {
 
 export function toApiErrorResponse(error: unknown): NextResponse<ApiErrorBody> {
   if (error instanceof DomainError) {
-    return jsonError(error.code, error.message, statusForDomainError(error.code), error.details);
+    return jsonError(
+      error.code,
+      error.message,
+      statusForDomainError(error.code),
+      error.details,
+    );
   }
 
   if (error instanceof TelegramAuthError) {

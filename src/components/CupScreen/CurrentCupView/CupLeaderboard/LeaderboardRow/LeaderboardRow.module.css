@@ -1,8 +1,8 @@
 .row,
 .pinnedRow {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) 92px 58px;
-  gap: 8px;
+  grid-template-columns: 42px minmax(0, 1fr) 125px 55px;
+  column-gap: 12px;
   align-items: center;
   min-height: 38px;
   color: var(--color-text-secondary);
@@ -15,10 +15,14 @@
   text-align: end;
 }
 
+.row > span:nth-child(3),
+.pinnedRow > span:nth-child(3) {
+  white-space: nowrap;
+}
+
 .pinnedRow {
   border-radius: 12px;
   padding-block: 8px;
-  padding-inline: 8px;
   background: var(--color-accent-soft);
   color: var(--color-accent-text);
 }
@@ -39,6 +43,9 @@
   align-items: center;
   gap: 6px;
 }
+.centerdText {
+  text-align: center;
+}
 
 .youBadge {
   flex: 0 0 auto;
@@ -55,7 +62,7 @@
 @media (max-width: 370px) {
   .row,
   .pinnedRow {
-    grid-template-columns: 28px minmax(0, 1fr) 84px 52px;
-    gap: 6px;
+    grid-template-columns: 34px minmax(0, 1fr) 112px 50px;
+    column-gap: 8px;
   }
 }

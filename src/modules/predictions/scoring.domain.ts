@@ -12,13 +12,20 @@ import {
   ScoringInputError,
 } from "./scoring.core";
 
-export { MAX_PREDICTION_POINTS, MIN_PREDICTION_POINTS, SCORING_NUMERATOR, SCORING_VERSION };
+export {
+  MAX_PREDICTION_POINTS,
+  MIN_PREDICTION_POINTS,
+  SCORING_NUMERATOR,
+  SCORING_VERSION,
+};
 
 export type RawOneXTwoOdds = RawOneXTwoOddsCore;
 
 export type NormalizedOneXTwoProbabilities = NormalizedOneXTwoProbabilitiesCore;
 
-export function calculatePredictionPoints(probability: Prisma.Decimal.Value): number {
+export function calculatePredictionPoints(
+  probability: Prisma.Decimal.Value,
+): number {
   try {
     return calculatePredictionPointsCore(probability);
   } catch (error) {
@@ -26,7 +33,9 @@ export function calculatePredictionPoints(probability: Prisma.Decimal.Value): nu
   }
 }
 
-export function normalizeOneXTwoOdds(odds: RawOneXTwoOdds): NormalizedOneXTwoProbabilities {
+export function normalizeOneXTwoOdds(
+  odds: RawOneXTwoOdds,
+): NormalizedOneXTwoProbabilities {
   try {
     return normalizeOneXTwoOddsCore(odds);
   } catch (error) {
@@ -39,5 +48,7 @@ function mapScoringError(error: unknown): Error {
     return new DomainError(error.code, error.message);
   }
 
-  return error instanceof Error ? error : new Error("Unexpected scoring error.");
+  return error instanceof Error
+    ? error
+    : new Error("Unexpected scoring error.");
 }

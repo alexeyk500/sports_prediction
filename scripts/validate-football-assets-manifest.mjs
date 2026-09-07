@@ -5,10 +5,18 @@ import {
 } from "../src/lib/sports-api/assets/asset-manifest.ts";
 
 try {
-  const manifest = JSON.parse(await readFile(FOOTBALL_ASSETS_MANIFEST_PATH, "utf8"));
-  const validation = validateFootballAssetsManifest(manifest, { checkLocalAssets: true });
-  const errors = validation.issues.filter((issue) => issue.severity === "error");
-  const warnings = validation.issues.filter((issue) => issue.severity === "warning");
+  const manifest = JSON.parse(
+    await readFile(FOOTBALL_ASSETS_MANIFEST_PATH, "utf8"),
+  );
+  const validation = validateFootballAssetsManifest(manifest, {
+    checkLocalAssets: true,
+  });
+  const errors = validation.issues.filter(
+    (issue) => issue.severity === "error",
+  );
+  const warnings = validation.issues.filter(
+    (issue) => issue.severity === "warning",
+  );
 
   console.log("Football assets manifest validation complete.");
   console.log(`Valid: ${validation.valid}`);
@@ -23,7 +31,10 @@ try {
     process.exit(1);
   }
 } catch (error) {
-  const message = error instanceof Error ? error.message : "Unknown football assets manifest validation error.";
+  const message =
+    error instanceof Error
+      ? error.message
+      : "Unknown football assets manifest validation error.";
   console.error(message);
   process.exit(1);
 }

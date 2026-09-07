@@ -10,11 +10,18 @@ interface ILeaderboardModeTabsProps {
 
 const MODES: CupLeaderboardMode[] = ["top", "around-me", "all"];
 
-const LeaderboardModeTabs: React.FC<ILeaderboardModeTabsProps> = ({ activeMode, onChange }) => {
+const LeaderboardModeTabs: React.FC<ILeaderboardModeTabsProps> = ({
+  activeMode,
+  onChange,
+}) => {
   const { t } = useTranslation();
 
   return (
-    <div className={styles.tabs} role="tablist" aria-label={t("cup.leaderboardModes.ariaLabel")}>
+    <div
+      className={styles.tabs}
+      role="tablist"
+      aria-label={t("cup.leaderboardModes.ariaLabel")}
+    >
       {MODES.map((mode) => (
         <button
           key={mode}

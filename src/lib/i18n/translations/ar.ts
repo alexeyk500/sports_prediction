@@ -75,7 +75,8 @@ export const ar = {
       plusOne: "+1",
     },
     aria: {
-      selectOutcome: "اختر {outcome}، {trophyValue}، في مباراة {homeTeam} ضد {awayTeam}",
+      selectOutcome:
+        "اختر {outcome}، {trophyValue}، في مباراة {homeTeam} ضد {awayTeam}",
     },
   },
   cup: {
@@ -90,16 +91,18 @@ export const ar = {
     unavailable: "—",
     yourPosition: "مركزك",
     positionRank: "الترتيب #{rank}",
-    positionSummary: "{points} نقطة · {predictions} توقعات · {correct} صحيح · {wrong} خطأ",
+    positionSummary:
+      "{points} نقطة · {predictions} توقعات · {correct} صحيح · {wrong} خطأ",
     positionUnavailableTitle: "مركزك في الكأس غير جاهز بعد",
-    positionUnavailableBody: "أنشئ توقعات للدخول تلقائيا. سيظهر ترتيبك عندما تكون لوحة الكأس متاحة.",
+    positionUnavailableBody:
+      "أنشئ توقعات للدخول تلقائيا. سيظهر ترتيبك عندما تكون لوحة الكأس متاحة.",
     makePrediction: "أنشئ توقعا",
     you: "أنت",
     leaderboard: "لوحة الصدارة",
     leaderboardModes: {
-      "top": "أفضل 50",
+      top: "أفضل 50",
       "around-me": "حولي",
-      "all": "كل اللاعبين",
+      all: "كل اللاعبين",
       ariaLabel: "عروض لوحة الصدارة",
     },
     leaderboardStates: {
@@ -127,9 +130,11 @@ export const ar = {
     empty: {
       noCurrentCup: "لا يوجد كأس نشط متاح.",
       leaderboardTitle: "لوحة الصدارة غير جاهزة بعد",
-      leaderboardBody: "ستظهر صفوف اللاعبين عندما تكون لوحة الكأس الحالية متاحة.",
+      leaderboardBody:
+        "ستظهر صفوف اللاعبين عندما تكون لوحة الكأس الحالية متاحة.",
       historyTitle: "لا توجد كؤوس سابقة بعد",
-      historyBody: "ستظهر ملخصات الكؤوس المكتملة هنا عندما تتوفر النتائج النهائية.",
+      historyBody:
+        "ستظهر ملخصات الكؤوس المكتملة هنا عندما تتوفر النتائج النهائية.",
     },
   },
   profile: {
@@ -142,7 +147,8 @@ export const ar = {
   },
   errors: {
     generic: "حدث خطأ ما.",
-    missingTelegramInitData: "افتح التطبيق في Telegram أو اضبط development initData.",
+    missingTelegramInitData:
+      "افتح التطبيق في Telegram أو اضبط development initData.",
     network: "فشل طلب الشبكة.",
     invalidApiResponse: "تعذرت قراءة استجابة الخادم.",
     PREDICTION_LOCKED: "بدأت هذه المباراة.",
@@ -153,7 +159,8 @@ export const ar = {
     FIXTURE_NOT_FOUND: "تعذر العثور على هذه المباراة.",
     FIXTURE_NOT_OPEN: "هذه المباراة غير مفتوحة للتوقعات.",
     FIXTURE_LOCKED: "هذه المباراة مغلقة.",
-    FIXTURE_SCORING_SNAPSHOT_MISSING: "احتمالات التوقع لهذه المباراة غير جاهزة بعد.",
+    FIXTURE_SCORING_SNAPSHOT_MISSING:
+      "احتمالات التوقع لهذه المباراة غير جاهزة بعد.",
     COMPETITION_NOT_SUPPORTED: "هذه البطولة غير مدعومة.",
     COMPETITION_INACTIVE: "هذه البطولة غير نشطة.",
     PREDICTION_ALREADY_EXISTS: "لديك اختيار لهذه المباراة بالفعل.",

@@ -29,7 +29,9 @@ describe("football assets canonical manifest", () => {
     const changedProviderName = {
       ...manifest,
       teams: manifest.teams.map((team) =>
-        team.providerTeamId === 157 ? { ...team, providerName: "Bayern Munich" } : team,
+        team.providerTeamId === 157
+          ? { ...team, providerName: "Bayern Munich" }
+          : team,
       ),
     };
 
@@ -66,7 +68,10 @@ describe("football assets canonical manifest", () => {
 
     expect(validateFootballAssetsManifest(invalid).issues).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ code: "DUPLICATE_PROVIDER_ID", severity: "error" }),
+        expect.objectContaining({
+          code: "DUPLICATE_PROVIDER_ID",
+          severity: "error",
+        }),
         expect.objectContaining({ code: "DUPLICATE_SLUG", severity: "error" }),
       ]),
     );
@@ -90,7 +95,10 @@ describe("football assets canonical manifest", () => {
 
     expect(validateFootballAssetsManifest(manifest).issues).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ code: "MISSING_PROVIDER_NAME", severity: "error" }),
+        expect.objectContaining({
+          code: "MISSING_PROVIDER_NAME",
+          severity: "error",
+        }),
         expect.objectContaining({ code: "MALFORMED_SLUG", severity: "error" }),
       ]),
     );
@@ -144,10 +152,15 @@ describe("football assets canonical manifest", () => {
 
   it("keeps seed and download tooling pointed at canonical manifest", () => {
     const seedScript = readFileSync("scripts/seed-dev.mjs", "utf8");
-    const downloadScript = readFileSync("scripts/download-football-assets.mjs", "utf8");
+    const downloadScript = readFileSync(
+      "scripts/download-football-assets.mjs",
+      "utf8",
+    );
 
     expect(seedScript).toContain("data/football-assets.manifest.json");
-    expect(seedScript).not.toContain("data/football-assets-download-report.json");
+    expect(seedScript).not.toContain(
+      "data/football-assets-download-report.json",
+    );
     expect(downloadScript).toContain("FOOTBALL_ASSETS_MANIFEST_PATH");
     expect(downloadScript).toContain("resolveTeamAssetIdentity");
     expect(downloadScript).not.toContain("loadExistingDownloadReport");

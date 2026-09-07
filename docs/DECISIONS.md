@@ -10,7 +10,7 @@ Detailed current-system behavior belongs to the relevant specification.
 This register records **what was deliberately decided, why, and what
 future work must not silently change**.
 
-------------------------------------------------------------------------
+---
 
 # 1. Decision Guardrail
 
@@ -21,7 +21,7 @@ superseded.
 
 Accepted decisions are historically immutable. Do not silently:
 
-``` text
+```text
 modify
 reinterpret
 weaken
@@ -38,7 +38,7 @@ If implementation appears to require such a change, stop before
 implementing it and request explicit approval. The proposal must
 identify:
 
-``` text
+```text
 affected decision
 proposed change
 reason
@@ -50,13 +50,13 @@ whether it supersedes the existing decision
 
 After approval, add a new decision with:
 
-``` text
+```text
 Supersedes: D-xxx
 ```
 
 and annotate the old record with:
 
-``` text
+```text
 Superseded by: D-yyy
 ```
 
@@ -80,13 +80,13 @@ Do not use this register for ordinary implementation details such as CSS
 pixels, class/function names, minor refactors or temporary debugging
 choices.
 
-------------------------------------------------------------------------
+---
 
 # 2. Decision Record Format
 
 Accepted records use:
 
-``` text
+```text
 D-xxx — Title
 Status
 Date
@@ -97,7 +97,7 @@ Consequences
 
 Optional:
 
-``` text
+```text
 Supersedes
 Superseded by
 ```
@@ -105,7 +105,7 @@ Superseded by
 Open records use `OD-xxx` and state the unresolved question plus
 already-approved constraints.
 
-------------------------------------------------------------------------
+---
 
 # 3. Reading This File Efficiently
 
@@ -116,7 +116,7 @@ authoritative specification routed by `AGENTS.md`.
 
 Task-oriented groups:
 
-``` text
+```text
 Product / tournament / quota / prediction / prizes
 D-001..D-014
 
@@ -163,7 +163,7 @@ When a task crosses several concerns, read all affected groups.
 This routing is only a context optimization. It does not weaken
 decisions outside the selected group.
 
-------------------------------------------------------------------------
+---
 
 # Product Decisions
 
@@ -180,13 +180,13 @@ Users do not stake money or cryptocurrency to participate.
 
 The product must not require:
 
--   stakes
--   deposits
--   entry fees
--   payment to make ordinary predictions
--   purchasing prediction points
--   conversion of prediction points into money
--   random prize lottery mechanics
+- stakes
+- deposits
+- entry fees
+- payment to make ordinary predictions
+- purchasing prediction points
+- conversion of prediction points into money
+- random prize lottery mechanics
 
 TON is used for predetermined tournament prizes.
 
@@ -208,7 +208,7 @@ according to the product rules, but users are not wagering money.
 Any proposal that changes this boundary requires an explicit new
 decision.
 
-------------------------------------------------------------------------
+---
 
 ## D-002 --- Goalstery uses continuous Weekly Cups
 
@@ -244,7 +244,7 @@ prediction rather than through a separate registration workflow.
 
 The exact weekly boundary remains an open decision.
 
-------------------------------------------------------------------------
+---
 
 ## D-003 --- Daily prediction quota is 3 free plus up to 5 rewarded
 
@@ -255,7 +255,7 @@ The exact weekly boundary remains an open decision.
 
 Each user receives per Goalstery business day:
 
-``` text
+```text
 3 FREE prediction slots
 +
 up to 5 REWARDED prediction slots
@@ -278,7 +278,7 @@ Quota enforcement is server-authoritative.
 
 FREE and REWARDED slot identity must remain persisted and auditable.
 
-------------------------------------------------------------------------
+---
 
 ## D-004 --- Predictions are limited to the current Daily Match Pool
 
@@ -304,7 +304,7 @@ The backend must enforce Daily Match Pool membership.
 
 Frontend filtering alone is not sufficient.
 
-------------------------------------------------------------------------
+---
 
 ## D-005 --- Prediction editing is locked strictly by kickoff time
 
@@ -315,7 +315,7 @@ Frontend filtering alone is not sufficient.
 
 An existing prediction may be edited according to:
 
-``` text
+```text
 now < fixture.kickoffAt
 → edit allowed
 
@@ -339,7 +339,7 @@ The server must validate the rule transactionally.
 Frontend editable state is informational and does not replace server
 validation.
 
-------------------------------------------------------------------------
+---
 
 ## D-006 --- Editing preserves the original scoring snapshot
 
@@ -351,11 +351,11 @@ validation.
 Editing a prediction changes the selected outcome but preserves the
 original:
 
--   `outcomeSnapshotId`
--   `slotType`
--   quota consumption
--   participant accounting
--   associated rewarded-ad consumption
+- `outcomeSnapshotId`
+- `slotType`
+- quota consumption
+- participant accounting
+- associated rewarded-ad consumption
 
 Probability and potential points are recalculated for the newly selected
 outcome using the same immutable snapshot.
@@ -372,7 +372,7 @@ Outcome snapshots are immutable scoring evidence.
 Prediction editing is not equivalent to deleting and creating a new
 prediction.
 
-------------------------------------------------------------------------
+---
 
 ## D-007 --- MVP supports seven football competitions
 
@@ -404,7 +404,7 @@ competitions.
 Adding competitions later does not inherently require a new project
 decision unless it changes the product model.
 
-------------------------------------------------------------------------
+---
 
 ## D-008 --- Goalstery scoring uses normalized probabilities and bounded points
 
@@ -418,15 +418,13 @@ removal.
 
 Potential points are calculated as:
 
-``` ts
-points = Math.round(
-  Math.min(50, Math.max(7, 6.5 / probability))
-)
+```ts
+points = Math.round(Math.min(50, Math.max(7, 6.5 / probability)));
 ```
 
 where:
 
-``` text
+```text
 probability ∈ (0, 1]
 ```
 
@@ -434,7 +432,7 @@ A correct prediction receives its calculated points.
 
 An incorrect prediction receives:
 
-``` text
+```text
 0
 ```
 
@@ -451,7 +449,7 @@ remain understandable and bounded.
 Scoring must be reproducible from the persisted scoring snapshot and
 scoring version.
 
-------------------------------------------------------------------------
+---
 
 ## D-009 --- Scoring snapshots are immutable
 
@@ -477,7 +475,7 @@ Do not update historical snapshots in place.
 
 A new market/scoring state requires a new snapshot.
 
-------------------------------------------------------------------------
+---
 
 ## D-010 --- Scoring calculations use persisted quantized probability
 
@@ -488,14 +486,14 @@ A new market/scoring state requires a new snapshot.
 
 Scoring persistence uses:
 
-``` text
+```text
 rawOdds       DECIMAL(12,6)
 probabilities DECIMAL(10,8)
 ```
 
 with:
 
-``` text
+```text
 ROUND_HALF_UP
 ```
 
@@ -512,7 +510,7 @@ as scoring evidence.
 Do not calculate final persisted points from a higher-precision
 transient probability and then persist a different rounded probability.
 
-------------------------------------------------------------------------
+---
 
 ## D-011 --- Global Rating measures performance relative to expected difficulty
 
@@ -526,7 +524,7 @@ variance of the user's predictions rather than raw Cup points alone.
 
 For prediction `i`:
 
-``` text
+```text
 E_i = p_i × points_i
 
 Var_i = p_i × (1 - p_i) × points_i²
@@ -534,7 +532,7 @@ Var_i = p_i × (1 - p_i) × points_i²
 
 For a qualified Weekly Cup:
 
-``` text
+```text
 Z =
 (ActualPoints - ExpectedPoints)
 /
@@ -543,7 +541,7 @@ sqrt(sum Var_i)
 
 A user requires at least:
 
-``` text
+```text
 10 predictions
 ```
 
@@ -556,20 +554,20 @@ model.
 
 Rating delta:
 
-``` text
+```text
 K × (ActualPercentile - ExpectedPercentile)
 ```
 
 with:
 
-``` text
+```text
 K = 120 for the first 5 qualified Cups
 K = 80 afterwards
 ```
 
 Initial internal rating:
 
-``` text
+```text
 1500
 ```
 
@@ -587,7 +585,7 @@ Global Rating and Weekly Cup raw ranking represent different concepts.
 
 Do not substitute raw Cup points for rating performance.
 
-------------------------------------------------------------------------
+---
 
 ## D-012 --- Rating leagues are derived from rating thresholds
 
@@ -598,7 +596,7 @@ Do not substitute raw Cup points for rating performance.
 
 Rating league thresholds are:
 
-``` text
+```text
 <1200      BRONZE_III
 1200       BRONZE_II
 1300       BRONZE_I
@@ -628,7 +626,7 @@ numerical rating.
 League identity is derived from rating and should not become an
 independent manually mutable progression system.
 
-------------------------------------------------------------------------
+---
 
 ## D-013 --- Prize amounts use nanoTON integer storage
 
@@ -640,7 +638,7 @@ independent manually mutable progression system.
 TON prize amounts are persisted as integer nanoTON values using
 `BigInt`.
 
-``` text
+```text
 1 TON = 1,000,000,000 nanoTON
 ```
 
@@ -658,7 +656,7 @@ floating-point types.
 
 Presentation precision and persistence precision are separate concerns.
 
-------------------------------------------------------------------------
+---
 
 ## D-014 --- MVP TON payouts use manual PrizeClaim workflow
 
@@ -688,7 +686,7 @@ Ordinary users can participate without connecting a TON wallet.
 Automated on-chain payout can be considered later as a separate
 decision.
 
-------------------------------------------------------------------------
+---
 
 # Time and Identity Decisions
 
@@ -701,7 +699,7 @@ decision.
 
 Goalstery uses:
 
-``` text
+```text
 Europe/London
 ```
 
@@ -720,16 +718,16 @@ match pools, and tournament boundaries.
 
 Do not use:
 
--   device timezone
--   server local timezone
--   browser timezone
--   fixed UTC offset
+- device timezone
+- server local timezone
+- browser timezone
+- fixed UTC offset
 
 as the authoritative Goalstery business calendar.
 
 DST must be handled using timezone-aware logic.
 
-------------------------------------------------------------------------
+---
 
 ## D-016 --- Business time uses an injectable Clock abstraction
 
@@ -740,7 +738,7 @@ DST must be handled using timezone-aware logic.
 
 Time-sensitive business logic uses:
 
-``` ts
+```ts
 interface Clock {
   now(): Date;
 }
@@ -748,7 +746,7 @@ interface Clock {
 
 with implementations such as:
 
-``` text
+```text
 SystemClock
 FixedClock
 ```
@@ -763,7 +761,7 @@ behavior must be deterministic and testable.
 Do not scatter direct `new Date()` calls through business-domain
 services when the time affects business correctness.
 
-------------------------------------------------------------------------
+---
 
 ## D-017 --- Internal database entities use UUID identity
 
@@ -787,7 +785,7 @@ identifier space.
 
 Provider IDs must not become Goalstery primary keys.
 
-------------------------------------------------------------------------
+---
 
 # External Provider and Football Data Decisions
 
@@ -823,7 +821,7 @@ integration boundaries.
 Changing sports-data provider should not require rewriting core
 prediction-domain logic.
 
-------------------------------------------------------------------------
+---
 
 ## D-019 --- Match acquisition and outcome evaluation are separate concerns
 
@@ -834,13 +832,13 @@ prediction-domain logic.
 
 Goalstery separates:
 
-``` text
+```text
 fixture / competition / team data acquisition
 ```
 
 from:
 
-``` text
+```text
 outcome probability evaluation
 ```
 
@@ -872,7 +870,7 @@ are necessarily the authoritative Goalstery probability source.
 Future mathematical-model architecture requires separate design and
 approval.
 
-------------------------------------------------------------------------
+---
 
 ## D-020 --- API-Football IDs are provider identities, not Goalstery presentation identities
 
@@ -895,7 +893,7 @@ unsuitable as stable application presentation identifiers.
 
 Assets and presentation identity use Goalstery canonical slugs.
 
-------------------------------------------------------------------------
+---
 
 # Football Asset Decisions
 
@@ -910,7 +908,7 @@ Teams and competitions have stable Goalstery canonical slugs.
 
 Examples:
 
-``` text
+```text
 arsenal
 manchester-united
 paris-saint-germain
@@ -920,12 +918,12 @@ uefa-champions-league
 
 Slugs are:
 
--   lowercase
--   ASCII
--   kebab-case
--   human-readable
--   stable
--   provider-independent
+- lowercase
+- ASCII
+- kebab-case
+- human-readable
+- stable
+- provider-independent
 
 ### Rationale
 
@@ -940,7 +938,7 @@ Do not generate canonical slugs at runtime from current display names.
 
 A name change does not automatically imply a slug change.
 
-------------------------------------------------------------------------
+---
 
 ## D-022 --- Football assets are local runtime assets
 
@@ -952,7 +950,7 @@ A name change does not automatically imply a slug change.
 Goalstery runtime football logos are served from local application
 assets:
 
-``` text
+```text
 /assets/teams/<slug>.webp
 /assets/competitions/<slug>.webp
 ```
@@ -970,7 +968,7 @@ provider-specific URL structure.
 Provider logo URLs may exist in tooling/download reports but are not
 frontend runtime asset contracts.
 
-------------------------------------------------------------------------
+---
 
 ## D-023 --- Frontend must not derive asset identity from names or provider IDs
 
@@ -984,7 +982,7 @@ application/API.
 
 Frontend must not:
 
-``` text
+```text
 slugify(team.name)
 ```
 
@@ -999,7 +997,7 @@ Presentation identity must be explicit and deterministic.
 Unknown/unmapped provider entities must be handled explicitly rather
 than silently assigned an inferred canonical asset identity.
 
-------------------------------------------------------------------------
+---
 
 ## D-024 --- Source football logos are not visually rewritten
 
@@ -1027,7 +1025,7 @@ destructive logo recoloring.
 Commercial use of third-party marks remains subject to appropriate
 rights/trademark review.
 
-------------------------------------------------------------------------
+---
 
 # Backend and Infrastructure Decisions
 
@@ -1050,7 +1048,7 @@ concurrency control, and durable historical data.
 Core application correctness should use PostgreSQL capabilities where
 appropriate rather than recreating database guarantees in memory.
 
-------------------------------------------------------------------------
+---
 
 ## D-026 --- Prisma is the database access layer
 
@@ -1078,7 +1076,7 @@ Direct SQL remains acceptable where required for database capabilities
 such as locking/advisory locking that are not appropriately expressed
 through the ordinary ORM API.
 
-------------------------------------------------------------------------
+---
 
 ## D-027 --- No mechanical repository layer over Prisma
 
@@ -1102,7 +1100,7 @@ Services may use Prisma through the established database boundary.
 Create an abstraction only when it provides real semantic or integration
 value.
 
-------------------------------------------------------------------------
+---
 
 ## D-028 --- Backend HTTP API remains inside the Next.js project for MVP
 
@@ -1128,7 +1126,7 @@ architectural purity.
 
 A future split would require a new explicit decision.
 
-------------------------------------------------------------------------
+---
 
 ## D-029 --- Background workers may run as separate Node processes
 
@@ -1153,7 +1151,7 @@ requests while not requiring a separate microservice architecture.
 Separate worker processes do not imply separate microservices or
 separate domain ownership.
 
-------------------------------------------------------------------------
+---
 
 ## D-030 --- Redis is not part of the MVP architecture
 
@@ -1174,18 +1172,18 @@ introducing another infrastructure dependency.
 
 Do not add Redis for:
 
--   caching
--   locks
--   quota counters
--   idempotency
--   queues
+- caching
+- locks
+- quota counters
+- idempotency
+- queues
 
 merely as a conventional infrastructure choice.
 
 If a concrete future requirement justifies Redis, it requires a new
 explicit decision.
 
-------------------------------------------------------------------------
+---
 
 ## D-031 --- Goalstery does not use premature distributed architecture
 
@@ -1196,11 +1194,11 @@ explicit decision.
 
 Do not introduce architecture such as:
 
--   microservices
--   Kafka
--   Kubernetes
--   event sourcing
--   CQRS
+- microservices
+- Kafka
+- Kubernetes
+- event sourcing
+- CQRS
 
 without a concrete requirement and explicit approval.
 
@@ -1214,7 +1212,7 @@ complexity of distributed infrastructure.
 Prefer the simplest architecture that satisfies actual correctness and
 scaling requirements.
 
-------------------------------------------------------------------------
+---
 
 ## D-032 --- Database constraints and application validation are complementary
 
@@ -1225,7 +1223,7 @@ scaling requirements.
 
 Goalstery uses both:
 
-``` text
+```text
 database constraints
 +
 application validation
@@ -1247,7 +1245,7 @@ database errors alone provide poor domain behavior.
 Do not remove a meaningful database constraint merely because equivalent
 application validation exists.
 
-------------------------------------------------------------------------
+---
 
 ## D-033 --- Concurrency-sensitive workflows must be concurrency-aware by design
 
@@ -1258,11 +1256,11 @@ application validation exists.
 
 Workflows such as:
 
--   prediction creation
--   quota consumption
--   rewarded slot consumption
--   idempotency
--   scoring snapshot publication
+- prediction creation
+- quota consumption
+- rewarded slot consumption
+- idempotency
+- scoring snapshot publication
 
 must be designed for concurrent requests.
 
@@ -1279,7 +1277,7 @@ simultaneous user requests.
 Concurrency behavior is part of domain correctness and must be tested
 where meaningful.
 
-------------------------------------------------------------------------
+---
 
 ## D-034 --- API operations use stable typed error codes
 
@@ -1292,7 +1290,7 @@ Goalstery HTTP APIs expose stable machine-readable error codes.
 
 General shape:
 
-``` json
+```json
 {
   "error": {
     "code": "PREDICTION_LOCKED",
@@ -1313,7 +1311,7 @@ Frontend maps stable error codes to localized presentation.
 
 Do not use raw backend exception messages as the UI contract.
 
-------------------------------------------------------------------------
+---
 
 ## D-035 --- Prediction creation is idempotent
 
@@ -1337,7 +1335,7 @@ business effects.
 Idempotency is a server correctness feature, not merely frontend
 duplicate-button protection.
 
-------------------------------------------------------------------------
+---
 
 # Authentication Decisions
 
@@ -1353,7 +1351,7 @@ Goalstery authenticates Telegram Mini App API requests using Telegram
 
 The frontend sends raw initData using:
 
-``` text
+```text
 X-Telegram-Init-Data
 ```
 
@@ -1369,7 +1367,7 @@ authentication evidence.
 
 Do not trust a separately supplied:
 
-``` text
+```text
 userId
 telegramUserId
 username
@@ -1379,7 +1377,7 @@ as authentication.
 
 Bot token must never be exposed to the frontend.
 
-------------------------------------------------------------------------
+---
 
 ## D-037 --- Production has no Telegram authentication bypass
 
@@ -1402,7 +1400,7 @@ boundary.
 
 Environment-specific development helpers must fail closed in production.
 
-------------------------------------------------------------------------
+---
 
 # Frontend Architecture Decisions
 
@@ -1418,7 +1416,7 @@ feature.
 
 Examples:
 
-``` text
+```text
 components/predict/
 components/CupScreen/
 components/rating/
@@ -1438,7 +1436,7 @@ generic component taxonomy.
 Do not prematurely move feature-specific components into global shared
 directories.
 
-------------------------------------------------------------------------
+---
 
 ## D-039 --- Goalstery uses practical Server/Client Component boundaries
 
@@ -1464,7 +1462,7 @@ from clear Next.js boundaries.
 `"use client"` should be introduced where required, at the smallest
 practical understandable boundary.
 
-------------------------------------------------------------------------
+---
 
 ## D-040 --- Presentation components do not fetch application data
 
@@ -1475,7 +1473,7 @@ practical understandable boundary.
 
 Frontend data flow follows:
 
-``` text
+```text
 typed API client
 → feature/screen orchestration
 → state
@@ -1494,7 +1492,7 @@ Networking and presentation are separate responsibilities.
 Feature components receive prepared data and callbacks rather than
 owning HTTP implementation.
 
-------------------------------------------------------------------------
+---
 
 ## D-041 --- Goalstery uses a custom typed API client without a fetching/cache framework
 
@@ -1508,12 +1506,12 @@ orchestration.
 
 Do not add:
 
--   TanStack Query / React Query
--   SWR
--   Apollo Client
--   RTK Query
--   Relay
--   equivalent fetching/cache frameworks
+- TanStack Query / React Query
+- SWR
+- Apollo Client
+- RTK Query
+- Relay
+- equivalent fetching/cache frameworks
 
 without an explicit future decision.
 
@@ -1530,7 +1528,7 @@ abstraction.
 If dedicated client caching becomes necessary, it must be evaluated as
 an explicit architectural change.
 
-------------------------------------------------------------------------
+---
 
 ## D-042 --- Zustand is used selectively
 
@@ -1555,7 +1553,7 @@ complexity.
 
 Every mutable frontend state should have a clear owner.
 
-------------------------------------------------------------------------
+---
 
 ## D-043 --- Goalstery does not use optimistic UI by default
 
@@ -1569,7 +1567,7 @@ until the server confirms success.
 
 Typical flow:
 
-``` text
+```text
 user action
 → pending
 → server request
@@ -1591,7 +1589,7 @@ Pending controls should prevent accidental duplicate actions.
 Selective optimistic behavior in the future requires an explicit
 decision where appropriate.
 
-------------------------------------------------------------------------
+---
 
 ## D-044 --- HTTP DTOs and frontend presentation models are separate
 
@@ -1602,7 +1600,7 @@ decision where appropriate.
 
 Goalstery treats these as separate concepts:
 
-``` text
+```text
 Prisma model
 ≠
 backend domain model
@@ -1625,7 +1623,7 @@ evolve for different reasons.
 Presentation mapping is explicit where the UI requires a representation
 different from the raw HTTP DTO.
 
-------------------------------------------------------------------------
+---
 
 ## D-045 --- Goalstery does not use a third-party UI component library
 
@@ -1636,7 +1634,7 @@ different from the raw HTTP DTO.
 
 Goalstery's production UI is built using:
 
-``` text
+```text
 React
 +
 CSS Modules
@@ -1660,7 +1658,7 @@ Do not introduce MUI, Ant Design, Chakra, Mantine, Bootstrap component
 frameworks, shadcn/ui as an application design system, or similar
 libraries as an implementation shortcut.
 
-------------------------------------------------------------------------
+---
 
 ## D-046 --- Goalstery uses CSS Modules
 
@@ -1686,7 +1684,7 @@ runtime styling infrastructure.
 Do not introduce CSS-in-JS or migrate to Tailwind as part of unrelated
 work.
 
-------------------------------------------------------------------------
+---
 
 ## D-047 --- Goalstery uses its own SVG icons
 
@@ -1710,7 +1708,7 @@ and should maintain consistent visual control.
 Do not add Lucide, Font Awesome, Heroicons packages, Material Icons,
 Phosphor, or similar icon libraries without explicit approval.
 
-------------------------------------------------------------------------
+---
 
 ## D-048 --- Goalstery does not use a form framework by default
 
@@ -1735,7 +1733,7 @@ evaluated separately.
 
 Backend validation remains authoritative.
 
-------------------------------------------------------------------------
+---
 
 ## D-049 --- Frontend uses `@/` source imports and direct module imports
 
@@ -1746,7 +1744,7 @@ Backend validation remains authoritative.
 
 Internal source imports use the project's:
 
-``` text
+```text
 @/
 ```
 
@@ -1756,7 +1754,7 @@ Direct module imports are preferred over broad barrel files.
 
 Example:
 
-``` ts
+```ts
 import { MatchCard } from "@/components/predict/MatchCard";
 ```
 
@@ -1769,7 +1767,7 @@ dependency/circular-import risk.
 
 Do not create broad `index.ts` barrels merely to shorten imports.
 
-------------------------------------------------------------------------
+---
 
 ## D-050 --- Components are split by responsibility, not arbitrary line count
 
@@ -1793,7 +1791,7 @@ maintainability.
 Codex must not refactor components solely to satisfy an invented
 file/function size rule.
 
-------------------------------------------------------------------------
+---
 
 ## D-051 --- Future feature abstractions are created from actual requirements
 
@@ -1807,7 +1805,7 @@ architecture are not generalized in advance.
 
 Preferred evolution:
 
-``` text
+```text
 specific requirement
 → specific implementation
 → observed stable reuse
@@ -1824,7 +1822,7 @@ assumptions made too early.
 Do not build speculative universal sports components merely because
 future screens might need them.
 
-------------------------------------------------------------------------
+---
 
 # UI and Presentation Decisions
 
@@ -1837,7 +1835,7 @@ future screens might need them.
 
 Prediction outcome presentation uses:
 
-``` text
+```text
 HOME → 1
 DRAW → X
 AWAY → 2
@@ -1845,7 +1843,7 @@ AWAY → 2
 
 Domain semantics remain:
 
-``` text
+```text
 HOME
 DRAW
 AWAY
@@ -1862,7 +1860,7 @@ Do not rename domain values to `1`, `X`, and `2`.
 The mapping must be explicit and must not depend on DOM direction or RTL
 layout.
 
-------------------------------------------------------------------------
+---
 
 ## D-053 --- Domain points are presented as trophy plus numeric value
 
@@ -1873,25 +1871,25 @@ layout.
 
 The domain and backend continue to use:
 
-``` text
+```text
 points
 ```
 
 The prediction UI presents potential scoring as:
 
-``` text
+```text
 trophy SVG + numeric value
 ```
 
 For example:
 
-``` text
+```text
 [trophy] 10
 ```
 
 rather than:
 
-``` text
+```text
 10 pts
 10 оч.
 ```
@@ -1907,7 +1905,7 @@ Do not rename backend/domain points to trophies.
 
 The trophy is a presentation metaphor only.
 
-------------------------------------------------------------------------
+---
 
 ## D-054 --- Selected prediction state uses visual state rather than redundant status text
 
@@ -1921,7 +1919,7 @@ selected-state styling and accessibility state.
 
 Do not add redundant visible labels such as:
 
-``` text
+```text
 Selected Draw
 Selected Home
 ```
@@ -1940,7 +1938,7 @@ interface.
 Accessibility state must still communicate selection without relying
 solely on color.
 
-------------------------------------------------------------------------
+---
 
 ## D-055 --- Team logos use a neutral contrast badge
 
@@ -1968,7 +1966,7 @@ trademarks.
 Do not implement automatic logo recoloring/darkness detection merely to
 solve ordinary theme contrast.
 
-------------------------------------------------------------------------
+---
 
 ## D-056 --- MatchCard uses logo-above-name team layout
 
@@ -1979,7 +1977,7 @@ solve ordinary theme contrast.
 
 The approved MatchCard layout places:
 
-``` text
+```text
 team logo
 ↓
 team name
@@ -1987,7 +1985,7 @@ team name
 
 on each side, with:
 
-``` text
+```text
 VS
 ```
 
@@ -2010,7 +2008,7 @@ MatchCard implementation must follow the approved component
 reference/specification rather than reverting to horizontal team
 identity layout.
 
-------------------------------------------------------------------------
+---
 
 ## D-057 --- Goalstery is mobile-first with 390 px as the primary visual target
 
@@ -2023,13 +2021,13 @@ Goalstery UI is designed mobile-first.
 
 Primary visual verification target:
 
-``` text
+```text
 390 × 844
 ```
 
 Required width sanity checks for significant UI work:
 
-``` text
+```text
 360
 390
 430
@@ -2046,7 +2044,7 @@ Desktop-style layouts squeezed into mobile width are not acceptable.
 Additional width should normally provide breathing room rather than
 radically changing the mobile interaction model.
 
-------------------------------------------------------------------------
+---
 
 ## D-058 --- Light, dark, localization, and RTL are first-class UI requirements
 
@@ -2057,7 +2055,7 @@ radically changing the mobile interaction model.
 
 Goalstery production UI supports:
 
-``` text
+```text
 appearance:
 system
 light
@@ -2082,13 +2080,13 @@ post-launch polish.
 
 Significant UI changes must preserve:
 
--   light theme
--   dark theme
--   localization
--   RTL
--   stable domain semantics
+- light theme
+- dark theme
+- localization
+- RTL
+- stable domain semantics
 
-------------------------------------------------------------------------
+---
 
 ## D-059 --- Approved visual references are implementation targets
 
@@ -2104,7 +2102,7 @@ The reference is not merely visual inspiration.
 
 For current MatchCard V2:
 
-``` text
+```text
 docs/design/predict-card-v2-reference.png
 docs/design/predict-card-v2-spec.md
 ```
@@ -2124,13 +2122,13 @@ Do not claim pixel-close fidelity without actual comparison.
 
 Obsolete references under:
 
-``` text
+```text
 docs/design/archive/
 ```
 
 are non-authoritative.
 
-------------------------------------------------------------------------
+---
 
 # Testing Decisions
 
@@ -2143,7 +2141,7 @@ are non-authoritative.
 
 Goalstery testing follows the conceptual split:
 
-``` text
+```text
 domain/backend tests
 → business correctness
 
@@ -2167,7 +2165,7 @@ Do not duplicate every business rule at every test layer.
 
 Do not write frontend tests merely because a React component exists.
 
-------------------------------------------------------------------------
+---
 
 ## D-061 --- Concurrency correctness is explicitly tested
 
@@ -2181,11 +2179,11 @@ operations where practical.
 
 This particularly includes:
 
--   prediction creation
--   idempotency
--   quota consumption
--   rewarded slot consumption
--   snapshot publication
+- prediction creation
+- idempotency
+- quota consumption
+- rewarded slot consumption
+- snapshot publication
 
 ### Rationale
 
@@ -2196,7 +2194,7 @@ Sequential tests cannot detect important race conditions.
 A workflow is not considered fully validated merely because
 single-request tests pass.
 
-------------------------------------------------------------------------
+---
 
 ## D-062 --- Visual geometry is verified visually rather than through brittle CSS unit tests
 
@@ -2211,10 +2209,10 @@ details.
 
 Visual fidelity is verified through:
 
--   component specification
--   browser rendering
--   screenshot comparison
--   required viewport sanity checks
+- component specification
+- browser rendering
+- screenshot comparison
+- required viewport sanity checks
 
 ### Rationale
 
@@ -2226,14 +2224,14 @@ implementation details.
 
 Do not create unit tests solely to assert values such as:
 
-``` text
+```text
 border-radius = 24px
 padding = 20px
 ```
 
 when the requirement is visual fidelity.
 
-------------------------------------------------------------------------
+---
 
 # Open Decisions
 
@@ -2247,7 +2245,7 @@ answer materially affects product behavior or architecture.
 If implementation requires resolving an Open Decision, Codex must stop
 and request an explicit decision.
 
-------------------------------------------------------------------------
+---
 
 ## OD-001 --- Exact Weekly Cup boundary
 
@@ -2266,7 +2264,7 @@ When one Cup ends, the next begins.
 
 The exact boundary has not yet been approved.
 
-------------------------------------------------------------------------
+---
 
 ## OD-002 --- Postponed / cancelled / abandoned / rescheduled fixture policy
 
@@ -2276,11 +2274,11 @@ The exact boundary has not yet been approved.
 
 How should Goalstery handle predictions when a fixture is:
 
--   postponed
--   cancelled
--   abandoned
--   rescheduled
--   otherwise materially changed after publication
+- postponed
+- cancelled
+- abandoned
+- rescheduled
+- otherwise materially changed after publication
 
 ### Current constraint
 
@@ -2290,7 +2288,7 @@ decision.
 This Open Decision must not be resolved by silently adding
 `Fixture.status` as an additional prediction-edit lock condition.
 
-------------------------------------------------------------------------
+---
 
 ## OD-003 --- Goalstery mathematical outcome model
 
@@ -2312,9 +2310,9 @@ calculations.
 The exact model, feature set, training/calibration methodology, update
 cadence, and validation methodology have not yet been approved.
 
-------------------------------------------------------------------------
+---
 
-------------------------------------------------------------------------
+---
 
 ## OD-004 --- Exact Prize Distribution by winning rank
 
@@ -2334,7 +2332,7 @@ must not be inferred from historical examples, seed data or implementation.
 
 MVP payout execution remains manual according to `D-014`.
 
-------------------------------------------------------------------------
+---
 
 ## OD-005 --- Global Rating expected-percentile model and calibration
 
@@ -2362,7 +2360,6 @@ The exact `expectedPercentile` calculation is not yet approved.
 This decision should be resolved together with the planned mathematical
 model/simulation/calibration work. Codex must not invent the formula or
 silently recalibrate League thresholds.
-
 
 # Decision Index
 
@@ -2434,13 +2431,13 @@ visually rather than through brittle CSS unit tests
 cancelled / abandoned / rescheduled fixture policy `OD-003` ---
 Goalstery mathematical outcome model
 
-------------------------------------------------------------------------
+---
 
 # Maintenance
 
 When a significant decision is explicitly approved:
 
-``` text
+```text
 1. assign the next sequential D-xxx
 2. record date, decision, rationale and meaningful consequences
 3. update this index
@@ -2449,7 +2446,7 @@ When a significant decision is explicitly approved:
 
 When it replaces an Accepted decision:
 
-``` text
+```text
 1. do not rewrite the old record
 2. create the new record
 3. add Supersedes: D-xxx to the new record

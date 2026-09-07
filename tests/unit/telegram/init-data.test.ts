@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { TelegramAuthError, validateTelegramInitData } from "@/lib/telegram/init-data";
+import {
+  TelegramAuthError,
+  validateTelegramInitData,
+} from "@/lib/telegram/init-data";
 import { signTelegramInitData } from "@/lib/telegram/init-data-signing";
 
 const botToken = "123456:test_bot_token";
@@ -20,15 +23,17 @@ describe("Telegram Mini App initData validation", () => {
       }),
     });
 
-    expect(validateTelegramInitData(initData, { botToken, now })).toMatchObject({
-      user: {
-        id: 9007199254740993n,
-        username: "alice",
-        firstName: "Alice",
-        lastName: "Example",
-        languageCode: "en",
+    expect(validateTelegramInitData(initData, { botToken, now })).toMatchObject(
+      {
+        user: {
+          id: 9007199254740993n,
+          username: "alice",
+          firstName: "Alice",
+          lastName: "Example",
+          languageCode: "en",
+        },
       },
-    });
+    );
   });
 
   it("rejects invalid hash", () => {
@@ -37,7 +42,9 @@ describe("Telegram Mini App initData validation", () => {
       user: JSON.stringify({ id: 1001 }),
     }).replace(/hash=[0-9a-f]+/, "hash=00");
 
-    expect(() => validateTelegramInitData(initData, { botToken, now })).toThrow(TelegramAuthError);
+    expect(() => validateTelegramInitData(initData, { botToken, now })).toThrow(
+      TelegramAuthError,
+    );
   });
 
   it("rejects modified user payload", () => {
@@ -46,7 +53,9 @@ describe("Telegram Mini App initData validation", () => {
       user: JSON.stringify({ id: 1001, username: "alice" }),
     }).replace("alice", "mallory");
 
-    expect(() => validateTelegramInitData(initData, { botToken, now })).toThrow(TelegramAuthError);
+    expect(() => validateTelegramInitData(initData, { botToken, now })).toThrow(
+      TelegramAuthError,
+    );
   });
 
   it("rejects expired auth_date", () => {
@@ -55,19 +64,35 @@ describe("Telegram Mini App initData validation", () => {
       user: JSON.stringify({ id: 1001 }),
     });
 
-    expect(catchTelegramAuthError(() => validateTelegramInitData(initData, { botToken, now, maxAgeSeconds: 60 }))).toMatchObject({
+    expect(
+      catchTelegramAuthError(() =>
+        validateTelegramInitData(initData, {
+          botToken,
+          now,
+          maxAgeSeconds: 60,
+        }),
+      ),
+    ).toMatchObject({
       code: "EXPIRED_TELEGRAM_INIT_DATA",
     } satisfies Partial<TelegramAuthError>);
   });
 
   it("rejects malformed initData", () => {
-    expect(catchTelegramAuthError(() => validateTelegramInitData("not-valid", { botToken, now }))).toMatchObject({
+    expect(
+      catchTelegramAuthError(() =>
+        validateTelegramInitData("not-valid", { botToken, now }),
+      ),
+    ).toMatchObject({
       code: "INVALID_TELEGRAM_INIT_DATA",
     } satisfies Partial<TelegramAuthError>);
   });
 
   it("rejects missing initData", () => {
-    expect(catchTelegramAuthError(() => validateTelegramInitData("", { botToken, now }))).toMatchObject({
+    expect(
+      catchTelegramAuthError(() =>
+        validateTelegramInitData("", { botToken, now }),
+      ),
+    ).toMatchObject({
       code: "MISSING_TELEGRAM_INIT_DATA",
     } satisfies Partial<TelegramAuthError>);
   });

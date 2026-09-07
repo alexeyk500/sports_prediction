@@ -13,7 +13,8 @@ services:
       - sports_prediction_postgres_data:/var/lib/postgresql/data
       - ./scripts/postgres/init-test-db.sql:/docker-entrypoint-initdb.d/10-init-test-db.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sports_prediction -d sports_prediction"]
+      test:
+        ["CMD-SHELL", "pg_isready -U sports_prediction -d sports_prediction"]
       interval: 5s
       timeout: 5s
       retries: 10

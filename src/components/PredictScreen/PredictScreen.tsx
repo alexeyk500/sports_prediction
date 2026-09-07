@@ -4,9 +4,16 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type React from "react";
 import { ApiClient } from "@/lib/api/client";
 import { messageForApiError } from "@/lib/api/error-presentation";
-import type { PredictionDto, PredictionOutcome, TodayFixtureDto } from "@/lib/api/types";
+import type {
+  PredictionDto,
+  PredictionOutcome,
+  TodayFixtureDto,
+} from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
-import { getTelegramInitData, initializeTelegramWebApp } from "@/lib/telegram/client";
+import {
+  getTelegramInitData,
+  initializeTelegramWebApp,
+} from "@/lib/telegram/client";
 import { useBootstrapStore } from "@/stores/bootstrap-store";
 import FixtureList from "./FixtureList/FixtureList";
 import Header from "./Header/Header";
@@ -29,12 +36,18 @@ const PredictScreen: React.FC = () => {
   const { bootstrap, setBootstrap } = useBootstrapStore();
   const { t, locale } = useTranslation();
   const apiClient = useMemo(() => new ApiClient({ getTelegramInitData }), []);
-  const [state, setState] = useState<IPredictState>({ fixtures: [], predictions: [], businessDate: null });
+  const [state, setState] = useState<IPredictState>({
+    fixtures: [],
+    predictions: [],
+    businessDate: null,
+  });
   const [activeTab, setActiveTab] = useState<ActiveTab>("available");
   const [isLoading, setIsLoading] = useState(true);
   const [pendingFixtureId, setPendingFixtureId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [rewardPromptFixtureId, setRewardPromptFixtureId] = useState<string | null>(null);
+  const [rewardPromptFixtureId, setRewardPromptFixtureId] = useState<
+    string | null
+  >(null);
 
   const load = useCallback(async () => {
     setErrorMessage(null);
@@ -64,12 +77,24 @@ const PredictScreen: React.FC = () => {
   }, [load, locale]);
 
   const predictionsByFixture = useMemo(
-    () => new Map(state.predictions.map((prediction) => [prediction.fixtureId, prediction])),
+    () =>
+      new Map(
+        state.predictions.map((prediction) => [
+          prediction.fixtureId,
+          prediction,
+        ]),
+      ),
     [state.predictions],
   );
-  const visibleMatchCount = activeTab === "available" ? state.fixtures.length : state.predictions.length;
+  const visibleMatchCount =
+    activeTab === "available"
+      ? state.fixtures.length
+      : state.predictions.length;
 
-  async function handleOutcome(fixtureId: string, selectedOutcome: PredictionOutcome): Promise<void> {
+  async function handleOutcome(
+    fixtureId: string,
+    selectedOutcome: PredictionOutcome,
+  ): Promise<void> {
     if (pendingFixtureId) {
       return;
     }
@@ -95,7 +120,10 @@ const PredictScreen: React.FC = () => {
     }
   }
 
-  async function handleActionResult(result: PredictActionResult, fixtureId: string): Promise<void> {
+  async function handleActionResult(
+    result: PredictActionResult,
+    fixtureId: string,
+  ): Promise<void> {
     if (result.status === "reward-required") {
       setRewardPromptFixtureId(fixtureId);
       return;
@@ -137,10 +165,19 @@ const PredictScreen: React.FC = () => {
     <main className={styles.screen}>
       <div className={styles.topArea}>
         <Header bootstrap={bootstrap} />
-        {errorMessage ? <div className={styles.errorBanner}>{errorMessage}</div> : null}
+        {errorMessage ? (
+          <div className={styles.errorBanner}>{errorMessage}</div>
+        ) : null}
         <Quota usage={bootstrap.dailyPredictionUsage} />
-        <PredictTabs activeTab={activeTab} predictionCount={state.predictions.length} onChange={setActiveTab} />
-        <TodayContextRow businessDate={state.businessDate} matchCount={visibleMatchCount} />
+        <PredictTabs
+          activeTab={activeTab}
+          predictionCount={state.predictions.length}
+          onChange={setActiveTab}
+        />
+        <TodayContextRow
+          businessDate={state.businessDate}
+          matchCount={visibleMatchCount}
+        />
       </div>
       <div className={styles.scrollArea} data-ui="predict-scroll-area">
         {activeTab === "available" ? (
@@ -152,7 +189,11 @@ const PredictScreen: React.FC = () => {
             onSelectOutcome={handleOutcome}
           />
         ) : (
-          <MyPicks predictions={state.predictions} fixtures={state.fixtures} onSelectOutcome={handleOutcome} />
+          <MyPicks
+            predictions={state.predictions}
+            fixtures={state.fixtures}
+            onSelectOutcome={handleOutcome}
+          />
         )}
       </div>
     </main>

@@ -3,7 +3,8 @@
   display: grid;
   min-height: 176px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--color-accent) 26%, var(--color-border));
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent) 26%, var(--color-border));
   border-radius: 18px;
   padding-block: 18px 20px;
   padding-inline: 18px;
@@ -94,7 +95,7 @@
 .prizeBlock {
   align-self: flex-start;
   min-width: 82px;
-    /*margin-top: -50px;*/
+  /*margin-top: -50px;*/
   text-align: end;
   transform: translateY(-40px);
 }

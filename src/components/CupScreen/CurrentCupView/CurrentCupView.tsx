@@ -26,18 +26,39 @@ const CurrentCupView: React.FC<ICurrentCupViewProps> = ({
 }) => {
   const { t } = useTranslation();
   const tournament = bootstrap.currentTournament;
-  const currentUserRow = cup?.currentUserRow ? toCupLeaderboardRowModel(cup.currentUserRow) : null;
+  const currentUserRow = cup?.currentUserRow
+    ? toCupLeaderboardRowModel(cup.currentUserRow)
+    : null;
 
   if (!tournament) {
-    return <section className={styles.statePanel}>{t("cup.empty.noCurrentCup")}</section>;
+    return (
+      <section className={styles.statePanel}>
+        {t("cup.empty.noCurrentCup")}
+      </section>
+    );
   }
 
   return (
     <section className={styles.currentStack}>
-      <CupHero tournament={tournament} nowMs={nowMs} timeZone={bootstrap.businessTimezone} />
-      <CupParticipantsStrip participantCountLabel={cup ? String(cup.participantCount) : t("cup.unavailable")} />
-      <UserCupPosition row={currentUserRow} onMakePrediction={onMakePrediction} />
-      <CupLeaderboard key={tournament.id} cupId={tournament.id} apiClient={apiClient} />
+      <CupHero
+        tournament={tournament}
+        nowMs={nowMs}
+        timeZone={bootstrap.businessTimezone}
+      />
+      <CupParticipantsStrip
+        participantCountLabel={
+          cup ? String(cup.participantCount) : t("cup.unavailable")
+        }
+      />
+      <UserCupPosition
+        row={currentUserRow}
+        onMakePrediction={onMakePrediction}
+      />
+      <CupLeaderboard
+        key={tournament.id}
+        cupId={tournament.id}
+        apiClient={apiClient}
+      />
     </section>
   );
 };

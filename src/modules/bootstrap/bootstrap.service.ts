@@ -1,12 +1,19 @@
 import type { PrismaClient } from "@prisma/client";
-import { BUSINESS_TIMEZONE, businessDateToDatabaseDate, getBusinessDate } from "@/lib/time/business-time";
+import {
+  BUSINESS_TIMEZONE,
+  businessDateToDatabaseDate,
+  getBusinessDate,
+} from "@/lib/time/business-time";
 import type { Clock } from "@/lib/time/clock";
 import {
   DAILY_PREDICTION_LIMIT,
   FREE_PREDICTION_LIMIT,
   REWARDED_PREDICTION_LIMIT,
 } from "@/modules/predictions/prediction.domain";
-import { getCurrentCupSummary, type CurrentCupSummaryDto } from "@/modules/tournaments/cup-read.service";
+import {
+  getCurrentCupSummary,
+  type CurrentCupSummaryDto,
+} from "@/modules/tournaments/cup-read.service";
 import { findActiveTournamentForInstant } from "@/modules/tournaments/tournament.service";
 
 export interface BootstrapDependencies {
@@ -72,7 +79,11 @@ export async function getBootstrap(
     }),
     dependencies.prisma.ratingProfile.findUnique({ where: { userId } }),
   ]);
-  const cup = await getCurrentCupSummary(dependencies.prisma, tournament, userId);
+  const cup = await getCurrentCupSummary(
+    dependencies.prisma,
+    tournament,
+    userId,
+  );
   const freeUsed = usage?.freeUsed ?? 0;
   const rewardedUsed = usage?.rewardedUsed ?? 0;
 

@@ -75,7 +75,8 @@ export const es = {
       plusOne: "+1",
     },
     aria: {
-      selectOutcome: "Elegir {outcome}, {trophyValue}, para {homeTeam} vs {awayTeam}",
+      selectOutcome:
+        "Elegir {outcome}, {trophyValue}, para {homeTeam} vs {awayTeam}",
     },
   },
   cup: {
@@ -90,16 +91,18 @@ export const es = {
     unavailable: "—",
     yourPosition: "Tu posición",
     positionRank: "Puesto #{rank}",
-    positionSummary: "{points} puntos · {predictions} pronósticos · {correct} aciertos · {wrong} fallos",
+    positionSummary:
+      "{points} puntos · {predictions} pronósticos · {correct} aciertos · {wrong} fallos",
     positionUnavailableTitle: "Tu posición en la Copa aún no está lista",
-    positionUnavailableBody: "Haz pronósticos para entrar automáticamente. Tu puesto aparecerá cuando esté disponible la clasificación de la Copa.",
+    positionUnavailableBody:
+      "Haz pronósticos para entrar automáticamente. Tu puesto aparecerá cuando esté disponible la clasificación de la Copa.",
     makePrediction: "Hacer pronóstico",
     you: "Tú",
     leaderboard: "Clasificación",
     leaderboardModes: {
-      "top": "Top 50",
+      top: "Top 50",
       "around-me": "Cerca de mí",
-      "all": "Todos",
+      all: "Todos",
       ariaLabel: "Vistas de clasificación",
     },
     leaderboardStates: {
@@ -127,14 +130,17 @@ export const es = {
     empty: {
       noCurrentCup: "No hay una Copa activa disponible.",
       leaderboardTitle: "La clasificación aún no está lista",
-      leaderboardBody: "Las filas de jugadores aparecerán cuando esté disponible la clasificación de la Copa actual.",
+      leaderboardBody:
+        "Las filas de jugadores aparecerán cuando esté disponible la clasificación de la Copa actual.",
       historyTitle: "Aún no hay Copas anteriores",
-      historyBody: "Los resúmenes de Copas finalizadas aparecerán aquí cuando estén disponibles los resultados finales.",
+      historyBody:
+        "Los resúmenes de Copas finalizadas aparecerán aquí cuando estén disponibles los resultados finales.",
     },
   },
   profile: {
     title: "Perfil",
-    stagePlaceholder: "La carrera y el historial de premios no están implementados en esta etapa.",
+    stagePlaceholder:
+      "La carrera y el historial de premios no están implementados en esta etapa.",
     settingsTitle: "Ajustes",
     languageLabel: "Idioma",
     appearanceLabel: "Apariencia",
@@ -142,7 +148,8 @@ export const es = {
   },
   errors: {
     generic: "Algo salió mal.",
-    missingTelegramInitData: "Abre la app en Telegram o configura development initData.",
+    missingTelegramInitData:
+      "Abre la app en Telegram o configura development initData.",
     network: "La solicitud de red fallo.",
     invalidApiResponse: "No se pudo leer la respuesta del servidor.",
     PREDICTION_LOCKED: "Este partido ya comenzó.",
@@ -153,7 +160,8 @@ export const es = {
     FIXTURE_NOT_FOUND: "No se encontró este partido.",
     FIXTURE_NOT_OPEN: "Este partido no está abierto para pronósticos.",
     FIXTURE_LOCKED: "Este partido está bloqueado.",
-    FIXTURE_SCORING_SNAPSHOT_MISSING: "Las cuotas para pronosticar este partido aún no están listas.",
+    FIXTURE_SCORING_SNAPSHOT_MISSING:
+      "Las cuotas para pronosticar este partido aún no están listas.",
     COMPETITION_NOT_SUPPORTED: "Esta competición no está admitida.",
     COMPETITION_INACTIVE: "Esta competición no está activa.",
     PREDICTION_ALREADY_EXISTS: "Ya hiciste un pick para este partido.",

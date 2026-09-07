@@ -38,19 +38,35 @@ const supportedCompetitions = [
 const teams = [
   { providerTeamId: "dev-arsenal", name: "Arsenal", apiFootballTeamId: 42 },
   { providerTeamId: "dev-chelsea", name: "Chelsea", apiFootballTeamId: 49 },
-  { providerTeamId: "dev-barcelona", name: "Barcelona", apiFootballTeamId: 529 },
+  {
+    providerTeamId: "dev-barcelona",
+    name: "Barcelona",
+    apiFootballTeamId: 529,
+  },
   { providerTeamId: "dev-valencia", name: "Valencia", apiFootballTeamId: 532 },
   { providerTeamId: "dev-milan", name: "Milan", apiFootballTeamId: 489 },
   { providerTeamId: "dev-roma", name: "Roma", apiFootballTeamId: 497 },
-  { providerTeamId: "dev-bayern", name: "Bayern Munich", apiFootballTeamId: 157 },
+  {
+    providerTeamId: "dev-bayern",
+    name: "Bayern Munich",
+    apiFootballTeamId: 157,
+  },
   { providerTeamId: "dev-dortmund", name: "Dortmund", apiFootballTeamId: 165 },
   { providerTeamId: "dev-psg", name: "Paris SG", apiFootballTeamId: 85 },
   { providerTeamId: "dev-lyon", name: "Lyon", apiFootballTeamId: 80 },
   { providerTeamId: "dev-inter", name: "Inter", apiFootballTeamId: 505 },
   { providerTeamId: "dev-napoli", name: "Napoli", apiFootballTeamId: 492 },
-  { providerTeamId: "dev-atletico", name: "Atletico Madrid", apiFootballTeamId: 530 },
+  {
+    providerTeamId: "dev-atletico",
+    name: "Atletico Madrid",
+    apiFootballTeamId: 530,
+  },
   { providerTeamId: "dev-sevilla", name: "Sevilla", apiFootballTeamId: 536 },
-  { providerTeamId: "dev-leverkusen", name: "Leverkusen", apiFootballTeamId: 168 },
+  {
+    providerTeamId: "dev-leverkusen",
+    name: "Leverkusen",
+    apiFootballTeamId: 168,
+  },
   { providerTeamId: "dev-leipzig", name: "Leipzig", apiFootballTeamId: 173 },
   { providerTeamId: "dev-marseille", name: "Marseille", apiFootballTeamId: 81 },
   { providerTeamId: "dev-lille", name: "Lille", apiFootballTeamId: 79 },
@@ -60,63 +76,420 @@ const teams = [
 
 const assetManifest = loadAssetManifest();
 const competitionSlugsByApiFootballId = new Map(
-  assetManifest.competitions.map((competition) => [competition.providerLeagueId, competition.slug]),
+  assetManifest.competitions.map((competition) => [
+    competition.providerLeagueId,
+    competition.slug,
+  ]),
 );
-const teamSlugsByApiFootballId = new Map(assetManifest.teams.map((team) => [team.providerTeamId, team.slug]));
+const teamSlugsByApiFootballId = new Map(
+  assetManifest.teams.map((team) => [team.providerTeamId, team.slug]),
+);
 
-const requestedLeaderboardSize = parseDevLeaderboardSize(process.env.DEV_SEED_LEADERBOARD_SIZE);
+const requestedLeaderboardSize = parseDevLeaderboardSize(
+  process.env.DEV_SEED_LEADERBOARD_SIZE,
+);
 
 const baseDevPlayers = [
-  { telegramUserId: 900000001n, username: "dev_user", firstName: "Dev", lastName: "User", languageCode: "en", targetPoints: 38 },
-  { telegramUserId: 900100001n, username: "GoalHunter", firstName: "Max", lastName: "Volkov", languageCode: "en", targetPoints: 65 },
-  { telegramUserId: 900100002n, username: "footking", firstName: "Leo", lastName: "Morgan", languageCode: "en", targetPoints: 64 },
-  { telegramUserId: 900100003n, username: "Nikita88", firstName: "Nikita", lastName: "Sokolov", languageCode: "ru", targetPoints: 61 },
-  { telegramUserId: 900100004n, username: "AlexR", firstName: "Alex", lastName: "Reed", languageCode: "en", targetPoints: 58 },
-  { telegramUserId: 900100005n, username: "Toni", firstName: "Toni", lastName: "Keller", languageCode: "de", targetPoints: 55 },
-  { telegramUserId: 900100006n, username: "viktor_k", firstName: "Viktor", lastName: "Karpov", languageCode: "ru", targetPoints: 52 },
-  { telegramUserId: 900100007n, username: "footballist", firstName: "Marco", lastName: "Rossi", languageCode: "en", targetPoints: 49 },
-  { telegramUserId: 900100008n, username: "Roman", firstName: "Roman", lastName: "Petrov", languageCode: "ru", targetPoints: 46 },
-  { telegramUserId: 900100009n, username: "pitchmind", firstName: "Oliver", lastName: "Stone", languageCode: "en", targetPoints: 43 },
-  { telegramUserId: 900100010n, username: "MaxBet", firstName: "Maksim", lastName: "Orlov", languageCode: "ru", targetPoints: 40 },
-  { telegramUserId: 900100011n, username: "crossbar", firstName: "Ethan", lastName: "Brooks", languageCode: "en", targetPoints: 38 },
-  { telegramUserId: 900100012n, username: "netfinder", firstName: "Jonas", lastName: "Weber", languageCode: "de", targetPoints: 36 },
-  { telegramUserId: 900100013n, username: "LaMasiaFan", firstName: "Diego", lastName: "Navarro", languageCode: "es", targetPoints: 35 },
-  { telegramUserId: 900100014n, username: "northstand", firstName: "Harry", lastName: "Mason", languageCode: "en", targetPoints: 33 },
-  { telegramUserId: 900100015n, username: "ultra_m", firstName: "Milan", lastName: "Horvat", languageCode: "en", targetPoints: 31 },
-  { telegramUserId: 900100016n, username: "keeper01", firstName: "Sam", lastName: "Foster", languageCode: "en", targetPoints: 30 },
-  { telegramUserId: 900100017n, username: "derbyday", firstName: "Pablo", lastName: "Santos", languageCode: "es", targetPoints: 29 },
-  { telegramUserId: 900100018n, username: "halfspace", firstName: "Luca", lastName: "Bianchi", languageCode: "en", targetPoints: 27 },
-  { telegramUserId: 900100019n, username: "pressingPro", firstName: "Felix", lastName: "Hartmann", languageCode: "de", targetPoints: 25 },
-  { telegramUserId: 900100020n, username: "awaydays", firstName: "Ben", lastName: "Carter", languageCode: "en", targetPoints: 24 },
-  { telegramUserId: 900100021n, username: "xGbrain", firstName: "Ivan", lastName: "Morozov", languageCode: "ru", targetPoints: 23 },
-  { telegramUserId: 900100022n, username: "tinytackle", firstName: "Noah", lastName: "Ward", languageCode: "en", targetPoints: 22 },
-  { telegramUserId: 900100023n, username: "leftwinger", firstName: "Sergio", lastName: "Ruiz", languageCode: "es", targetPoints: 21 },
-  { telegramUserId: 900100024n, username: "cornerkick", firstName: "Adam", lastName: "Nowak", languageCode: "en", targetPoints: 20 },
-  { telegramUserId: 900100025n, username: "cleanSheet", firstName: "Daniel", lastName: "King", languageCode: "en", targetPoints: 19 },
-  { telegramUserId: 900100026n, username: "kopite_m", firstName: "Mason", lastName: "Clark", languageCode: "en", targetPoints: 18 },
-  { telegramUserId: 900100027n, username: "futbolero", firstName: "Carlos", lastName: "Mendez", languageCode: "es", targetPoints: 17 },
-  { telegramUserId: 900100028n, username: "sweeper", firstName: "Owen", lastName: "Taylor", languageCode: "en", targetPoints: 16 },
-  { telegramUserId: 900100029n, username: "gegenpress", firstName: "Moritz", lastName: "Bauer", languageCode: "de", targetPoints: 15 },
-  { telegramUserId: 900100030n, username: "finalthird", firstName: "Tim", lastName: "Fischer", languageCode: "de", targetPoints: 14 },
-  { telegramUserId: 900100031n, username: "no9", firstName: "Artem", lastName: "Egorov", languageCode: "ru", targetPoints: 13 },
-  { telegramUserId: 900100032n, username: "zona14", firstName: "Miguel", lastName: "Torres", languageCode: "es", targetPoints: 12 },
-  { telegramUserId: 900100033n, username: "box2box", firstName: "Chris", lastName: "Walker", languageCode: "en", targetPoints: 11 },
-  { telegramUserId: 900100034n, username: "stoppage", firstName: "Daniil", lastName: "Smirnov", languageCode: "ru", targetPoints: 10 },
-  { telegramUserId: 900100035n, username: "widePlay", firstName: "Luis", lastName: "Garcia", languageCode: "es", targetPoints: 9 },
-  { telegramUserId: 900100036n, username: "overlap", firstName: "Jan", lastName: "Schmidt", languageCode: "de", targetPoints: 8 },
-  { telegramUserId: 900100037n, username: "academy10", firstName: "Tom", lastName: "Hughes", languageCode: "en", targetPoints: 7 },
-  { telegramUserId: 900100038n, username: "deepblock", firstName: "Kirill", lastName: "Lebedev", languageCode: "ru", targetPoints: 7 },
-  { telegramUserId: 900100039n, username: "touchline", firstName: "Hugo", lastName: "Martin", languageCode: "en", targetPoints: 6 },
-  { telegramUserId: 900100040n, username: "setpiece", firstName: "Rafael", lastName: "Silva", languageCode: "es", targetPoints: 6 },
-  { telegramUserId: 900100041n, username: "false9", firstName: "Anton", lastName: "Fedorov", languageCode: "ru", targetPoints: 5 },
-  { telegramUserId: 900100042n, username: "lowCross", firstName: "Jack", lastName: "Evans", languageCode: "en", targetPoints: 5 },
-  { telegramUserId: 900100043n, username: "mezzala", firstName: "Enzo", lastName: "Ricci", languageCode: "en", targetPoints: 4 },
-  { telegramUserId: 900100044n, username: "topbins", firstName: "Oscar", lastName: "Hill", languageCode: "en", targetPoints: 4 },
-  { telegramUserId: 900100045n, username: "pressTrap", firstName: "Amir", lastName: "Khan", languageCode: "en", targetPoints: 3 },
-  { telegramUserId: 900100046n, username: "sideoverload", firstName: "Ilya", lastName: "Kuznetsov", languageCode: "ru", targetPoints: 2 },
-  { telegramUserId: 900100047n, username: "volley", firstName: "Mateo", lastName: "Lopez", languageCode: "es", targetPoints: 1 },
-  { telegramUserId: 900100048n, username: "tapin", firstName: "George", lastName: "Moore", languageCode: "en", targetPoints: 0 },
-  { telegramUserId: 900100049n, username: "lateRun", firstName: "Ahmed", lastName: "Hassan", languageCode: "ar", targetPoints: 0 },
+  {
+    telegramUserId: 900000001n,
+    username: "dev_user",
+    firstName: "Dev",
+    lastName: "User",
+    languageCode: "en",
+    targetPoints: 38,
+  },
+  {
+    telegramUserId: 900100001n,
+    username: "GoalHunter",
+    firstName: "Max",
+    lastName: "Volkov",
+    languageCode: "en",
+    targetPoints: 65,
+  },
+  {
+    telegramUserId: 900100002n,
+    username: "footking",
+    firstName: "Leo",
+    lastName: "Morgan",
+    languageCode: "en",
+    targetPoints: 64,
+  },
+  {
+    telegramUserId: 900100003n,
+    username: "Nikita88",
+    firstName: "Nikita",
+    lastName: "Sokolov",
+    languageCode: "ru",
+    targetPoints: 61,
+  },
+  {
+    telegramUserId: 900100004n,
+    username: "AlexR",
+    firstName: "Alex",
+    lastName: "Reed",
+    languageCode: "en",
+    targetPoints: 58,
+  },
+  {
+    telegramUserId: 900100005n,
+    username: "Toni",
+    firstName: "Toni",
+    lastName: "Keller",
+    languageCode: "de",
+    targetPoints: 55,
+  },
+  {
+    telegramUserId: 900100006n,
+    username: "viktor_k",
+    firstName: "Viktor",
+    lastName: "Karpov",
+    languageCode: "ru",
+    targetPoints: 52,
+  },
+  {
+    telegramUserId: 900100007n,
+    username: "footballist",
+    firstName: "Marco",
+    lastName: "Rossi",
+    languageCode: "en",
+    targetPoints: 49,
+  },
+  {
+    telegramUserId: 900100008n,
+    username: "Roman",
+    firstName: "Roman",
+    lastName: "Petrov",
+    languageCode: "ru",
+    targetPoints: 46,
+  },
+  {
+    telegramUserId: 900100009n,
+    username: "pitchmind",
+    firstName: "Oliver",
+    lastName: "Stone",
+    languageCode: "en",
+    targetPoints: 43,
+  },
+  {
+    telegramUserId: 900100010n,
+    username: "MaxBet",
+    firstName: "Maksim",
+    lastName: "Orlov",
+    languageCode: "ru",
+    targetPoints: 40,
+  },
+  {
+    telegramUserId: 900100011n,
+    username: "crossbar",
+    firstName: "Ethan",
+    lastName: "Brooks",
+    languageCode: "en",
+    targetPoints: 38,
+  },
+  {
+    telegramUserId: 900100012n,
+    username: "netfinder",
+    firstName: "Jonas",
+    lastName: "Weber",
+    languageCode: "de",
+    targetPoints: 36,
+  },
+  {
+    telegramUserId: 900100013n,
+    username: "LaMasiaFan",
+    firstName: "Diego",
+    lastName: "Navarro",
+    languageCode: "es",
+    targetPoints: 35,
+  },
+  {
+    telegramUserId: 900100014n,
+    username: "northstand",
+    firstName: "Harry",
+    lastName: "Mason",
+    languageCode: "en",
+    targetPoints: 33,
+  },
+  {
+    telegramUserId: 900100015n,
+    username: "ultra_m",
+    firstName: "Milan",
+    lastName: "Horvat",
+    languageCode: "en",
+    targetPoints: 31,
+  },
+  {
+    telegramUserId: 900100016n,
+    username: "keeper01",
+    firstName: "Sam",
+    lastName: "Foster",
+    languageCode: "en",
+    targetPoints: 30,
+  },
+  {
+    telegramUserId: 900100017n,
+    username: "derbyday",
+    firstName: "Pablo",
+    lastName: "Santos",
+    languageCode: "es",
+    targetPoints: 29,
+  },
+  {
+    telegramUserId: 900100018n,
+    username: "halfspace",
+    firstName: "Luca",
+    lastName: "Bianchi",
+    languageCode: "en",
+    targetPoints: 27,
+  },
+  {
+    telegramUserId: 900100019n,
+    username: "pressingPro",
+    firstName: "Felix",
+    lastName: "Hartmann",
+    languageCode: "de",
+    targetPoints: 25,
+  },
+  {
+    telegramUserId: 900100020n,
+    username: "awaydays",
+    firstName: "Ben",
+    lastName: "Carter",
+    languageCode: "en",
+    targetPoints: 24,
+  },
+  {
+    telegramUserId: 900100021n,
+    username: "xGbrain",
+    firstName: "Ivan",
+    lastName: "Morozov",
+    languageCode: "ru",
+    targetPoints: 23,
+  },
+  {
+    telegramUserId: 900100022n,
+    username: "tinytackle",
+    firstName: "Noah",
+    lastName: "Ward",
+    languageCode: "en",
+    targetPoints: 22,
+  },
+  {
+    telegramUserId: 900100023n,
+    username: "leftwinger",
+    firstName: "Sergio",
+    lastName: "Ruiz",
+    languageCode: "es",
+    targetPoints: 21,
+  },
+  {
+    telegramUserId: 900100024n,
+    username: "cornerkick",
+    firstName: "Adam",
+    lastName: "Nowak",
+    languageCode: "en",
+    targetPoints: 20,
+  },
+  {
+    telegramUserId: 900100025n,
+    username: "cleanSheet",
+    firstName: "Daniel",
+    lastName: "King",
+    languageCode: "en",
+    targetPoints: 19,
+  },
+  {
+    telegramUserId: 900100026n,
+    username: "kopite_m",
+    firstName: "Mason",
+    lastName: "Clark",
+    languageCode: "en",
+    targetPoints: 18,
+  },
+  {
+    telegramUserId: 900100027n,
+    username: "futbolero",
+    firstName: "Carlos",
+    lastName: "Mendez",
+    languageCode: "es",
+    targetPoints: 17,
+  },
+  {
+    telegramUserId: 900100028n,
+    username: "sweeper",
+    firstName: "Owen",
+    lastName: "Taylor",
+    languageCode: "en",
+    targetPoints: 16,
+  },
+  {
+    telegramUserId: 900100029n,
+    username: "gegenpress",
+    firstName: "Moritz",
+    lastName: "Bauer",
+    languageCode: "de",
+    targetPoints: 15,
+  },
+  {
+    telegramUserId: 900100030n,
+    username: "finalthird",
+    firstName: "Tim",
+    lastName: "Fischer",
+    languageCode: "de",
+    targetPoints: 14,
+  },
+  {
+    telegramUserId: 900100031n,
+    username: "no9",
+    firstName: "Artem",
+    lastName: "Egorov",
+    languageCode: "ru",
+    targetPoints: 13,
+  },
+  {
+    telegramUserId: 900100032n,
+    username: "zona14",
+    firstName: "Miguel",
+    lastName: "Torres",
+    languageCode: "es",
+    targetPoints: 12,
+  },
+  {
+    telegramUserId: 900100033n,
+    username: "box2box",
+    firstName: "Chris",
+    lastName: "Walker",
+    languageCode: "en",
+    targetPoints: 11,
+  },
+  {
+    telegramUserId: 900100034n,
+    username: "stoppage",
+    firstName: "Daniil",
+    lastName: "Smirnov",
+    languageCode: "ru",
+    targetPoints: 10,
+  },
+  {
+    telegramUserId: 900100035n,
+    username: "widePlay",
+    firstName: "Luis",
+    lastName: "Garcia",
+    languageCode: "es",
+    targetPoints: 9,
+  },
+  {
+    telegramUserId: 900100036n,
+    username: "overlap",
+    firstName: "Jan",
+    lastName: "Schmidt",
+    languageCode: "de",
+    targetPoints: 8,
+  },
+  {
+    telegramUserId: 900100037n,
+    username: "academy10",
+    firstName: "Tom",
+    lastName: "Hughes",
+    languageCode: "en",
+    targetPoints: 7,
+  },
+  {
+    telegramUserId: 900100038n,
+    username: "deepblock",
+    firstName: "Kirill",
+    lastName: "Lebedev",
+    languageCode: "ru",
+    targetPoints: 7,
+  },
+  {
+    telegramUserId: 900100039n,
+    username: "touchline",
+    firstName: "Hugo",
+    lastName: "Martin",
+    languageCode: "en",
+    targetPoints: 6,
+  },
+  {
+    telegramUserId: 900100040n,
+    username: "setpiece",
+    firstName: "Rafael",
+    lastName: "Silva",
+    languageCode: "es",
+    targetPoints: 6,
+  },
+  {
+    telegramUserId: 900100041n,
+    username: "false9",
+    firstName: "Anton",
+    lastName: "Fedorov",
+    languageCode: "ru",
+    targetPoints: 5,
+  },
+  {
+    telegramUserId: 900100042n,
+    username: "lowCross",
+    firstName: "Jack",
+    lastName: "Evans",
+    languageCode: "en",
+    targetPoints: 5,
+  },
+  {
+    telegramUserId: 900100043n,
+    username: "mezzala",
+    firstName: "Enzo",
+    lastName: "Ricci",
+    languageCode: "en",
+    targetPoints: 4,
+  },
+  {
+    telegramUserId: 900100044n,
+    username: "topbins",
+    firstName: "Oscar",
+    lastName: "Hill",
+    languageCode: "en",
+    targetPoints: 4,
+  },
+  {
+    telegramUserId: 900100045n,
+    username: "pressTrap",
+    firstName: "Amir",
+    lastName: "Khan",
+    languageCode: "en",
+    targetPoints: 3,
+  },
+  {
+    telegramUserId: 900100046n,
+    username: "sideoverload",
+    firstName: "Ilya",
+    lastName: "Kuznetsov",
+    languageCode: "ru",
+    targetPoints: 2,
+  },
+  {
+    telegramUserId: 900100047n,
+    username: "volley",
+    firstName: "Mateo",
+    lastName: "Lopez",
+    languageCode: "es",
+    targetPoints: 1,
+  },
+  {
+    telegramUserId: 900100048n,
+    username: "tapin",
+    firstName: "George",
+    lastName: "Moore",
+    languageCode: "en",
+    targetPoints: 0,
+  },
+  {
+    telegramUserId: 900100049n,
+    username: "lateRun",
+    firstName: "Ahmed",
+    lastName: "Hassan",
+    languageCode: "ar",
+    targetPoints: 0,
+  },
 ];
 
 const devPlayers = buildDevPlayers(baseDevPlayers, requestedLeaderboardSize);
@@ -147,9 +520,13 @@ try {
   });
 
   for (const competition of supportedCompetitions) {
-    const slug = competitionSlugsByApiFootballId.get(competition.apiFootballLeagueId);
+    const slug = competitionSlugsByApiFootballId.get(
+      competition.apiFootballLeagueId,
+    );
     if (!slug) {
-      throw new Error(`Missing asset slug for competition ${competition.name} (${competition.apiFootballLeagueId}).`);
+      throw new Error(
+        `Missing asset slug for competition ${competition.name} (${competition.apiFootballLeagueId}).`,
+      );
     }
 
     await prisma.competition.upsert({
@@ -168,7 +545,9 @@ try {
   for (const team of teams) {
     const slug = teamSlugsByApiFootballId.get(team.apiFootballTeamId);
     if (!slug) {
-      throw new Error(`Missing asset slug for team ${team.name} (${team.apiFootballTeamId}).`);
+      throw new Error(
+        `Missing asset slug for team ${team.name} (${team.apiFootballTeamId}).`,
+      );
     }
 
     await prisma.team.upsert({
@@ -182,7 +561,9 @@ try {
     await Promise.all(
       supportedCompetitions.map(async (competition) => [
         competition.code,
-        await prisma.competition.findUniqueOrThrow({ where: { code: competition.code } }),
+        await prisma.competition.findUniqueOrThrow({
+          where: { code: competition.code },
+        }),
       ]),
     ),
   );
@@ -190,28 +571,44 @@ try {
     await Promise.all(
       teams.map(async (team) => [
         team.providerTeamId,
-        await prisma.team.findUniqueOrThrow({ where: { providerTeamId: team.providerTeamId } }),
+        await prisma.team.findUniqueOrThrow({
+          where: { providerTeamId: team.providerTeamId },
+        }),
       ]),
     ),
   );
 
   const devUsers = await upsertDevUsers();
-  const fixtureDefinitions = buildFixtureDefinitions({ businessDate, kickoffTimes, now });
+  const fixtureDefinitions = buildFixtureDefinitions({
+    businessDate,
+    kickoffTimes,
+    now,
+  });
   await archiveObsoleteDevelopmentFixtures({
     businessDate,
-    currentProviderFixtureIds: fixtureDefinitions.map((fixture) => fixture.providerFixtureId),
+    currentProviderFixtureIds: fixtureDefinitions.map(
+      (fixture) => fixture.providerFixtureId,
+    ),
     previousDayKickoffAt: new Date(range.startUtc.getTime() - 60 * 60 * 1000),
   });
 
   const seededFixtures = [];
 
   for (const fixtureDefinition of fixtureDefinitions) {
-    const competition = competitionsByCode.get(fixtureDefinition.competitionCode);
-    const homeTeam = teamsByProviderId.get(fixtureDefinition.homeTeamProviderId);
-    const awayTeam = teamsByProviderId.get(fixtureDefinition.awayTeamProviderId);
+    const competition = competitionsByCode.get(
+      fixtureDefinition.competitionCode,
+    );
+    const homeTeam = teamsByProviderId.get(
+      fixtureDefinition.homeTeamProviderId,
+    );
+    const awayTeam = teamsByProviderId.get(
+      fixtureDefinition.awayTeamProviderId,
+    );
 
     if (!competition || !homeTeam || !awayTeam) {
-      throw new Error(`Seed definition references missing competition/team: ${fixtureDefinition.providerFixtureId}`);
+      throw new Error(
+        `Seed definition references missing competition/team: ${fixtureDefinition.providerFixtureId}`,
+      );
     }
 
     const seededFixture = await upsertFixtureWithSnapshot({
@@ -243,16 +640,25 @@ try {
 
   const leaderboard = await recalculateTournamentParticipants(tournament.id);
 
-  console.log(`Development seed complete for London business date ${businessDate}.`);
-  console.log(`Active Weekly Cup: ${tournament.startsAt.toISOString()} → ${tournament.endsAt.toISOString()}.`);
-  console.log(`Seeded ${devUsers.length} users, ${seededFixtures.length} fixtures and ${leaderboard.predictionCount} predictions.`);
+  console.log(
+    `Development seed complete for London business date ${businessDate}.`,
+  );
+  console.log(
+    `Active Weekly Cup: ${tournament.startsAt.toISOString()} → ${tournament.endsAt.toISOString()}.`,
+  );
+  console.log(
+    `Seeded ${devUsers.length} users, ${seededFixtures.length} fixtures and ${leaderboard.predictionCount} predictions.`,
+  );
   console.table(
     seededFixtures.map((fixture) => ({
       fixture: `${fixture.homeTeamName} vs ${fixture.awayTeamName}`,
       competition: fixture.competitionName,
       kickoffAt: fixture.kickoffAt.toISOString(),
       status: fixture.status,
-      score: fixture.homeScore === null ? "" : `${fixture.homeScore}-${fixture.awayScore}`,
+      score:
+        fixture.homeScore === null
+          ? ""
+          : `${fixture.homeScore}-${fixture.awayScore}`,
       odds: fixture.odds.join(" / "),
       probabilities: fixture.probabilities.join(" / "),
       points: fixture.points.join(" / "),
@@ -274,7 +680,9 @@ try {
 
 function loadAssetManifest() {
   try {
-    return JSON.parse(readFileSync("data/football-assets.manifest.json", "utf8"));
+    return JSON.parse(
+      readFileSync("data/football-assets.manifest.json", "utf8"),
+    );
   } catch (error) {
     throw new Error(
       "Development seed requires data/football-assets.manifest.json to assign canonical asset slugs. Run npm run football:assets:manifest:build first.",
@@ -303,7 +711,10 @@ function buildDevPlayers(players, requestedSize) {
   }
 
   const extraPlayersNeeded = requestedSize - players.length;
-  const extraPlayersAboveDevUser = requestedSize >= 1_000 ? 788 : Math.max(0, Math.floor(extraPlayersNeeded * 0.68));
+  const extraPlayersAboveDevUser =
+    requestedSize >= 1_000
+      ? 788
+      : Math.max(0, Math.floor(extraPlayersNeeded * 0.68));
   const firstNames = [
     "Kirill",
     "Elena",
@@ -463,58 +874,291 @@ async function upsertFixtureWithSnapshot(input) {
 
 function buildFixtureDefinitions({ businessDate, kickoffTimes, now }) {
   const pastFixtures = [
-    ["01", -4, 13, "EPL", "dev-arsenal", "dev-chelsea", ["1.700000", "4.100000", "5.400000"], 2, 0],
-    ["02", -4, 16, "LALIGA", "dev-valencia", "dev-barcelona", ["5.200000", "4.000000", "1.720000"], 1, 3],
-    ["03", -4, 19, "SERIE_A", "dev-milan", "dev-roma", ["2.650000", "3.250000", "2.750000"], 1, 1],
-    ["04", -3, 12, "BUNDESLIGA", "dev-bayern", "dev-dortmund", ["1.250000", "6.200000", "11.000000"], 3, 1],
-    ["05", -3, 15, "LIGUE_1", "dev-lyon", "dev-marseille", ["2.950000", "2.750000", "3.050000"], 0, 1],
-    ["06", -3, 18, "UCL", "dev-inter", "dev-napoli", ["2.200000", "3.800000", "2.200000"], 2, 2],
-    ["07", -2, 12, "UEL", "dev-lille", "dev-benfica", ["6.800000", "4.600000", "1.480000"], 0, 2],
-    ["08", -2, 15, "EPL", "dev-chelsea", "dev-ajax", ["1.420000", "5.000000", "8.500000"], 2, 0],
-    ["09", -2, 18, "BUNDESLIGA", "dev-leverkusen", "dev-leipzig", ["2.800000", "3.200000", "2.800000"], 1, 0],
-    ["10", -2, 20, "UCL", "dev-atletico", "dev-sevilla", ["2.050000", "3.550000", "3.700000"], 1, 1],
-    ["11", -1, 12, "SERIE_A", "dev-napoli", "dev-milan", ["2.250000", "3.300000", "3.300000"], 2, 1],
-    ["12", -1, 14, "LALIGA", "dev-barcelona", "dev-atletico", ["1.950000", "3.700000", "4.000000"], 0, 0],
-    ["13", -1, 16, "EPL", "dev-arsenal", "dev-leverkusen", ["1.900000", "3.900000", "4.100000"], 2, 2],
-    ["14", -1, 18, "LIGUE_1", "dev-psg", "dev-lille", ["1.520000", "4.500000", "6.400000"], 4, 1],
-    ["15", -1, 20, "UEL", "dev-benfica", "dev-ajax", ["2.150000", "3.600000", "3.350000"], 1, 2],
-    ["16", -1, 21, "BUNDESLIGA", "dev-dortmund", "dev-leipzig", ["2.450000", "3.650000", "2.850000"], 3, 2],
-    ["17", 0, 9, "UCL", "dev-roma", "dev-inter", ["3.400000", "3.350000", "2.200000"], 0, 1],
-    ["18", 0, 10, "EPL", "dev-chelsea", "dev-sevilla", ["1.880000", "3.650000", "4.400000"], 2, 1],
-  ].map(([id, dayOffset, hour, competitionCode, homeTeamProviderId, awayTeamProviderId, odds, homeScore, awayScore]) => ({
-    providerFixtureId: `dev-cup-settled-${id}`,
-    competitionCode,
-    homeTeamProviderId,
-    awayTeamProviderId,
-    kickoffAt: createRelativeKickoff(now, dayOffset, hour),
-    odds,
-    status: "SETTLED",
-    providerStatus: "FT",
-    homeScore,
-    awayScore,
-    finalOutcome: finalOutcomeForScore(homeScore, awayScore),
-  }));
+    [
+      "01",
+      -4,
+      13,
+      "EPL",
+      "dev-arsenal",
+      "dev-chelsea",
+      ["1.700000", "4.100000", "5.400000"],
+      2,
+      0,
+    ],
+    [
+      "02",
+      -4,
+      16,
+      "LALIGA",
+      "dev-valencia",
+      "dev-barcelona",
+      ["5.200000", "4.000000", "1.720000"],
+      1,
+      3,
+    ],
+    [
+      "03",
+      -4,
+      19,
+      "SERIE_A",
+      "dev-milan",
+      "dev-roma",
+      ["2.650000", "3.250000", "2.750000"],
+      1,
+      1,
+    ],
+    [
+      "04",
+      -3,
+      12,
+      "BUNDESLIGA",
+      "dev-bayern",
+      "dev-dortmund",
+      ["1.250000", "6.200000", "11.000000"],
+      3,
+      1,
+    ],
+    [
+      "05",
+      -3,
+      15,
+      "LIGUE_1",
+      "dev-lyon",
+      "dev-marseille",
+      ["2.950000", "2.750000", "3.050000"],
+      0,
+      1,
+    ],
+    [
+      "06",
+      -3,
+      18,
+      "UCL",
+      "dev-inter",
+      "dev-napoli",
+      ["2.200000", "3.800000", "2.200000"],
+      2,
+      2,
+    ],
+    [
+      "07",
+      -2,
+      12,
+      "UEL",
+      "dev-lille",
+      "dev-benfica",
+      ["6.800000", "4.600000", "1.480000"],
+      0,
+      2,
+    ],
+    [
+      "08",
+      -2,
+      15,
+      "EPL",
+      "dev-chelsea",
+      "dev-ajax",
+      ["1.420000", "5.000000", "8.500000"],
+      2,
+      0,
+    ],
+    [
+      "09",
+      -2,
+      18,
+      "BUNDESLIGA",
+      "dev-leverkusen",
+      "dev-leipzig",
+      ["2.800000", "3.200000", "2.800000"],
+      1,
+      0,
+    ],
+    [
+      "10",
+      -2,
+      20,
+      "UCL",
+      "dev-atletico",
+      "dev-sevilla",
+      ["2.050000", "3.550000", "3.700000"],
+      1,
+      1,
+    ],
+    [
+      "11",
+      -1,
+      12,
+      "SERIE_A",
+      "dev-napoli",
+      "dev-milan",
+      ["2.250000", "3.300000", "3.300000"],
+      2,
+      1,
+    ],
+    [
+      "12",
+      -1,
+      14,
+      "LALIGA",
+      "dev-barcelona",
+      "dev-atletico",
+      ["1.950000", "3.700000", "4.000000"],
+      0,
+      0,
+    ],
+    [
+      "13",
+      -1,
+      16,
+      "EPL",
+      "dev-arsenal",
+      "dev-leverkusen",
+      ["1.900000", "3.900000", "4.100000"],
+      2,
+      2,
+    ],
+    [
+      "14",
+      -1,
+      18,
+      "LIGUE_1",
+      "dev-psg",
+      "dev-lille",
+      ["1.520000", "4.500000", "6.400000"],
+      4,
+      1,
+    ],
+    [
+      "15",
+      -1,
+      20,
+      "UEL",
+      "dev-benfica",
+      "dev-ajax",
+      ["2.150000", "3.600000", "3.350000"],
+      1,
+      2,
+    ],
+    [
+      "16",
+      -1,
+      21,
+      "BUNDESLIGA",
+      "dev-dortmund",
+      "dev-leipzig",
+      ["2.450000", "3.650000", "2.850000"],
+      3,
+      2,
+    ],
+    [
+      "17",
+      0,
+      9,
+      "UCL",
+      "dev-roma",
+      "dev-inter",
+      ["3.400000", "3.350000", "2.200000"],
+      0,
+      1,
+    ],
+    [
+      "18",
+      0,
+      10,
+      "EPL",
+      "dev-chelsea",
+      "dev-sevilla",
+      ["1.880000", "3.650000", "4.400000"],
+      2,
+      1,
+    ],
+  ].map(
+    ([
+      id,
+      dayOffset,
+      hour,
+      competitionCode,
+      homeTeamProviderId,
+      awayTeamProviderId,
+      odds,
+      homeScore,
+      awayScore,
+    ]) => ({
+      providerFixtureId: `dev-cup-settled-${id}`,
+      competitionCode,
+      homeTeamProviderId,
+      awayTeamProviderId,
+      kickoffAt: createRelativeKickoff(now, dayOffset, hour),
+      odds,
+      status: "SETTLED",
+      providerStatus: "FT",
+      homeScore,
+      awayScore,
+      finalOutcome: finalOutcomeForScore(homeScore, awayScore),
+    }),
+  );
 
   const todayFixtures = [
-    ["01", "EPL", "dev-arsenal", "dev-chelsea", ["1.700000", "4.100000", "5.400000"]],
-    ["02", "LALIGA", "dev-valencia", "dev-barcelona", ["5.200000", "4.000000", "1.720000"]],
-    ["03", "SERIE_A", "dev-milan", "dev-roma", ["2.650000", "3.250000", "2.750000"]],
-    ["04", "BUNDESLIGA", "dev-bayern", "dev-dortmund", ["1.250000", "6.200000", "11.000000"]],
-    ["05", "LIGUE_1", "dev-lyon", "dev-marseille", ["2.950000", "2.750000", "3.050000"]],
-    ["06", "UCL", "dev-inter", "dev-napoli", ["2.200000", "3.800000", "2.200000"]],
-  ].map(([id, competitionCode, homeTeamProviderId, awayTeamProviderId, odds], index) => ({
-    providerFixtureId: `dev-${businessDate}-predict-${id}`,
-    competitionCode,
-    homeTeamProviderId,
-    awayTeamProviderId,
-    kickoffAt: kickoffTimes[index],
-    odds,
-    status: "OPEN",
-    providerStatus: "NS",
-    homeScore: null,
-    awayScore: null,
-    finalOutcome: null,
-  }));
+    [
+      "01",
+      "EPL",
+      "dev-arsenal",
+      "dev-chelsea",
+      ["1.700000", "4.100000", "5.400000"],
+    ],
+    [
+      "02",
+      "LALIGA",
+      "dev-valencia",
+      "dev-barcelona",
+      ["5.200000", "4.000000", "1.720000"],
+    ],
+    [
+      "03",
+      "SERIE_A",
+      "dev-milan",
+      "dev-roma",
+      ["2.650000", "3.250000", "2.750000"],
+    ],
+    [
+      "04",
+      "BUNDESLIGA",
+      "dev-bayern",
+      "dev-dortmund",
+      ["1.250000", "6.200000", "11.000000"],
+    ],
+    [
+      "05",
+      "LIGUE_1",
+      "dev-lyon",
+      "dev-marseille",
+      ["2.950000", "2.750000", "3.050000"],
+    ],
+    [
+      "06",
+      "UCL",
+      "dev-inter",
+      "dev-napoli",
+      ["2.200000", "3.800000", "2.200000"],
+    ],
+  ].map(
+    (
+      [id, competitionCode, homeTeamProviderId, awayTeamProviderId, odds],
+      index,
+    ) => ({
+      providerFixtureId: `dev-${businessDate}-predict-${id}`,
+      competitionCode,
+      homeTeamProviderId,
+      awayTeamProviderId,
+      kickoffAt: kickoffTimes[index],
+      odds,
+      status: "OPEN",
+      providerStatus: "NS",
+      homeScore: null,
+      awayScore: null,
+      finalOutcome: null,
+    }),
+  );
 
   return [...pastFixtures, ...todayFixtures];
 }
@@ -625,8 +1269,15 @@ async function upsertDevUsers() {
   return users;
 }
 
-async function seedCupPredictions({ tournamentId, users, fixtures, currentInstant }) {
-  const settledFixtures = fixtures.filter((fixture) => fixture.status === "SETTLED");
+async function seedCupPredictions({
+  tournamentId,
+  users,
+  fixtures,
+  currentInstant,
+}) {
+  const settledFixtures = fixtures.filter(
+    (fixture) => fixture.status === "SETTLED",
+  );
   const openFixtures = fixtures.filter((fixture) => fixture.status === "OPEN");
   const userIds = users.map((user) => user.id);
 
@@ -661,10 +1312,18 @@ async function seedCupPredictions({ tournamentId, users, fixtures, currentInstan
 
     for (const [predictionIndex, prediction] of plan.entries()) {
       const snapshot = prediction.fixture.snapshot;
-      const values = snapshotValuesForOutcome(snapshot, prediction.selectedOutcome);
+      const values = snapshotValuesForOutcome(
+        snapshot,
+        prediction.selectedOutcome,
+      );
       const isSettled = prediction.fixture.status === "SETTLED";
-      const isCorrect = isSettled && prediction.selectedOutcome === prediction.fixture.finalOutcome;
-      const createdAt = new Date(prediction.fixture.kickoffAt.getTime() - (95 + predictionIndex * 7) * 60 * 1000);
+      const isCorrect =
+        isSettled &&
+        prediction.selectedOutcome === prediction.fixture.finalOutcome;
+      const createdAt = new Date(
+        prediction.fixture.kickoffAt.getTime() -
+          (95 + predictionIndex * 7) * 60 * 1000,
+      );
 
       await prisma.prediction.upsert({
         where: {
@@ -680,9 +1339,17 @@ async function seedCupPredictions({ tournamentId, users, fixtures, currentInstan
           slotType: prediction.slotType,
           probabilityAtPrediction: values.probability,
           potentialPoints: values.points,
-          resultStatus: isSettled ? (isCorrect ? "CORRECT" : "INCORRECT") : "PENDING",
+          resultStatus: isSettled
+            ? isCorrect
+              ? "CORRECT"
+              : "INCORRECT"
+            : "PENDING",
           earnedPoints: isSettled && isCorrect ? values.points : 0,
-          settledAt: isSettled ? new Date(prediction.fixture.kickoffAt.getTime() + 2 * 60 * 60 * 1000) : null,
+          settledAt: isSettled
+            ? new Date(
+                prediction.fixture.kickoffAt.getTime() + 2 * 60 * 60 * 1000,
+              )
+            : null,
           createdAt,
         },
         create: {
@@ -694,9 +1361,17 @@ async function seedCupPredictions({ tournamentId, users, fixtures, currentInstan
           slotType: prediction.slotType,
           probabilityAtPrediction: values.probability,
           potentialPoints: values.points,
-          resultStatus: isSettled ? (isCorrect ? "CORRECT" : "INCORRECT") : "PENDING",
+          resultStatus: isSettled
+            ? isCorrect
+              ? "CORRECT"
+              : "INCORRECT"
+            : "PENDING",
           earnedPoints: isSettled && isCorrect ? values.points : 0,
-          settledAt: isSettled ? new Date(prediction.fixture.kickoffAt.getTime() + 2 * 60 * 60 * 1000) : null,
+          settledAt: isSettled
+            ? new Date(
+                prediction.fixture.kickoffAt.getTime() + 2 * 60 * 60 * 1000,
+              )
+            : null,
           createdAt,
         },
       });
@@ -719,7 +1394,9 @@ async function cleanupSeedTournamentRows({ tournamentId, activeUserIds }) {
   });
   const seedUserIds = seedUsers.map((user) => user.id);
   const activeUserIdSet = new Set(activeUserIds);
-  const obsoleteUserIds = seedUserIds.filter((userId) => !activeUserIdSet.has(userId));
+  const obsoleteUserIds = seedUserIds.filter(
+    (userId) => !activeUserIdSet.has(userId),
+  );
 
   await prisma.prediction.deleteMany({
     where: {
@@ -738,11 +1415,26 @@ async function cleanupSeedTournamentRows({ tournamentId, activeUserIds }) {
   }
 }
 
-function buildPredictionPlan({ user, userIndex, settledFixtures, openFixtures }) {
-  const correctFixtures = chooseCorrectFixturesForTarget(user.targetPoints, settledFixtures, userIndex);
+function buildPredictionPlan({
+  user,
+  userIndex,
+  settledFixtures,
+  openFixtures,
+}) {
+  const correctFixtures = chooseCorrectFixturesForTarget(
+    user.targetPoints,
+    settledFixtures,
+    userIndex,
+  );
   const usedFixtureIds = new Set(correctFixtures.map((fixture) => fixture.id));
-  const settledIncorrectCount = plannedSettledIncorrectCount(user.targetPoints, userIndex);
-  const todayPendingCount = user.telegramUserId === 900000001n ? 1 : plannedTodayPendingCount(user.targetPoints, userIndex);
+  const settledIncorrectCount = plannedSettledIncorrectCount(
+    user.targetPoints,
+    userIndex,
+  );
+  const todayPendingCount =
+    user.telegramUserId === 900000001n
+      ? 1
+      : plannedTodayPendingCount(user.targetPoints, userIndex);
   const predictions = [];
 
   for (const fixture of correctFixtures) {
@@ -753,7 +1445,13 @@ function buildPredictionPlan({ user, userIndex, settledFixtures, openFixtures })
   }
 
   for (const fixture of rotate(settledFixtures, userIndex * 3)) {
-    if (predictions.filter((prediction) => prediction.fixture.status === "SETTLED" && prediction.selectedOutcome !== prediction.fixture.finalOutcome).length >= settledIncorrectCount) {
+    if (
+      predictions.filter(
+        (prediction) =>
+          prediction.fixture.status === "SETTLED" &&
+          prediction.selectedOutcome !== prediction.fixture.finalOutcome,
+      ).length >= settledIncorrectCount
+    ) {
       break;
     }
 
@@ -764,12 +1462,18 @@ function buildPredictionPlan({ user, userIndex, settledFixtures, openFixtures })
     usedFixtureIds.add(fixture.id);
     predictions.push({
       fixture,
-      selectedOutcome: firstIncorrectOutcome(fixture.finalOutcome, userIndex + predictions.length),
+      selectedOutcome: firstIncorrectOutcome(
+        fixture.finalOutcome,
+        userIndex + predictions.length,
+      ),
     });
   }
 
   for (const fixture of rotate(openFixtures, userIndex)) {
-    if (predictions.filter((prediction) => prediction.fixture.status === "OPEN").length >= todayPendingCount) {
+    if (
+      predictions.filter((prediction) => prediction.fixture.status === "OPEN")
+        .length >= todayPendingCount
+    ) {
       break;
     }
 
@@ -785,7 +1489,10 @@ function buildPredictionPlan({ user, userIndex, settledFixtures, openFixtures })
   }
 
   return assignDailySlotTypes(
-    predictions.sort((left, right) => left.fixture.kickoffAt.getTime() - right.fixture.kickoffAt.getTime()),
+    predictions.sort(
+      (left, right) =>
+        left.fixture.kickoffAt.getTime() - right.fixture.kickoffAt.getTime(),
+    ),
   );
 }
 
@@ -795,7 +1502,10 @@ function assignDailySlotTypes(predictions) {
 
   for (const prediction of predictions) {
     const businessDate = getBusinessDate(prediction.fixture.kickoffAt);
-    const usage = usageByBusinessDate.get(businessDate) ?? { freeUsed: 0, rewardedUsed: 0 };
+    const usage = usageByBusinessDate.get(businessDate) ?? {
+      freeUsed: 0,
+      rewardedUsed: 0,
+    };
 
     if (usage.freeUsed < 3) {
       usage.freeUsed += 1;
@@ -814,7 +1524,11 @@ function assignDailySlotTypes(predictions) {
   return result;
 }
 
-function chooseCorrectFixturesForTarget(targetPoints, settledFixtures, userIndex) {
+function chooseCorrectFixturesForTarget(
+  targetPoints,
+  settledFixtures,
+  userIndex,
+) {
   if (targetPoints <= 0) {
     return [];
   }
@@ -822,7 +1536,8 @@ function chooseCorrectFixturesForTarget(targetPoints, settledFixtures, userIndex
   const candidates = rotate(settledFixtures, userIndex)
     .map((fixture) => ({
       fixture,
-      points: snapshotValuesForOutcome(fixture.snapshot, fixture.finalOutcome).points,
+      points: snapshotValuesForOutcome(fixture.snapshot, fixture.finalOutcome)
+        .points,
     }))
     .sort((left, right) => right.points - left.points);
   const chosen = [];
@@ -884,7 +1599,10 @@ async function syncDailyUsageForUser(userId, currentInstant) {
 
   for (const prediction of businessDates) {
     const businessDate = getBusinessDate(prediction.fixture.kickoffAt);
-    const current = usageByDate.get(businessDate) ?? { freeUsed: 0, rewardedUsed: 0 };
+    const current = usageByDate.get(businessDate) ?? {
+      freeUsed: 0,
+      rewardedUsed: 0,
+    };
 
     if (prediction.slotType === "FREE") {
       current.freeUsed += 1;
@@ -939,9 +1657,14 @@ async function recalculateTournamentParticipants(tournamentId) {
     await prisma.tournamentParticipant.update({
       where: { id: participant.id },
       data: {
-        tournamentPoints: predictions.reduce((sum, prediction) => sum + prediction.earnedPoints, 0),
+        tournamentPoints: predictions.reduce(
+          (sum, prediction) => sum + prediction.earnedPoints,
+          0,
+        ),
         predictionsCount: predictions.length,
-        correctPredictionsCount: predictions.filter((prediction) => prediction.resultStatus === "CORRECT").length,
+        correctPredictionsCount: predictions.filter(
+          (prediction) => prediction.resultStatus === "CORRECT",
+        ).length,
       },
     });
   }
@@ -961,13 +1684,18 @@ async function recalculateTournamentParticipants(tournamentId) {
     },
     _count: { _all: true },
   });
-  const incorrectByUserId = new Map(incorrectCounts.map((row) => [row.userId, row._count._all]));
+  const incorrectByUserId = new Map(
+    incorrectCounts.map((row) => [row.userId, row._count._all]),
+  );
 
   return {
     predictionCount,
     top10: top.map((participant, index) => ({
       rank: index + 1,
-      player: participant.user.username ?? participant.user.firstName ?? participant.user.telegramUserId.toString(),
+      player:
+        participant.user.username ??
+        participant.user.firstName ??
+        participant.user.telegramUserId.toString(),
       points: participant.tournamentPoints,
       predictions: participant.predictionsCount,
       correct: participant.correctPredictionsCount,
@@ -979,16 +1707,27 @@ async function recalculateTournamentParticipants(tournamentId) {
 function snapshotValuesForOutcome(snapshot, outcome) {
   switch (outcome) {
     case "HOME":
-      return { probability: snapshot.homeProbability, points: snapshot.homePoints };
+      return {
+        probability: snapshot.homeProbability,
+        points: snapshot.homePoints,
+      };
     case "DRAW":
-      return { probability: snapshot.drawProbability, points: snapshot.drawPoints };
+      return {
+        probability: snapshot.drawProbability,
+        points: snapshot.drawPoints,
+      };
     case "AWAY":
-      return { probability: snapshot.awayProbability, points: snapshot.awayPoints };
+      return {
+        probability: snapshot.awayProbability,
+        points: snapshot.awayPoints,
+      };
   }
 }
 
 function firstIncorrectOutcome(finalOutcome, index) {
-  return ["HOME", "DRAW", "AWAY"].filter((outcome) => outcome !== finalOutcome)[index % 2];
+  return ["HOME", "DRAW", "AWAY"].filter((outcome) => outcome !== finalOutcome)[
+    index % 2
+  ];
 }
 
 function outcomeByIndex(index) {
@@ -1001,20 +1740,32 @@ function rotate(items, offset) {
   }
 
   const normalizedOffset = offset % items.length;
-  return [...items.slice(normalizedOffset), ...items.slice(0, normalizedOffset)];
+  return [
+    ...items.slice(normalizedOffset),
+    ...items.slice(0, normalizedOffset),
+  ];
 }
 
 function createSeedKickoffTimes(now, range, count) {
   const minimumLeadMs = 15 * 60 * 1000;
   const latestKickoff = range.endUtc.getTime() - 5 * 60 * 1000;
-  const earliestKickoff = Math.max(now.getTime() + minimumLeadMs, range.startUtc.getTime() + 12 * 60 * 60 * 1000);
+  const earliestKickoff = Math.max(
+    now.getTime() + minimumLeadMs,
+    range.startUtc.getTime() + 12 * 60 * 60 * 1000,
+  );
 
   if (earliestKickoff >= latestKickoff) {
-    const fallbackStart = Math.max(now.getTime() + 60 * 1000, range.startUtc.getTime());
+    const fallbackStart = Math.max(
+      now.getTime() + 60 * 1000,
+      range.startUtc.getTime(),
+    );
     const fallbackEnd = range.endUtc.getTime() - 1000;
 
     if (fallbackStart >= fallbackEnd) {
-      return Array.from({ length: count }, (_, index) => new Date(range.endUtc.getTime() - (count - index) * 1000));
+      return Array.from(
+        { length: count },
+        (_, index) => new Date(range.endUtc.getTime() - (count - index) * 1000),
+      );
     }
 
     return spreadTimes(fallbackStart, fallbackEnd, count);
@@ -1024,10 +1775,19 @@ function createSeedKickoffTimes(now, range, count) {
 }
 
 function createRelativeKickoff(now, dayOffset, londonHour) {
-  const businessDate = getBusinessDate(new Date(now.getTime() + dayOffset * 24 * 60 * 60 * 1000));
+  const businessDate = getBusinessDate(
+    new Date(now.getTime() + dayOffset * 24 * 60 * 60 * 1000),
+  );
   const [year, month, day] = businessDate.split("-").map(Number);
 
-  return zonedLocalTimeToUtc({ year, month, day, hour: londonHour, minute: 0, second: 0 });
+  return zonedLocalTimeToUtc({
+    year,
+    month,
+    day,
+    hour: londonHour,
+    minute: 0,
+    second: 0,
+  });
 }
 
 function finalOutcomeForScore(homeScore, awayScore) {
@@ -1049,7 +1809,10 @@ function spreadTimes(startMs, endMs, count) {
 
   const stepMs = Math.max(1, Math.floor((endMs - startMs) / (count - 1)));
 
-  return Array.from({ length: count }, (_, index) => new Date(startMs + stepMs * index));
+  return Array.from(
+    { length: count },
+    (_, index) => new Date(startMs + stepMs * index),
+  );
 }
 
 function getBusinessDate(instant) {
@@ -1059,7 +1822,9 @@ function getBusinessDate(instant) {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-    }).formatToParts(instant).map((part) => [part.type, part.value]),
+    })
+      .formatToParts(instant)
+      .map((part) => [part.type, part.value]),
   );
 
   return `${values.year}-${values.month}-${values.day}`;
@@ -1070,7 +1835,14 @@ function getBusinessDayRangeUtc(businessDate) {
   const nextDay = new Date(Date.UTC(year, month - 1, day + 1));
 
   return {
-    startUtc: zonedLocalTimeToUtc({ year, month, day, hour: 0, minute: 0, second: 0 }),
+    startUtc: zonedLocalTimeToUtc({
+      year,
+      month,
+      day,
+      hour: 0,
+      minute: 0,
+      second: 0,
+    }),
     endUtc: zonedLocalTimeToUtc({
       year: nextDay.getUTCFullYear(),
       month: nextDay.getUTCMonth() + 1,
@@ -1110,7 +1882,9 @@ function zonedLocalTimeToUtc(localTime) {
         minute: "2-digit",
         second: "2-digit",
         hourCycle: "h23",
-      }).formatToParts(instant).map((part) => [part.type, part.value]),
+      })
+        .formatToParts(instant)
+        .map((part) => [part.type, part.value]),
     );
     const localAsUtc = Date.UTC(
       Number(values.year),

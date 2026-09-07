@@ -32,28 +32,42 @@ describe("prediction creation concurrency", () => {
     const firstFixture = await createEligibleTestFixture(prisma);
     const secondFixture = await createEligibleTestFixture(prisma);
     const results = await Promise.allSettled([
-      createPrediction({ prisma, clock }, {
-        userId: user.id,
-        fixtureId: firstFixture.fixture.id,
-        selectedOutcome: "HOME",
-        adRewardId: firstReward.id,
-        idempotencyKey: uniqueTestKey("idem"),
-      }),
-      createPrediction({ prisma, clock }, {
-        userId: user.id,
-        fixtureId: secondFixture.fixture.id,
-        selectedOutcome: "DRAW",
-        adRewardId: secondReward.id,
-        idempotencyKey: uniqueTestKey("idem"),
-      }),
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: firstFixture.fixture.id,
+          selectedOutcome: "HOME",
+          adRewardId: firstReward.id,
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      ),
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: secondFixture.fixture.id,
+          selectedOutcome: "DRAW",
+          adRewardId: secondReward.id,
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      ),
     ]);
-    const usage = await prisma.dailyPredictionUsage.findFirstOrThrow({ where: { userId: user.id } });
+    const usage = await prisma.dailyPredictionUsage.findFirstOrThrow({
+      where: { userId: user.id },
+    });
 
-    expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
-    expect(results.filter((result) => result.status === "rejected")).toHaveLength(1);
+    expect(
+      results.filter((result) => result.status === "fulfilled"),
+    ).toHaveLength(1);
+    expect(
+      results.filter((result) => result.status === "rejected"),
+    ).toHaveLength(1);
     expect(usage.freeUsed).toBe(3);
     expect(usage.rewardedUsed).toBe(5);
-    expect(await prisma.prediction.count({ where: { userId: user.id } })).toBe(8);
+    expect(await prisma.prediction.count({ where: { userId: user.id } })).toBe(
+      8,
+    );
   });
 
   it("consumes the same AdReward only once", async () => {
@@ -64,28 +78,42 @@ describe("prediction creation concurrency", () => {
     const firstFixture = await createEligibleTestFixture(prisma);
     const secondFixture = await createEligibleTestFixture(prisma);
     const results = await Promise.allSettled([
-      createPrediction({ prisma, clock }, {
-        userId: user.id,
-        fixtureId: firstFixture.fixture.id,
-        selectedOutcome: "HOME",
-        adRewardId: reward.id,
-        idempotencyKey: uniqueTestKey("idem"),
-      }),
-      createPrediction({ prisma, clock }, {
-        userId: user.id,
-        fixtureId: secondFixture.fixture.id,
-        selectedOutcome: "DRAW",
-        adRewardId: reward.id,
-        idempotencyKey: uniqueTestKey("idem"),
-      }),
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: firstFixture.fixture.id,
+          selectedOutcome: "HOME",
+          adRewardId: reward.id,
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      ),
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: secondFixture.fixture.id,
+          selectedOutcome: "DRAW",
+          adRewardId: reward.id,
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      ),
     ]);
-    const consumedReward = await prisma.adReward.findUniqueOrThrow({ where: { id: reward.id } });
+    const consumedReward = await prisma.adReward.findUniqueOrThrow({
+      where: { id: reward.id },
+    });
 
-    expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
-    expect(results.filter((result) => result.status === "rejected")).toHaveLength(1);
+    expect(
+      results.filter((result) => result.status === "fulfilled"),
+    ).toHaveLength(1);
+    expect(
+      results.filter((result) => result.status === "rejected"),
+    ).toHaveLength(1);
     expect(consumedReward.status).toBe("CONSUMED");
     expect(consumedReward.consumedByPredictionId).not.toBeNull();
-    expect(await prisma.prediction.count({ where: { userId: user.id } })).toBe(4);
+    expect(await prisma.prediction.count({ where: { userId: user.id } })).toBe(
+      4,
+    );
   });
 
   it("auto-joins tournament once for simultaneous first predictions", async () => {
@@ -93,20 +121,28 @@ describe("prediction creation concurrency", () => {
     const firstFixture = await createEligibleTestFixture(prisma);
     const secondFixture = await createEligibleTestFixture(prisma);
     const results = await Promise.allSettled([
-      createPrediction({ prisma, clock }, {
-        userId: user.id,
-        fixtureId: firstFixture.fixture.id,
-        selectedOutcome: "HOME",
-        idempotencyKey: uniqueTestKey("idem"),
-      }),
-      createPrediction({ prisma, clock }, {
-        userId: user.id,
-        fixtureId: secondFixture.fixture.id,
-        selectedOutcome: "DRAW",
-        idempotencyKey: uniqueTestKey("idem"),
-      }),
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: firstFixture.fixture.id,
+          selectedOutcome: "HOME",
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      ),
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: secondFixture.fixture.id,
+          selectedOutcome: "DRAW",
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      ),
     ]);
-    const participants = await prisma.tournamentParticipant.findMany({ where: { userId: user.id } });
+    const participants = await prisma.tournamentParticipant.findMany({
+      where: { userId: user.id },
+    });
 
     expect(results.every((result) => result.status === "fulfilled")).toBe(true);
     expect(participants).toHaveLength(1);
@@ -117,23 +153,37 @@ describe("prediction creation concurrency", () => {
     const user = await createTestUser(prisma);
     const { fixture } = await createEligibleTestFixture(prisma);
     const results = await Promise.allSettled([
-      createPrediction({ prisma, clock }, {
-        userId: user.id,
-        fixtureId: fixture.id,
-        selectedOutcome: "HOME",
-        idempotencyKey: uniqueTestKey("idem"),
-      }),
-      createPrediction({ prisma, clock }, {
-        userId: user.id,
-        fixtureId: fixture.id,
-        selectedOutcome: "DRAW",
-        idempotencyKey: uniqueTestKey("idem"),
-      }),
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: fixture.id,
+          selectedOutcome: "HOME",
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      ),
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: fixture.id,
+          selectedOutcome: "DRAW",
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      ),
     ]);
 
-    expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
-    expect(results.filter((result) => result.status === "rejected")).toHaveLength(1);
-    expect(await prisma.prediction.count({ where: { userId: user.id, fixtureId: fixture.id } })).toBe(1);
+    expect(
+      results.filter((result) => result.status === "fulfilled"),
+    ).toHaveLength(1);
+    expect(
+      results.filter((result) => result.status === "rejected"),
+    ).toHaveLength(1);
+    expect(
+      await prisma.prediction.count({
+        where: { userId: user.id, fixtureId: fixture.id },
+      }),
+    ).toBe(1);
   });
 
   it("serializes a new idempotency key for simultaneous identical rewarded requests", async () => {
@@ -156,23 +206,39 @@ describe("prediction creation concurrency", () => {
       createPrediction({ prisma, clock }, input),
     ]);
     const fulfilled = results.filter((result) => result.status === "fulfilled");
-    const usage = await prisma.dailyPredictionUsage.findFirstOrThrow({ where: { userId: user.id } });
-    const participant = await prisma.tournamentParticipant.findFirstOrThrow({ where: { userId: user.id } });
-    const consumedReward = await prisma.adReward.findUniqueOrThrow({ where: { id: reward.id } });
+    const usage = await prisma.dailyPredictionUsage.findFirstOrThrow({
+      where: { userId: user.id },
+    });
+    const participant = await prisma.tournamentParticipant.findFirstOrThrow({
+      where: { userId: user.id },
+    });
+    const consumedReward = await prisma.adReward.findUniqueOrThrow({
+      where: { id: reward.id },
+    });
 
     expect(fulfilled).toHaveLength(2);
-    expect(fulfilled[0]?.status === "fulfilled" ? fulfilled[0].value : null).toEqual(
-      fulfilled[1]?.status === "fulfilled" ? fulfilled[1].value : null,
-    );
-    expect(await prisma.prediction.count({ where: { userId: user.id, fixtureId: fixture.id } })).toBe(1);
+    expect(
+      fulfilled[0]?.status === "fulfilled" ? fulfilled[0].value : null,
+    ).toEqual(fulfilled[1]?.status === "fulfilled" ? fulfilled[1].value : null);
+    expect(
+      await prisma.prediction.count({
+        where: { userId: user.id, fixtureId: fixture.id },
+      }),
+    ).toBe(1);
     expect(usage.freeUsed).toBe(3);
     expect(usage.rewardedUsed).toBe(1);
     expect(participant.predictionsCount).toBe(4);
     expect(consumedReward.status).toBe("CONSUMED");
     expect(consumedReward.consumedByPredictionId).toBe(
-      fulfilled[0]?.status === "fulfilled" ? fulfilled[0].value.predictionId : null,
+      fulfilled[0]?.status === "fulfilled"
+        ? fulfilled[0].value.predictionId
+        : null,
     );
-    expect(await prisma.idempotencyRecord.count({ where: { userId: user.id, key: idempotencyKey } })).toBe(1);
+    expect(
+      await prisma.idempotencyRecord.count({
+        where: { userId: user.id, key: idempotencyKey },
+      }),
+    ).toBe(1);
   });
 
   it("serializes a new idempotency key for simultaneous conflicting payloads", async () => {
@@ -182,32 +248,54 @@ describe("prediction creation concurrency", () => {
     const idempotencyKey = uniqueTestKey("idem");
 
     const results = await Promise.allSettled([
-      createPrediction({ prisma, clock }, {
-        userId: user.id,
-        fixtureId: firstFixture.fixture.id,
-        selectedOutcome: "HOME",
-        idempotencyKey,
-      }),
-      createPrediction({ prisma, clock }, {
-        userId: user.id,
-        fixtureId: secondFixture.fixture.id,
-        selectedOutcome: "DRAW",
-        idempotencyKey,
-      }),
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: firstFixture.fixture.id,
+          selectedOutcome: "HOME",
+          idempotencyKey,
+        },
+      ),
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: secondFixture.fixture.id,
+          selectedOutcome: "DRAW",
+          idempotencyKey,
+        },
+      ),
     ]);
-    const usage = await prisma.dailyPredictionUsage.findFirstOrThrow({ where: { userId: user.id } });
-    const participant = await prisma.tournamentParticipant.findFirstOrThrow({ where: { userId: user.id } });
+    const usage = await prisma.dailyPredictionUsage.findFirstOrThrow({
+      where: { userId: user.id },
+    });
+    const participant = await prisma.tournamentParticipant.findFirstOrThrow({
+      where: { userId: user.id },
+    });
 
-    expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
-    expect(results.filter((result) => result.status === "rejected")).toHaveLength(1);
-    expect(results.find((result) => result.status === "rejected")).toMatchObject({
+    expect(
+      results.filter((result) => result.status === "fulfilled"),
+    ).toHaveLength(1);
+    expect(
+      results.filter((result) => result.status === "rejected"),
+    ).toHaveLength(1);
+    expect(
+      results.find((result) => result.status === "rejected"),
+    ).toMatchObject({
       reason: { code: "IDEMPOTENCY_CONFLICT" },
     });
-    expect(await prisma.prediction.count({ where: { userId: user.id } })).toBe(1);
+    expect(await prisma.prediction.count({ where: { userId: user.id } })).toBe(
+      1,
+    );
     expect(usage.freeUsed).toBe(1);
     expect(usage.rewardedUsed).toBe(0);
     expect(participant.predictionsCount).toBe(1);
-    expect(await prisma.idempotencyRecord.count({ where: { userId: user.id, key: idempotencyKey } })).toBe(1);
+    expect(
+      await prisma.idempotencyRecord.count({
+        where: { userId: user.id, key: idempotencyKey },
+      }),
+    ).toBe(1);
   });
 });
 
@@ -218,14 +306,18 @@ async function createPredictions(
 ): Promise<void> {
   for (let index = 0; index < count; index += 1) {
     const { fixture } = await createEligibleTestFixture(prisma);
-    const reward = slotType === "REWARDED" ? await createTestAdReward(prisma, userId) : null;
+    const reward =
+      slotType === "REWARDED" ? await createTestAdReward(prisma, userId) : null;
 
-    await createPrediction({ prisma, clock }, {
-      userId,
-      fixtureId: fixture.id,
-      selectedOutcome: "HOME",
-      adRewardId: reward?.id,
-      idempotencyKey: uniqueTestKey("idem"),
-    });
+    await createPrediction(
+      { prisma, clock },
+      {
+        userId,
+        fixtureId: fixture.id,
+        selectedOutcome: "HOME",
+        adRewardId: reward?.id,
+        idempotencyKey: uniqueTestKey("idem"),
+      },
+    );
   }
 }

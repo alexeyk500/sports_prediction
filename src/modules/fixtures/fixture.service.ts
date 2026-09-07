@@ -18,7 +18,9 @@ export async function resolveEligibleFixtureForPrediction(
   });
 
   if (!fixture) {
-    throw new DomainError("FIXTURE_NOT_FOUND", "Fixture not found.", { fixtureId });
+    throw new DomainError("FIXTURE_NOT_FOUND", "Fixture not found.", {
+      fixtureId,
+    });
   }
 
   assertFixtureEligibleForPrediction(fixture, dependencies.clock.now());

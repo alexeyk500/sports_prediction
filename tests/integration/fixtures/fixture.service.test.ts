@@ -19,10 +19,14 @@ describe("fixture service", () => {
 
   it("resolves an eligible fixture for prediction", async () => {
     const competition = await createSupportedTestCompetition(prisma);
-    const fixture = await createTestFixture(prisma, { competitionId: competition.id });
+    const fixture = await createTestFixture(prisma, {
+      competitionId: competition.id,
+    });
     await attachTestScoringSnapshot(prisma, fixture.id);
 
-    await expect(resolveEligibleFixtureForPrediction({ prisma, clock }, fixture.id)).resolves.toMatchObject({
+    await expect(
+      resolveEligibleFixtureForPrediction({ prisma, clock }, fixture.id),
+    ).resolves.toMatchObject({
       id: fixture.id,
       status: "OPEN",
     });
@@ -35,7 +39,9 @@ describe("fixture service", () => {
       status: "OPEN",
     });
 
-    await expect(resolveEligibleFixtureForPrediction({ prisma, clock }, fixture.id)).rejects.toMatchObject({
+    await expect(
+      resolveEligibleFixtureForPrediction({ prisma, clock }, fixture.id),
+    ).rejects.toMatchObject({
       code: "FIXTURE_SCORING_SNAPSHOT_MISSING",
     });
   });

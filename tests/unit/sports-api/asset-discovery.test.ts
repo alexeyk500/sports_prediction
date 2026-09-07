@@ -55,7 +55,9 @@ describe("football asset discovery manifest logic", () => {
     expect(slugifyAssetName("Paris Saint-Germain")).toBe("paris-saint-germain");
     expect(slugifyAssetName("Atlético de Madrid")).toBe("atletico-de-madrid");
     expect(slugifyAssetName("UEFA Europa League")).toBe("uefa-europa-league");
-    expect(slugifyAssetName("Brighton & Hove Albion")).toBe("brighton-and-hove-albion");
+    expect(slugifyAssetName("Brighton & Hove Albion")).toBe(
+      "brighton-and-hove-albion",
+    );
   });
 
   it("deduplicates a provider team across competitions", () => {
@@ -65,15 +67,26 @@ describe("football asset discovery manifest logic", () => {
       team("UCL", 541, "Real Madrid"),
     ]);
 
-    expect(manifest.teams.map((entry) => entry.slug)).toEqual(["arsenal", "real-madrid"]);
-    expect(manifest.teams.find((entry) => entry.slug === "arsenal")?.competitions.sort()).toEqual(["EPL", "UCL"]);
-    expect(summarizeFootballAssetsManifest(manifest).competitionMemberships).toBe(3);
+    expect(manifest.teams.map((entry) => entry.slug)).toEqual([
+      "arsenal",
+      "real-madrid",
+    ]);
+    expect(
+      manifest.teams
+        .find((entry) => entry.slug === "arsenal")
+        ?.competitions.sort(),
+    ).toEqual(["EPL", "UCL"]);
+    expect(
+      summarizeFootballAssetsManifest(manifest).competitionMemberships,
+    ).toBe(3);
   });
 
   it("does not use provider IDs as filenames", () => {
     const manifest = buildManifest([team("EPL", 42, "Manchester City")]);
 
-    expect(manifest.teams[0]?.asset.logoUrl).toBe("/assets/teams/manchester-city.webp");
+    expect(manifest.teams[0]?.asset.logoUrl).toBe(
+      "/assets/teams/manchester-city.webp",
+    );
     expect(manifest.teams[0]?.asset.logoUrl).not.toContain("/42.webp");
   });
 
@@ -98,7 +111,10 @@ describe("football asset discovery manifest logic", () => {
   it("detects slug collisions across different provider team IDs", () => {
     const manifest = buildManifest([
       team("EPL", 1, "Inter"),
-      team("UCL", 2, "Inter", { canonicalName: "Inter", canonicalSlug: "inter" }),
+      team("UCL", 2, "Inter", {
+        canonicalName: "Inter",
+        canonicalSlug: "inter",
+      }),
     ]);
 
     expect(manifest.warnings).toEqual(
@@ -138,8 +154,14 @@ describe("football asset discovery manifest logic", () => {
 
     expect(manifest.warnings).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ code: "DUPLICATE_COMPETITION_CODE", severity: "error" }),
-        expect.objectContaining({ code: "DUPLICATE_COMPETITION_SLUG", severity: "error" }),
+        expect.objectContaining({
+          code: "DUPLICATE_COMPETITION_CODE",
+          severity: "error",
+        }),
+        expect.objectContaining({
+          code: "DUPLICATE_COMPETITION_SLUG",
+          severity: "error",
+        }),
       ]),
     );
   });
@@ -158,23 +180,32 @@ describe("football asset discovery manifest logic", () => {
 
     expect(manifest.warnings).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ code: "MISSING_LEAGUE_ID", severity: "error" }),
+        expect.objectContaining({
+          code: "MISSING_LEAGUE_ID",
+          severity: "error",
+        }),
         expect.objectContaining({ code: "MISSING_TEAM_ID", severity: "error" }),
       ]),
     );
   });
 
   it("generates future asset logo URLs from reviewed slugs", () => {
-    expect(competitionAssetLogoUrl("premier-league")).toBe("/assets/competitions/premier-league.webp");
+    expect(competitionAssetLogoUrl("premier-league")).toBe(
+      "/assets/competitions/premier-league.webp",
+    );
     expect(teamAssetLogoUrl("arsenal")).toBe("/assets/teams/arsenal.webp");
   });
 
   it("keeps provider logo source separate from Goalstery logoUrl", () => {
     const manifest = buildManifest([team("EPL", 50, "Arsenal")]);
 
-    expect(manifest.teams[0]?.provider.logoSourceUrl).toBe("https://provider.example/teams/50.png");
+    expect(manifest.teams[0]?.provider.logoSourceUrl).toBe(
+      "https://provider.example/teams/50.png",
+    );
     expect(manifest.teams[0]?.asset.logoUrl).toBe("/assets/teams/arsenal.webp");
-    expect(manifest.teams[0]?.asset.logoUrl).not.toBe(manifest.teams[0]?.provider.logoSourceUrl);
+    expect(manifest.teams[0]?.asset.logoUrl).not.toBe(
+      manifest.teams[0]?.provider.logoSourceUrl,
+    );
   });
 });
 
@@ -199,7 +230,9 @@ function team(
     providerTeamId,
     providerName,
     providerLogoSourceUrl:
-      providerTeamId === null ? null : `https://provider.example/teams/${providerTeamId.toString()}.png`,
+      providerTeamId === null
+        ? null
+        : `https://provider.example/teams/${providerTeamId.toString()}.png`,
     ...overrides,
   };
 }

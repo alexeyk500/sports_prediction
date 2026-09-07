@@ -1,6 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { Prisma, type AdRewardStatus, type PrismaClient } from "@prisma/client";
-import { SUPPORTED_COMPETITION_CODES, type SupportedCompetitionCode } from "@/modules/fixtures/fixture.domain";
+import {
+  SUPPORTED_COMPETITION_CODES,
+  type SupportedCompetitionCode,
+} from "@/modules/fixtures/fixture.domain";
 import { SCORING_VERSION } from "@/modules/predictions/scoring.domain";
 
 let sequence = 0;
@@ -21,7 +24,9 @@ export function uniqueTournamentNumber(): number {
 }
 
 export function uniqueTelegramUserId(): bigint {
-  return BigInt((process.pid % 100_000) * 1_000_000 + Date.now() % 1_000_000 + sequence++);
+  return BigInt(
+    (process.pid % 100_000) * 1_000_000 + (Date.now() % 1_000_000) + sequence++,
+  );
 }
 
 export async function createTestUser(prisma: PrismaClient) {
@@ -150,7 +155,10 @@ export async function createEligibleTestFixture(prisma: PrismaClient) {
   return { fixture, snapshot };
 }
 
-export async function attachTestScoringSnapshot(prisma: PrismaClient, fixtureId: string) {
+export async function attachTestScoringSnapshot(
+  prisma: PrismaClient,
+  fixtureId: string,
+) {
   const snapshot = await prisma.outcomeSnapshot.create({
     data: {
       fixtureId,
@@ -195,7 +203,10 @@ export async function createTestAdReward(
       providerRewardId: uniqueTestKey("reward"),
       attemptKey: uniqueTestKey("attempt"),
       status: overrides.status ?? "VERIFIED",
-      verifiedAt: overrides.status === "CREATED" ? null : new Date("2026-09-05T11:00:00.000Z"),
+      verifiedAt:
+        overrides.status === "CREATED"
+          ? null
+          : new Date("2026-09-05T11:00:00.000Z"),
       expiresAt: overrides.expiresAt ?? new Date("2026-09-05T13:00:00.000Z"),
       consumedByPredictionId: overrides.consumedByPredictionId ?? null,
     },

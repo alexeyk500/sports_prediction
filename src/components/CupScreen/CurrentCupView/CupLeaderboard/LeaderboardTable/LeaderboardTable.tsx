@@ -24,7 +24,11 @@ const LeaderboardTable: React.FC<ILeaderboardTableProps> = ({
 
   if (isLoading) {
     return (
-      <div className={styles.rows} aria-busy="true" aria-label={t("cup.leaderboardStates.loading")}>
+      <div
+        className={styles.rows}
+        aria-busy="true"
+        aria-label={t("cup.leaderboardStates.loading")}
+      >
         {SKELETON_ROWS.map((row) => (
           <div key={row} className={styles.skeletonRow} />
         ))}

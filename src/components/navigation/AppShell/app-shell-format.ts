@@ -1,7 +1,10 @@
 import type { useTranslation } from "@/lib/i18n/use-translation";
 import type { NavItem } from "./app-shell-types";
 
-export function navLabel(item: NavItem, t: ReturnType<typeof useTranslation>["t"]): string {
+export function navLabel(
+  item: NavItem,
+  t: ReturnType<typeof useTranslation>["t"],
+): string {
   switch (item) {
     case "Predict":
       return t("navigation.predict");

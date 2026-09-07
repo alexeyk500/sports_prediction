@@ -2,19 +2,21 @@
 
 **Design System v0.1**
 
-  ----------------------------------- -----------------------------------
-  **Status**                          Authoritative global visual
-                                      specification
+---
 
-  **Platform**                        Telegram Mini App
+**Status** Authoritative global visual
+specification
 
-  **Frontend architecture**           `docs/FRONTEND_ARCHITECTURE.md`
+**Platform** Telegram Mini App
 
-  **Testing**                         `docs/TESTING_SPEC.md`
+**Frontend architecture** `docs/FRONTEND_ARCHITECTURE.md`
 
-  **Component designs**               `docs/design/*-spec.md` + approved
-                                      references
-  ----------------------------------- -----------------------------------
+**Testing** `docs/TESTING_SPEC.md`
+
+**Component designs** `docs/design/*-spec.md` + approved
+references
+
+---
 
 This document owns Goalstery's shared visual language: hierarchy,
 semantic visual tokens, typography, spacing, surfaces, interaction
@@ -25,7 +27,7 @@ persistence, authentication or frontend code architecture.
 
 For visual implementation, precedence is:
 
-``` text
+```text
 approved component reference
 → component-specific design spec
 → DESIGN_SYSTEM.md
@@ -35,13 +37,13 @@ approved component reference
 A component-specific spec overrides this document only where the
 override is explicit or required to reproduce its approved reference.
 
-------------------------------------------------------------------------
+---
 
 # 1. Visual Direction
 
 Goalstery should feel:
 
-``` text
+```text
 premium
 modern
 football-oriented
@@ -55,13 +57,13 @@ easy to scan
 
 The visual language communicates:
 
-``` text
+```text
 football + competition + skill + reward
 ```
 
 not:
 
-``` text
+```text
 betting/casino
 neon crypto dashboard
 generic admin UI
@@ -71,7 +73,7 @@ desktop UI squeezed into mobile
 
 When visual goals conflict, prioritize:
 
-``` text
+```text
 clarity
 → usability
 → information hierarchy
@@ -83,19 +85,19 @@ clarity
 
 Decoration must not reduce readability or interaction clarity.
 
-------------------------------------------------------------------------
+---
 
 # 2. Mobile Layout
 
 Primary target:
 
-``` text
+```text
 390 × 844
 ```
 
 Required width sanity:
 
-``` text
+```text
 360
 390
 430
@@ -105,14 +107,14 @@ Normal screen content must not horizontally overflow.
 
 Primary containers normally use:
 
-``` css
+```css
 width: 100%;
 min-width: 0;
 ```
 
 Recommended screen horizontal padding:
 
-``` text
+```text
 16px
 ```
 
@@ -120,7 +122,7 @@ Recommended screen horizontal padding:
 
 Prefer a clear vertical hierarchy:
 
-``` text
+```text
 screen context/header
 → summary/context
 → primary controls
@@ -133,13 +135,13 @@ Avoid unnecessary nested visible cards/surfaces.
 A surface should communicate grouping or hierarchy, not merely wrap
 markup.
 
-------------------------------------------------------------------------
+---
 
 # 3. Application Shell, Scrolling and Safe Areas
 
 The main mobile shell should normally behave as:
 
-``` text
+```text
 application viewport
 + stable top context
 + primary vertical content scroll region
@@ -152,7 +154,7 @@ Bottom navigation must not scroll with fixture content.
 
 Respect mobile safe areas where applicable:
 
-``` css
+```css
 env(safe-area-inset-top)
 env(safe-area-inset-bottom)
 ```
@@ -160,13 +162,13 @@ env(safe-area-inset-bottom)
 Controls/navigation must remain usable around device home indicators and
 Telegram viewport constraints.
 
-------------------------------------------------------------------------
+---
 
 # 4. Spacing
 
 Preferred core spacing tokens:
 
-``` css
+```css
 --space-1: 4px;
 --space-2: 8px;
 --space-3: 12px;
@@ -178,7 +180,7 @@ Preferred core spacing tokens:
 
 Useful intermediate values such as:
 
-``` text
+```text
 6, 10, 14, 18, 28px
 ```
 
@@ -189,7 +191,7 @@ Do not introduce arbitrary isolated spacing without a visual reason.
 Component-specific approved specs may define exact values outside this
 scale.
 
-------------------------------------------------------------------------
+---
 
 # 5. Typography
 
@@ -198,19 +200,21 @@ product-wide font decision changes it.
 
 Recommended hierarchy:
 
-  Role                          Size   Line height   Weight
-  --------------------------- ------ ------------- --------
-  Major numeric/display         28px           1.1      700
-  Screen title                  24px          1.15      700
-  Section title                 18px           1.2      700
-  Important component title     16px           1.2      700
-  Body                          15px          1.35      400
-  Metadata                      14px           1.3      500
-  Supporting text               12px           1.3      500
+Role Size Line height Weight
+
+---
+
+Major numeric/display 28px 1.1 700
+Screen title 24px 1.15 700
+Section title 18px 1.2 700
+Important component title 16px 1.2 700
+Body 15px 1.35 400
+Metadata 14px 1.3 500
+Supporting text 12px 1.3 500
 
 Preferred weights:
 
-``` text
+```text
 400 body
 500 metadata/control
 600 emphasized metadata/button
@@ -225,7 +229,7 @@ Normal application information should generally not be smaller than
 Typography should create hierarchy without making repeated sports UI
 oversized.
 
-------------------------------------------------------------------------
+---
 
 # 6. Long and Localized Text
 
@@ -236,7 +240,7 @@ than defaulting to single-line ellipsis.
 
 Representative stress cases include:
 
-``` text
+```text
 Manchester United
 Paris Saint-Germain
 Borussia Mönchengladbach
@@ -249,7 +253,7 @@ intentionally constrains vertical space and the full name is secondary.
 
 Do not solve localization by globally shrinking typography.
 
-------------------------------------------------------------------------
+---
 
 # 7. Semantic Color Tokens
 
@@ -258,7 +262,7 @@ hardcoding palette values.
 
 ## Light baseline
 
-``` css
+```css
 --page-bg: #f5f7fa;
 
 --surface-primary: #ffffff;
@@ -276,7 +280,7 @@ hardcoding palette values.
 
 ## Dark baseline
 
-``` css
+```css
 --page-bg: #0f1724;
 
 --surface-primary: #172233;
@@ -298,7 +302,7 @@ an unrelated visual language.
 These values are global baselines. Existing equivalent semantic project
 tokens may be retained/mapped rather than mechanically renamed.
 
-------------------------------------------------------------------------
+---
 
 # 8. Accent and Reward Colors
 
@@ -306,7 +310,7 @@ Primary interaction accent uses restrained teal/green.
 
 Light baseline:
 
-``` css
+```css
 --accent: #16856f;
 --accent-hover: #117461;
 --accent-soft: #e9f8f3;
@@ -315,7 +319,7 @@ Light baseline:
 
 Dark baseline:
 
-``` css
+```css
 --accent: #63e6c2;
 --accent-soft: #143f39;
 --accent-text: #d9fff3;
@@ -323,7 +327,7 @@ Dark baseline:
 
 Use accent for interaction meaning such as:
 
-``` text
+```text
 selected prediction
 active navigation
 primary positive action
@@ -334,13 +338,13 @@ Do not use accent decoratively everywhere.
 
 Reward/competitive value uses warm gold:
 
-``` css
+```css
 --reward-gold: #f6b817;
 ```
 
 Gold communicates:
 
-``` text
+```text
 potential points/trophies
 prizes
 rank achievement
@@ -350,13 +354,13 @@ competitive reward
 Selection remains teal; do not turn reward/trophy visuals green merely
 because an outcome is selected.
 
-------------------------------------------------------------------------
+---
 
 # 9. Semantic Status Colors
 
 Baseline:
 
-``` css
+```css
 --success: #16856f;
 --success-soft: #e9f8f3;
 
@@ -373,13 +377,13 @@ Do not use red simply to attract attention, and do not style normal
 states such as a post-kickoff locked prediction as an error unless the
 interaction actually represents an error.
 
-------------------------------------------------------------------------
+---
 
 # 10. Radius, Borders and Shadows
 
 Recommended radius system:
 
-``` css
+```css
 --radius-sm: 10px;
 --radius-md: 14px;
 --radius-lg: 18px;
@@ -389,7 +393,7 @@ Recommended radius system:
 
 Typical usage:
 
-``` text
+```text
 small control        10–14px
 button               14–18px
 outcome control      16–18px
@@ -400,13 +404,13 @@ avatar/logo badge     50%
 
 Default border:
 
-``` css
+```css
 border: 1px solid var(--border-subtle);
 ```
 
 Selected interactive border may use approximately:
 
-``` text
+```text
 1.5–2px accent
 ```
 
@@ -415,7 +419,7 @@ variation.
 
 Shadows are restrained:
 
-``` css
+```css
 /* card */
 box-shadow: 0 10px 30px rgb(15 23 42 / 0.08);
 
@@ -426,13 +430,13 @@ box-shadow: 0 4px 14px rgb(15 23 42 / 0.08);
 Avoid strong black shadows, neon halos and dramatic layered glow unless
 an approved component reference explicitly requires them.
 
-------------------------------------------------------------------------
+---
 
 # 11. Cards and Information Density
 
 Typical primary card baseline:
 
-``` css
+```css
 .card {
   background: var(--surface-primary);
   border: 1px solid var(--border-subtle);
@@ -442,13 +446,13 @@ Typical primary card baseline:
 
 Typical card padding:
 
-``` text
+```text
 16–20px
 ```
 
 Repeated football content should remain compact and scannable:
 
-``` text
+```text
 metadata visually secondary
 primary actions easy to compare
 no oversized repeated headings
@@ -458,13 +462,13 @@ no decorative empty vertical space
 
 Avoid fixed card heights unless an approved design requires them.
 
-------------------------------------------------------------------------
+---
 
 # 12. Buttons and Touch Targets
 
 Conceptual button hierarchy:
 
-``` text
+```text
 primary
 secondary
 ghost
@@ -474,7 +478,7 @@ specialized interactive control
 
 Important mobile controls should generally provide approximately:
 
-``` text
+```text
 44 × 44px
 ```
 
@@ -482,7 +486,7 @@ minimum practical touch area.
 
 Primary baseline:
 
-``` css
+```css
 .primaryButton {
   min-height: 48px;
   padding-inline: 18px;
@@ -496,7 +500,7 @@ Primary baseline:
 
 Secondary baseline:
 
-``` css
+```css
 .secondaryButton {
   min-height: 44px;
   padding-inline: 16px;
@@ -513,7 +517,7 @@ Foreground must maintain accessible contrast.
 Do not use gradients by default or make critical mobile controls
 difficult to tap.
 
-------------------------------------------------------------------------
+---
 
 # 13. Interactive States
 
@@ -521,7 +525,7 @@ difficult to tap.
 
 Preferred treatment:
 
-``` text
+```text
 soft accent background
 + single accent border
 + optional accent foreground
@@ -529,7 +533,7 @@ soft accent background
 
 Example:
 
-``` css
+```css
 .selected {
   background: var(--accent-soft);
   border-color: var(--accent);
@@ -550,7 +554,7 @@ Locked is not necessarily disabled/error styling.
 
 A locked prediction may remain:
 
-``` text
+```text
 visible
 readable
 selected state preserved
@@ -559,7 +563,7 @@ not editable
 
 A restrained lock icon/status explanation is appropriate.
 
-------------------------------------------------------------------------
+---
 
 # 14. Icons and Trophy Presentation
 
@@ -567,7 +571,7 @@ Use a consistent local SVG icon language.
 
 Typical visual sizes:
 
-``` text
+```text
 14px inline metadata
 16px compact UI
 18px standard control
@@ -580,13 +584,13 @@ should exist.
 
 Prediction points may be presented visually as:
 
-``` text
+```text
 gold trophy SVG + numeric value
 ```
 
 Typical trophy size:
 
-``` text
+```text
 16–18px
 ```
 
@@ -595,7 +599,7 @@ Domain terminology remains `points`; the trophy is presentation only.
 Detailed icon dependency/code architecture belongs to
 `FRONTEND_ARCHITECTURE.md`.
 
-------------------------------------------------------------------------
+---
 
 # 15. Football Logos
 
@@ -604,7 +608,7 @@ the frontend asset contract.
 
 Do not visually:
 
-``` text
+```text
 recolor official logos
 invent fake club logos
 use neon glow as a contrast fix
@@ -615,7 +619,7 @@ margins, so use a neutral badge where needed.
 
 Typical team presentation:
 
-``` text
+```text
 outer badge ~52 × 52px
 logo max ~44 × 44px
 ```
@@ -629,7 +633,7 @@ broken-image icon.
 Canonical asset identity/path rules belong to `FRONTEND_ARCHITECTURE.md`
 / technical asset tooling rather than this visual document.
 
-------------------------------------------------------------------------
+---
 
 # 16. Tabs and Bottom Navigation
 
@@ -639,7 +643,7 @@ button.
 
 Use combinations of:
 
-``` text
+```text
 accent
 stronger foreground
 selected surface
@@ -650,7 +654,7 @@ Bottom navigation is persistent primary navigation.
 
 Current product sections include:
 
-``` text
+```text
 Predict
 Cup
 Rating
@@ -659,7 +663,7 @@ Profile
 
 It should:
 
-``` text
+```text
 remain separate from scrolling content
 respect safe area
 use consistent icon scale
@@ -668,13 +672,13 @@ clearly identify active section
 
 Exact route behavior is outside this document.
 
-------------------------------------------------------------------------
+---
 
 # 17. Theme Requirements
 
 Goalstery supports:
 
-``` text
+```text
 system
 light
 dark
@@ -684,7 +688,7 @@ Components consume the resolved application theme and semantic tokens.
 
 Every new visual component must be checked in light and dark, including:
 
-``` text
+```text
 surface contrast
 text hierarchy
 borders
@@ -700,7 +704,7 @@ Do not assume automatic inversion will create a good dark theme.
 Implementation architecture for theme state belongs to
 `FRONTEND_ARCHITECTURE.md`.
 
-------------------------------------------------------------------------
+---
 
 # 18. RTL and Localization Presentation
 
@@ -708,7 +712,7 @@ RTL is first-class.
 
 Prefer logical CSS properties where direction matters:
 
-``` css
+```css
 margin-inline
 padding-inline
 inset-inline-start
@@ -727,7 +731,7 @@ numbers/dates/times rather than hand-building locale strings.
 
 Canonical business timezone remains a domain concern.
 
-------------------------------------------------------------------------
+---
 
 # 19. Accessibility and Focus
 
@@ -737,7 +741,7 @@ Interactive states should not rely on color alone.
 
 Use a visible restrained focus treatment, for example:
 
-``` css
+```css
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -753,7 +757,7 @@ Accessibility code architecture belongs to frontend implementation; this
 document defines the visual requirement that accessible state remains
 perceivable.
 
-------------------------------------------------------------------------
+---
 
 # 20. Motion
 
@@ -761,7 +765,7 @@ Motion is restrained and functional.
 
 Typical simple transition:
 
-``` css
+```css
 transition:
   background-color 150ms ease,
   border-color 150ms ease,
@@ -777,7 +781,7 @@ Respect reduced-motion preferences where meaningful.
 
 Animation-library architecture belongs to `FRONTEND_ARCHITECTURE.md`.
 
-------------------------------------------------------------------------
+---
 
 # 21. Loading, Empty and Error Presentation
 
@@ -789,7 +793,7 @@ without a design need.
 
 Empty states should concisely communicate:
 
-``` text
+```text
 what is empty
 what the user can do next, if applicable
 ```
@@ -801,7 +805,7 @@ from normal unavailable/locked states.
 
 Detailed API error-code mapping belongs to frontend/technical contracts.
 
-------------------------------------------------------------------------
+---
 
 # 22. Rewarded and Competitive UI
 
@@ -810,7 +814,7 @@ language.
 
 Avoid:
 
-``` text
+```text
 casino bonus aesthetics
 flashing rewards
 aggressive monetization prompts
@@ -821,7 +825,7 @@ styling.
 
 Cup/Rating may use stronger hierarchy for:
 
-``` text
+```text
 rank
 trophy
 league badge
@@ -837,7 +841,7 @@ Gold remains a meaningful reward signal.
 
 Business mechanics belong to `PRODUCT_SPEC.md`.
 
-------------------------------------------------------------------------
+---
 
 # 23. CSS Visual Discipline
 
@@ -845,7 +849,7 @@ Component styling should use semantic classes and low specificity.
 
 Good:
 
-``` text
+```text
 matchCard
 teamBadge
 teamName
@@ -855,7 +859,7 @@ lockedStatus
 
 Avoid purely visual/positional names such as:
 
-``` text
+```text
 greenBox
 bigText
 leftThing
@@ -863,7 +867,7 @@ leftThing
 
 Prefer explicit state classes:
 
-``` text
+```text
 selected
 disabled
 locked
@@ -878,7 +882,7 @@ Avoid `!important` except for a documented external constraint.
 Detailed CSS/module ownership rules belong to
 `FRONTEND_ARCHITECTURE.md`.
 
-------------------------------------------------------------------------
+---
 
 # 24. Design Tokens
 
@@ -886,7 +890,7 @@ Where a shared visual concept exists, prefer semantic variables.
 
 Conceptual token groups:
 
-``` text
+```text
 surfaces
 text
 borders
@@ -906,14 +910,14 @@ project tokens already exist.
 A component-specific spec may define local semantic tokens where it has
 a distinct visual concept.
 
-------------------------------------------------------------------------
+---
 
 # 25. Component Reuse as a Visual Concept
 
 Reuse visual components when they represent the same stable design
 concept, for example:
 
-``` text
+```text
 logo badge
 trophy/value
 status row
@@ -926,32 +930,32 @@ few CSS properties.
 
 Code/component ownership details belong to `FRONTEND_ARCHITECTURE.md`.
 
-------------------------------------------------------------------------
+---
 
 # 26. Visual References
 
 Approved visual artifacts live under:
 
-``` text
+```text
 docs/design/
 ```
 
 Obsolete references belong in:
 
-``` text
+```text
 docs/design/archive/
 ```
 
 Preferred naming:
 
-``` text
+```text
 <component>-v<version>-reference.png
 <component>-v<version>-spec.md
 ```
 
 For a component with both reference and spec:
 
-``` text
+```text
 reference → target appearance
 spec      → implementation constraints/clarification
 ```
@@ -961,7 +965,7 @@ inspiration.
 
 Target fidelity includes:
 
-``` text
+```text
 geometry
 spacing
 hierarchy
@@ -978,13 +982,13 @@ visual scope.
 
 Meaningful deviations should be reported.
 
-------------------------------------------------------------------------
+---
 
 # 27. Visual Implementation Workflow
 
 For approved reference-driven work:
 
-``` text
+```text
 approved reference
 + component spec
 + DESIGN_SYSTEM
@@ -999,13 +1003,13 @@ Compilation/tests alone do not prove visual completion.
 
 Unless the component spec says otherwise, primary comparison uses:
 
-``` text
+```text
 390 × 844
 ```
 
 with responsive sanity at:
 
-``` text
+```text
 360
 430
 ```
@@ -1014,7 +1018,7 @@ Use realistic data, including long names.
 
 Compare:
 
-``` text
+```text
 outer geometry
 padding/gaps
 alignment/baselines
@@ -1031,13 +1035,13 @@ comparison.
 Detailed automated/browser testing requirements belong to
 `TESTING_SPEC.md`.
 
-------------------------------------------------------------------------
+---
 
 # 28. Visual Acceptance
 
 A component with an approved reference is visually acceptable when:
 
-``` text
+```text
 major geometry and hierarchy match
 spacing/density are consistent with the target
 light/dark treatment is intentional
@@ -1053,7 +1057,7 @@ pixel-close target.
 For components without a dedicated reference, consistency with this
 Design System is the acceptance target.
 
-------------------------------------------------------------------------
+---
 
 # 29. Visual Implementation Constraints
 
@@ -1061,7 +1065,7 @@ Prefer ordinary deterministic HTML/CSS.
 
 Do not introduce unnecessary:
 
-``` text
+```text
 canvas rendering
 runtime image analysis
 dynamic logo color detection
@@ -1077,7 +1081,7 @@ includes behavior changes.
 
 Do not silently change during visual work:
 
-``` text
+```text
 database/domain behavior
 prediction/quota/scoring rules
 authentication
@@ -1090,7 +1094,7 @@ theme persistence
 
 If a non-visual blocker is discovered, report it separately.
 
-------------------------------------------------------------------------
+---
 
 # 30. Existing Implementation vs Approved Design
 
@@ -1098,7 +1102,7 @@ Existing CSS/markup is not automatically visual authority.
 
 If it conflicts with:
 
-``` text
+```text
 approved component reference
 or
 approved component spec
@@ -1108,7 +1112,7 @@ the approved design controls visual implementation.
 
 However, existing non-visual behavior such as:
 
-``` text
+```text
 business behavior
 accessibility semantics
 localization
@@ -1120,13 +1124,13 @@ responsive behavior
 must be preserved unless explicitly superseded through the appropriate
 authority.
 
-------------------------------------------------------------------------
+---
 
 # 31. Current MatchCard Authority
 
 Current prediction MatchCard visual authority:
 
-``` text
+```text
 docs/design/predict-card-v2-reference.png
 docs/design/predict-card-v2-spec.md
 ```
@@ -1137,14 +1141,14 @@ necessary.
 Older MatchCard visual references are non-authoritative and should
 remain archived rather than competing with the current reference.
 
-------------------------------------------------------------------------
+---
 
 # 32. Visual Review Report
 
 For significant reference-driven visual work, the implementation report
 should state relevant items such as:
 
-``` text
+```text
 files changed
 meaningful markup/DOM changes
 key geometry/typography decisions
@@ -1160,13 +1164,13 @@ Do not require boilerplate fields that are irrelevant to the task.
 
 Do not report "pixel perfect" without actual comparison.
 
-------------------------------------------------------------------------
+---
 
 # 33. Source Boundaries
 
 This document owns:
 
-``` text
+```text
 global visual direction
 semantic visual hierarchy
 baseline visual tokens
@@ -1180,7 +1184,7 @@ visual acceptance criteria
 
 It does not own:
 
-``` text
+```text
 product behavior              → PRODUCT_SPEC.md
 backend/runtime architecture  → TECH_SPEC.md
 database schema               → DB_SCHEMA.md

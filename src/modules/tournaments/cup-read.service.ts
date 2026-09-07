@@ -78,9 +78,12 @@ export function calculateAroundMeWindow(
   currentUserRank: number,
   radius: number,
 ): LeaderboardWindow {
-  const windowSize = (radius * 2) + 1;
+  const windowSize = radius * 2 + 1;
   const maxStartRank = Math.max(1, totalParticipants - windowSize + 1);
-  const startRank = Math.min(Math.max(1, currentUserRank - radius), maxStartRank);
+  const startRank = Math.min(
+    Math.max(1, currentUserRank - radius),
+    maxStartRank,
+  );
   const endRank = Math.min(totalParticipants, startRank + windowSize - 1);
 
   return { startRank, endRank };
@@ -145,7 +148,10 @@ export async function getCupLeaderboardPage(
   const items = rows.map((row) => toLeaderboardEntry(row, input.currentUserId));
   const totalParticipants = toNumber(rows[0]?.totalParticipants ?? 0);
   const lastRank = items.at(-1)?.rank ?? cursorRank;
-  const hasNextPage = input.mode === "all" && items.length === limit && lastRank < totalParticipants;
+  const hasNextPage =
+    input.mode === "all" &&
+    items.length === limit &&
+    lastRank < totalParticipants;
 
   return {
     items,
@@ -163,7 +169,11 @@ export async function getCupLeaderboardAroundMe(
   },
 ): Promise<CupAroundMeLeaderboardDto> {
   const radius = normalizeAroundMeRadius(input.radius);
-  const currentUserPosition = await queryCurrentUserPosition(prisma, input.tournamentId, input.currentUserId);
+  const currentUserPosition = await queryCurrentUserPosition(
+    prisma,
+    input.tournamentId,
+    input.currentUserId,
+  );
 
   if (!currentUserPosition) {
     const totalParticipants = await prisma.tournamentParticipant.count({
@@ -175,7 +185,11 @@ export async function getCupLeaderboardAroundMe(
 
   const currentUserRank = toNumber(currentUserPosition.rank);
   const totalParticipants = toNumber(currentUserPosition.totalParticipants);
-  const window = calculateAroundMeWindow(totalParticipants, currentUserRank, radius);
+  const window = calculateAroundMeWindow(
+    totalParticipants,
+    currentUserRank,
+    radius,
+  );
   const rows = await queryLeaderboardRowsBetweenRanks(prisma, {
     tournamentId: input.tournamentId,
     currentUserId: input.currentUserId,
@@ -195,7 +209,9 @@ async function queryCurrentUserPosition(
   tournamentId: string,
   currentUserId: string,
 ): Promise<Pick<RankedParticipantRow, "rank" | "totalParticipants"> | null> {
-  const rows = await prisma.$queryRaw<Array<Pick<RankedParticipantRow, "rank" | "totalParticipants">>>`
+  const rows = await prisma.$queryRaw<
+    Array<Pick<RankedParticipantRow, "rank" | "totalParticipants">>
+  >`
     WITH ranked AS (
       SELECT
         tp."userId",
@@ -291,7 +307,10 @@ function parseCursorRank(cursor: string | null | undefined): number {
   return Number.isInteger(parsed) && parsed > 0 ? parsed : 0;
 }
 
-function toLeaderboardEntry(row: RankedParticipantRow, currentUserId: string): CupLeaderboardEntryDto {
+function toLeaderboardEntry(
+  row: RankedParticipantRow,
+  currentUserId: string,
+): CupLeaderboardEntryDto {
   const username = row.username?.trim() || null;
 
   return {

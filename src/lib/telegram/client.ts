@@ -26,7 +26,10 @@ export function getTelegramInitData(): string | null {
   }
 
   if (process.env.NODE_ENV === "development") {
-    return process.env.NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA ?? window.localStorage.getItem(DEV_INIT_DATA_STORAGE_KEY);
+    return (
+      process.env.NEXT_PUBLIC_TELEGRAM_DEV_INIT_DATA ??
+      window.localStorage.getItem(DEV_INIT_DATA_STORAGE_KEY)
+    );
   }
 
   return null;

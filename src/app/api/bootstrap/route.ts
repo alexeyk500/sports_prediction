@@ -1,6 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { toApiErrorResponse } from "@/lib/http/api-errors";
-import { getRoutePrismaClient, requireAuthenticatedUser } from "@/lib/http/auth";
+import {
+  getRoutePrismaClient,
+  requireAuthenticatedUser,
+} from "@/lib/http/auth";
 import { systemClock } from "@/lib/time/clock";
 import { getBootstrap } from "@/modules/bootstrap/bootstrap.service";
 

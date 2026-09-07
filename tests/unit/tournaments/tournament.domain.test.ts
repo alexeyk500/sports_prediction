@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { DomainError } from "@/lib/errors/domain-error";
-import { assertTournamentUsableForPrediction, isTournamentActiveAt } from "@/modules/tournaments/tournament.domain";
+import {
+  assertTournamentUsableForPrediction,
+  isTournamentActiveAt,
+} from "@/modules/tournaments/tournament.domain";
 
 describe("tournament domain", () => {
   it("recognizes an active tournament at an instant", () => {

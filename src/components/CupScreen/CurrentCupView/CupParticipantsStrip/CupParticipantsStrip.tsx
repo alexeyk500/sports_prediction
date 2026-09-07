@@ -7,7 +7,9 @@ interface ICupParticipantsStripProps {
   participantCountLabel: string;
 }
 
-const CupParticipantsStrip: React.FC<ICupParticipantsStripProps> = ({ participantCountLabel }) => {
+const CupParticipantsStrip: React.FC<ICupParticipantsStripProps> = ({
+  participantCountLabel,
+}) => {
   const { t } = useTranslation();
 
   return (

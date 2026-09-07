@@ -19,14 +19,18 @@ try {
 }
 
 if (!databaseName.endsWith("_test")) {
-  console.error(`Refusing to run test database command against non-test database: ${databaseName}`);
+  console.error(
+    `Refusing to run test database command against non-test database: ${databaseName}`,
+  );
   process.exit(1);
 }
 
 const [command, ...args] = process.argv.slice(2);
 
 if (!command) {
-  console.error("Usage: node --env-file=.env scripts/run-with-test-database.mjs <command> [...args]");
+  console.error(
+    "Usage: node --env-file=.env scripts/run-with-test-database.mjs <command> [...args]",
+  );
   process.exit(1);
 }
 

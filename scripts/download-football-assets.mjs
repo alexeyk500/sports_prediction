@@ -19,18 +19,24 @@ const DOWNLOAD_REPORT_PATH = "data/football-assets-download-report.json";
 const API_FOOTBALL_MIN_REQUEST_INTERVAL_MS = 6500;
 const API_FOOTBALL_RATE_LIMIT_RETRY_MS = 65000;
 const apiKey = process.env.API_FOOTBALL_KEY;
-const baseUrl = (process.env.API_FOOTBALL_BASE_URL || "https://v3.football.api-sports.io").replace(/\/+$/, "");
+const baseUrl = (
+  process.env.API_FOOTBALL_BASE_URL || "https://v3.football.api-sports.io"
+).replace(/\/+$/, "");
 const assetManifest = loadCanonicalManifest();
 let lastApiFootballRequestAt = 0;
 
 if (process.env.NODE_ENV === "production") {
-  console.error("Refusing to run football asset download with NODE_ENV=production.");
+  console.error(
+    "Refusing to run football asset download with NODE_ENV=production.",
+  );
   process.exit(1);
 }
 
 if (!apiKey) {
   console.error("API_FOOTBALL_KEY is required for football asset download.");
-  console.error("Add it to your local .env. The key will not be written to reports or logs.");
+  console.error(
+    "Add it to your local .env. The key will not be written to reports or logs.",
+  );
   process.exit(1);
 }
 
@@ -42,7 +48,10 @@ try {
   printSummary(report);
   console.log(`Download report written: ${DOWNLOAD_REPORT_PATH}`);
 } catch (error) {
-  const message = error instanceof Error ? error.message : "Unknown football asset download error.";
+  const message =
+    error instanceof Error
+      ? error.message
+      : "Unknown football asset download error.";
   console.error(message);
   process.exit(1);
 }
@@ -65,8 +74,12 @@ async function downloadFootballAssets() {
   const teamSlugToProviderId = new Map();
   const competitionSlugToCode = new Map();
 
-  await mkdir(path.resolve(process.cwd(), "public/assets/competitions"), { recursive: true });
-  await mkdir(path.resolve(process.cwd(), "public/assets/teams"), { recursive: true });
+  await mkdir(path.resolve(process.cwd(), "public/assets/competitions"), {
+    recursive: true,
+  });
+  await mkdir(path.resolve(process.cwd(), "public/assets/teams"), {
+    recursive: true,
+  });
 
   for (const competition of SUPPORTED_ASSET_DISCOVERY_COMPETITIONS) {
     const league = await resolveLeague(competition);
@@ -86,7 +99,10 @@ async function downloadFootballAssets() {
       continue;
     }
 
-    const competitionIdentity = resolveCompetitionAssetIdentity(assetManifest, league.providerLeagueId);
+    const competitionIdentity = resolveCompetitionAssetIdentity(
+      assetManifest,
+      league.providerLeagueId,
+    );
     if (competitionIdentity.status === "unmapped") {
       report.unmappedCompetitions.push({
         goalsteryCode: competition.goalsteryCode,
@@ -98,19 +114,28 @@ async function downloadFootballAssets() {
         severity: "warning",
         code: "UNMAPPED_COMPETITION",
         message: `Provider league ${league.providerLeagueId} is not mapped in canonical asset manifest.`,
-        details: { goalsteryCode: competition.goalsteryCode, providerLeagueId: league.providerLeagueId },
+        details: {
+          goalsteryCode: competition.goalsteryCode,
+          providerLeagueId: league.providerLeagueId,
+        },
       });
       continue;
     }
 
     const competitionSlug = competitionIdentity.slug;
     const existingCompetitionCode = competitionSlugToCode.get(competitionSlug);
-    if (existingCompetitionCode && existingCompetitionCode !== competition.goalsteryCode) {
+    if (
+      existingCompetitionCode &&
+      existingCompetitionCode !== competition.goalsteryCode
+    ) {
       report.warnings.push({
         severity: "error",
         code: "DUPLICATE_COMPETITION_SLUG",
         message: `Competition slug ${competitionSlug} is used by multiple competitions.`,
-        details: { slug: competitionSlug, codes: [existingCompetitionCode, competition.goalsteryCode] },
+        details: {
+          slug: competitionSlug,
+          codes: [existingCompetitionCode, competition.goalsteryCode],
+        },
       });
       continue;
     }
@@ -144,7 +169,10 @@ async function downloadFootballAssets() {
         severity: "warning",
         code: "MISSING_LOGO_URL",
         message: `Provider logo URL is missing for ${competition.name}.`,
-        details: { goalsteryCode: competition.goalsteryCode, leagueId: league.providerLeagueId },
+        details: {
+          goalsteryCode: competition.goalsteryCode,
+          leagueId: league.providerLeagueId,
+        },
       });
     } else {
       const downloadResult = await downloadAndNormalizeImage({
@@ -158,12 +186,18 @@ async function downloadFootballAssets() {
           severity: "error",
           code: "FAILED_DOWNLOAD",
           message: `Failed to download competition logo for ${competition.name}.`,
-          details: { goalsteryCode: competition.goalsteryCode, sourceUrl: league.providerLogoSourceUrl },
+          details: {
+            goalsteryCode: competition.goalsteryCode,
+            sourceUrl: league.providerLogoSourceUrl,
+          },
         });
       }
     }
 
-    const providerTeams = await fetchTeamsForLeague(competition.goalsteryCode, league.providerLeagueId);
+    const providerTeams = await fetchTeamsForLeague(
+      competition.goalsteryCode,
+      league.providerLeagueId,
+    );
     competitionEntry.teamsDiscovered = providerTeams.length;
     report.competitions.push(competitionEntry);
 
@@ -183,12 +217,18 @@ async function downloadFootballAssets() {
           severity: "error",
           code: "MISSING_TEAM_NAME",
           message: `Provider team name is missing for team ID ${team.providerTeamId}.`,
-          details: { competitionCode: competition.goalsteryCode, teamId: team.providerTeamId },
+          details: {
+            competitionCode: competition.goalsteryCode,
+            teamId: team.providerTeamId,
+          },
         });
         continue;
       }
 
-      const teamIdentity = resolveTeamAssetIdentity(assetManifest, team.providerTeamId);
+      const teamIdentity = resolveTeamAssetIdentity(
+        assetManifest,
+        team.providerTeamId,
+      );
       if (teamIdentity.status === "unmapped") {
         report.unmappedTeams.push({
           competitionCode: competition.goalsteryCode,
@@ -201,19 +241,28 @@ async function downloadFootballAssets() {
           severity: "warning",
           code: "UNMAPPED_TEAM",
           message: `Provider team ${team.providerTeamId} is not mapped in canonical asset manifest.`,
-          details: { competitionCode: competition.goalsteryCode, providerTeamId: team.providerTeamId },
+          details: {
+            competitionCode: competition.goalsteryCode,
+            providerTeamId: team.providerTeamId,
+          },
         });
         continue;
       }
 
       const teamSlug = teamIdentity.slug;
       const existingProviderId = teamSlugToProviderId.get(teamSlug);
-      if (existingProviderId !== undefined && existingProviderId !== team.providerTeamId) {
+      if (
+        existingProviderId !== undefined &&
+        existingProviderId !== team.providerTeamId
+      ) {
         report.warnings.push({
           severity: "error",
           code: "TEAM_SLUG_COLLISION",
           message: `Team slug ${teamSlug} maps to multiple provider team IDs.`,
-          details: { slug: teamSlug, providerTeamIds: [existingProviderId, team.providerTeamId] },
+          details: {
+            slug: teamSlug,
+            providerTeamIds: [existingProviderId, team.providerTeamId],
+          },
         });
         continue;
       }
@@ -254,7 +303,10 @@ async function downloadFootballAssets() {
           severity: "warning",
           code: "MISSING_LOGO_URL",
           message: `Provider logo URL is missing for ${team.providerName}.`,
-          details: { competitionCode: competition.goalsteryCode, teamId: team.providerTeamId },
+          details: {
+            competitionCode: competition.goalsteryCode,
+            teamId: team.providerTeamId,
+          },
         });
       } else {
         const downloadResult = await downloadAndNormalizeImage({
@@ -268,7 +320,10 @@ async function downloadFootballAssets() {
             severity: "error",
             code: "FAILED_DOWNLOAD",
             message: `Failed to download team logo for ${team.providerName}.`,
-            details: { teamId: team.providerTeamId, sourceUrl: team.providerLogoSourceUrl },
+            details: {
+              teamId: team.providerTeamId,
+              sourceUrl: team.providerLogoSourceUrl,
+            },
           });
         }
       }
@@ -277,7 +332,9 @@ async function downloadFootballAssets() {
     }
   }
 
-  report.teams = Array.from(teamByProviderId.values()).sort((first, second) => first.slug.localeCompare(second.slug));
+  report.teams = Array.from(teamByProviderId.values()).sort((first, second) =>
+    first.slug.localeCompare(second.slug),
+  );
   return report;
 }
 
@@ -288,8 +345,12 @@ async function resolveLeague(competition) {
 
   const matches = Array.isArray(payload.response) ? payload.response : [];
   const exactMatch =
-    matches.find((candidate) => isExpectedLeague(candidate, competition, true)) ??
-    matches.find((candidate) => isExpectedLeague(candidate, competition, false));
+    matches.find((candidate) =>
+      isExpectedLeague(candidate, competition, true),
+    ) ??
+    matches.find((candidate) =>
+      isExpectedLeague(candidate, competition, false),
+    );
 
   if (!exactMatch) {
     return {
@@ -316,7 +377,8 @@ function isExpectedLeague(candidate, competition, requireType) {
   const type = stringOrNull(candidate.league?.type);
 
   return (
-    candidateName?.toLowerCase() === competition.providerSearchName.toLowerCase() &&
+    candidateName?.toLowerCase() ===
+      competition.providerSearchName.toLowerCase() &&
     country?.toLowerCase() === competition.providerCountry.toLowerCase() &&
     (!requireType || type === competition.providerType)
   );
@@ -353,7 +415,9 @@ async function fetchApiFootball(endpoint, params) {
     });
 
     if (!response.ok) {
-      throw new Error(`API-Football request failed for ${endpoint}: HTTP ${response.status}.`);
+      throw new Error(
+        `API-Football request failed for ${endpoint}: HTTP ${response.status}.`,
+      );
     }
 
     const payload = await response.json();
@@ -362,12 +426,16 @@ async function fetchApiFootball(endpoint, params) {
     }
 
     if (payload.errors.rateLimit && attempt < 3) {
-      console.log(`API-Football rate limit reached. Waiting ${API_FOOTBALL_RATE_LIMIT_RETRY_MS / 1000}s before retry.`);
+      console.log(
+        `API-Football rate limit reached. Waiting ${API_FOOTBALL_RATE_LIMIT_RETRY_MS / 1000}s before retry.`,
+      );
       await sleep(API_FOOTBALL_RATE_LIMIT_RETRY_MS);
       continue;
     }
 
-    throw new Error(`API-Football returned an error for ${endpoint}: ${JSON.stringify(payload.errors)}`);
+    throw new Error(
+      `API-Football returned an error for ${endpoint}: ${JSON.stringify(payload.errors)}`,
+    );
   }
 
   throw new Error(`API-Football request failed for ${endpoint}.`);
@@ -389,12 +457,18 @@ async function downloadAndNormalizeImage(input) {
   try {
     const response = await fetch(input.sourceUrl);
     if (!response.ok) {
-      return { status: "failed", error: `Image download failed with HTTP ${response.status}.` };
+      return {
+        status: "failed",
+        error: `Image download failed with HTTP ${response.status}.`,
+      };
     }
 
     const contentType = response.headers.get("content-type") ?? "";
     if (!contentType.toLowerCase().startsWith("image/")) {
-      return { status: "failed", error: `Invalid image content-type: ${contentType || "missing"}.` };
+      return {
+        status: "failed",
+        error: `Invalid image content-type: ${contentType || "missing"}.`,
+      };
     }
 
     const source = Buffer.from(await response.arrayBuffer());
@@ -402,12 +476,16 @@ async function downloadAndNormalizeImage(input) {
       return { status: "failed", error: "Image response was empty." };
     }
 
-    const output = await sharp(source, { animated: false }).webp({ quality: 92, lossless: false }).toBuffer();
+    const output = await sharp(source, { animated: false })
+      .webp({ quality: 92, lossless: false })
+      .toBuffer();
     if (output.length === 0) {
       return { status: "failed", error: "Normalized image was empty." };
     }
 
-    await mkdir(path.dirname(path.resolve(process.cwd(), input.localPath)), { recursive: true });
+    await mkdir(path.dirname(path.resolve(process.cwd(), input.localPath)), {
+      recursive: true,
+    });
     await writeFile(path.resolve(process.cwd(), input.localPath), output);
     await assertImageFile(path.resolve(process.cwd(), input.localPath));
 
@@ -415,7 +493,10 @@ async function downloadAndNormalizeImage(input) {
   } catch (error) {
     return {
       status: "failed",
-      error: error instanceof Error ? error.message : "Unknown image download error.",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Unknown image download error.",
     };
   }
 }
@@ -438,15 +519,21 @@ function numberOrNull(value) {
 }
 
 function stringOrNull(value) {
-  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
+  return typeof value === "string" && value.trim().length > 0
+    ? value.trim()
+    : null;
 }
 
 function loadCanonicalManifest() {
   try {
-    const manifest = JSON.parse(readFileSync(FOOTBALL_ASSETS_MANIFEST_PATH, "utf8"));
+    const manifest = JSON.parse(
+      readFileSync(FOOTBALL_ASSETS_MANIFEST_PATH, "utf8"),
+    );
     const validation = validateFootballAssetsManifest(manifest);
     if (!validation.valid) {
-      throw new Error(`Canonical football assets manifest is invalid: ${JSON.stringify(validation.issues)}`);
+      throw new Error(
+        `Canonical football assets manifest is invalid: ${JSON.stringify(validation.issues)}`,
+      );
     }
 
     return manifest;
@@ -459,13 +546,28 @@ function loadCanonicalManifest() {
 }
 
 function printSummary(report) {
-  const downloadedCompetitions = report.competitions.filter((competition) => competition.downloadStatus === "downloaded");
-  const failedCompetitions = report.competitions.filter((competition) => competition.downloadStatus === "failed");
-  const downloadedTeams = report.teams.filter((team) => team.downloadStatus === "downloaded");
-  const failedTeams = report.teams.filter((team) => team.downloadStatus === "failed");
-  const missingTeamLogos = report.teams.filter((team) => team.downloadStatus === "missing_logo");
-  const skippedDuplicateTeams = report.teams.reduce((total, team) => total + team.skippedDuplicateCount, 0);
-  const slugCollisions = report.warnings.filter((warning) => warning.code === "TEAM_SLUG_COLLISION").length;
+  const downloadedCompetitions = report.competitions.filter(
+    (competition) => competition.downloadStatus === "downloaded",
+  );
+  const failedCompetitions = report.competitions.filter(
+    (competition) => competition.downloadStatus === "failed",
+  );
+  const downloadedTeams = report.teams.filter(
+    (team) => team.downloadStatus === "downloaded",
+  );
+  const failedTeams = report.teams.filter(
+    (team) => team.downloadStatus === "failed",
+  );
+  const missingTeamLogos = report.teams.filter(
+    (team) => team.downloadStatus === "missing_logo",
+  );
+  const skippedDuplicateTeams = report.teams.reduce(
+    (total, team) => total + team.skippedDuplicateCount,
+    0,
+  );
+  const slugCollisions = report.warnings.filter(
+    (warning) => warning.code === "TEAM_SLUG_COLLISION",
+  ).length;
 
   console.log("Football asset download complete.");
   console.log(`Season: ${report.season}`);
@@ -473,7 +575,9 @@ function printSummary(report) {
   console.log(`Competitions discovered: ${report.competitions.length}`);
   console.log(`Competition logos downloaded: ${downloadedCompetitions.length}`);
   console.log(`Competition logos failed: ${failedCompetitions.length}`);
-  console.log(`Teams discovered: ${report.competitions.reduce((total, competition) => total + competition.teamsDiscovered, 0)}`);
+  console.log(
+    `Teams discovered: ${report.competitions.reduce((total, competition) => total + competition.teamsDiscovered, 0)}`,
+  );
   console.log(`Unique teams: ${report.teams.length}`);
   console.log(`Team logos downloaded: ${downloadedTeams.length}`);
   console.log(`Skipped duplicate team memberships: ${skippedDuplicateTeams}`);

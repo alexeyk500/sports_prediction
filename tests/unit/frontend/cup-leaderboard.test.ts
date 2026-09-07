@@ -5,7 +5,11 @@ import {
 } from "@/components/CupScreen/CurrentCupView/CupLeaderboard/leaderboard-types";
 import type { CupLeaderboardRowDto } from "@/lib/api/types";
 
-function dto(userId: string, rank: number, isCurrentUser = false): CupLeaderboardRowDto {
+function dto(
+  userId: string,
+  rank: number,
+  isCurrentUser = false,
+): CupLeaderboardRowDto {
   return {
     userId,
     rank,
@@ -35,9 +39,17 @@ describe("Cup leaderboard presentation helpers", () => {
   });
 
   it("appends All Players pages without dropping previous rows or adding duplicates", () => {
-    const firstPage = [toCupLeaderboardRowModel(dto("a", 1)), toCupLeaderboardRowModel(dto("b", 2))];
-    const secondPage = [toCupLeaderboardRowModel(dto("b", 2)), toCupLeaderboardRowModel(dto("c", 3))];
+    const firstPage = [
+      toCupLeaderboardRowModel(dto("a", 1)),
+      toCupLeaderboardRowModel(dto("b", 2)),
+    ];
+    const secondPage = [
+      toCupLeaderboardRowModel(dto("b", 2)),
+      toCupLeaderboardRowModel(dto("c", 3)),
+    ];
 
-    expect(mergeCupLeaderboardRows(firstPage, secondPage).map((row) => row.id)).toEqual(["a", "b", "c"]);
+    expect(
+      mergeCupLeaderboardRows(firstPage, secondPage).map((row) => row.id),
+    ).toEqual(["a", "b", "c"]);
   });
 });

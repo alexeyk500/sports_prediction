@@ -2,13 +2,15 @@
 
 **Testing Spec v0.1**
 
-  ------------------------- ----------------------------------------------------
-  **Status**                Mandatory testing contract
-  **Stack**                 Next.js + React + TypeScript + Prisma + PostgreSQL
-  **Product authority**     `docs/PRODUCT_SPEC.md`
-  **Technical authority**   `docs/TECH_SPEC.md`
-  **Database authority**    `docs/DB_SCHEMA.md`
-  ------------------------- ----------------------------------------------------
+---
+
+**Status** Mandatory testing contract
+**Stack** Next.js + React + TypeScript + Prisma + PostgreSQL
+**Product authority** `docs/PRODUCT_SPEC.md`
+**Technical authority** `docs/TECH_SPEC.md`
+**Database authority** `docs/DB_SCHEMA.md`
+
+---
 
 Этот документ определяет обязательную testing strategy и минимальную
 automated coverage для correctness-critical behavior.
@@ -17,7 +19,7 @@ automated coverage для correctness-critical behavior.
 frontend architecture. Tests проверяют authoritative behavior из
 соответствующих specs.
 
-------------------------------------------------------------------------
+---
 
 # 1. Testing Principles
 
@@ -25,7 +27,7 @@ frontend architecture. Tests проверяют authoritative behavior из
 
 Primary coverage targets:
 
-``` text
+```text
 pure/domain functions
 application services
 database invariants
@@ -43,7 +45,7 @@ critical browser flows
 
 Critical persistence workflows test against:
 
-``` text
+```text
 real PostgreSQL
 real Prisma client
 real migrations
@@ -51,7 +53,7 @@ real migrations
 
 Do not mock Prisma when verifying:
 
-``` text
+```text
 create/update Prediction
 quota
 AdReward consumption
@@ -67,7 +69,7 @@ concurrency
 
 Normal automated tests must not depend on:
 
-``` text
+```text
 wall-clock time
 live API-Football
 live Telegram
@@ -84,7 +86,7 @@ Time-sensitive business logic uses the approved controllable `Clock`.
 
 For a reproducible production bug:
 
-``` text
+```text
 reproduce with failing automated test
 → fix
 → keep regression test
@@ -99,13 +101,13 @@ Global coverage percentage is not the primary quality metric.
 For critical domain logic, aim for strong branch/boundary coverage and
 assert business outcomes/invariants.
 
-------------------------------------------------------------------------
+---
 
 # 2. Test Levels
 
 Use the smallest level that proves the behavior.
 
-``` text
+```text
 Unit
 Integration
 Concurrency
@@ -117,25 +119,27 @@ Migration/operational smoke where relevant
 
 Guidance:
 
-  Concern                                           Primary level
-  ------------------------------------------------- ----------------------
-  Pure formula / mapping / presentation transform   Unit
-  Persistence / transaction / DB constraint         Integration
-  Race condition / duplicate business effect        Concurrency
-  Auth/status/DTO/error envelope                    API
-  Retryable background operation                    Worker + integration
-  Critical user flow / layout behavior              Browser/E2E
-  Migration compatibility                           Migration validation
+Concern Primary level
+
+---
+
+Pure formula / mapping / presentation transform Unit
+Persistence / transaction / DB constraint Integration
+Race condition / duplicate business effect Concurrency
+Auth/status/DTO/error envelope API
+Retryable background operation Worker + integration
+Critical user flow / layout behavior Browser/E2E
+Migration compatibility Migration validation
 
 Do not duplicate every service scenario through every higher layer.
 
-------------------------------------------------------------------------
+---
 
 # 3. Tooling and Test Environment
 
 Baseline:
 
-``` text
+```text
 Vitest
 Playwright
 Prisma
@@ -145,19 +149,19 @@ Docker where useful
 
 Main unit/integration runner:
 
-``` text
+```text
 Vitest
 ```
 
 Browser/E2E:
 
-``` text
+```text
 Playwright
 ```
 
 Use a dedicated test database, currently:
 
-``` text
+```text
 sports_prediction_test
 ```
 
@@ -169,13 +173,13 @@ Database reset must produce a known state and remain safe for parallel
 execution. The exact reset mechanism is implementation/tooling
 configuration, not a product decision.
 
-------------------------------------------------------------------------
+---
 
 # 4. Test Utilities
 
 Prefer reusable deterministic factories/helpers such as:
 
-``` text
+```text
 createTestUser()
 createTestTournament()
 createTestCompetition()
@@ -190,7 +194,7 @@ FixedClock
 External boundaries should use project-owned fakes/adapters rather than
 scattered module mocking:
 
-``` text
+```text
 SportsProvider
 TelegramAuth boundary
 AdProvider
@@ -201,7 +205,7 @@ Clock
 Stored provider fixtures may represent API-Football responses. Normal CI
 must not require live provider network access.
 
-------------------------------------------------------------------------
+---
 
 # 5. Scoring and Probability Tests
 
@@ -210,7 +214,7 @@ Test the currently authoritative scoring behavior from
 
 Current scoring formula coverage must include:
 
-``` text
+```text
 normal probabilities
 minimum-points boundary
 maximum-points cap
@@ -222,7 +226,7 @@ invalid p > 1
 If current probability generation uses bookmaker-odds normalization,
 test:
 
-``` text
+```text
 implied probabilities
 overround removal
 normalized total within approved tolerance
@@ -236,7 +240,7 @@ approved.
 When the model changes, replace/add tests only as part of the approved
 synchronized model/spec migration.
 
-------------------------------------------------------------------------
+---
 
 # 6. Business Time Tests
 
@@ -244,7 +248,7 @@ Canonical timezone behavior must be deterministic.
 
 Mandatory coverage:
 
-``` text
+```text
 normal GMT date
 normal BST date
 GMT → BST transition
@@ -255,7 +259,7 @@ UTC date differing from London business date
 
 Critical exact boundaries:
 
-``` text
+```text
 23:59:59 London
 00:00:00 London
 
@@ -272,7 +276,7 @@ endsAt
 Relevant business-time helpers and workflows must use a controllable
 Clock rather than real wall-clock time.
 
-------------------------------------------------------------------------
+---
 
 # 7. Prediction and Daily Quota Tests
 
@@ -283,7 +287,7 @@ restating them as a competing spec.
 
 At minimum test:
 
-``` text
+```text
 FREE eligibility before configured free quota exhausted
 REWARDED requirement after configured free quota
 daily hard limit derived from centralized quota constants
@@ -297,7 +301,7 @@ pre-kickoff editability
 
 Use real PostgreSQL to prove:
 
-``` text
+```text
 first valid Prediction creates/uses TournamentParticipant correctly
 free quota increments correctly
 rewarded Prediction consumes valid AdReward exactly once
@@ -312,7 +316,7 @@ conflicting idempotency reuse is rejected
 
 Before kickoff, prove:
 
-``` text
+```text
 selectedOutcome updates
 probabilityAtPrediction/potentialPoints come from SAME OutcomeSnapshot
 outcomeSnapshotId unchanged
@@ -324,7 +328,7 @@ AdReward unchanged
 
 Boundary regression:
 
-``` text
+```text
 kickoffAt - 1 ms → allowed
 kickoffAt        → PREDICTION_LOCKED
 kickoffAt + 1 ms → PREDICTION_LOCKED
@@ -334,7 +338,7 @@ kickoffAt + 1 ms → PREDICTION_LOCKED
 pre-kickoff edit unless a later approved product rule explicitly changes
 this.
 
-------------------------------------------------------------------------
+---
 
 # 8. Prediction Concurrency Tests
 
@@ -348,7 +352,7 @@ Required scenarios:
 Starting with exactly one remaining valid daily slot, two simultaneous
 creates must result in:
 
-``` text
+```text
 one success
 one rejection
 final usage at limit
@@ -359,7 +363,7 @@ no extra Prediction
 
 Two concurrent attempts to consume one reward:
 
-``` text
+```text
 one business success
 one rejection/idempotent equivalent as contract requires
 one consumedByPredictionId
@@ -369,7 +373,7 @@ one consumedByPredictionId
 
 Two valid first Predictions for the same User/Tournament concurrently:
 
-``` text
+```text
 exactly one TournamentParticipant
 both Predictions may succeed if otherwise valid
 aggregate count reflects successful Predictions exactly once
@@ -379,7 +383,7 @@ aggregate count reflects successful Predictions exactly once
 
 Simultaneous requests using the same new idempotency key must prove:
 
-``` text
+```text
 same payload → one business effect / stable result
 conflicting payload → no second business effect / conflict
 ```
@@ -387,7 +391,7 @@ conflicting payload → no second business effect / conflict
 Concurrency tests should exercise the real locking/unique-constraint
 strategy, not a mocked approximation.
 
-------------------------------------------------------------------------
+---
 
 # 9. Settlement Tests
 
@@ -395,7 +399,7 @@ Use real PostgreSQL.
 
 Correct Prediction must result in:
 
-``` text
+```text
 CORRECT
 earnedPoints = potentialPoints
 settledAt set
@@ -405,7 +409,7 @@ correctPredictionsCount incremented once
 
 Incorrect Prediction:
 
-``` text
+```text
 INCORRECT
 earnedPoints = 0
 no correct-count increment
@@ -413,7 +417,7 @@ no correct-count increment
 
 Also test:
 
-``` text
+```text
 multiple users/outcomes on one Fixture
 retrying Settlement
 duplicate worker execution
@@ -423,18 +427,18 @@ Fixture reaches SETTLED only after required internal settlement completes
 
 Critical invariant:
 
-``` text
+```text
 at-least-once execution
 → exactly-once business effect
 ```
 
-------------------------------------------------------------------------
+---
 
 # 10. Tournament and Leaderboard Tests
 
 Tournament lifecycle coverage:
 
-``` text
+```text
 scheduled activation
 automatic participation through first Prediction
 transition to finalization
@@ -445,7 +449,7 @@ no duplicate Tournament/Prize/RatingHistory effects
 
 Leaderboard coverage:
 
-``` text
+```text
 ranking from maintained TournamentParticipant aggregates
 top-N query
 user neighborhood
@@ -458,7 +462,7 @@ Do not encode an official tie-breaker until it is explicitly approved.
 A deterministic technical fallback order may be tested only as technical
 determinism, not as an official product tie-break rule.
 
-------------------------------------------------------------------------
+---
 
 # 11. Rating Tests
 
@@ -467,7 +471,7 @@ Test the currently authoritative Rating formulas/rules from
 
 Pure/domain coverage should include:
 
-``` text
+```text
 ExpectedPoints
 Variance
 Z
@@ -480,7 +484,7 @@ qualification threshold
 
 Integration coverage:
 
-``` text
+```text
 unqualified Cup → no RatingHistory / no rating effect
 qualified Cup → RatingProfile updated + RatingHistory created
 retry → rating applied once
@@ -501,7 +505,7 @@ provisional pending model calibration.
 
 Until that is resolved:
 
-``` text
+```text
 do not invent new thresholds
 do not silently recalibrate them
 do not add tests that falsely imply unresolved calibration is final product policy
@@ -513,7 +517,7 @@ behavior does not drift accidentally.
 When the mathematical model/calibration decision is made, update
 Product/Decisions/implementation/tests together.
 
-------------------------------------------------------------------------
+---
 
 # 12. Rewarded Ad Tests
 
@@ -522,7 +526,7 @@ live network dependency.
 
 State coverage:
 
-``` text
+```text
 CREATED
 VERIFIED
 CONSUMED
@@ -532,7 +536,7 @@ REJECTED
 
 Required business cases:
 
-``` text
+```text
 unverified client claim cannot unlock Prediction
 expired reward rejected
 consumed reward cannot be reused
@@ -544,7 +548,7 @@ concurrent consumption creates one business effect
 Do not fake a stronger provider verification guarantee than the approved
 Monetag integration actually provides.
 
-------------------------------------------------------------------------
+---
 
 # 13. Prize Tests
 
@@ -557,7 +561,7 @@ implementation before that product decision is approved.
 
 PrizeClaim integration coverage:
 
-``` text
+```text
 valid state flow
 ownership
 nonexistent Prize
@@ -572,13 +576,13 @@ Manual payout state may be tested without connecting to real TON.
 
 Never use real payout credentials in automated tests.
 
-------------------------------------------------------------------------
+---
 
 # 14. Telegram Authentication and User Settings
 
 Telegram validation coverage:
 
-``` text
+```text
 valid initData
 invalid hash
 tampered user payload
@@ -597,7 +601,7 @@ identity.
 
 User/settings coverage:
 
-``` text
+```text
 initial locale from supported Telegram language_code
 unsupported language fallback
 manual locale not overwritten by later Telegram sync
@@ -608,7 +612,7 @@ unsupported appearance rejection
 bootstrap returns settings
 ```
 
-------------------------------------------------------------------------
+---
 
 # 15. API Contract Tests
 
@@ -617,7 +621,7 @@ not a duplicate of every service test.
 
 For changed/implemented endpoints cover as relevant:
 
-``` text
+```text
 authentication
 runtime input validation
 HTTP status
@@ -629,7 +633,7 @@ authorization/ownership
 
 Current core regression coverage includes:
 
-``` text
+```text
 valid Telegram auth creates/resolves User
 subsequent sync does not duplicate User
 invalid auth → 401 envelope
@@ -648,7 +652,7 @@ authoritative and client impersonation cannot select another User.
 
 For expected failures assert stable:
 
-``` text
+```text
 error.code
 ```
 
@@ -658,7 +662,7 @@ localization layer itself is under test.
 When `API_CONTRACTS.md` exists, endpoint-specific mandatory cases should
 be synchronized with it rather than duplicated extensively here.
 
-------------------------------------------------------------------------
+---
 
 # 16. Sports Provider and Asset Tests
 
@@ -666,7 +670,7 @@ Sports Provider adapter tests use stored provider fixtures/fakes.
 
 Cover relevant mapping behavior:
 
-``` text
+```text
 valid Fixture
 completed Fixture
 provider/API error
@@ -680,7 +684,7 @@ before the corresponding Open Decision is resolved.
 
 Football asset manifest validation must cover:
 
-``` text
+```text
 unique provider IDs
 unique canonical slugs
 lowercase ASCII kebab-case slugs
@@ -694,7 +698,7 @@ Unit/CI tests must not require live API-Football access.
 Canonical slug stability must not depend on provider display-name
 cosmetic changes.
 
-------------------------------------------------------------------------
+---
 
 # 17. Worker Tests
 
@@ -703,7 +707,7 @@ commands.
 
 For each relevant worker responsibility cover:
 
-``` text
+```text
 normal execution
 retry
 duplicate execution
@@ -714,7 +718,7 @@ idempotent business effect
 
 Current logical responsibilities include:
 
-``` text
+```text
 fixture/sports ingestion
 result-sync
 settlement
@@ -726,7 +730,7 @@ Do not require tests for an obsolete `odds-sync` worker name merely
 because an older spec listed it. Current probability/snapshot ingestion
 responsibilities must follow the active Technical/Product specs.
 
-------------------------------------------------------------------------
+---
 
 # 18. Frontend Unit Tests
 
@@ -735,7 +739,7 @@ JSX/CSS implementation details.
 
 Useful targets:
 
-``` text
+```text
 DTO → presentation transforms
 HOME/DRAW/AWAY → 1/X/2 mapping
 points → trophy-value presentation data
@@ -750,7 +754,7 @@ asset URL resolution/fallback logic
 
 Avoid brittle assertions on:
 
-``` text
+```text
 CSS class names
 exact DOM nesting
 pixel geometry
@@ -762,13 +766,13 @@ unless those details are themselves the contract.
 Frontend architecture/testing boundaries are also governed by
 `FRONTEND_ARCHITECTURE.md`.
 
-------------------------------------------------------------------------
+---
 
 # 19. Localization, RTL and Theme Tests
 
 Supported locales:
 
-``` text
+```text
 en
 ru
 de
@@ -778,7 +782,7 @@ ar
 
 Dictionary tests must verify:
 
-``` text
+```text
 known translation keys
 complete dictionary contract
 fallback behavior
@@ -790,14 +794,14 @@ unknown API error fallback
 
 Direction:
 
-``` text
+```text
 ar → RTL
 others → LTR
 ```
 
 Theme:
 
-``` text
+```text
 system
 light
 dark
@@ -809,7 +813,7 @@ combinations where practical, with dedicated RTL coverage.
 Do not multiply the entire E2E suite across every locale × theme unless
 there is demonstrated value.
 
-------------------------------------------------------------------------
+---
 
 # 20. Browser / E2E Tests
 
@@ -820,7 +824,7 @@ pretending unfinished screens are complete.
 
 For Predict, representative browser flow:
 
-``` text
+```text
 open app
 bootstrap
 seeded Fixtures visible
@@ -832,7 +836,7 @@ locked/error behavior handled
 
 Rewarded flow before real Monetag integration:
 
-``` text
+```text
 free quota exhausted
 select additional outcome
 controlled rewarded-required UI appears
@@ -844,7 +848,7 @@ to the real verification contract.
 
 Browser layout sanity for current UI should verify:
 
-``` text
+```text
 no horizontal overflow
 no unintended page-level scroll
 fixture list remains intended vertical scroll region
@@ -862,20 +866,20 @@ reference.
 Do not replace visual review with brittle unit assertions for exact CSS
 pixels.
 
-------------------------------------------------------------------------
+---
 
 # 21. MatchCard Visual Regression
 
 When implementing/changing MatchCard against the approved reference:
 
-``` text
+```text
 docs/design/predict-card-v2-spec.md
 docs/design/predict-card-v2-reference.png
 ```
 
 verify at least:
 
-``` text
+```text
 390×844 reference sanity
 360 width sanity
 430 width sanity
@@ -895,13 +899,13 @@ Functional tests should separately verify semantic
 mapping/accessibility; screenshot tests are not a substitute for
 behavior tests.
 
-------------------------------------------------------------------------
+---
 
 # 22. Migration Validation
 
 For schema migrations:
 
-``` text
+```text
 apply migrations to clean test database
 validate Prisma schema/client
 run relevant integration suite
@@ -916,13 +920,13 @@ relevant.
 Migration tests should prove preservation of required invariants, not
 merely that SQL executes.
 
-------------------------------------------------------------------------
+---
 
 # 23. CI and Required Checks
 
 Baseline checks for a normal code change:
 
-``` text
+```text
 lint
 typecheck
 relevant unit tests
@@ -932,7 +936,7 @@ build
 
 Additionally:
 
-``` text
+```text
 concurrency suite → when concurrency-sensitive behavior changes
 API tests         → when API contract changes
 browser/E2E       → when critical user flow/UI changes
@@ -946,33 +950,35 @@ does not require duplicate aliases solely for documentation aesthetics.
 Do not run expensive unrelated suites when the task clearly cannot
 affect them unless repository policy/CI requires it.
 
-------------------------------------------------------------------------
+---
 
 # 24. Mandatory Coverage by Change Type
 
-  Change                                     Required coverage
-  ------------------------------------------ ---------------------------------------------
-  Pure business formula/rule                 Unit
-  Persistence behavior                       Integration with real PostgreSQL
-  Race-sensitive mutation                    Concurrency
-  API endpoint/DTO/error behavior            Focused API contract
-  Worker behavior                            Normal + retry/idempotency + failure
-  Prisma migration                           Migration validation + affected integration
-  Frontend pure transform/state rule         Unit where meaningful
-  Critical user flow                         Browser/E2E
-  Approved visual reference implementation   Browser screenshot/sanity
-  Production bug                             Regression test at lowest effective layer
+Change Required coverage
+
+---
+
+Pure business formula/rule Unit
+Persistence behavior Integration with real PostgreSQL
+Race-sensitive mutation Concurrency
+API endpoint/DTO/error behavior Focused API contract
+Worker behavior Normal + retry/idempotency + failure
+Prisma migration Migration validation + affected integration
+Frontend pure transform/state rule Unit where meaningful
+Critical user flow Browser/E2E
+Approved visual reference implementation Browser screenshot/sanity
+Production bug Regression test at lowest effective layer
 
 A single change may require multiple rows.
 
-------------------------------------------------------------------------
+---
 
 # 25. Critical Risk Coverage
 
 Before production launch, automated coverage must explicitly protect
 against:
 
-``` text
+```text
 daily Prediction limit exceeded
 same AdReward consumed twice
 Prediction edited at/after kickoff
@@ -991,7 +997,7 @@ When a new severity-critical invariant is introduced, add it here or to
 the appropriate authoritative testing section rather than relying on
 incidental coverage.
 
-------------------------------------------------------------------------
+---
 
 # 26. Test Data and Secrets
 
@@ -999,7 +1005,7 @@ Never use production credentials in automated tests.
 
 Test/CI environments must not contain production:
 
-``` text
+```text
 TELEGRAM_BOT_TOKEN
 API_FOOTBALL_KEY
 TON private key
@@ -1015,7 +1021,7 @@ Never print secrets or full Telegram initData in test output.
 Factories/fixtures should use deterministic safe defaults and explicit
 overrides.
 
-------------------------------------------------------------------------
+---
 
 # 27. Performance and Load Testing
 
@@ -1024,7 +1030,7 @@ Load testing is not required for ordinary MVP feature development.
 Before meaningful acquisition/load, measure representative paths such
 as:
 
-``` text
+```text
 today Fixtures
 Leaderboard
 createPrediction
@@ -1033,7 +1039,7 @@ Settlement batches
 
 Focus on:
 
-``` text
+```text
 query cost
 indexes
 lock contention
@@ -1047,14 +1053,14 @@ synthetic test can create load.
 Scaling changes require measured need and the relevant architecture
 decision.
 
-------------------------------------------------------------------------
+---
 
 # 28. Production Smoke Testing
 
 Post-deploy smoke checks should verify current implemented operational
 surfaces, for example:
 
-``` text
+```text
 application reachable
 database connectivity
 Telegram bootstrap/auth
@@ -1069,13 +1075,13 @@ actually part of the implemented/approved operational contract.
 
 Prefer non-mutating checks against production gameplay state.
 
-------------------------------------------------------------------------
+---
 
 # 29. Open Testing Decisions
 
 Authoritative significant Open Decisions belong in:
 
-``` text
+```text
 docs/DECISIONS.md
 ```
 
@@ -1084,7 +1090,7 @@ Do not maintain a second authoritative decision register here.
 Testing/tooling details may remain implementation choices unless they
 materially affect architecture/product behavior, for example:
 
-``` text
+```text
 Vitest configuration
 database reset implementation
 CI provider
@@ -1098,13 +1104,13 @@ Provider/model-dependent tests must wait for the corresponding
 product/integration decisions rather than silently defining them through
 tests.
 
-------------------------------------------------------------------------
+---
 
 # 30. Testing Definition of Done
 
 A change is testing-complete when all relevant statements are true:
 
-``` text
+```text
 tests verify authoritative behavior rather than inventing it
 pure logic has meaningful unit coverage
 persistence-critical behavior uses real PostgreSQL
@@ -1119,13 +1125,13 @@ required checks pass
 tests were not weakened to accommodate incorrect implementation
 ```
 
-------------------------------------------------------------------------
+---
 
 # 31. Spec Maintenance
 
 This document owns:
 
-``` text
+```text
 testing levels
 mandatory coverage
 critical risk scenarios
@@ -1138,7 +1144,7 @@ testing Definition of Done
 
 It does not own:
 
-``` text
+```text
 product behavior             → PRODUCT_SPEC.md
 backend/runtime architecture → TECH_SPEC.md
 database schema              → DB_SCHEMA.md

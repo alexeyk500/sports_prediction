@@ -21,35 +21,62 @@ interface ICupLeaderboardProps {
 const PAGE_SIZE = 50;
 const AROUND_ME_RADIUS = 4;
 
-const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({ cupId, apiClient }) => {
+const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({
+  cupId,
+  apiClient,
+}) => {
   const { t, locale } = useTranslation();
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const [activeMode, setActiveMode] = useState<CupLeaderboardMode>("top");
-  const [modeState, setModeState] = useState<Record<CupLeaderboardMode, ICupLeaderboardModeState>>({
+  const [modeState, setModeState] = useState<
+    Record<CupLeaderboardMode, ICupLeaderboardModeState>
+  >({
     top: createEmptyModeState(),
     "around-me": createEmptyModeState(),
     all: createEmptyModeState(),
   });
-  const [loadingMode, setLoadingMode] = useState<CupLeaderboardMode | null>(null);
+  const [loadingMode, setLoadingMode] = useState<CupLeaderboardMode | null>(
+    null,
+  );
   const [isLoadingNextPage, setIsLoadingNextPage] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const currentModeState = modeState[activeMode];
-  const isInitialLoading = loadingMode === activeMode && !currentModeState.isLoaded;
+  const isInitialLoading =
+    loadingMode === activeMode && !currentModeState.isLoaded;
 
-  const loadMode = useCallback(async (mode: CupLeaderboardMode, force = false) => {
-    if (!force && modeState[mode].isLoaded) {
+  const loadMode = useCallback(
+    async (mode: CupLeaderboardMode, force = false) => {
+      if (!force && modeState[mode].isLoaded) {
+        setErrorMessage(null);
+        return;
+      }
+
+      setLoadingMode(mode);
       setErrorMessage(null);
-      return;
-    }
 
-    setLoadingMode(mode);
-    setErrorMessage(null);
+      try {
+        if (mode === "around-me") {
+          const response = await apiClient.getCupLeaderboardAroundMe({
+            cupId,
+            radius: AROUND_ME_RADIUS,
+          });
 
-    try {
-      if (mode === "around-me") {
-        const response = await apiClient.getCupLeaderboardAroundMe({
+          setModeState((current) => ({
+            ...current,
+            [mode]: {
+              rows: response.items.map(toCupLeaderboardRowModel),
+              totalParticipants: response.totalParticipants,
+              nextCursor: null,
+              isLoaded: true,
+            },
+          }));
+          return;
+        }
+
+        const response = await apiClient.getCupLeaderboard({
           cupId,
-          radius: AROUND_ME_RADIUS,
+          mode,
+          limit: PAGE_SIZE,
         });
 
         setModeState((current) => ({
@@ -57,39 +84,28 @@ const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({ cupId, apiClient }) =>
           [mode]: {
             rows: response.items.map(toCupLeaderboardRowModel),
             totalParticipants: response.totalParticipants,
-            nextCursor: null,
+            nextCursor: response.nextCursor,
             isLoaded: true,
           },
         }));
-        return;
+      } catch (error: unknown) {
+        setErrorMessage(messageForApiError(error, locale));
+      } finally {
+        setLoadingMode((current) => (current === mode ? null : current));
       }
-
-      const response = await apiClient.getCupLeaderboard({
-        cupId,
-        mode,
-        limit: PAGE_SIZE,
-      });
-
-      setModeState((current) => ({
-        ...current,
-        [mode]: {
-          rows: response.items.map(toCupLeaderboardRowModel),
-          totalParticipants: response.totalParticipants,
-          nextCursor: response.nextCursor,
-          isLoaded: true,
-        },
-      }));
-    } catch (error: unknown) {
-      setErrorMessage(messageForApiError(error, locale));
-    } finally {
-      setLoadingMode((current) => (current === mode ? null : current));
-    }
-  }, [apiClient, cupId, locale, modeState]);
+    },
+    [apiClient, cupId, locale, modeState],
+  );
 
   const loadNextAllPage = useCallback(async () => {
     const allState = modeState.all;
 
-    if (activeMode !== "all" || !allState.nextCursor || isLoadingNextPage || loadingMode) {
+    if (
+      activeMode !== "all" ||
+      !allState.nextCursor ||
+      isLoadingNextPage ||
+      loadingMode
+    ) {
       return;
     }
 
@@ -119,7 +135,15 @@ const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({ cupId, apiClient }) =>
     } finally {
       setIsLoadingNextPage(false);
     }
-  }, [activeMode, apiClient, cupId, isLoadingNextPage, loadingMode, locale, modeState.all]);
+  }, [
+    activeMode,
+    apiClient,
+    cupId,
+    isLoadingNextPage,
+    loadingMode,
+    locale,
+    modeState.all,
+  ]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- leaderboard modes load independently from the Cup bootstrap request.
@@ -129,15 +153,23 @@ const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({ cupId, apiClient }) =>
   useEffect(() => {
     const target = loadMoreRef.current;
 
-    if (activeMode !== "all" || !target || !currentModeState.nextCursor || errorMessage) {
+    if (
+      activeMode !== "all" ||
+      !target ||
+      !currentModeState.nextCursor ||
+      errorMessage
+    ) {
       return;
     }
 
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) {
-        void loadNextAllPage();
-      }
-    }, { rootMargin: "260px 0px" });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          void loadNextAllPage();
+        }
+      },
+      { rootMargin: "260px 0px" },
+    );
 
     observer.observe(target);
     return () => observer.disconnect();
@@ -159,7 +191,10 @@ const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({ cupId, apiClient }) =>
     const lastRank = currentModeState.rows.at(-1)?.rank;
 
     return firstRank && lastRank
-      ? t("cup.leaderboardStates.aroundSubtitle", { start: firstRank, end: lastRank })
+      ? t("cup.leaderboardStates.aroundSubtitle", {
+          start: firstRank,
+          end: lastRank,
+        })
       : null;
   }, [activeMode, currentModeState.rows, t]);
 
@@ -185,7 +220,9 @@ const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({ cupId, apiClient }) =>
         />
         {activeMode === "all" && currentModeState.rows.length > 0 ? (
           <div className={styles.paginationState}>
-            {isLoadingNextPage ? <span>{t("cup.leaderboardStates.loadingMore")}</span> : null}
+            {isLoadingNextPage ? (
+              <span>{t("cup.leaderboardStates.loadingMore")}</span>
+            ) : null}
             {!isLoadingNextPage && currentModeState.nextCursor ? (
               <button type="button" onClick={() => void loadNextAllPage()}>
                 {t("cup.leaderboardStates.loadMore")}
@@ -194,11 +231,19 @@ const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({ cupId, apiClient }) =>
             {!isLoadingNextPage && !currentModeState.nextCursor ? (
               <span>{t("cup.leaderboardStates.end")}</span>
             ) : null}
-            <div ref={loadMoreRef} className={styles.loadSentinel} aria-hidden="true" />
+            <div
+              ref={loadMoreRef}
+              className={styles.loadSentinel}
+              aria-hidden="true"
+            />
           </div>
         ) : null}
         {activeMode === "around-me" && currentModeState.rows.length > 0 ? (
-          <button className={styles.fullLeaderboardButton} type="button" onClick={() => setActiveMode("all")}>
+          <button
+            className={styles.fullLeaderboardButton}
+            type="button"
+            onClick={() => setActiveMode("all")}
+          >
             {t("cup.leaderboardStates.viewFull")}
           </button>
         ) : null}

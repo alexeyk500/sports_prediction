@@ -32,15 +32,24 @@ export interface NormalizedOneXTwoProbabilitiesCore {
   away: Prisma.Decimal;
 }
 
-export function calculatePredictionPointsCore(probability: Prisma.Decimal.Value): number {
+export function calculatePredictionPointsCore(
+  probability: Prisma.Decimal.Value,
+): number {
   const normalizedProbability = parseProbability(probability);
-  const rawPoints = SCORING_NUMERATOR.div(normalizedProbability).round().toNumber();
-  const clampedPoints = Math.min(MAX_PREDICTION_POINTS, Math.max(MIN_PREDICTION_POINTS, rawPoints));
+  const rawPoints = SCORING_NUMERATOR.div(normalizedProbability)
+    .round()
+    .toNumber();
+  const clampedPoints = Math.min(
+    MAX_PREDICTION_POINTS,
+    Math.max(MIN_PREDICTION_POINTS, rawPoints),
+  );
 
   return Math.round(clampedPoints);
 }
 
-export function normalizeOneXTwoOddsCore(odds: RawOneXTwoOddsCore): NormalizedOneXTwoProbabilitiesCore {
+export function normalizeOneXTwoOddsCore(
+  odds: RawOneXTwoOddsCore,
+): NormalizedOneXTwoProbabilitiesCore {
   const homeOdds = parsePositiveDecimal(odds.home, "home odds");
   const drawOdds = parsePositiveDecimal(odds.draw, "draw odds");
   const awayOdds = parsePositiveDecimal(odds.away, "away odds");
@@ -51,7 +60,10 @@ export function normalizeOneXTwoOddsCore(odds: RawOneXTwoOddsCore): NormalizedOn
   const impliedTotal = homeImplied.plus(drawImplied).plus(awayImplied);
 
   if (impliedTotal.lte(0)) {
-    throw new ScoringInputError("INVALID_ODDS", "Implied probability total must be greater than zero.");
+    throw new ScoringInputError(
+      "INVALID_ODDS",
+      "Implied probability total must be greater than zero.",
+    );
   }
 
   return {
@@ -61,25 +73,41 @@ export function normalizeOneXTwoOddsCore(odds: RawOneXTwoOddsCore): NormalizedOn
   };
 }
 
-export function quantizeProbabilityCore(value: Prisma.Decimal.Value): Prisma.Decimal {
-  return new Prisma.Decimal(value).toDecimalPlaces(NORMALIZED_PROBABILITY_SCALE, DECIMAL_ROUNDING_MODE);
+export function quantizeProbabilityCore(
+  value: Prisma.Decimal.Value,
+): Prisma.Decimal {
+  return new Prisma.Decimal(value).toDecimalPlaces(
+    NORMALIZED_PROBABILITY_SCALE,
+    DECIMAL_ROUNDING_MODE,
+  );
 }
 
-export function quantizeRawOddsCore(value: Prisma.Decimal.Value): Prisma.Decimal {
-  return new Prisma.Decimal(value).toDecimalPlaces(RAW_ODDS_SCALE, DECIMAL_ROUNDING_MODE);
+export function quantizeRawOddsCore(
+  value: Prisma.Decimal.Value,
+): Prisma.Decimal {
+  return new Prisma.Decimal(value).toDecimalPlaces(
+    RAW_ODDS_SCALE,
+    DECIMAL_ROUNDING_MODE,
+  );
 }
 
 function parseProbability(probability: Prisma.Decimal.Value): Prisma.Decimal {
   const decimal = parsePositiveDecimal(probability, "probability");
 
   if (decimal.gt(1)) {
-    throw new ScoringInputError("INVALID_PROBABILITY", "Probability must be less than or equal to 1.");
+    throw new ScoringInputError(
+      "INVALID_PROBABILITY",
+      "Probability must be less than or equal to 1.",
+    );
   }
 
   return decimal;
 }
 
-function parsePositiveDecimal(value: Prisma.Decimal.Value, fieldName: string): Prisma.Decimal {
+function parsePositiveDecimal(
+  value: Prisma.Decimal.Value,
+  fieldName: string,
+): Prisma.Decimal {
   let decimal: Prisma.Decimal;
 
   try {

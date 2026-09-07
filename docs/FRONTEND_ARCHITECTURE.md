@@ -2,25 +2,27 @@
 
 **Frontend Architecture v0.1**
 
-  ----------------------------------- -----------------------------------
-  **Status**                          Authoritative frontend architecture
-                                      specification
+---
 
-  **Platform**                        Telegram Mini App
+**Status** Authoritative frontend architecture
+specification
 
-  **Stack**                           Next.js + React + TypeScript
+**Platform** Telegram Mini App
 
-  **Product authority**               `docs/PRODUCT_SPEC.md`
+**Stack** Next.js + React + TypeScript
 
-  **Technical authority**             `docs/TECH_SPEC.md`
+**Product authority** `docs/PRODUCT_SPEC.md`
 
-  **Testing authority**               `docs/TESTING_SPEC.md`
+**Technical authority** `docs/TECH_SPEC.md`
 
-  **Visual authority**                `docs/design/DESIGN_SYSTEM.md` +
-                                      approved component specs/references
+**Testing authority** `docs/TESTING_SPEC.md`
 
-  **Decision register**               `docs/DECISIONS.md`
-  ----------------------------------- -----------------------------------
+**Visual authority** `docs/design/DESIGN_SYSTEM.md` +
+approved component specs/references
+
+**Decision register** `docs/DECISIONS.md`
+
+---
 
 Этот документ определяет frontend code architecture: boundaries, data
 flow, state ownership, dependencies, component structure и
@@ -29,13 +31,13 @@ implementation discipline.
 Он не должен повторять product rules, backend contracts, detailed visual
 geometry или полный testing contract.
 
-------------------------------------------------------------------------
+---
 
 # 1. Frontend Contract
 
 Goalstery frontend uses:
 
-``` text
+```text
 Next.js App Router
 React
 TypeScript
@@ -52,7 +54,7 @@ system/light/dark themes
 
 Architectural defaults:
 
-``` text
+```text
 no third-party UI framework
 no server-state fetching/cache framework
 no optimistic UI by default
@@ -65,7 +67,7 @@ no speculative feature abstractions
 Changing these defaults requires the project decision process defined by
 `AGENTS.md` / `DECISIONS.md`.
 
-------------------------------------------------------------------------
+---
 
 # 2. Ownership and Directory Boundaries
 
@@ -75,7 +77,7 @@ Screen components are roots of their UI component trees.
 
 Preferred shape:
 
-``` text
+```text
 src/
 ├── app/
 ├── components/
@@ -116,20 +118,22 @@ src/
 
 Responsibility guide:
 
-  Concern                                    Owner
-  ------------------------------------------ -------------------------
-  Routing/layout/Next.js route boundary      `app/`
-  Goalstery HTTP communication               `lib/api/`
-  Telegram browser integration               `lib/telegram/`
-  Football asset resolution                  `lib/assets/`
-  Localization infrastructure                `lib/i18n/`
-  Shared formatting primitives               `lib/format/` when genuinely shared
-  Shared application state                   `stores/`
-  Shared reusable UI icons                   `assets/icons/`
-  Screen UI tree                             `components/<ScreenName>/`
-  Genuine cross-screen UI concept            `components/common/`
-  Global visual tokens/reset/root behavior   global CSS
-  Component geometry/presentation            owning component CSS Module
+Concern Owner
+
+---
+
+Routing/layout/Next.js route boundary `app/`
+Goalstery HTTP communication `lib/api/`
+Telegram browser integration `lib/telegram/`
+Football asset resolution `lib/assets/`
+Localization infrastructure `lib/i18n/`
+Shared formatting primitives `lib/format/` when genuinely shared
+Shared application state `stores/`
+Shared reusable UI icons `assets/icons/`
+Screen UI tree `components/<ScreenName>/`
+Genuine cross-screen UI concept `components/common/`
+Global visual tokens/reset/root behavior global CSS
+Component geometry/presentation owning component CSS Module
 
 Directory nesting should express ownership/responsibility, not file category.
 
@@ -137,7 +141,7 @@ Prefer the shallowest structure that preserves clear ownership.
 
 Do not add generic organizational directories such as:
 
-``` text
+```text
 components/
 ui/
 internal/
@@ -148,7 +152,7 @@ inside a component directory merely to group file kinds.
 
 For example, prefer:
 
-``` text
+```text
 src/components/CupScreen/
 ├── CupScreen.tsx
 ├── CupScreen.module.css
@@ -158,7 +162,7 @@ src/components/CupScreen/
 
 over:
 
-``` text
+```text
 src/components/cup/
 └── components/
     ├── CupHero/
@@ -175,7 +179,7 @@ actual cross-screen value.
 
 Preferred evolution:
 
-``` text
+```text
 specific implementation
 → observed reuse
 → shared abstraction
@@ -183,7 +187,7 @@ specific implementation
 
 Do not pre-build shared abstractions for future screens before real reuse exists.
 
-------------------------------------------------------------------------
+---
 
 # 3. App Router and Client Boundaries
 
@@ -191,7 +195,7 @@ Goalstery uses Next.js App Router.
 
 Route files should primarily own:
 
-``` text
+```text
 routing
 layout
 route-level composition
@@ -205,7 +209,7 @@ runtime/interaction requires them.
 
 Typical client requirements:
 
-``` text
+```text
 React state
 event handlers
 Zustand
@@ -221,13 +225,13 @@ Telegram Mini App into Server Components merely to minimize client code.
 Use the smallest **practical** client boundary that preserves clear
 ownership.
 
-------------------------------------------------------------------------
+---
 
 # 4. Telegram Boundary
 
 Telegram browser access stays behind the existing project abstraction:
 
-``` text
+```text
 Telegram WebApp runtime
 → src/lib/telegram/*
 → feature code
@@ -238,13 +242,13 @@ Do not scatter direct Telegram global access across components.
 Raw `initData` is authentication material and is sent through the
 established API mechanism:
 
-``` text
+```text
 X-Telegram-Init-Data
 ```
 
 Frontend must never:
 
-``` text
+```text
 trust parsed Telegram user identity as server authentication
 expose/send TELEGRAM_BOT_TOKEN
 create production auth bypass
@@ -253,20 +257,20 @@ override authenticated identity with client-supplied userId
 
 Detailed authentication correctness belongs to `TECH_SPEC.md`.
 
-------------------------------------------------------------------------
+---
 
 # 5. API and Data Flow
 
 Goalstery HTTP communication goes through the custom typed API boundary,
 normally:
 
-``` text
+```text
 src/lib/api/
 ```
 
 Preferred flow:
 
-``` text
+```text
 HTTP
 → typed API client
 → feature/screen orchestration
@@ -286,7 +290,7 @@ not presentation models.
 
 Conceptual separation:
 
-``` text
+```text
 Prisma model
 ≠ backend domain object
 ≠ HTTP DTO
@@ -300,7 +304,7 @@ When the UI needs a different shape, derive a presentation model
 explicitly rather than polluting the API DTO with presentation-only
 fields.
 
-------------------------------------------------------------------------
+---
 
 # 6. Fetching and Cache Policy
 
@@ -309,7 +313,7 @@ architecture decision.
 
 Examples:
 
-``` text
+```text
 TanStack Query / React Query
 SWR
 Apollo Client
@@ -319,7 +323,7 @@ Relay
 
 Do not recreate one as a hidden in-house framework either:
 
-``` text
+```text
 TTL cache layer
 normalized entity cache
 custom stale-while-revalidate engine
@@ -332,7 +336,7 @@ The current architecture intentionally prefers explicit
 fetching/orchestration until measured complexity justifies a different
 decision.
 
-------------------------------------------------------------------------
+---
 
 # 7. State Ownership
 
@@ -342,7 +346,7 @@ Use the smallest appropriate owner.
 
 Prefer for state naturally owned by one component/subtree:
 
-``` text
+```text
 temporary input
 expanded/collapsed state
 local modal visibility
@@ -361,7 +365,7 @@ Server data is not automatically global state.
 
 Avoid maintaining the same logical value independently in:
 
-``` text
+```text
 component state
 + Zustand
 + copied API state
@@ -371,7 +375,7 @@ without an explicit synchronization model.
 
 Backend/domain state remains authoritative on the server.
 
-------------------------------------------------------------------------
+---
 
 # 8. Mutation Policy
 
@@ -379,7 +383,7 @@ Correctness-sensitive mutations are not optimistic by default.
 
 Preferred flow:
 
-``` text
+```text
 user action
 → pending state
 → server mutation
@@ -390,7 +394,7 @@ user action
 
 While pending:
 
-``` text
+```text
 prevent accidental duplicate submission
 do not present success early
 preserve understandable UI state
@@ -405,7 +409,7 @@ Frontend eligibility checks are UX only; backend rules remain
 authoritative for quota, kickoff, participation, reward validity,
 scoring and idempotency.
 
-------------------------------------------------------------------------
+---
 
 # 9. Presentation Boundary
 
@@ -413,7 +417,7 @@ Presentation components receive explicit data and callbacks.
 
 They may own:
 
-``` text
+```text
 rendering
 accessible control state
 callback invocation
@@ -422,7 +426,7 @@ component-local presentation behavior
 
 They should not own:
 
-``` text
+```text
 HTTP implementation
 Telegram authentication
 database/domain rules
@@ -434,13 +438,13 @@ canonical asset identity generation
 Props should express a cohesive presentation contract. Avoid both
 extremes:
 
-``` text
+```text
 passing giant unrelated backend-shaped objects
 ```
 
 and:
 
-``` text
+```text
 splitting one cohesive view model into dozens of meaningless primitives
 ```
 
@@ -449,13 +453,13 @@ clarity/testability.
 
 Current example:
 
-``` text
+```text
 src/components/predict/match-card-presentation.ts
 ```
 
 Domain semantics must remain stable across presentation mappings:
 
-``` text
+```text
 HOME → 1
 DRAW → X
 AWAY → 2
@@ -467,13 +471,13 @@ domain Points
 Presentation terminology must not silently mutate backend/domain
 contracts.
 
-------------------------------------------------------------------------
+---
 
 # 10. Football Assets
 
 Runtime football assets use canonical Goalstery identity:
 
-``` text
+```text
 Team.slug
 → /assets/teams/<slug>.webp
 
@@ -483,13 +487,13 @@ Competition.slug
 
 Use the established resolver:
 
-``` text
+```text
 src/lib/assets/football-assets.ts
 ```
 
 Do not derive canonical asset identity in frontend from:
 
-``` text
+```text
 slugify(displayName)
 provider ID
 provider CDN URL
@@ -500,7 +504,7 @@ broken-image icon.
 
 Do not remove fallback behavior during visual refactoring.
 
-------------------------------------------------------------------------
+---
 
 # 11. Component Architecture
 
@@ -511,7 +515,7 @@ responsibility-scoped React functional components.
 
 A screen component is primarily a composition/orchestration boundary. It may own:
 
-``` text
+```text
 route/screen state
 screen-level data orchestration
 top-level loading/error state
@@ -525,7 +529,7 @@ every visual section of the screen.
 
 Preferred composition shape:
 
-``` text
+```text
 Screen
 └── meaningful screen section
     └── repeated or independently responsible child component
@@ -533,7 +537,7 @@ Screen
 
 Example:
 
-``` text
+```text
 CupScreen
 ├── CupHeader
 ├── CupModeTabs
@@ -550,7 +554,7 @@ CupScreen
 The filesystem should mirror this ownership tree for meaningful standalone UI
 components:
 
-``` text
+```text
 src/components/CupScreen/
 ├── CupScreen.tsx
 ├── CupScreen.module.css
@@ -574,7 +578,7 @@ trivial fragment.
 Extract a standalone UI component when a block has a meaningful independent
 presentation responsibility, for example:
 
-``` text
+```text
 screen section
 card/panel with its own visual structure
 repeated row/item
@@ -593,13 +597,13 @@ reuse.
 
 Avoid both extremes:
 
-``` text
+```text
 one monolithic Screen.tsx + Screen.module.css containing the whole screen
 ```
 
 and:
 
-``` text
+```text
 micro-components created for every text node, icon or trivial wrapper
 ```
 
@@ -609,7 +613,7 @@ Split by UI responsibility, not arbitrary line count.
 
 Each meaningful standalone UI component should normally own a directory:
 
-``` text
+```text
 CupHero/
 ├── CupHero.tsx
 └── CupHero.module.css
@@ -620,7 +624,7 @@ immediate owning component.
 
 Do not add generic categorization layers such as:
 
-``` text
+```text
 components/
 ui/
 internal/
@@ -637,7 +641,7 @@ Prefer the shallowest hierarchy that still mirrors ownership clearly.
 
 Each meaningful standalone UI component:
 
-``` text
+```text
 is a typed React functional component
 receives external data/actions through explicit typed props/callbacks
 does not fetch Goalstery application data unless explicitly defined as an
@@ -729,7 +733,7 @@ indiscriminately to every TypeScript module.
 
 For React UI component props:
 
-``` text
+```text
 prefer interface I<ComponentName>Props
 do not declare props as an inline object type in the component signature
 do not use export function ComponentName(...) as the default Goalstery UI style
@@ -752,7 +756,7 @@ primitive props either.
 
 Presentation components must preserve the established data flow:
 
-``` text
+```text
 HTTP
 → typed API client
 → feature/screen orchestration
@@ -766,7 +770,7 @@ HTTP
 A standalone UI component owns CSS describing its internal visual
 implementation:
 
-``` text
+```text
 internal layout
 component geometry
 component typography
@@ -776,7 +780,7 @@ component-local responsive behavior
 
 Parent CSS may control composition concerns:
 
-``` text
+```text
 placement of child components
 spacing between siblings
 screen/grid composition
@@ -804,7 +808,7 @@ only because it is not a React component.
 
 Preferred evolution:
 
-``` text
+```text
 owner-local implementation
 → observed cross-screen reuse
 → shared responsibility-specific module
@@ -812,7 +816,7 @@ owner-local implementation
 
 Move a type/helper/formatter into a shared project module only when:
 
-``` text
+```text
 it is used by multiple screens/features
 its semantics are genuinely owner-independent
 the shared contract/name is stable
@@ -821,7 +825,7 @@ extraction reduces duplication rather than merely moving files
 
 Avoid generic dumping-ground modules such as:
 
-``` text
+```text
 src/types.ts
 src/utils.ts
 src/helpers.ts
@@ -829,7 +833,7 @@ src/helpers.ts
 
 Shared code should live in responsibility-specific modules, for example:
 
-``` text
+```text
 src/lib/format/
 src/lib/telegram/
 src/lib/assets/
@@ -850,7 +854,7 @@ inside the `CupScreen` ownership tree.
 A complex screen component should remain easy to read at a glance and primarily
 contain:
 
-``` text
+```text
 screen-level orchestration
 screen-level local UI state
 selection between screen modes/views
@@ -880,7 +884,7 @@ a component-scoped task.
 If the requested change requires modification outside the owning component
 boundary:
 
-``` text
+```text
 identify the dependency
 explain why the boundary must be crossed
 expand scope only as much as required
@@ -905,7 +909,7 @@ concrete reason.
 Repeated entities use stable semantic keys, not array indexes when stable IDs
 exist.
 
-------------------------------------------------------------------------
+---
 
 # 12. Dependency Policy
 
@@ -914,7 +918,7 @@ implementation code.
 
 Before adding one, determine whether:
 
-``` text
+```text
 the project already solves the problem
 React/browser/CSS can solve it simply
 it becomes an architectural dependency
@@ -924,7 +928,7 @@ the benefit justifies long-term cost
 Without an approved architecture decision, do not add frontend
 frameworks/libraries for:
 
-``` text
+```text
 UI components
 icons
 server-state fetching/cache
@@ -936,7 +940,7 @@ general animation
 
 Current explicit exclusions include families such as:
 
-``` text
+```text
 MUI / Ant Design / Chakra / Mantine / Bootstrap UI
 shadcn/ui as imported application design system
 Lucide / Font Awesome / Heroicons / Material Icons / Phosphor
@@ -949,13 +953,13 @@ Framer Motion for ordinary UI state transitions
 This list illustrates the policy; the architectural category matters
 more than package spelling.
 
-------------------------------------------------------------------------
+---
 
 # 13. Styling Architecture
 
 Goalstery styling:
 
-``` text
+```text
 global CSS
 → reset
 → root/document behavior
@@ -978,7 +982,7 @@ Use semantic CSS class names.
 Prefer semantic shared design tokens for genuinely shared concepts such
 as:
 
-``` text
+```text
 surface
 text
 border
@@ -996,7 +1000,7 @@ Exact colors, typography, spacing and visual component rules belong to
 Ordinary interaction transitions should use CSS. Do not add an animation
 framework for basic selected/hover/expand behavior.
 
-------------------------------------------------------------------------
+---
 
 # 14. Icons
 
@@ -1014,7 +1018,7 @@ it inside the directory of that owning component.
 
 Example:
 
-``` text
+```text
 CupHero/
 ├── CupHero.tsx
 ├── CupHero.module.css
@@ -1024,7 +1028,7 @@ CupHero/
 If several icons are tightly related to and exclusively used by that component,
 they may live beside it as individually named icon modules:
 
-``` text
+```text
 CupHero/
 ├── CupHero.tsx
 ├── CupHero.module.css
@@ -1041,7 +1045,7 @@ across independent components/screens.
 
 Shared reusable icons belong in:
 
-``` text
+```text
 src/assets/icons/
 ```
 
@@ -1050,7 +1054,7 @@ project SVG implementation convention.
 
 Example:
 
-``` text
+```text
 src/assets/icons/
 ├── TrophyIcon.tsx
 ├── ChevronRightIcon.tsx
@@ -1068,7 +1072,7 @@ screen-specific implementation detail.
 
 Preferred evolution:
 
-``` text
+```text
 component-local icon
 → observed reuse
 → shared src/assets/icons/
@@ -1080,7 +1084,7 @@ Do not promote icons to shared scope speculatively.
 
 Do not create screen/feature-level icon dumping-ground modules such as:
 
-``` text
+```text
 CupIcons.tsx
 PredictIcons.tsx
 Icons.tsx
@@ -1094,7 +1098,7 @@ fact that the file contains SVG.
 
 If a former icon collector exists, classify each icon independently:
 
-``` text
+```text
 single-component usage
 → move to owning component directory
 
@@ -1113,7 +1117,7 @@ meaningful icons require accessible context.
 Emoji are not substitutes for production UI icons where a proper SVG exists or
 should exist.
 
-------------------------------------------------------------------------
+---
 
 # 15. Forms and Frontend Validation
 
@@ -1132,14 +1136,14 @@ Do not introduce frontend schema-validation infrastructure or duplicate
 client/server schemas without a concrete requirement and appropriate
 architecture decision.
 
-------------------------------------------------------------------------
+---
 
 # 16. Localization and RTL
 
 Supported production locales are defined by the current product/settings
 contract:
 
-``` text
+```text
 en
 ru
 de
@@ -1158,7 +1162,7 @@ RTL is first-class.
 
 Prefer logical CSS properties where direction matters:
 
-``` css
+```css
 padding-inline
 margin-inline
 inset-inline-start
@@ -1167,7 +1171,7 @@ text-align: start
 
 Layout direction must not alter domain meaning. In particular:
 
-``` text
+```text
 HOME → 1
 DRAW → X
 AWAY → 2
@@ -1175,13 +1179,13 @@ AWAY → 2
 
 remains deterministic in RTL.
 
-------------------------------------------------------------------------
+---
 
 # 17. Theme
 
 Supported appearance:
 
-``` text
+```text
 system
 light
 dark
@@ -1198,7 +1202,7 @@ New visual UI must remain functional in light and dark themes.
 
 Exact visual palette/tokens belong to `DESIGN_SYSTEM.md`.
 
-------------------------------------------------------------------------
+---
 
 # 18. Errors, Loading and Empty States
 
@@ -1207,7 +1211,7 @@ human-readable server text or HTTP status alone.
 
 Conceptually:
 
-``` text
+```text
 API error.code
 → centralized/feature-boundary interpretation
 → localized user-facing state/message
@@ -1225,7 +1229,7 @@ components should not infer whole-screen emptiness independently.
 Detailed HTTP error contract belongs to `TECH_SPEC.md` /
 `API_CONTRACTS.md` when present.
 
-------------------------------------------------------------------------
+---
 
 # 19. Accessibility and Mobile Interaction
 
@@ -1233,7 +1237,7 @@ Accessibility is part of component correctness.
 
 Use semantic controls:
 
-``` text
+```text
 button → <button>
 navigation → <nav>
 ```
@@ -1248,7 +1252,7 @@ replacement.
 
 Goalstery is mobile-first:
 
-``` text
+```text
 practical touch targets
 no hover-only interaction
 no precision-pointer dependency
@@ -1257,13 +1261,13 @@ no precision-pointer dependency
 Exact touch sizing and visual focus treatment belong to the Design
 System.
 
-------------------------------------------------------------------------
+---
 
 # 20. Performance Discipline
 
 Prioritize meaningful performance issues:
 
-``` text
+```text
 unnecessary network requests
 large-list rerenders
 oversized assets
@@ -1276,7 +1280,7 @@ Do not micro-optimize trivial expressions or add memoization by habit.
 
 Performance architecture changes should be driven by measurement.
 
-------------------------------------------------------------------------
+---
 
 # 21. Imports and Module Boundaries
 
@@ -1284,7 +1288,7 @@ Use the configured `@/` alias for imports from `src/`.
 
 Prefer:
 
-``` ts
+```ts
 import CupHero from "@/components/CupScreen/CurrentCupView/CupHero/CupHero";
 ```
 
@@ -1298,7 +1302,7 @@ obscure ownership and can increase circular-dependency risk.
 A small local barrel is acceptable only when it establishes a real
 module boundary with concrete value.
 
-------------------------------------------------------------------------
+---
 
 # 22. Frontend Testing Boundary
 
@@ -1307,7 +1311,7 @@ trivia.
 
 Useful unit targets:
 
-``` text
+```text
 presentation mapping
 state transitions
 error mapping
@@ -1327,13 +1331,13 @@ For significant UI work use browser/screenshot verification according to
 
 Current primary mobile reference size:
 
-``` text
+```text
 390 × 844
 ```
 
 Responsive sanity currently includes:
 
-``` text
+```text
 360
 390
 430
@@ -1344,13 +1348,13 @@ should be exercised with realistic long sports names.
 
 Detailed testing requirements belong to `TESTING_SPEC.md`.
 
-------------------------------------------------------------------------
+---
 
 # 23. Visual Work Boundary
 
 Visual implementation authority:
 
-``` text
+```text
 global:
 docs/design/DESIGN_SYSTEM.md
 
@@ -1362,7 +1366,7 @@ approved component spec
 
 For current MatchCard:
 
-``` text
+```text
 docs/design/predict-card-v2-reference.png
 docs/design/predict-card-v2-spec.md
 ```
@@ -1372,7 +1376,7 @@ includes an approved behavior change.
 
 Do not silently change during a visual task:
 
-``` text
+```text
 API requests
 prediction mutation semantics
 idempotency
@@ -1387,7 +1391,7 @@ authentication
 Do not claim reference fidelity without rendering and comparing the
 implementation.
 
-------------------------------------------------------------------------
+---
 
 # 24. Scoped Changes
 
@@ -1396,7 +1400,7 @@ a bounded feature/visual task.
 
 If unrelated technical debt is discovered:
 
-``` text
+```text
 report it separately
 do not silently expand scope
 ```
@@ -1404,7 +1408,7 @@ do not silently expand scope
 For component-scoped UI work, preserve the ownership boundary defined in
 Section 11:
 
-``` text
+```text
 change the owning component
 do not redesign/restyle sibling components
 do not move unrelated responsibilities
@@ -1417,13 +1421,13 @@ redesign.
 Similarly, do not create speculative abstractions for future screens/components
 before actual requirements or observed reuse exist.
 
-------------------------------------------------------------------------
+---
 
 # 25. MatchCard Architecture Example
 
 Current MatchCard illustrates the intended separation:
 
-``` text
+```text
 Predict screen orchestration
 → fixture/prediction DTO data
 → presentation mapping
@@ -1434,7 +1438,7 @@ Predict screen orchestration
 
 MatchCard may own:
 
-``` text
+```text
 rendering
 callback invocation
 accessible control state
@@ -1443,7 +1447,7 @@ local presentation behavior
 
 It must not own:
 
-``` text
+```text
 Telegram authentication
 Goalstery HTTP fetching
 quota/scoring authority
@@ -1454,13 +1458,13 @@ asset slug generation
 This is an example of the general architecture, not a universal
 component template.
 
-------------------------------------------------------------------------
+---
 
 # 26. Simplicity Rule
 
 When two approaches are equally correct, prefer the one with:
 
-``` text
+```text
 fewer architectural concepts
 fewer dependencies
 clearer ownership
@@ -1471,7 +1475,7 @@ easier modification
 
 Do not optimize architecture for cleverness.
 
-------------------------------------------------------------------------
+---
 
 # 27. Architecture Change Policy
 
@@ -1480,7 +1484,7 @@ decision/change process.
 
 Do not:
 
-``` text
+```text
 change implementation first
 → rewrite this document afterward to justify it
 ```
@@ -1492,13 +1496,13 @@ explicit approval according to `AGENTS.md`.
 After approval, synchronize affected decision/spec/implementation/tests
 in the same change where applicable.
 
-------------------------------------------------------------------------
+---
 
 # 28. Source Boundaries
 
 This document owns:
 
-``` text
+```text
 frontend code organization
 client/server component boundaries
 frontend data flow
@@ -1512,7 +1516,7 @@ frontend implementation discipline
 
 It does not own:
 
-``` text
+```text
 product/domain behavior        → PRODUCT_SPEC.md
 backend/runtime architecture   → TECH_SPEC.md
 database schema                → DB_SCHEMA.md

@@ -5,10 +5,14 @@ export function assertTournamentUsableForPrediction(
   tournament: Pick<Tournament, "id" | "status">,
 ): void {
   if (tournament.status !== "ACTIVE") {
-    throw new DomainError("TOURNAMENT_NOT_ACTIVE", "Tournament is not active.", {
-      tournamentId: tournament.id,
-      status: tournament.status,
-    });
+    throw new DomainError(
+      "TOURNAMENT_NOT_ACTIVE",
+      "Tournament is not active.",
+      {
+        tournamentId: tournament.id,
+        status: tournament.status,
+      },
+    );
   }
 }
 
@@ -23,4 +27,6 @@ export function isTournamentActiveAt(
   );
 }
 
-export const PREDICTION_USABLE_TOURNAMENT_STATUSES = ["ACTIVE"] satisfies TournamentStatus[];
+export const PREDICTION_USABLE_TOURNAMENT_STATUSES = [
+  "ACTIVE",
+] satisfies TournamentStatus[];

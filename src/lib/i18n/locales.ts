@@ -10,7 +10,9 @@ export function isSupportedLocale(value: unknown): value is SupportedLocale {
   return typeof value === "string" && supportedLocaleSet.has(value);
 }
 
-export function normalizeTelegramLanguageCode(languageCode: string | null | undefined): SupportedLocale {
+export function normalizeTelegramLanguageCode(
+  languageCode: string | null | undefined,
+): SupportedLocale {
   if (!languageCode) {
     return DEFAULT_LOCALE;
   }

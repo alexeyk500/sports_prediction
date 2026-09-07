@@ -6,7 +6,10 @@ import {
   outcomeDisplayLabel,
   trophyAriaValues,
 } from "@/components/PredictScreen/MatchCardShared/match-card-presentation";
-import { getCompetitionAssetUrl, getTeamAssetUrl } from "@/lib/assets/football-assets";
+import {
+  getCompetitionAssetUrl,
+  getTeamAssetUrl,
+} from "@/lib/assets/football-assets";
 import { PREDICTION_OUTCOME_ORDER } from "@/components/PredictScreen/predict-outcomes";
 import { createTranslator, translationResources } from "@/lib/i18n/i18n";
 
@@ -18,7 +21,12 @@ describe("match card presentation", () => {
   });
 
   it("keeps HOME/DRAW/AWAY mapping independent of RTL direction", () => {
-    expect(PREDICTION_OUTCOME_ORDER.map((outcome) => [outcome, outcomeDisplayLabel(outcome)])).toEqual([
+    expect(
+      PREDICTION_OUTCOME_ORDER.map((outcome) => [
+        outcome,
+        outcomeDisplayLabel(outcome),
+      ]),
+    ).toEqual([
       ["HOME", "1"],
       ["DRAW", "X"],
       ["AWAY", "2"],
@@ -97,7 +105,9 @@ describe("match card presentation", () => {
 
   it("resolves local asset paths from slug only", () => {
     expect(getTeamAssetUrl("arsenal")).toBe("/assets/teams/arsenal.webp");
-    expect(getCompetitionAssetUrl("premier-league")).toBe("/assets/competitions/premier-league.webp");
+    expect(getCompetitionAssetUrl("premier-league")).toBe(
+      "/assets/competitions/premier-league.webp",
+    );
   });
 
   it("formats trophy value for accessible labels without exposing point text", () => {
@@ -105,12 +115,14 @@ describe("match card presentation", () => {
     const trophyValue = t("common.trophyCount", trophyAriaValues("en", 10));
 
     expect(trophyValue).toBe("10 trophies");
-    expect(t("predict.aria.selectOutcome", {
-      outcome: "Home",
-      trophyValue,
-      homeTeam: "Arsenal",
-      awayTeam: "Chelsea",
-    })).toBe("Select Home, 10 trophies, for Arsenal vs Chelsea");
+    expect(
+      t("predict.aria.selectOutcome", {
+        outcome: "Home",
+        trophyValue,
+        homeTeam: "Arsenal",
+        awayTeam: "Chelsea",
+      }),
+    ).toBe("Select Home, 10 trophies, for Arsenal vs Chelsea");
     expect("pointsShort" in translationResources.en.common).toBe(false);
   });
 });

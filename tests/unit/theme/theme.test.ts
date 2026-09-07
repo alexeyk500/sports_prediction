@@ -20,7 +20,10 @@ describe("resolveEffectiveTheme", () => {
   });
 
   it("defines semantic tokens for light and dark palettes", () => {
-    const css = readFileSync(new URL("../../../src/app/globals.css", import.meta.url), "utf8");
+    const css = readFileSync(
+      new URL("../../../src/app/globals.css", import.meta.url),
+      "utf8",
+    );
 
     expect(css).toContain("--color-app-bg");
     expect(css).toContain("--color-surface-elevated");

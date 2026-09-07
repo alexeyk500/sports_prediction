@@ -9,7 +9,10 @@ interface IUserCupPositionProps {
   onMakePrediction: () => void;
 }
 
-const UserCupPosition: React.FC<IUserCupPositionProps> = ({ row, onMakePrediction }) => {
+const UserCupPosition: React.FC<IUserCupPositionProps> = ({
+  row,
+  onMakePrediction,
+}) => {
   const { t } = useTranslation();
 
   return (
@@ -35,7 +38,11 @@ const UserCupPosition: React.FC<IUserCupPositionProps> = ({ row, onMakePredictio
           <>
             <h2>{t("cup.positionUnavailableTitle")}</h2>
             <p>{t("cup.positionUnavailableBody")}</p>
-            <button className={styles.predictCta} type="button" onClick={onMakePrediction}>
+            <button
+              className={styles.predictCta}
+              type="button"
+              onClick={onMakePrediction}
+            >
               {t("cup.makePrediction")}
             </button>
           </>

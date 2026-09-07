@@ -10,11 +10,19 @@ interface IPredictTabsProps {
   onChange: (tab: ActiveTab) => void;
 }
 
-const PredictTabs: React.FC<IPredictTabsProps> = ({ activeTab, predictionCount, onChange }) => {
+const PredictTabs: React.FC<IPredictTabsProps> = ({
+  activeTab,
+  predictionCount,
+  onChange,
+}) => {
   const { t, locale } = useTranslation();
 
   return (
-    <div className={styles.tabs} role="tablist" aria-label={t("predict.tabs.ariaLabel")}>
+    <div
+      className={styles.tabs}
+      role="tablist"
+      aria-label={t("predict.tabs.ariaLabel")}
+    >
       <button
         className={activeTab === "available" ? styles.activeTab : styles.tab}
         type="button"
@@ -33,7 +41,9 @@ const PredictTabs: React.FC<IPredictTabsProps> = ({ activeTab, predictionCount, 
       >
         <span>{t("predict.tabs.myPicks")}</span>
         {predictionCount > 0 ? (
-          <span className={styles.tabCount}>{formatLocalizedNumber(locale, predictionCount)}</span>
+          <span className={styles.tabCount}>
+            {formatLocalizedNumber(locale, predictionCount)}
+          </span>
         ) : null}
       </button>
     </div>

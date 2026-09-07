@@ -3,7 +3,8 @@ import { DomainError } from "@/lib/errors/domain-error";
 
 export const FREE_PREDICTION_LIMIT = 3;
 export const REWARDED_PREDICTION_LIMIT = 5;
-export const DAILY_PREDICTION_LIMIT = FREE_PREDICTION_LIMIT + REWARDED_PREDICTION_LIMIT;
+export const DAILY_PREDICTION_LIMIT =
+  FREE_PREDICTION_LIMIT + REWARDED_PREDICTION_LIMIT;
 
 export interface DailyPredictionUsageState {
   freeUsed: number;
@@ -20,7 +21,10 @@ export function resolvePredictionSlotType(
     return "FREE";
   }
 
-  if (totalUsed >= DAILY_PREDICTION_LIMIT || usage.rewardedUsed >= REWARDED_PREDICTION_LIMIT) {
+  if (
+    totalUsed >= DAILY_PREDICTION_LIMIT ||
+    usage.rewardedUsed >= REWARDED_PREDICTION_LIMIT
+  ) {
     throw new DomainError(
       "DAILY_PREDICTION_LIMIT_REACHED",
       "Daily prediction limit reached.",
@@ -29,7 +33,9 @@ export function resolvePredictionSlotType(
   }
 
   if (!hasAdReward) {
-    throw new DomainError("REWARDED_AD_REQUIRED", "Rewarded ad is required.", { ...usage });
+    throw new DomainError("REWARDED_AD_REQUIRED", "Rewarded ad is required.", {
+      ...usage,
+    });
   }
 
   return "REWARDED";

@@ -2,25 +2,27 @@
 
 **Technical Spec v0.1**
 
-  ----------------------- ----------------------------
-  **Status**              Working technical baseline
-  **Platform**            Telegram Mini App
-  **Product authority**   `docs/PRODUCT_SPEC.md`
-  **Decision register**   `docs/DECISIONS.md`
-  ----------------------- ----------------------------
+---
+
+**Status** Working technical baseline
+**Platform** Telegram Mini App
+**Product authority** `docs/PRODUCT_SPEC.md`
+**Decision register** `docs/DECISIONS.md`
+
+---
 
 Этот документ определяет backend architecture, integration boundaries,
 runtime, workers, security и operational rules. Product behavior,
 database field-level structure, frontend architecture, testing strategy
 и visual rules принадлежат соответствующим специализированным specs.
 
-------------------------------------------------------------------------
+---
 
 # 1. Technical Boundaries
 
 Goalstery v0.1 --- modular monolith:
 
-``` text
+```text
 Telegram Mini App
       │
       ▼
@@ -49,7 +51,7 @@ Separate Node.js Workers
 
 Core stack:
 
-``` text
+```text
 Next.js
 React
 TypeScript
@@ -64,33 +66,33 @@ npm
 
 Frontend implementation details are governed by:
 
-``` text
+```text
 docs/FRONTEND_ARCHITECTURE.md
 ```
 
 Database structure is governed by:
 
-``` text
+```text
 docs/DB_SCHEMA.md
 prisma/schema.prisma
 ```
 
 Testing requirements are governed by:
 
-``` text
+```text
 docs/TESTING_SPEC.md
 ```
 
 Accepted/Open project decisions are governed by:
 
-``` text
+```text
 docs/DECISIONS.md
 ```
 
 Do not duplicate those documents here unless a technical boundary must
 be stated to make this spec coherent.
 
-------------------------------------------------------------------------
+---
 
 # 2. Runtime and Deployment Architecture
 
@@ -98,7 +100,7 @@ Backend is part of the same Next.js project.
 
 Primary frontend/backend transport:
 
-``` text
+```text
 /api/*
 ```
 
@@ -110,7 +112,7 @@ unique business logic.
 
 Production baseline:
 
-``` text
+```text
 VPS
 Nginx reverse proxy / HTTPS termination
 Next.js Node.js service via systemd
@@ -121,7 +123,7 @@ systemd timers or equivalent scheduler
 
 v0.1 does not require:
 
-``` text
+```text
 Redis
 message broker
 microservices
@@ -140,13 +142,13 @@ practical, health checks and backups.
 Production schema changes use Prisma Migrations, not destructive schema
 push.
 
-------------------------------------------------------------------------
+---
 
 # 3. Application Architecture
 
 Route Handlers are thin:
 
-``` text
+```text
 authenticate
 parse/validate input
 call application/domain service
@@ -155,7 +157,7 @@ map result/error to HTTP
 
 Do not place in Route Handlers:
 
-``` text
+```text
 scoring formulas
 quota logic
 settlement logic
@@ -176,7 +178,7 @@ solve a concrete problem.
 
 Provider-specific payloads must not leak into domain modules.
 
-------------------------------------------------------------------------
+---
 
 # 4. External Adapter Boundaries
 
@@ -184,7 +186,7 @@ External systems are isolated behind project-owned adapters.
 
 Current integration boundaries:
 
-``` text
+```text
 Telegram
 Sports Provider
 Rewarded Ads
@@ -200,25 +202,25 @@ Tournament, Rating or Prize domain rules.
 
 Secrets remain server-side.
 
-------------------------------------------------------------------------
+---
 
 # 5. Authentication
 
 Telegram Mini App authentication uses:
 
-``` text
+```text
 Telegram initData
 ```
 
 Authenticated v0.1 API requests send raw initData in:
 
-``` text
+```text
 X-Telegram-Init-Data
 ```
 
 Backend performs official server-side validation including:
 
-``` text
+```text
 hash verification
 auth_date validation
 expiration check
@@ -228,7 +230,7 @@ internal User resolution
 
 Default maximum age:
 
-``` text
+```text
 TELEGRAM_INIT_DATA_MAX_AGE_SECONDS=86400
 ```
 
@@ -236,7 +238,7 @@ TELEGRAM_INIT_DATA_MAX_AGE_SECONDS=86400
 
 Never trust separately supplied client identity fields such as:
 
-``` text
+```text
 userId
 telegramUserId
 username
@@ -245,7 +247,7 @@ client auth state
 
 At first valid authenticated request:
 
-``` text
+```text
 validated Telegram user
 → find User by telegramUserId
 → create if absent
@@ -270,7 +272,7 @@ Introducing a different session mechanism changes the auth contract and
 must not be done as an opportunistic optimization. It requires explicit
 architecture approval and synchronized contract updates.
 
-------------------------------------------------------------------------
+---
 
 # 6. Time Model
 
@@ -278,7 +280,7 @@ Persistent timestamps are timezone-aware and represent UTC instants.
 
 Canonical business timezone:
 
-``` text
+```text
 Europe/London
 ```
 
@@ -287,7 +289,7 @@ offset.
 
 Business-day logic must use one shared time boundary implementation for:
 
-``` text
+```text
 current business date
 business-day UTC range
 Daily Prediction quota
@@ -302,13 +304,13 @@ tests can control time deterministically.
 
 Exact product time rules remain in `PRODUCT_SPEC.md`.
 
-------------------------------------------------------------------------
+---
 
 # 7. Tournament Technical Model
 
 Core lifecycle:
 
-``` text
+```text
 SCHEDULED
 → ACTIVE
 → FINALIZING
@@ -322,7 +324,7 @@ Tournament lifecycle operations must be idempotent.
 
 The lifecycle worker is responsible for orchestration such as:
 
-``` text
+```text
 ensure/create next Tournament
 activate scheduled Tournament
 transition previous Tournament to FINALIZING
@@ -345,13 +347,13 @@ recomputing all Prediction sums on every request.
 Official sports tie-break behavior must not be invented by database
 ordering.
 
-------------------------------------------------------------------------
+---
 
 # 8. Fixture and Daily Match Pool
 
 Fixture product lifecycle:
 
-``` text
+```text
 DRAFT
 OPEN
 LOCKED
@@ -377,7 +379,7 @@ must not be prematurely blocked by `Fixture.status`.
 Policy for postponed/cancelled/abandoned/rescheduled Fixture remains
 unresolved until explicitly decided.
 
-------------------------------------------------------------------------
+---
 
 # 9. Outcome Probability and Scoring Snapshot Boundary
 
@@ -410,7 +412,7 @@ The exact mathematical model has not yet been designed.
 
 Therefore:
 
-``` text
+```text
 do not replace current scoring/probability behavior yet
 do not adopt provider prediction products as authority
 do not silently redesign OutcomeSnapshot
@@ -420,7 +422,7 @@ When the mathematical model is designed, reconcile `PRODUCT_SPEC.md`,
 `TECH_SPEC.md`, `DB_SCHEMA.md`, `TESTING_SPEC.md` and `DECISIONS.md`
 explicitly before implementation.
 
-------------------------------------------------------------------------
+---
 
 # 10. Prediction Transaction
 
@@ -429,7 +431,7 @@ explicitly before implementation.
 The operation must atomically enforce all current authoritative rules
 required to:
 
-``` text
+```text
 resolve authenticated User
 resolve Active Tournament
 lock/read eligible Fixture
@@ -448,7 +450,7 @@ Failure of any required invariant rolls back the operation.
 
 Concurrency must prevent:
 
-``` text
+```text
 Prediction beyond daily quota
 duplicate Prediction for User + Fixture
 double AdReward consumption
@@ -463,7 +465,7 @@ implementation/tests.
 
 Its product invariant is:
 
-``` text
+```text
 now < fixture.kickoffAt  → permitted
 now >= fixture.kickoffAt → PREDICTION_LOCKED
 ```
@@ -471,7 +473,7 @@ now >= fixture.kickoffAt → PREDICTION_LOCKED
 It must preserve the original slot/snapshot/quota/reward semantics
 defined by `PRODUCT_SPEC.md`.
 
-------------------------------------------------------------------------
+---
 
 # 11. Rewarded Ads
 
@@ -479,13 +481,13 @@ Rewarded Ads are behind an adapter/integration boundary.
 
 Current intended provider:
 
-``` text
+```text
 Monetag
 ```
 
 High-level flow:
 
-``` text
+```text
 intended Prediction
 → server-created reward attempt
 → provider flow
@@ -500,7 +502,7 @@ proof by itself.
 If the provider lacks a signed server verification mechanism, the
 integration must minimize forgery/replay using mechanisms such as:
 
-``` text
+```text
 server-created attempt
 unique attempt ID
 expiration
@@ -512,7 +514,7 @@ telemetry/anomaly detection
 Exact Monetag verification contract remains unresolved until integration
 design is approved.
 
-------------------------------------------------------------------------
+---
 
 # 12. Sports Data Integration
 
@@ -520,7 +522,7 @@ Sports provider code is isolated behind the Sports Provider adapter.
 
 Current provider/discovery source:
 
-``` text
+```text
 API-Football / API-Sports
 ```
 
@@ -528,7 +530,7 @@ Core domain code must not depend on raw provider responses.
 
 High-level ingestion responsibilities may include:
 
-``` text
+```text
 Fixture ingestion/sync
 historical football data ingestion
 result/status ingestion
@@ -548,21 +550,21 @@ intact.
 Football presentation identity is Goalstery-owned and
 provider-independent:
 
-``` text
+```text
 Competition.slug
 Team.slug
 ```
 
 Runtime local assets:
 
-``` text
+```text
 /assets/competitions/<Competition.slug>.webp
 /assets/teams/<Team.slug>.webp
 ```
 
 Canonical mapping:
 
-``` text
+```text
 data/football-assets.manifest.json
 ```
 
@@ -571,7 +573,7 @@ identity and not runtime asset filenames.
 
 Frontend must not derive canonical asset identity from:
 
-``` text
+```text
 provider ID
 provider logo URL
 runtime slugify(displayName)
@@ -589,7 +591,7 @@ existing canonical slugs.
 Detailed asset tooling belongs in scripts/tooling documentation rather
 than this Technical Spec.
 
-------------------------------------------------------------------------
+---
 
 # 13. Result Ingestion and Settlement
 
@@ -597,7 +599,7 @@ Separate external data ingestion from internal business settlement.
 
 Conceptually:
 
-``` text
+```text
 result-sync
 → provider result/status ingestion
 
@@ -614,7 +616,7 @@ Settlement must be safe under retries and duplicate worker execution.
 
 Required business property:
 
-``` text
+```text
 at-least-once execution
 → exactly-once business effect
 ```
@@ -622,7 +624,7 @@ at-least-once execution
 Large settlement work may be chunked if necessary, but chunking must
 preserve correctness and idempotency.
 
-------------------------------------------------------------------------
+---
 
 # 14. Global Rating Finalization
 
@@ -633,7 +635,7 @@ required settlement state.
 
 Conceptual operation:
 
-``` text
+```text
 select qualified participants
 calculate approved rating inputs/results
 update RatingProfile
@@ -642,7 +644,7 @@ create immutable RatingHistory
 
 For a given:
 
-``` text
+```text
 (userId, tournamentId)
 ```
 
@@ -652,7 +654,7 @@ The exact future mathematical probability/rating calibration work must
 not be inferred or implemented before its relevant decisions/spec
 changes are approved.
 
-------------------------------------------------------------------------
+---
 
 # 15. Prize and TON
 
@@ -679,7 +681,7 @@ application/service operations and must be auditable/idempotent.
 Do not introduce automatic smart-contract payout architecture without an
 approved change.
 
-------------------------------------------------------------------------
+---
 
 # 16. Idempotency
 
@@ -687,7 +689,7 @@ Critical operations must be safe under retries.
 
 At minimum this applies where relevant to:
 
-``` text
+```text
 Prediction creation
 Rewarded reward completion
 Settlement
@@ -701,7 +703,7 @@ where defined by the API contract.
 
 Current Prediction creation contract uses:
 
-``` text
+```text
 Idempotency-Key
 ```
 
@@ -713,13 +715,13 @@ Conflicting reuse returns the stable idempotency conflict error.
 
 Workers must assume scheduler/process delivery is at-least-once.
 
-------------------------------------------------------------------------
+---
 
 # 17. Worker Model
 
 Logical responsibilities:
 
-``` text
+```text
 fixture-sync / sports ingestion
 result-sync
 settlement
@@ -736,7 +738,7 @@ scheduling remain clear.
 
 Worker operations must tolerate:
 
-``` text
+```text
 retry
 process restart
 duplicate timer invocation
@@ -746,13 +748,13 @@ temporary provider/network failure
 Exact polling intervals are configuration/operations, not architectural
 product rules.
 
-------------------------------------------------------------------------
+---
 
 # 18. HTTP API Contract
 
 Base prefix:
 
-``` text
+```text
 /api
 ```
 
@@ -760,7 +762,7 @@ JSON is the standard payload format.
 
 Current implemented authenticated vertical slice:
 
-``` http
+```http
 GET   /api/bootstrap
 GET   /api/fixtures/today
 GET   /api/predictions/today
@@ -780,7 +782,7 @@ explicitly superseded.
 Frontend-supplied business-authoritative values such as these must not
 be trusted:
 
-``` text
+```text
 user identity
 points
 probability
@@ -794,13 +796,13 @@ A dedicated `API_CONTRACTS.md` may become the detailed endpoint/DTO
 authority; when it exists, endpoint-level schemas should move there
 rather than grow this file.
 
-------------------------------------------------------------------------
+---
 
 # 19. API Errors
 
 Expected failures use one stable machine-readable envelope:
 
-``` json
+```json
 {
   "error": {
     "code": "PREDICTION_LOCKED",
@@ -812,7 +814,7 @@ Expected failures use one stable machine-readable envelope:
 
 Clients branch on:
 
-``` text
+```text
 error.code
 ```
 
@@ -820,7 +822,7 @@ not localized/human-readable `message`.
 
 Current HTTP policy:
 
-``` text
+```text
 200 success
 201 created
 400 malformed/validation/non-conflict rejection
@@ -841,7 +843,7 @@ route-specific variants.
 Detailed endpoint error matrices belong in the future API contract
 document.
 
-------------------------------------------------------------------------
+---
 
 # 20. Input Validation and Security
 
@@ -854,7 +856,7 @@ introduce another validation framework without need.
 
 Mandatory security boundaries:
 
-``` text
+```text
 server-side Telegram auth
 HTTPS in production
 server-only secrets
@@ -876,7 +878,7 @@ critical mutation correctness remains database/application enforced.
 
 Do not add a production auth bypass.
 
-------------------------------------------------------------------------
+---
 
 # 21. Observability and Operations
 
@@ -884,7 +886,7 @@ Use structured logging.
 
 Include relevant identifiers where available:
 
-``` text
+```text
 requestId
 userId
 tournamentId
@@ -899,7 +901,7 @@ Never log full Telegram initData or secrets.
 
 Worker operational logs should make it possible to determine:
 
-``` text
+```text
 start/end
 duration
 items processed/updated
@@ -916,7 +918,7 @@ ingestion failures.
 Exact health endpoint shape is implementation-level unless exposed as a
 stable external contract.
 
-------------------------------------------------------------------------
+---
 
 # 22. Database Operations
 
@@ -924,7 +926,7 @@ PostgreSQL runs in Docker for the current deployment model.
 
 Required operational properties:
 
-``` text
+```text
 persistent volume
 non-default strong credentials
 non-public exposure where practical
@@ -935,7 +937,7 @@ backups
 
 Backups begin in MVP:
 
-``` text
+```text
 regular pg_dump or equivalent
 multiple retained generations
 storage outside the sole database volume
@@ -945,14 +947,14 @@ production backup before risky schema migration
 
 Prisma migration policy:
 
-``` text
+```text
 development → prisma migrate dev
 production  → prisma migrate deploy
 ```
 
 Field-level schema, constraints and indexes belong in `DB_SCHEMA.md`.
 
-------------------------------------------------------------------------
+---
 
 # 23. Environment Configuration
 
@@ -960,7 +962,7 @@ Configuration is environment-driven.
 
 Representative groups:
 
-``` text
+```text
 App
 Database
 Telegram
@@ -972,7 +974,7 @@ Business Time
 
 Current examples include:
 
-``` text
+```text
 NODE_ENV
 APP_URL
 DATABASE_URL
@@ -992,7 +994,7 @@ according to the frontend/dev tooling contract.
 Secrets are never committed to git or copied into public browser
 environment variables.
 
-------------------------------------------------------------------------
+---
 
 # 24. Development Tooling
 
@@ -1001,7 +1003,7 @@ Telegram initData.
 
 These tools must:
 
-``` text
+```text
 refuse unsafe production use where applicable
 not call production external providers unless explicitly intended
 not create real TON payout state
@@ -1011,13 +1013,13 @@ remain deterministic/re-runnable where designed
 Exact commands and step-by-step local workflow belong in development
 documentation/scripts rather than this Technical Spec.
 
-------------------------------------------------------------------------
+---
 
 # 25. Performance and Scaling
 
 v0.1 intentionally optimizes for a simple single-VPS architecture:
 
-``` text
+```text
 1 Next.js application
 1 PostgreSQL
 multiple Worker processes
@@ -1030,7 +1032,7 @@ Scale only from measured need.
 
 Potential future split boundaries include:
 
-``` text
+```text
 Sports ingestion
 Settlement
 Leaderboard
@@ -1046,13 +1048,13 @@ without rewriting business rules.
 Do not pre-build distributed-system infrastructure for hypothetical
 scale.
 
-------------------------------------------------------------------------
+---
 
 # 26. Open Technical Decisions
 
 Authoritative tracked Open Decisions belong in:
 
-``` text
+```text
 docs/DECISIONS.md
 ```
 
@@ -1061,7 +1063,7 @@ Do not maintain a second authoritative list here.
 Technical areas that may still require explicit resolution before
 affected implementation include, depending on current Decision register:
 
-``` text
+```text
 exact Weekly Cup boundary
 fixture disruption policy
 future Goalstery probability model and required data sources
@@ -1076,13 +1078,13 @@ TON wallet validation / payout operating procedure
 If implementation depends on an unresolved decision, follow `AGENTS.md`:
 stop and ask rather than silently choose.
 
-------------------------------------------------------------------------
+---
 
 # 27. Explicit Non-Goals v0.1
 
 Without an approved architecture/product change, do not introduce:
 
-``` text
+```text
 Redis
 Kafka / RabbitMQ
 microservices
@@ -1096,13 +1098,13 @@ complex admin panel
 live/in-play Prediction
 ```
 
-------------------------------------------------------------------------
+---
 
 # 28. Technical Acceptance
 
 The v0.1 technical architecture is compliant when:
 
-``` text
+```text
 frontend is not authoritative for auth/quota/kickoff/scoring/prize state
 critical Prediction mutations are atomic
 Rewarded entitlement cannot be consumed twice
@@ -1119,13 +1121,13 @@ Accepted decisions are respected
 Open Decisions are not silently resolved
 ```
 
-------------------------------------------------------------------------
+---
 
 # 29. Technical Spec Maintenance
 
 This document owns:
 
-``` text
+```text
 backend architecture
 runtime/deployment architecture
 application/domain boundaries
@@ -1139,7 +1141,7 @@ scaling boundaries
 
 It does not own:
 
-``` text
+```text
 product rules               → PRODUCT_SPEC.md
 database field definitions  → DB_SCHEMA.md / schema.prisma
 frontend architecture       → FRONTEND_ARCHITECTURE.md

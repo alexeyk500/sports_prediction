@@ -4,7 +4,12 @@ import type { useTranslation } from "@/lib/i18n/use-translation";
 
 const NANO_TON_PER_TON = 1_000_000_000n;
 
-export function formatDateRange(locale: SupportedLocale, startsAt: string, endsAt: string, timeZone: string): string {
+export function formatDateRange(
+  locale: SupportedLocale,
+  startsAt: string,
+  endsAt: string,
+  timeZone: string,
+): string {
   const formatter = new Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
@@ -15,7 +20,11 @@ export function formatDateRange(locale: SupportedLocale, startsAt: string, endsA
   return formatter.formatRange(new Date(startsAt), new Date(endsAt));
 }
 
-export function formatEndDate(locale: SupportedLocale, endsAt: string, timeZone: string): string {
+export function formatEndDate(
+  locale: SupportedLocale,
+  endsAt: string,
+  timeZone: string,
+): string {
   return new Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
@@ -25,7 +34,10 @@ export function formatEndDate(locale: SupportedLocale, endsAt: string, timeZone:
   }).format(new Date(endsAt));
 }
 
-export function formatCountdown(t: ReturnType<typeof useTranslation>["t"], remainingMs: number): string {
+export function formatCountdown(
+  t: ReturnType<typeof useTranslation>["t"],
+  remainingMs: number,
+): string {
   const totalMinutes = Math.floor(remainingMs / 60_000);
   const days = Math.floor(totalMinutes / 1_440);
   const hours = Math.floor((totalMinutes % 1_440) / 60);
@@ -39,7 +51,9 @@ export function formatNanoTon(locale: SupportedLocale, value: string): string {
   const whole = nanoTon / NANO_TON_PER_TON;
   const fraction = nanoTon % NANO_TON_PER_TON;
   const wholeText =
-    whole <= BigInt(Number.MAX_SAFE_INTEGER) ? formatLocalizedNumber(locale, Number(whole)) : whole.toString();
+    whole <= BigInt(Number.MAX_SAFE_INTEGER)
+      ? formatLocalizedNumber(locale, Number(whole))
+      : whole.toString();
 
   if (fraction === 0n) {
     return `${wholeText} TON`;

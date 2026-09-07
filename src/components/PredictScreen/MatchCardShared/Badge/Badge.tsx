@@ -14,13 +14,22 @@ const Badge: React.FC<IBadgeProps> = ({ badge, size }) => {
   const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null);
   const badgeClass = size === "small" ? styles.badgeSmall : styles.badgeLarge;
   const dataUi = size === "small" ? "league-badge" : "team-badge";
-  const logoFailed = badge.logoUrl !== undefined && failedLogoUrl === badge.logoUrl;
+  const logoFailed =
+    badge.logoUrl !== undefined && failedLogoUrl === badge.logoUrl;
 
   if (badge.logoUrl && !logoFailed) {
     return (
-      <span className={`${badgeClass} ${styles.badgeLogo}`} aria-hidden="true" data-ui={dataUi}>
+      <span
+        className={`${badgeClass} ${styles.badgeLogo}`}
+        aria-hidden="true"
+        data-ui={dataUi}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element -- Tiny badge logos need native onError fallback for canonical local/CDN asset URLs. */}
-        <img src={badge.logoUrl} alt="" onError={() => setFailedLogoUrl(badge.logoUrl ?? null)} />
+        <img
+          src={badge.logoUrl}
+          alt=""
+          onError={() => setFailedLogoUrl(badge.logoUrl ?? null)}
+        />
       </span>
     );
   }

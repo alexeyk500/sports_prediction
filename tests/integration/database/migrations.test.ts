@@ -1,5 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createTestPrismaClient, requireTestDatabaseUrl } from "../helpers/prisma-test-client";
+import {
+  createTestPrismaClient,
+  requireTestDatabaseUrl,
+} from "../helpers/prisma-test-client";
 
 const databaseUrl = requireTestDatabaseUrl();
 const prisma = createTestPrismaClient(databaseUrl);
@@ -9,7 +12,9 @@ describe("test database migrations", () => {
     const databaseName = new URL(databaseUrl).pathname.replace(/^\//, "");
 
     if (!databaseName.endsWith("_test")) {
-      throw new Error(`Integration tests must run against a test database, got: ${databaseName}`);
+      throw new Error(
+        `Integration tests must run against a test database, got: ${databaseName}`,
+      );
     }
   });
 

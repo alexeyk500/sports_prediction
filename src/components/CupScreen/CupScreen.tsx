@@ -74,7 +74,7 @@ const CupScreen: React.FC<ICupScreenProps> = ({ onMakePrediction }) => {
       return Number.isNaN(fallbackMs) ? 0 : fallbackMs;
     }
 
-    return serverTimeMs + (clockTick * 30_000);
+    return serverTimeMs + clockTick * 30_000;
   }, [bootstrap, clockTick]);
 
   if (isBootstrapping) {
@@ -96,7 +96,9 @@ const CupScreen: React.FC<ICupScreenProps> = ({ onMakePrediction }) => {
     <main className={styles.screen}>
       <div className={styles.topArea}>
         <CupHeader />
-        {errorMessage ? <div className={styles.errorBanner}>{errorMessage}</div> : null}
+        {errorMessage ? (
+          <div className={styles.errorBanner}>{errorMessage}</div>
+        ) : null}
         <CupModeTabs activeTab={activeTab} onChange={setActiveTab} />
       </div>
       <div className={styles.scrollArea} data-ui="cup-scroll-area">
@@ -133,5 +135,8 @@ function logCupLoadError(error: unknown): void {
     return;
   }
 
-  console.error("Cup bootstrap failed", error instanceof Error ? error.message : error);
+  console.error(
+    "Cup bootstrap failed",
+    error instanceof Error ? error.message : error,
+  );
 }

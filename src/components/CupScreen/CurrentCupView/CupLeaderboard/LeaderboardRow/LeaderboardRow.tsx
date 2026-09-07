@@ -8,12 +8,19 @@ interface ILeaderboardRowProps {
   pinned?: boolean;
 }
 
-const LeaderboardRow: React.FC<ILeaderboardRowProps> = ({ row, pinned = false }) => {
+const LeaderboardRow: React.FC<ILeaderboardRowProps> = ({
+  row,
+  pinned = false,
+}) => {
   const { t } = useTranslation();
-  const rowClassName = pinned || row.isCurrentUser ? styles.pinnedRow : styles.row;
+  const rowClassName =
+    pinned || row.isCurrentUser ? styles.pinnedRow : styles.row;
 
   return (
-    <div className={rowClassName} data-current-user={row.isCurrentUser ? "true" : undefined}>
+    <div
+      className={rowClassName}
+      data-current-user={row.isCurrentUser ? "true" : undefined}
+    >
       <span>{row.rank}</span>
       <span className={styles.playerCell}>
         {row.telegramUrl ? (
@@ -21,12 +28,15 @@ const LeaderboardRow: React.FC<ILeaderboardRowProps> = ({ row, pinned = false })
         ) : (
           <span className={styles.playerName}>{row.playerName}</span>
         )}
-        {row.isCurrentUser ? <span className={styles.youBadge}>{t("cup.you")}</span> : null}
+        {row.isCurrentUser ? (
+          <span className={styles.youBadge}>{t("cup.you")}</span>
+        ) : null}
       </span>
-      <span>
+      <span className={styles.centerdText}>
         {row.correctPredictions} / {row.wrongPredictions}
       </span>
-      <strong>{row.points}</strong>
+
+      <span className={styles.centerdText}>{row.points}</span>
     </div>
   );
 };

@@ -1,11 +1,22 @@
 import { createHash } from "node:crypto";
-import { Prisma, type Prediction, type PredictionOutcome, type PrismaClient } from "@prisma/client";
+import {
+  Prisma,
+  type Prediction,
+  type PredictionOutcome,
+  type PrismaClient,
+} from "@prisma/client";
 import { DomainError } from "@/lib/errors/domain-error";
-import { businessDateToDatabaseDate, getBusinessDate } from "@/lib/time/business-time";
+import {
+  businessDateToDatabaseDate,
+  getBusinessDate,
+} from "@/lib/time/business-time";
 import type { Clock } from "@/lib/time/clock";
 import { assertFixtureEligibleForPrediction } from "@/modules/fixtures/fixture.domain";
 import { findActiveTournamentForInstant } from "@/modules/tournaments/tournament.service";
-import { getSnapshotValuesForOutcome, resolvePredictionSlotType } from "./prediction.domain";
+import {
+  getSnapshotValuesForOutcome,
+  resolvePredictionSlotType,
+} from "./prediction.domain";
 
 const CREATE_PREDICTION_OPERATION = "CREATE_PREDICTION";
 
@@ -78,32 +89,49 @@ export async function createPrediction(
   return dependencies.prisma.$transaction(
     async (tx) => {
       await lockCreatePredictionIdempotencyScope(tx, input);
-      const idempotency = await lockCreatePredictionIdempotencyRecord(tx, input, requestHash);
+      const idempotency = await lockCreatePredictionIdempotencyRecord(
+        tx,
+        input,
+        requestHash,
+      );
 
       if (idempotency.responseBody) {
         return idempotency.responseBody as unknown as PredictionMutationResult;
       }
 
-      const tournament = await findActiveTournamentForInstant({ prisma: tx }, now);
+      const tournament = await findActiveTournamentForInstant(
+        { prisma: tx },
+        now,
+      );
 
       if (!tournament) {
-        throw new DomainError("NO_ACTIVE_TOURNAMENT", "No active tournament found.", {
-          instant: now.toISOString(),
-        });
+        throw new DomainError(
+          "NO_ACTIVE_TOURNAMENT",
+          "No active tournament found.",
+          {
+            instant: now.toISOString(),
+          },
+        );
       }
 
       const fixture = await lockFixture(tx, input.fixtureId);
 
       if (!fixture) {
-        throw new DomainError("FIXTURE_NOT_FOUND", "Fixture not found.", { fixtureId: input.fixtureId });
+        throw new DomainError("FIXTURE_NOT_FOUND", "Fixture not found.", {
+          fixtureId: input.fixtureId,
+        });
       }
 
       if (getBusinessDate(fixture.kickoffAt) !== businessDate) {
-        throw new DomainError("FIXTURE_NOT_IN_DAILY_POOL", "Fixture is not in the current daily match pool.", {
-          fixtureId: fixture.id,
-          businessDate,
-          fixtureBusinessDate: getBusinessDate(fixture.kickoffAt),
-        });
+        throw new DomainError(
+          "FIXTURE_NOT_IN_DAILY_POOL",
+          "Fixture is not in the current daily match pool.",
+          {
+            fixtureId: fixture.id,
+            businessDate,
+            fixtureBusinessDate: getBusinessDate(fixture.kickoffAt),
+          },
+        );
       }
 
       assertFixtureIsEligibleForPredictionCreation(fixture, now);
@@ -111,7 +139,10 @@ export async function createPrediction(
       const snapshot = await tx.outcomeSnapshot.findUniqueOrThrow({
         where: { id: fixture.scoringSnapshotId ?? "" },
       });
-      const selectedOutcomeValues = getSnapshotValuesForOutcome(snapshot, input.selectedOutcome);
+      const selectedOutcomeValues = getSnapshotValuesForOutcome(
+        snapshot,
+        input.selectedOutcome,
+      );
 
       await lockDailyUsageScope(tx, input.userId, businessDate);
       const usage = await tx.dailyPredictionUsage.upsert({
@@ -127,8 +158,14 @@ export async function createPrediction(
           businessDate: businessDateToDatabaseDate(businessDate),
         },
       });
-      const slotType = resolvePredictionSlotType(usage, Boolean(input.adRewardId));
-      const adReward = slotType === "REWARDED" ? await lockAndValidateAdReward(tx, input, now) : null;
+      const slotType = resolvePredictionSlotType(
+        usage,
+        Boolean(input.adRewardId),
+      );
+      const adReward =
+        slotType === "REWARDED"
+          ? await lockAndValidateAdReward(tx, input, now)
+          : null;
 
       await tx.tournamentParticipant.upsert({
         where: {
@@ -155,16 +192,21 @@ export async function createPrediction(
             outcomeSnapshotId: snapshot.id,
             selectedOutcome: input.selectedOutcome,
             slotType,
-            probabilityAtPrediction: selectedOutcomeValues.probabilityAtPrediction as Prisma.Decimal,
+            probabilityAtPrediction:
+              selectedOutcomeValues.probabilityAtPrediction as Prisma.Decimal,
             potentialPoints: selectedOutcomeValues.potentialPoints,
           },
         });
       } catch (error) {
         if (isUniqueConstraintError(error)) {
-          throw new DomainError("PREDICTION_ALREADY_EXISTS", "Prediction already exists.", {
-            userId: input.userId,
-            fixtureId: fixture.id,
-          });
+          throw new DomainError(
+            "PREDICTION_ALREADY_EXISTS",
+            "Prediction already exists.",
+            {
+              userId: input.userId,
+              fixtureId: fixture.id,
+            },
+          );
         }
 
         throw error;
@@ -224,7 +266,11 @@ export async function updatePrediction(
   const now = dependencies.clock.now();
 
   return dependencies.prisma.$transaction(async (tx) => {
-    const existingPrediction = await lockPredictionForUpdate(tx, input.predictionId, input.userId);
+    const existingPrediction = await lockPredictionForUpdate(
+      tx,
+      input.predictionId,
+      input.userId,
+    );
 
     if (!existingPrediction) {
       throw new DomainError("PREDICTION_NOT_FOUND", "Prediction not found.", {
@@ -243,13 +289,17 @@ export async function updatePrediction(
     const snapshot = await tx.outcomeSnapshot.findUniqueOrThrow({
       where: { id: existingPrediction.outcomeSnapshotId },
     });
-    const selectedOutcomeValues = getSnapshotValuesForOutcome(snapshot, input.selectedOutcome);
+    const selectedOutcomeValues = getSnapshotValuesForOutcome(
+      snapshot,
+      input.selectedOutcome,
+    );
 
     const updatedPrediction = await tx.prediction.update({
       where: { id: existingPrediction.id },
       data: {
         selectedOutcome: input.selectedOutcome,
-        probabilityAtPrediction: selectedOutcomeValues.probabilityAtPrediction as Prisma.Decimal,
+        probabilityAtPrediction:
+          selectedOutcomeValues.probabilityAtPrediction as Prisma.Decimal,
         potentialPoints: selectedOutcomeValues.potentialPoints,
       },
     });
@@ -289,9 +339,13 @@ async function lockCreatePredictionIdempotencyRecord(
   }
 
   if (record.requestHash !== requestHash) {
-    throw new DomainError("IDEMPOTENCY_CONFLICT", "Idempotency key was used with a different payload.", {
-      idempotencyKey: input.idempotencyKey,
-    });
+    throw new DomainError(
+      "IDEMPOTENCY_CONFLICT",
+      "Idempotency key was used with a different payload.",
+      {
+        idempotencyKey: input.idempotencyKey,
+      },
+    );
   }
 
   return record;
@@ -385,15 +439,23 @@ async function lockAndValidateAdReward(
   }
 
   if (reward.userId !== input.userId) {
-    throw new DomainError("INVALID_AD_REWARD", "Ad reward belongs to another user.", {
-      adRewardId: reward.id,
-    });
+    throw new DomainError(
+      "INVALID_AD_REWARD",
+      "Ad reward belongs to another user.",
+      {
+        adRewardId: reward.id,
+      },
+    );
   }
 
   if (reward.status === "CONSUMED" || reward.consumedByPredictionId) {
-    throw new DomainError("AD_REWARD_ALREADY_CONSUMED", "Ad reward is already consumed.", {
-      adRewardId: reward.id,
-    });
+    throw new DomainError(
+      "AD_REWARD_ALREADY_CONSUMED",
+      "Ad reward is already consumed.",
+      {
+        adRewardId: reward.id,
+      },
+    );
   }
 
   if (reward.status !== "VERIFIED") {
@@ -413,7 +475,9 @@ async function lockAndValidateAdReward(
   return reward;
 }
 
-function toPredictionMutationResult(prediction: Prediction): PredictionMutationResult {
+function toPredictionMutationResult(
+  prediction: Prediction,
+): PredictionMutationResult {
   return {
     predictionId: prediction.id,
     userId: prediction.userId,
@@ -441,10 +505,16 @@ function hashCreatePredictionInput(input: CreatePredictionInput): string {
 }
 
 function isUniqueConstraintError(error: unknown): boolean {
-  return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002";
+  return (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === "P2002"
+  );
 }
 
-function assertFixtureIsEligibleForPredictionCreation(fixture: LockedFixtureRow, now: Date): void {
+function assertFixtureIsEligibleForPredictionCreation(
+  fixture: LockedFixtureRow,
+  now: Date,
+): void {
   try {
     assertFixtureEligibleForPrediction(
       {

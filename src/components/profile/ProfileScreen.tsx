@@ -4,7 +4,11 @@ import { useMemo, useState } from "react";
 import type React from "react";
 import { ApiClient } from "@/lib/api/client";
 import { messageForApiError } from "@/lib/api/error-presentation";
-import type { AppearanceMode, SupportedLocale, UserSettingsDto } from "@/lib/api/types";
+import type {
+  AppearanceMode,
+  SupportedLocale,
+  UserSettingsDto,
+} from "@/lib/api/types";
 import { APPEARANCE_MODES } from "@/lib/theme/theme";
 import { SUPPORTED_LOCALES } from "@/lib/i18n/locales";
 import { useTranslation } from "@/lib/i18n/use-translation";
@@ -21,10 +25,15 @@ const ProfileScreen: React.FC = () => {
   const setSettings = useSettingsStore((state) => state.setSettings);
   const { t, locale } = useTranslation();
   const apiClient = useMemo(() => new ApiClient({ getTelegramInitData }), []);
-  const [pendingField, setPendingField] = useState<"locale" | "appearance" | null>(null);
+  const [pendingField, setPendingField] = useState<
+    "locale" | "appearance" | null
+  >(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  async function updateSettings(patch: Partial<UserSettingsDto>, field: "locale" | "appearance"): Promise<void> {
+  async function updateSettings(
+    patch: Partial<UserSettingsDto>,
+    field: "locale" | "appearance",
+  ): Promise<void> {
     setPendingField(field);
     setErrorMessage(null);
 
@@ -58,7 +67,12 @@ const ProfileScreen: React.FC = () => {
           <select
             value={selectedLocale}
             disabled={pendingField !== null}
-            onChange={(event) => void updateSettings({ locale: event.target.value as SupportedLocale }, "locale")}
+            onChange={(event) =>
+              void updateSettings(
+                { locale: event.target.value as SupportedLocale },
+                "locale",
+              )
+            }
           >
             {SUPPORTED_LOCALES.map((option) => (
               <option key={option} value={option}>
@@ -74,7 +88,10 @@ const ProfileScreen: React.FC = () => {
             value={appearance}
             disabled={pendingField !== null}
             onChange={(event) =>
-              void updateSettings({ appearance: event.target.value as AppearanceMode }, "appearance")
+              void updateSettings(
+                { appearance: event.target.value as AppearanceMode },
+                "appearance",
+              )
             }
           >
             {APPEARANCE_MODES.map((option) => (

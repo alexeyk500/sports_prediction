@@ -1,4 +1,9 @@
-import { Prisma, type FixtureStatus, type OutcomeSnapshot, type PrismaClient } from "@prisma/client";
+import {
+  Prisma,
+  type FixtureStatus,
+  type OutcomeSnapshot,
+  type PrismaClient,
+} from "@prisma/client";
 import type { Clock } from "@/lib/time/clock";
 import { DomainError } from "@/lib/errors/domain-error";
 import {
@@ -7,7 +12,10 @@ import {
   SCORING_VERSION,
   type RawOneXTwoOdds,
 } from "@/modules/predictions/scoring.domain";
-import { quantizeProbabilityCore, quantizeRawOddsCore } from "@/modules/predictions/scoring.core";
+import {
+  quantizeProbabilityCore,
+  quantizeRawOddsCore,
+} from "@/modules/predictions/scoring.core";
 import { SUPPORTED_COMPETITION_CODES } from "./fixture.domain";
 
 const supportedCompetitionCodes = new Set<string>(SUPPORTED_COMPETITION_CODES);
@@ -38,10 +46,15 @@ export async function publishOutcomeSnapshot(
   const now = dependencies.clock.now();
 
   return dependencies.prisma.$transaction(async (tx) => {
-    const fixture = await lockFixtureForSnapshotPublication(tx, input.fixtureId);
+    const fixture = await lockFixtureForSnapshotPublication(
+      tx,
+      input.fixtureId,
+    );
 
     if (!fixture) {
-      throw new DomainError("FIXTURE_NOT_FOUND", "Fixture not found.", { fixtureId: input.fixtureId });
+      throw new DomainError("FIXTURE_NOT_FOUND", "Fixture not found.", {
+        fixtureId: input.fixtureId,
+      });
     }
 
     assertFixturePublishable(fixture, now);
@@ -55,7 +68,10 @@ export async function publishOutcomeSnapshot(
         throw new DomainError(
           "OUTCOME_SNAPSHOT_NOT_PUBLISHABLE",
           "Fixture points to a missing scoring snapshot.",
-          { fixtureId: fixture.id, scoringSnapshotId: fixture.scoringSnapshotId },
+          {
+            fixtureId: fixture.id,
+            scoringSnapshotId: fixture.scoringSnapshotId,
+          },
         );
       }
 
@@ -96,7 +112,9 @@ export async function publishOutcomeSnapshot(
   });
 }
 
-export function quantizeProbability(value: Prisma.Decimal.Value): Prisma.Decimal {
+export function quantizeProbability(
+  value: Prisma.Decimal.Value,
+): Prisma.Decimal {
   return quantizeProbabilityCore(value);
 }
 
@@ -125,7 +143,10 @@ async function lockFixtureForSnapshotPublication(
   return rows[0] ?? null;
 }
 
-function assertFixturePublishable(fixture: LockedFixtureRow, instant: Date): void {
+function assertFixturePublishable(
+  fixture: LockedFixtureRow,
+  instant: Date,
+): void {
   if (!fixture.competitionIsActive) {
     throw new DomainError("COMPETITION_INACTIVE", "Competition is inactive.", {
       fixtureId: fixture.id,
@@ -134,18 +155,26 @@ function assertFixturePublishable(fixture: LockedFixtureRow, instant: Date): voi
   }
 
   if (!supportedCompetitionCodes.has(fixture.competitionCode)) {
-    throw new DomainError("COMPETITION_NOT_SUPPORTED", "Competition is not supported.", {
-      fixtureId: fixture.id,
-      competitionCode: fixture.competitionCode,
-    });
+    throw new DomainError(
+      "COMPETITION_NOT_SUPPORTED",
+      "Competition is not supported.",
+      {
+        fixtureId: fixture.id,
+        competitionCode: fixture.competitionCode,
+      },
+    );
   }
 
   if (instant.getTime() >= fixture.kickoffAt.getTime()) {
-    throw new DomainError("FIXTURE_LOCKED", "Fixture is locked for snapshot publication.", {
-      fixtureId: fixture.id,
-      kickoffAt: fixture.kickoffAt.toISOString(),
-      instant: instant.toISOString(),
-    });
+    throw new DomainError(
+      "FIXTURE_LOCKED",
+      "Fixture is locked for snapshot publication.",
+      {
+        fixtureId: fixture.id,
+        kickoffAt: fixture.kickoffAt.toISOString(),
+        instant: instant.toISOString(),
+      },
+    );
   }
 
   if (fixture.status !== "DRAFT" && fixture.status !== "OPEN") {

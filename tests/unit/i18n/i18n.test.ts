@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 import { ApiClientError } from "@/lib/api/client";
 import { messageForApiError } from "@/lib/api/error-presentation";
 import { formatKickoffTime, formatLocalizedNumber } from "@/lib/i18n/format";
-import { coerceLocale, createTranslator, translationResources } from "@/lib/i18n/i18n";
+import {
+  coerceLocale,
+  createTranslator,
+  translationResources,
+} from "@/lib/i18n/i18n";
 import {
   directionForLocale,
   normalizeTelegramLanguageCode,
@@ -26,16 +30,20 @@ describe("i18n", () => {
   it("translates known keys for all supported locales", () => {
     expect(createTranslator("en")("profile.settingsTitle")).toBe("Settings");
     expect(createTranslator("ru")("profile.settingsTitle")).toBe("Настройки");
-    expect(createTranslator("de")("profile.settingsTitle")).toBe("Einstellungen");
+    expect(createTranslator("de")("profile.settingsTitle")).toBe(
+      "Einstellungen",
+    );
     expect(createTranslator("es")("profile.settingsTitle")).toBe("Ajustes");
     expect(createTranslator("ar")("profile.settingsTitle")).toBe("الإعدادات");
   });
 
   it("interpolates dynamic values without string concatenation", () => {
-    expect(createTranslator("en")("predict.quota.free", { used: 2, limit: 3 })).toBe(
-      "Free predictions: 2 / 3",
-    );
-    expect(createTranslator("ar")("common.userFallback", { id: "900000001" })).toBe("مستخدم 900000001");
+    expect(
+      createTranslator("en")("predict.quota.free", { used: 2, limit: 3 }),
+    ).toBe("Free predictions: 2 / 3");
+    expect(
+      createTranslator("ar")("common.userFallback", { id: "900000001" }),
+    ).toBe("مستخدم 900000001");
   });
 
   it("normalizes Telegram language codes for initial locale", () => {
@@ -62,7 +70,9 @@ describe("i18n", () => {
   it("formats kickoff time with the active locale", () => {
     const kickoffAt = "2026-09-06T18:30:00.000Z";
 
-    expect(formatKickoffTime("en", kickoffAt, { timeZone: "UTC" })).toMatch(/06|6/);
+    expect(formatKickoffTime("en", kickoffAt, { timeZone: "UTC" })).toMatch(
+      /06|6/,
+    );
     expect(formatKickoffTime("ru", kickoffAt, { timeZone: "UTC" })).not.toBe(
       formatKickoffTime("en", kickoffAt, { timeZone: "UTC" }),
     );
@@ -70,13 +80,21 @@ describe("i18n", () => {
 
   it("maps known API errors to localized user-facing messages", () => {
     const error = new ApiClientError(
-      { code: "PREDICTION_LOCKED", message: "Prediction is locked.", details: {} },
+      {
+        code: "PREDICTION_LOCKED",
+        message: "Prediction is locked.",
+        details: {},
+      },
       423,
       "/api/predictions/prediction-1",
     );
 
-    expect(messageForApiError(error, "en", { includeDiagnostics: false })).toBe("This match has started.");
-    expect(messageForApiError(error, "ru", { includeDiagnostics: false })).toBe("Матч уже начался.");
+    expect(messageForApiError(error, "en", { includeDiagnostics: false })).toBe(
+      "This match has started.",
+    );
+    expect(messageForApiError(error, "ru", { includeDiagnostics: false })).toBe(
+      "Матч уже начался.",
+    );
   });
 
   it("maps unknown API errors to the localized generic message", () => {
@@ -86,7 +104,9 @@ describe("i18n", () => {
       "/api/bootstrap",
     );
 
-    expect(messageForApiError(error, "es", { includeDiagnostics: false })).toBe("Algo salió mal.");
+    expect(messageForApiError(error, "es", { includeDiagnostics: false })).toBe(
+      "Algo salió mal.",
+    );
   });
 });
 
@@ -96,6 +116,8 @@ function leafPaths(value: unknown, prefix = ""): string[] {
   }
 
   return Object.entries(value)
-    .flatMap(([key, nested]) => leafPaths(nested, prefix ? `${prefix}.${key}` : key))
+    .flatMap(([key, nested]) =>
+      leafPaths(nested, prefix ? `${prefix}.${key}` : key),
+    )
     .sort();
 }

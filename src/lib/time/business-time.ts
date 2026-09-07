@@ -43,7 +43,10 @@ export function getBusinessDate(instant: Date): BusinessDate {
   return formatBusinessDate(parts);
 }
 
-export function isInstantInBusinessDate(instant: Date, businessDate: BusinessDate): boolean {
+export function isInstantInBusinessDate(
+  instant: Date,
+  businessDate: BusinessDate,
+): boolean {
   assertValidDate(instant, "instant");
   const { startUtc, endUtc } = getBusinessDayRangeUtc(businessDate);
   const timestamp = instant.getTime();
@@ -51,13 +54,25 @@ export function isInstantInBusinessDate(instant: Date, businessDate: BusinessDat
   return timestamp >= startUtc.getTime() && timestamp < endUtc.getTime();
 }
 
-export function getBusinessDayRangeUtc(businessDate: BusinessDate): BusinessDayRangeUtc {
+export function getBusinessDayRangeUtc(
+  businessDate: BusinessDate,
+): BusinessDayRangeUtc {
   const localDate = parseBusinessDate(businessDate);
   const nextLocalDate = addDays(localDate, 1);
 
   return {
-    startUtc: zonedLocalTimeToUtc({ ...localDate, hour: 0, minute: 0, second: 0 }),
-    endUtc: zonedLocalTimeToUtc({ ...nextLocalDate, hour: 0, minute: 0, second: 0 }),
+    startUtc: zonedLocalTimeToUtc({
+      ...localDate,
+      hour: 0,
+      minute: 0,
+      second: 0,
+    }),
+    endUtc: zonedLocalTimeToUtc({
+      ...nextLocalDate,
+      hour: 0,
+      minute: 0,
+      second: 0,
+    }),
   };
 }
 
@@ -114,7 +129,9 @@ function getTimeZoneOffsetMilliseconds(instant: Date): number {
 
 function getLocalDateParts(instant: Date): LocalDateParts {
   const values = Object.fromEntries(
-    londonDateFormatter.formatToParts(instant).map((part) => [part.type, part.value]),
+    londonDateFormatter
+      .formatToParts(instant)
+      .map((part) => [part.type, part.value]),
   );
 
   return {
@@ -126,7 +143,9 @@ function getLocalDateParts(instant: Date): LocalDateParts {
 
 function getLocalDateTimeParts(instant: Date): LocalDateTimeParts {
   const values = Object.fromEntries(
-    londonDateTimeFormatter.formatToParts(instant).map((part) => [part.type, part.value]),
+    londonDateTimeFormatter
+      .formatToParts(instant)
+      .map((part) => [part.type, part.value]),
   );
 
   return {
@@ -139,7 +158,11 @@ function getLocalDateTimeParts(instant: Date): LocalDateTimeParts {
   };
 }
 
-function formatBusinessDate({ year, month, day }: LocalDateParts): BusinessDate {
+function formatBusinessDate({
+  year,
+  month,
+  day,
+}: LocalDateParts): BusinessDate {
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}` as BusinessDate;
 }
 

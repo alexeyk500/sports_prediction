@@ -13,7 +13,9 @@ describe("frontend API client", () => {
     });
 
     await expect(client.getBootstrap()).resolves.toEqual({ ok: true });
-    expect(receivedHeaders?.get("X-Telegram-Init-Data")).toBe("signed-init-data");
+    expect(receivedHeaders?.get("X-Telegram-Init-Data")).toBe(
+      "signed-init-data",
+    );
   });
 
   it("maps API error envelope to typed client error", async () => {
@@ -61,7 +63,11 @@ describe("frontend API client", () => {
       getTelegramInitData: () => "signed-init-data",
       fetchImpl: async (input) => {
         requestedUrls.push(String(input));
-        return Response.json({ items: [], nextCursor: null, totalParticipants: 0 });
+        return Response.json({
+          items: [],
+          nextCursor: null,
+          totalParticipants: 0,
+        });
       },
     });
 

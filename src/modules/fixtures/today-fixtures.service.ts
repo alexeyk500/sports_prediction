@@ -1,5 +1,8 @@
 import type { FixtureStatus, PrismaClient } from "@prisma/client";
-import { getBusinessDate, getBusinessDayRangeUtc } from "@/lib/time/business-time";
+import {
+  getBusinessDate,
+  getBusinessDayRangeUtc,
+} from "@/lib/time/business-time";
 import type { Clock } from "@/lib/time/clock";
 import { SUPPORTED_COMPETITION_CODES } from "./fixture.domain";
 

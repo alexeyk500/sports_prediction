@@ -4,10 +4,10 @@
 
 Продуктовые требования, user-facing behavior и бизнес-правила MVP.
 
-| | |
-|---|---|
-| **Status** | Working baseline specification |
-| **Platform** | Telegram Mini App |
+|              |                                             |
+| ------------ | ------------------------------------------- |
+| **Status**   | Working baseline specification              |
+| **Platform** | Telegram Mini App                           |
 | **Language** | Описание — русский; code entities — English |
 
 Этот документ является product/domain source of truth. Архитектурные, database, testing и visual implementation details принадлежат соответствующим специализированным specs и не должны дублироваться здесь.
@@ -49,11 +49,11 @@ TON используется для заранее определённых Tour
 
 # 2. Product Loops
 
-| Loop | Period | Purpose |
-|---|---|---|
-| Daily | Calendar day | Match Pool, 3 Free + up to 5 Rewarded Predictions |
-| Weekly Cup | Week | Tournament, Leaderboard, TON prizes |
-| Long-term | Multiple Cups | Global Rating, League, Profile, Career |
+| Loop       | Period        | Purpose                                           |
+| ---------- | ------------- | ------------------------------------------------- |
+| Daily      | Calendar day  | Match Pool, 3 Free + up to 5 Rewarded Predictions |
+| Weekly Cup | Week          | Tournament, Leaderboard, TON prizes               |
+| Long-term  | Multiple Cups | Global Rating, League, Profile, Career            |
 
 ---
 
@@ -198,9 +198,7 @@ points = clamp(round(6.5 / p), 7, 50)
 Equivalent implementation:
 
 ```ts
-Math.round(
-  Math.min(50, Math.max(7, 6.5 / probability))
-)
+Math.round(Math.min(50, Math.max(7, 6.5 / probability)));
 ```
 
 Rules:
@@ -227,16 +225,16 @@ Scoring имеет versioned semantics через `scoringVersion`.
 `MAX_POINTS = 50` ограничивает влияние единичного экстремального longshot.
 
 | Probability | Points |
-|---:|---:|
-| 75% | 9 |
-| 65% | 10 |
-| 55% | 12 |
-| 45% | 14 |
-| 35% | 19 |
-| 25% | 26 |
-| 20% | 33 |
-| 15% | 43 |
-| ≤13% | 50 cap |
+| ----------: | -----: |
+|         75% |      9 |
+|         65% |     10 |
+|         55% |     12 |
+|         45% |     14 |
+|         35% |     19 |
+|         25% |     26 |
+|         20% |     33 |
+|         15% |     43 |
+|        ≤13% | 50 cap |
 
 В domain/API/database значение называется `Points`.
 
@@ -260,14 +258,14 @@ High-level Fixture lifecycle:
 DRAFT → OPEN → LOCKED → LIVE → FINISHED → SETTLED
 ```
 
-| Status | Product meaning |
-|---|---|
-| DRAFT | Fixture ещё не опубликован для Prediction |
-| OPEN | Fixture доступен для new Prediction |
-| LOCKED | Kickoff boundary reached |
-| LIVE | Match in progress; Prediction result pending |
-| FINISHED | Final result received |
-| SETTLED | Prediction results/Points applied |
+| Status   | Product meaning                              |
+| -------- | -------------------------------------------- |
+| DRAFT    | Fixture ещё не опубликован для Prediction    |
+| OPEN     | Fixture доступен для new Prediction          |
+| LOCKED   | Kickoff boundary reached                     |
+| LIVE     | Match in progress; Prediction result pending |
+| FINISHED | Final result received                        |
+| SETTLED  | Prediction results/Points applied            |
 
 Important:
 
@@ -287,12 +285,12 @@ Policy для postponed/cancelled/abandoned/rescheduled Fixture остаётся
 
 Bottom Navigation:
 
-| Item | Purpose |
-|---|---|
-| Predict | Today's Fixtures, Prediction, My Picks |
-| Cup | Current Weekly Cup, Prize Zone, Leaderboard |
-| Rating | Global Rating and competitive status |
-| Profile | Career, History, Achievements, Prizes |
+| Item    | Purpose                                     |
+| ------- | ------------------------------------------- |
+| Predict | Today's Fixtures, Prediction, My Picks      |
+| Cup     | Current Weekly Cup, Prize Zone, Leaderboard |
+| Rating  | Global Rating and competitive status        |
+| Profile | Career, History, Achievements, Prizes       |
 
 Settings не является отдельным Bottom Navigation item и открывается из Profile.
 
@@ -484,24 +482,24 @@ Internal initial rating:
 Current thresholds:
 
 | ratingValue | leagueDivision |
-|---:|---|
-| <1200 | BRONZE_III |
-| 1200 | BRONZE_II |
-| 1300 | BRONZE_I |
-| 1400 | SILVER_III |
-| 1450 | SILVER_II |
-| 1500 | SILVER_I |
-| 1550 | GOLD_III |
-| 1650 | GOLD_II |
-| 1750 | GOLD_I |
-| 1850 | PLATINUM_III |
-| 1925 | PLATINUM_II |
-| 2000 | PLATINUM_I |
-| 2075 | DIAMOND_III |
-| 2150 | DIAMOND_II |
-| 2225 | DIAMOND_I |
-| 2300 | MASTER |
-| 2450+ | LEGEND |
+| ----------: | -------------- |
+|       <1200 | BRONZE_III     |
+|        1200 | BRONZE_II      |
+|        1300 | BRONZE_I       |
+|        1400 | SILVER_III     |
+|        1450 | SILVER_II      |
+|        1500 | SILVER_I       |
+|        1550 | GOLD_III       |
+|        1650 | GOLD_II        |
+|        1750 | GOLD_I         |
+|        1850 | PLATINUM_III   |
+|        1925 | PLATINUM_II    |
+|        2000 | PLATINUM_I     |
+|        2075 | DIAMOND_III    |
+|        2150 | DIAMOND_II     |
+|        2225 | DIAMOND_I      |
+|        2300 | MASTER         |
+|       2450+ | LEGEND         |
 
 **Documentation note:** исходная Product Spec помечала эти thresholds как `provisional` и требующие Simulation/Calibration. Если `docs/DECISIONS.md` фиксирует их как Accepted, это apparent documentation conflict и должно быть отдельно разрешено до изменения статуса thresholds.
 
@@ -564,16 +562,16 @@ dark
 
 ## 12.1 Achievement v0.1
 
-| Code | Condition |
-|---|---|
-| FIRST_PICK | First Prediction |
-| FIRST_WIN | First Correct Prediction |
-| ON_FIRE | 5 Correct Predictions in a row |
-| GIANT_KILLER | Correct Prediction with Points ≥ 40 |
+| Code         | Condition                                                                           |
+| ------------ | ----------------------------------------------------------------------------------- |
+| FIRST_PICK   | First Prediction                                                                    |
+| FIRST_WIN    | First Correct Prediction                                                            |
+| ON_FIRE      | 5 Correct Predictions in a row                                                      |
+| GIANT_KILLER | Correct Prediction with Points ≥ 40                                                 |
 | SHARPSHOOTER | Correct Predictions equal current `DAILY_PREDICTION_LIMIT` in one day (currently 8) |
-| CHAMPION | Weekly Cup win |
-| ELITE | Global Rank ≤ 100 |
-| MASTER | League = MASTER |
+| CHAMPION     | Weekly Cup win                                                                      |
+| ELITE        | Global Rank ≤ 100                                                                   |
+| MASTER       | League = MASTER                                                                     |
 
 ---
 
@@ -583,16 +581,16 @@ Goal: first launch → first Prediction in approximately 20–30 seconds.
 
 Explain mechanics when they become relevant.
 
-| Trigger | Message |
-|---|---|
-| FIRST_LAUNCH | Free-to-play Weekly Cup, Prize Pool, 3 Free/day |
-| FIRST_MATCH_VIEW | More unlikely outcome = more Points |
-| FIRST_PREDICTION_CREATED | Prediction automatically joined current Cup |
-| FREE_LIMIT_REACHED | Up to 5 Rewarded Predictions available |
-| FIRST_PREDICTION_SETTLED | Points affect Weekly Leaderboard |
-| RATING_PROGRESS | 10 Predictions required for Rating qualification |
-| FIRST_CUP_FINISHED | Rating Delta and League movement |
-| FIRST_PRIZE | TON wallet and Prize Claim |
+| Trigger                  | Message                                          |
+| ------------------------ | ------------------------------------------------ |
+| FIRST_LAUNCH             | Free-to-play Weekly Cup, Prize Pool, 3 Free/day  |
+| FIRST_MATCH_VIEW         | More unlikely outcome = more Points              |
+| FIRST_PREDICTION_CREATED | Prediction automatically joined current Cup      |
+| FREE_LIMIT_REACHED       | Up to 5 Rewarded Predictions available           |
+| FIRST_PREDICTION_SETTLED | Points affect Weekly Leaderboard                 |
+| RATING_PROGRESS          | 10 Predictions required for Rating qualification |
+| FIRST_CUP_FINISHED       | Rating Delta and League movement                 |
+| FIRST_PRIZE              | TON wallet and Prize Claim                       |
 
 Before first Prediction do not request:
 
@@ -611,26 +609,26 @@ Detailed scoring explanation may be available via Info UI; formula `6.5 / p` is 
 
 # 14. Core UI States
 
-| Area | State | Product behavior |
-|---|---|---|
-| Predict | NO_ELIGIBLE_FIXTURES | Explain no available matches today; My Picks remains accessible |
-| Predict | FREE_AVAILABLE | One-tap Prediction |
-| Predict | REWARDED_REQUIRED | Outcome → rewarded flow |
-| Predict | DAILY_LIMIT_REACHED | Block new Prediction until daily reset |
-| Prediction | OPEN | selectedOutcome editable before kickoff |
-| Prediction | LOCKED_OR_LIVE | Edit forbidden; result Pending |
-| Prediction | SETTLED_CORRECT | earnedPoints and relevant movement |
-| Prediction | SETTLED_INCORRECT | 0 Points; neutral wording |
-| Cup | NOT_PARTICIPATING | CTA → first Prediction |
-| Cup | ACTIVE | Rank, Points, Prize gap, Leaderboard |
-| Cup | IN_PRIZE_ZONE | Current Prize and competitive gaps |
-| Cup | FINISHED_WINNER | Final result, Prize Claim, next Cup |
-| Cup | FINISHED_NON_WINNER | Final result, Rating Delta, next Cup |
-| Rating | UNRANKED | Qualification progress |
-| Rating | RANKED | Rank, League, Percentile, next threshold |
-| Profile | NEW_USER | Avoid wall of zeros; emphasize current progress |
-| Wallet | NOT_REQUIRED | Do not request connection |
-| Wallet | CLAIM_REQUIRED | TON connection + Prize Claim |
+| Area       | State                | Product behavior                                                |
+| ---------- | -------------------- | --------------------------------------------------------------- |
+| Predict    | NO_ELIGIBLE_FIXTURES | Explain no available matches today; My Picks remains accessible |
+| Predict    | FREE_AVAILABLE       | One-tap Prediction                                              |
+| Predict    | REWARDED_REQUIRED    | Outcome → rewarded flow                                         |
+| Predict    | DAILY_LIMIT_REACHED  | Block new Prediction until daily reset                          |
+| Prediction | OPEN                 | selectedOutcome editable before kickoff                         |
+| Prediction | LOCKED_OR_LIVE       | Edit forbidden; result Pending                                  |
+| Prediction | SETTLED_CORRECT      | earnedPoints and relevant movement                              |
+| Prediction | SETTLED_INCORRECT    | 0 Points; neutral wording                                       |
+| Cup        | NOT_PARTICIPATING    | CTA → first Prediction                                          |
+| Cup        | ACTIVE               | Rank, Points, Prize gap, Leaderboard                            |
+| Cup        | IN_PRIZE_ZONE        | Current Prize and competitive gaps                              |
+| Cup        | FINISHED_WINNER      | Final result, Prize Claim, next Cup                             |
+| Cup        | FINISHED_NON_WINNER  | Final result, Rating Delta, next Cup                            |
+| Rating     | UNRANKED             | Qualification progress                                          |
+| Rating     | RANKED               | Rank, League, Percentile, next threshold                        |
+| Profile    | NEW_USER             | Avoid wall of zeros; emphasize current progress                 |
+| Wallet     | NOT_REQUIRED         | Do not request connection                                       |
+| Wallet     | CLAIM_REQUIRED       | TON connection + Prize Claim                                    |
 
 Detailed component geometry and visual states belong in design documentation.
 
@@ -694,14 +692,14 @@ Prize amounts are domain monetary values; exact persistence representation belon
 
 # 17. Product Language
 
-| Prefer | Avoid as primary UI |
-|---|---|
-| Prediction / прогноз | Bet / ставка |
-| Points / очки | Stake |
+| Prefer                           | Avoid as primary UI               |
+| -------------------------------- | --------------------------------- |
+| Prediction / прогноз             | Bet / ставка                      |
+| Points / очки                    | Stake                             |
 | Market Probability / вероятность | Bookmaker Odds as main UI element |
-| Tournament / Weekly Cup | Lottery / betting pool |
-| Prize / Prize Pool | Bet winnings |
-| Rating / League | Cash balance |
+| Tournament / Weekly Cup          | Lottery / betting pool            |
+| Prize / Prize Pool               | Bet winnings                      |
+| Rating / League                  | Cash balance                      |
 
 Product visual/language framing must remain skill-competition oriented rather than casino/betting oriented.
 

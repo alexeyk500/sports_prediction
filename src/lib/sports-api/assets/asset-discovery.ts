@@ -1,5 +1,6 @@
 export const API_FOOTBALL_ASSET_DISCOVERY_SEASON = 2026;
-export const API_FOOTBALL_ASSET_MANIFEST_PATH = "data/football-assets.manifest.json";
+export const API_FOOTBALL_ASSET_MANIFEST_PATH =
+  "data/football-assets.manifest.json";
 
 export interface SupportedCompetitionSeed {
   goalsteryCode: string;
@@ -9,57 +10,58 @@ export interface SupportedCompetitionSeed {
   providerType: "League" | "Cup";
 }
 
-export const SUPPORTED_ASSET_DISCOVERY_COMPETITIONS: SupportedCompetitionSeed[] = [
-  {
-    goalsteryCode: "EPL",
-    name: "Premier League",
-    providerSearchName: "Premier League",
-    providerCountry: "England",
-    providerType: "League",
-  },
-  {
-    goalsteryCode: "LALIGA",
-    name: "La Liga",
-    providerSearchName: "La Liga",
-    providerCountry: "Spain",
-    providerType: "League",
-  },
-  {
-    goalsteryCode: "SERIE_A",
-    name: "Serie A",
-    providerSearchName: "Serie A",
-    providerCountry: "Italy",
-    providerType: "League",
-  },
-  {
-    goalsteryCode: "BUNDESLIGA",
-    name: "Bundesliga",
-    providerSearchName: "Bundesliga",
-    providerCountry: "Germany",
-    providerType: "League",
-  },
-  {
-    goalsteryCode: "LIGUE_1",
-    name: "Ligue 1",
-    providerSearchName: "Ligue 1",
-    providerCountry: "France",
-    providerType: "League",
-  },
-  {
-    goalsteryCode: "UCL",
-    name: "UEFA Champions League",
-    providerSearchName: "UEFA Champions League",
-    providerCountry: "World",
-    providerType: "Cup",
-  },
-  {
-    goalsteryCode: "UEL",
-    name: "UEFA Europa League",
-    providerSearchName: "UEFA Europa League",
-    providerCountry: "World",
-    providerType: "Cup",
-  },
-];
+export const SUPPORTED_ASSET_DISCOVERY_COMPETITIONS: SupportedCompetitionSeed[] =
+  [
+    {
+      goalsteryCode: "EPL",
+      name: "Premier League",
+      providerSearchName: "Premier League",
+      providerCountry: "England",
+      providerType: "League",
+    },
+    {
+      goalsteryCode: "LALIGA",
+      name: "La Liga",
+      providerSearchName: "La Liga",
+      providerCountry: "Spain",
+      providerType: "League",
+    },
+    {
+      goalsteryCode: "SERIE_A",
+      name: "Serie A",
+      providerSearchName: "Serie A",
+      providerCountry: "Italy",
+      providerType: "League",
+    },
+    {
+      goalsteryCode: "BUNDESLIGA",
+      name: "Bundesliga",
+      providerSearchName: "Bundesliga",
+      providerCountry: "Germany",
+      providerType: "League",
+    },
+    {
+      goalsteryCode: "LIGUE_1",
+      name: "Ligue 1",
+      providerSearchName: "Ligue 1",
+      providerCountry: "France",
+      providerType: "League",
+    },
+    {
+      goalsteryCode: "UCL",
+      name: "UEFA Champions League",
+      providerSearchName: "UEFA Champions League",
+      providerCountry: "World",
+      providerType: "Cup",
+    },
+    {
+      goalsteryCode: "UEL",
+      name: "UEFA Europa League",
+      providerSearchName: "UEFA Europa League",
+      providerCountry: "World",
+      providerType: "Cup",
+    },
+  ];
 
 export interface ProviderLeagueInput {
   goalsteryCode: string;
@@ -142,12 +144,21 @@ export interface ManifestSummary {
   competitionsRequested: number;
   uniqueTeams: number;
   competitionMemberships: number;
-  teamsInMultipleCompetitions: Array<{ slug: string; name: string; competitions: string[] }>;
+  teamsInMultipleCompetitions: Array<{
+    slug: string;
+    name: string;
+    competitions: string[];
+  }>;
   missingLogoSources: number;
   slugCollisions: number;
   warnings: number;
   errors: number;
-  competitionBreakdown: Array<{ code: string; name: string; teams: number; availableForSeason: boolean }>;
+  competitionBreakdown: Array<{
+    code: string;
+    name: string;
+    teams: number;
+    availableForSeason: boolean;
+  }>;
 }
 
 export function slugifyAssetName(input: string): string {
@@ -205,13 +216,18 @@ export function buildFootballAssetsManifest(input: {
         severity: "error",
         code: "DUPLICATE_COMPETITION_SLUG",
         message: `Duplicate competition slug ${slug}.`,
-        details: { slug, competitionCodes: [existingCode, competition.goalsteryCode] },
+        details: {
+          slug,
+          competitionCodes: [existingCode, competition.goalsteryCode],
+        },
       });
     }
     seenCompetitionSlugs.set(slug, competition.goalsteryCode);
   }
 
-  const providerLeaguesByCode = new Map(input.providerLeagues.map((league) => [league.goalsteryCode, league]));
+  const providerLeaguesByCode = new Map(
+    input.providerLeagues.map((league) => [league.goalsteryCode, league]),
+  );
 
   for (const team of input.providerTeams) {
     if (team.providerTeamId === null) {
@@ -219,7 +235,10 @@ export function buildFootballAssetsManifest(input: {
         severity: "error",
         code: "MISSING_TEAM_ID",
         message: `Provider team ID is missing for ${team.providerName ?? "unknown team"}.`,
-        details: { competitionCode: team.competitionCode, providerName: team.providerName },
+        details: {
+          competitionCode: team.competitionCode,
+          providerName: team.providerName,
+        },
       });
       continue;
     }
@@ -230,7 +249,10 @@ export function buildFootballAssetsManifest(input: {
         severity: "error",
         code: "MISSING_TEAM_ID",
         message: `Provider team name is missing for team ID ${team.providerTeamId}.`,
-        details: { competitionCode: team.competitionCode, providerTeamId: team.providerTeamId },
+        details: {
+          competitionCode: team.competitionCode,
+          providerTeamId: team.providerTeamId,
+        },
       });
       continue;
     }
@@ -238,7 +260,10 @@ export function buildFootballAssetsManifest(input: {
     const canonicalName = team.canonicalName?.trim() || providerName;
     const slug = team.canonicalSlug?.trim() || slugifyAssetName(canonicalName);
     const existingProviderIdForSlug = teamSlugToProviderId.get(slug);
-    if (existingProviderIdForSlug !== undefined && existingProviderIdForSlug !== team.providerTeamId) {
+    if (
+      existingProviderIdForSlug !== undefined &&
+      existingProviderIdForSlug !== team.providerTeamId
+    ) {
       warnings.push({
         severity: "error",
         code: "TEAM_SLUG_COLLISION",
@@ -290,11 +315,16 @@ export function buildFootballAssetsManifest(input: {
         severity: "warning",
         code: "MISSING_PROVIDER_LOGO_SOURCE",
         message: `Provider logo source is missing for team ${providerName}.`,
-        details: { competitionCode: team.competitionCode, providerTeamId: team.providerTeamId },
+        details: {
+          competitionCode: team.competitionCode,
+          providerTeamId: team.providerTeamId,
+        },
       });
     }
 
-    const memberships = teamMembershipsByCompetition.get(team.competitionCode) ?? new Set<string>();
+    const memberships =
+      teamMembershipsByCompetition.get(team.competitionCode) ??
+      new Set<string>();
     memberships.add(slug);
     teamMembershipsByCompetition.set(team.competitionCode, memberships);
   }
@@ -308,7 +338,10 @@ export function buildFootballAssetsManifest(input: {
         severity: "error",
         code: "MISSING_LEAGUE_ID",
         message: `Provider league ID is missing for ${competition.name}.`,
-        details: { goalsteryCode: competition.goalsteryCode, name: competition.name },
+        details: {
+          goalsteryCode: competition.goalsteryCode,
+          name: competition.name,
+        },
       });
     }
 
@@ -336,7 +369,9 @@ export function buildFootballAssetsManifest(input: {
       asset: {
         logoUrl: competitionAssetLogoUrl(slug),
       },
-      teams: Array.from(teamMembershipsByCompetition.get(competition.goalsteryCode) ?? []).sort(),
+      teams: Array.from(
+        teamMembershipsByCompetition.get(competition.goalsteryCode) ?? [],
+      ).sort(),
     } satisfies FootballAssetsManifestCompetition;
   });
 
@@ -346,12 +381,16 @@ export function buildFootballAssetsManifest(input: {
     season: input.season,
     generatedAt: input.generatedAt,
     competitions,
-    teams: Array.from(teamsByProviderId.values()).sort((first, second) => first.slug.localeCompare(second.slug)),
+    teams: Array.from(teamsByProviderId.values()).sort((first, second) =>
+      first.slug.localeCompare(second.slug),
+    ),
     warnings,
   };
 }
 
-export function summarizeFootballAssetsManifest(manifest: FootballAssetsManifest): ManifestSummary {
+export function summarizeFootballAssetsManifest(
+  manifest: FootballAssetsManifest,
+): ManifestSummary {
   const teamsInMultipleCompetitions = manifest.teams
     .filter((team) => team.competitions.length > 1)
     .map((team) => ({
@@ -362,15 +401,27 @@ export function summarizeFootballAssetsManifest(manifest: FootballAssetsManifest
     .sort((first, second) => first.slug.localeCompare(second.slug));
 
   return {
-    competitionsDiscovered: manifest.competitions.filter((competition) => competition.provider.leagueId !== null).length,
+    competitionsDiscovered: manifest.competitions.filter(
+      (competition) => competition.provider.leagueId !== null,
+    ).length,
     competitionsRequested: manifest.competitions.length,
     uniqueTeams: manifest.teams.length,
-    competitionMemberships: manifest.competitions.reduce((total, competition) => total + competition.teams.length, 0),
+    competitionMemberships: manifest.competitions.reduce(
+      (total, competition) => total + competition.teams.length,
+      0,
+    ),
     teamsInMultipleCompetitions,
-    missingLogoSources: manifest.warnings.filter((warning) => warning.code === "MISSING_PROVIDER_LOGO_SOURCE").length,
-    slugCollisions: manifest.warnings.filter((warning) => warning.code === "TEAM_SLUG_COLLISION").length,
-    warnings: manifest.warnings.filter((warning) => warning.severity === "warning").length,
-    errors: manifest.warnings.filter((warning) => warning.severity === "error").length,
+    missingLogoSources: manifest.warnings.filter(
+      (warning) => warning.code === "MISSING_PROVIDER_LOGO_SOURCE",
+    ).length,
+    slugCollisions: manifest.warnings.filter(
+      (warning) => warning.code === "TEAM_SLUG_COLLISION",
+    ).length,
+    warnings: manifest.warnings.filter(
+      (warning) => warning.severity === "warning",
+    ).length,
+    errors: manifest.warnings.filter((warning) => warning.severity === "error")
+      .length,
     competitionBreakdown: manifest.competitions.map((competition) => ({
       code: competition.goalsteryCode,
       name: competition.name,

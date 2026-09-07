@@ -8,14 +8,27 @@ interface ITodayContextRowProps {
   matchCount: number;
 }
 
-const TodayContextRow: React.FC<ITodayContextRowProps> = ({ businessDate, matchCount }) => {
+const TodayContextRow: React.FC<ITodayContextRowProps> = ({
+  businessDate,
+  matchCount,
+}) => {
   const { t, locale } = useTranslation();
-  const dateLabel = businessDate ? formatBusinessDate(locale, businessDate) : "";
+  const dateLabel = businessDate
+    ? formatBusinessDate(locale, businessDate)
+    : "";
 
   return (
     <div className={styles.todayRow}>
-      <strong>{dateLabel ? t("predict.today.labelWithDate", { date: dateLabel }) : t("predict.today.label")}</strong>
-      <span>{t("predict.today.matchCount", { count: formatLocalizedNumber(locale, matchCount) })}</span>
+      <strong>
+        {dateLabel
+          ? t("predict.today.labelWithDate", { date: dateLabel })
+          : t("predict.today.label")}
+      </strong>
+      <span>
+        {t("predict.today.matchCount", {
+          count: formatLocalizedNumber(locale, matchCount),
+        })}
+      </span>
     </div>
   );
 };

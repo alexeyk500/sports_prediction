@@ -11,8 +11,12 @@ export function signTelegramInitData(
     .sort(([left], [right]) => left.localeCompare(right))
     .map(([key, value]) => `${key}=${value}`)
     .join("\n");
-  const secretKey = createHmac("sha256", "WebAppData").update(botToken).digest();
-  const hash = createHmac("sha256", secretKey).update(dataCheckString).digest("hex");
+  const secretKey = createHmac("sha256", "WebAppData")
+    .update(botToken)
+    .digest();
+  const hash = createHmac("sha256", secretKey)
+    .update(dataCheckString)
+    .digest("hex");
   const params = new URLSearchParams(fields);
 
   params.set("hash", hash);

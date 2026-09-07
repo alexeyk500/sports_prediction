@@ -48,10 +48,11 @@ describe("Cup leaderboard domain helpers", () => {
   });
 
   it("appends All Players pages without duplicate rows", () => {
-    expect(mergeLeaderboardEntries([entry("a", 1), entry("b", 2)], [entry("b", 2), entry("c", 3)])).toEqual([
-      entry("a", 1),
-      entry("b", 2),
-      entry("c", 3),
-    ]);
+    expect(
+      mergeLeaderboardEntries(
+        [entry("a", 1), entry("b", 2)],
+        [entry("b", 2), entry("c", 3)],
+      ),
+    ).toEqual([entry("a", 1), entry("b", 2), entry("c", 3)]);
   });
 });

@@ -8,17 +8,20 @@
 Это работает для небольшого числа участников, но ломает UX при 1000+ игроков.
 
 Пример:
+
 - участников: 1000;
 - current user rank: #800.
 
 Пользователь не должен скроллить сотни строк, чтобы найти себя.
 
 В package приложены:
+
 - `current-cup-screen.png` — текущий экран;
 - `leaderboard-concept.png` — UX-концепт;
 - `LEADERBOARD_SPEC.md` — полная спецификация.
 
 Перед реализацией ОБЯЗАТЕЛЬНО:
+
 1. Изучи архитектуру проекта и markdown-спецификации.
 2. Найди текущий Cup screen и все дочерние React components.
 3. Найди leaderboard data flow: API → service/query → component.
@@ -41,6 +44,7 @@ Leaderboard должен иметь три режима:
 Не загружать полный leaderboard для этого режима.
 
 Если current user входит в Top 50:
+
 - выделить его строку.
 
 ### Around Me
@@ -48,6 +52,7 @@ Leaderboard должен иметь три режима:
 Показывает current user и соседние позиции.
 
 Использовать radius = 4:
+
 - до 4 выше;
 - current user;
 - до 4 ниже.
@@ -69,6 +74,7 @@ Leaderboard должен иметь три режима:
 ### All Players
 
 Полный leaderboard:
+
 - backend pagination/cursor pagination;
 - page size около 50;
 - infinite loading;
@@ -105,6 +111,7 @@ Leaderboard должен иметь три режима:
 Сначала изучи текущую component hierarchy и вложи дочерние компоненты в родителей согласно project specification.
 
 Сохраняй принятое в проекте правило экспорта React components:
+
 - standalone React component file → default export;
 - types/helpers/constants → named exports.
 
@@ -126,6 +133,7 @@ All:
 Это ориентир, не обязательный URL contract.
 
 Если уже существует endpoint/service:
+
 - расширь его в рамках текущей архитектуры;
 - не создавай параллельную систему.
 
@@ -169,6 +177,7 @@ type LeaderboardEntry = {
 Используй существующий data fetching stack проекта.
 
 Если используется React Query:
+
 - разные query keys для top / around-me / all;
 - keep/cache полученных данных;
 - infinite query для All Players.
@@ -176,6 +185,7 @@ type LeaderboardEntry = {
 Если используется другой подход — придерживайся его.
 
 При переключении Top 50 ↔ Around Me:
+
 - не делать full page reload;
 - не сбрасывать Cup screen;
 - показывать локальный loading state/skeleton только для leaderboard.
@@ -191,6 +201,7 @@ type LeaderboardEntry = {
 - end of All Players list.
 
 Если турнир существует, но participants = 0:
+
 - leaderboard должен корректно отображать empty state.
 
 ## UI
@@ -198,11 +209,13 @@ type LeaderboardEntry = {
 Не пытайся pixel-perfect копировать AI mockup.
 
 Source of truth:
+
 1. текущий дизайн проекта;
 2. `current-cup-screen.png`;
 3. `leaderboard-concept.png` только как reference структуры.
 
 Сохранить:
+
 - navy background;
 - teal active state;
 - существующую typography;
@@ -211,6 +224,7 @@ Source of truth:
 - BottomNavigation.
 
 Current user row:
+
 - subtle teal highlight;
 - хороший contrast;
 - без яркого neon.
@@ -218,6 +232,7 @@ Current user row:
 ## Important constraints
 
 Не делать:
+
 - frontend mock data;
 - hardcoded leaderboard;
 - загрузку 1000 участников одним request;
@@ -261,6 +276,7 @@ Current user row:
 Используй уже созданный dev seed leaderboard, если он есть.
 
 Если текущая dev база не позволяет проверить кейс #800:
+
 - минимально расширь dev seed до 1000 участников;
 - текущему dev user задай/получи через реальные prediction/scoring данные позицию примерно #800;
 - не хардкодить rank, если он должен вычисляться domain logic.

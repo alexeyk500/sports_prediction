@@ -45,6 +45,10 @@ export interface SportsProvider {
   listCompetitions(): Promise<ProviderCompetition[]>;
   listTeams(): Promise<ProviderTeam[]>;
   listUpcomingFixtures(from: Date, to: Date): Promise<ProviderFixture[]>;
-  getOneXTwoOdds(providerFixtureId: string): Promise<ProviderOneXTwoOdds | null>;
-  getFixtureResult(providerFixtureId: string): Promise<ProviderFixtureResult | null>;
+  getOneXTwoOdds(
+    providerFixtureId: string,
+  ): Promise<ProviderOneXTwoOdds | null>;
+  getFixtureResult(
+    providerFixtureId: string,
+  ): Promise<ProviderFixtureResult | null>;
 }

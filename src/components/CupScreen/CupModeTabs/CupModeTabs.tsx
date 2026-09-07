@@ -12,7 +12,11 @@ const CupModeTabs: React.FC<ICupModeTabsProps> = ({ activeTab, onChange }) => {
   const { t } = useTranslation();
 
   return (
-    <div className={styles.tabs} role="tablist" aria-label={t("cup.tabs.ariaLabel")}>
+    <div
+      className={styles.tabs}
+      role="tablist"
+      aria-label={t("cup.tabs.ariaLabel")}
+    >
       <button
         className={activeTab === "current" ? styles.activeTab : styles.tab}
         type="button"

@@ -8,7 +8,12 @@ interface INavIconProps {
 
 const NavIcon: React.FC<INavIconProps> = ({ item }) => {
   return (
-    <svg className={styles.navIcon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <svg
+      className={styles.navIcon}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
       {item === "Predict" ? (
         <>
           <path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm0 2.2a6.3 6.3 0 0 1 3.43 1.02l-2.18 1.59h-2.5L8.57 6.72A6.3 6.3 0 0 1 12 5.7Zm-5.26 4.1 2.1 1.53.76 2.35-.8 2.45A6.27 6.27 0 0 1 6.74 9.8Zm5.26 8.5c-.7 0-1.37-.11-2-.32l.82-2.52 2-1.45 2 1.45.82 2.52c-.63.21-1.3.32-2 .32Zm3.2-6.97 2.1-1.53a6.27 6.27 0 0 1-2.06 6.33l-.8-2.45.76-2.35Zm-3.2-1.02h2.04l.63 1.94L12 14.2l-2.67-1.95.63-1.94H12Z" />

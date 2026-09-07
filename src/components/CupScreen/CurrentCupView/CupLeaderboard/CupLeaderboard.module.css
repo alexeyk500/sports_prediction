@@ -38,16 +38,21 @@
 
 .leaderboardHeader {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) 92px 58px;
-  gap: 8px;
+  grid-template-columns: 42px minmax(0, 1fr) 125px 55px;
+  column-gap: 12px;
   color: var(--color-muted);
   font-size: 12px;
   font-weight: 650;
   line-height: 1.2;
 }
 
+.leaderboardHeader span:nth-child(3) {
+  white-space: nowrap;
+  text-align: center;
+}
+
 .leaderboardHeader span:last-child {
-  text-align: end;
+  text-align: center;
 }
 
 .paginationState {
@@ -87,7 +92,7 @@
 
 @media (max-width: 370px) {
   .leaderboardHeader {
-    grid-template-columns: 28px minmax(0, 1fr) 84px 52px;
-    gap: 6px;
+    grid-template-columns: 34px minmax(0, 1fr) 112px 50px;
+    column-gap: 8px;
   }
 }

@@ -1,6 +1,9 @@
 import { Prisma } from "@prisma/client";
 import { describe, expect, it } from "vitest";
-import { calculatePredictionPoints, normalizeOneXTwoOdds } from "@/modules/predictions/scoring.domain";
+import {
+  calculatePredictionPoints,
+  normalizeOneXTwoOdds,
+} from "@/modules/predictions/scoring.domain";
 
 describe("calculatePredictionPoints", () => {
   it("applies the lower bound for very high probability", () => {
@@ -26,15 +29,25 @@ describe("calculatePredictionPoints", () => {
   });
 
   it("uses deterministic half-up Decimal rounding", () => {
-    expect(calculatePredictionPoints(new Prisma.Decimal(6.5).div(10.49))).toBe(10);
-    expect(calculatePredictionPoints(new Prisma.Decimal(6.5).div(10.5))).toBe(11);
+    expect(calculatePredictionPoints(new Prisma.Decimal(6.5).div(10.49))).toBe(
+      10,
+    );
+    expect(calculatePredictionPoints(new Prisma.Decimal(6.5).div(10.5))).toBe(
+      11,
+    );
   });
 
   it("rejects invalid probability", () => {
     expect(() => calculatePredictionPoints("0")).toThrow(/greater than zero/);
-    expect(() => calculatePredictionPoints("-0.1")).toThrow(/greater than zero/);
-    expect(() => calculatePredictionPoints("1.00000001")).toThrow(/less than or equal to 1/);
-    expect(() => calculatePredictionPoints(Number.NaN)).toThrow(/valid decimal|finite/);
+    expect(() => calculatePredictionPoints("-0.1")).toThrow(
+      /greater than zero/,
+    );
+    expect(() => calculatePredictionPoints("1.00000001")).toThrow(
+      /less than or equal to 1/,
+    );
+    expect(() => calculatePredictionPoints(Number.NaN)).toThrow(
+      /valid decimal|finite/,
+    );
   });
 });
 
@@ -45,7 +58,9 @@ describe("normalizeOneXTwoOdds", () => {
       draw: "3.50",
       away: "4.00",
     });
-    const total = probabilities.home.plus(probabilities.draw).plus(probabilities.away);
+    const total = probabilities.home
+      .plus(probabilities.draw)
+      .plus(probabilities.away);
 
     expect(total.toNumber()).toBeCloseTo(1, 12);
     expect(probabilities.home.toNumber()).toBeCloseTo(0.4827586206896552, 12);
@@ -54,11 +69,11 @@ describe("normalizeOneXTwoOdds", () => {
   });
 
   it("rejects zero or negative odds", () => {
-    expect(() => normalizeOneXTwoOdds({ home: "0", draw: "3.5", away: "4" })).toThrow(
-      /greater than zero/,
-    );
-    expect(() => normalizeOneXTwoOdds({ home: "2", draw: "-3.5", away: "4" })).toThrow(
-      /greater than zero/,
-    );
+    expect(() =>
+      normalizeOneXTwoOdds({ home: "0", draw: "3.5", away: "4" }),
+    ).toThrow(/greater than zero/);
+    expect(() =>
+      normalizeOneXTwoOdds({ home: "2", draw: "-3.5", away: "4" }),
+    ).toThrow(/greater than zero/);
   });
 });

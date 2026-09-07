@@ -1,7 +1,9 @@
 import { existsSync } from "node:fs";
 
-export const FOOTBALL_ASSETS_MANIFEST_PATH = "data/football-assets.manifest.json";
-export const FOOTBALL_ASSETS_DOWNLOAD_REPORT_PATH = "data/football-assets-download-report.json";
+export const FOOTBALL_ASSETS_MANIFEST_PATH =
+  "data/football-assets.manifest.json";
+export const FOOTBALL_ASSETS_DOWNLOAD_REPORT_PATH =
+  "data/football-assets-download-report.json";
 
 export interface CanonicalFootballAssetsManifest {
   version: 1;
@@ -52,11 +54,19 @@ export function resolveTeamAssetIdentity(
   manifest: CanonicalFootballAssetsManifest,
   providerTeamId: number,
 ): AssetIdentityResolution {
-  const team = manifest.teams.find((entry) => entry.provider === "api-football" && entry.providerTeamId === providerTeamId);
+  const team = manifest.teams.find(
+    (entry) =>
+      entry.provider === "api-football" &&
+      entry.providerTeamId === providerTeamId,
+  );
 
   return team
     ? { status: "mapped", canonicalName: team.canonicalName, slug: team.slug }
-    : { status: "unmapped", provider: "api-football", providerId: providerTeamId };
+    : {
+        status: "unmapped",
+        provider: "api-football",
+        providerId: providerTeamId,
+      };
 }
 
 export function resolveCompetitionAssetIdentity(
@@ -64,12 +74,22 @@ export function resolveCompetitionAssetIdentity(
   providerLeagueId: number,
 ): AssetIdentityResolution {
   const competition = manifest.competitions.find(
-    (entry) => entry.provider === "api-football" && entry.providerLeagueId === providerLeagueId,
+    (entry) =>
+      entry.provider === "api-football" &&
+      entry.providerLeagueId === providerLeagueId,
   );
 
   return competition
-    ? { status: "mapped", canonicalName: competition.canonicalName, slug: competition.slug }
-    : { status: "unmapped", provider: "api-football", providerId: providerLeagueId };
+    ? {
+        status: "mapped",
+        canonicalName: competition.canonicalName,
+        slug: competition.slug,
+      }
+    : {
+        status: "unmapped",
+        provider: "api-football",
+        providerId: providerLeagueId,
+      };
 }
 
 export function teamAssetPath(slug: string): string {
@@ -89,19 +109,35 @@ export function validateFootballAssetsManifest(
   if (!isObject(manifest)) {
     return {
       valid: false,
-      issues: [{ severity: "error", code: "INVALID_VERSION", message: "Manifest must be an object." }],
+      issues: [
+        {
+          severity: "error",
+          code: "INVALID_VERSION",
+          message: "Manifest must be an object.",
+        },
+      ],
     };
   }
 
   if (manifest.version !== 1) {
-    issues.push({ severity: "error", code: "INVALID_VERSION", message: "Manifest version must be 1." });
+    issues.push({
+      severity: "error",
+      code: "INVALID_VERSION",
+      message: "Manifest version must be 1.",
+    });
   }
 
   if (manifest.provider !== "api-football") {
-    issues.push({ severity: "error", code: "INVALID_PROVIDER", message: "Manifest provider must be api-football." });
+    issues.push({
+      severity: "error",
+      code: "INVALID_PROVIDER",
+      message: "Manifest provider must be api-football.",
+    });
   }
 
-  const competitions = Array.isArray(manifest.competitions) ? manifest.competitions : [];
+  const competitions = Array.isArray(manifest.competitions)
+    ? manifest.competitions
+    : [];
   const teams = Array.isArray(manifest.teams) ? manifest.teams : [];
 
   validateEntries({
@@ -127,12 +163,16 @@ export function validateFootballAssetsManifest(
   };
 }
 
-export function createCanonicalManifestFromDownloadReport(report: unknown): CanonicalFootballAssetsManifest {
+export function createCanonicalManifestFromDownloadReport(
+  report: unknown,
+): CanonicalFootballAssetsManifest {
   if (!isObject(report)) {
     throw new Error("Download report must be an object.");
   }
 
-  const competitions = Array.isArray(report.competitions) ? report.competitions : [];
+  const competitions = Array.isArray(report.competitions)
+    ? report.competitions
+    : [];
   const teams = Array.isArray(report.teams) ? report.teams : [];
 
   return {
@@ -145,7 +185,10 @@ export function createCanonicalManifestFromDownloadReport(report: unknown): Cano
 
       return {
         provider: "api-football",
-        providerLeagueId: requiredNumber(entry.provider.leagueId, "providerLeagueId"),
+        providerLeagueId: requiredNumber(
+          entry.provider.leagueId,
+          "providerLeagueId",
+        ),
         providerName: requiredString(entry.provider.name, "providerName"),
         canonicalName: requiredString(entry.name, "canonicalName"),
         slug: requiredString(entry.slug, "slug"),
@@ -216,7 +259,10 @@ function validateEntries(input: {
       providerIds.set(providerId, entry);
     }
 
-    if (typeof entry.providerName !== "string" || entry.providerName.trim().length === 0) {
+    if (
+      typeof entry.providerName !== "string" ||
+      entry.providerName.trim().length === 0
+    ) {
       input.issues.push({
         severity: "error",
         code: "MISSING_PROVIDER_NAME",
@@ -225,7 +271,10 @@ function validateEntries(input: {
       });
     }
 
-    if (typeof entry.canonicalName !== "string" || entry.canonicalName.trim().length === 0) {
+    if (
+      typeof entry.canonicalName !== "string" ||
+      entry.canonicalName.trim().length === 0
+    ) {
       input.issues.push({
         severity: "error",
         code: "MISSING_CANONICAL_NAME",
@@ -289,7 +338,7 @@ function requiredString(value: unknown, field: string): string {
 }
 
 function requiredNumber(value: unknown, field: string): number {
-    if (!Number.isInteger(value)) {
+  if (!Number.isInteger(value)) {
     throw new Error(`Download report field ${field} is required.`);
   }
 

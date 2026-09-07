@@ -52,7 +52,9 @@ const AppShell: React.FC<IAppShellProps> = ({ predict }) => {
           <button
             key={item}
             type="button"
-            className={active === item ? styles.activeNavButton : styles.navButton}
+            className={
+              active === item ? styles.activeNavButton : styles.navButton
+            }
             onClick={() => setActive(item)}
           >
             <NavIcon item={item} />

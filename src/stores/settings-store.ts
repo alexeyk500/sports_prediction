@@ -8,7 +8,10 @@ export interface SettingsState {
   locale: SupportedLocale;
   appearance: AppearanceMode;
   effectiveTheme: EffectiveTheme;
-  setSettings: (settings: { locale: SupportedLocale; appearance: AppearanceMode }) => void;
+  setSettings: (settings: {
+    locale: SupportedLocale;
+    appearance: AppearanceMode;
+  }) => void;
   setEffectiveTheme: (effectiveTheme: EffectiveTheme) => void;
 }
 

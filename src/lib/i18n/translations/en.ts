@@ -73,7 +73,8 @@ export const en = {
       plusOne: "+1",
     },
     aria: {
-      selectOutcome: "Select {outcome}, {trophyValue}, for {homeTeam} vs {awayTeam}",
+      selectOutcome:
+        "Select {outcome}, {trophyValue}, for {homeTeam} vs {awayTeam}",
     },
   },
   cup: {
@@ -88,16 +89,18 @@ export const en = {
     unavailable: "—",
     yourPosition: "Your Position",
     positionRank: "Rank #{rank}",
-    positionSummary: "{points} Points · {predictions} picks · {correct} correct · {wrong} wrong",
+    positionSummary:
+      "{points} Points · {predictions} picks · {correct} correct · {wrong} wrong",
     positionUnavailableTitle: "Your Cup position is not ready yet",
-    positionUnavailableBody: "Make predictions to enter automatically. Your rank will appear when Cup standings are available.",
+    positionUnavailableBody:
+      "Make predictions to enter automatically. Your rank will appear when Cup standings are available.",
     makePrediction: "Make a prediction",
     you: "You",
     leaderboard: "Leaderboard",
     leaderboardModes: {
-      "top": "Top 50",
+      top: "Top 50",
       "around-me": "Around Me",
-      "all": "All Players",
+      all: "All Players",
       ariaLabel: "Leaderboard views",
     },
     leaderboardStates: {
@@ -125,14 +128,17 @@ export const en = {
     empty: {
       noCurrentCup: "No active Cup is available.",
       leaderboardTitle: "Standings are not ready yet",
-      leaderboardBody: "Player rows will appear when current Cup standings are available.",
+      leaderboardBody:
+        "Player rows will appear when current Cup standings are available.",
       historyTitle: "No past Cups yet",
-      historyBody: "Completed Cup summaries will appear here when final results are available.",
+      historyBody:
+        "Completed Cup summaries will appear here when final results are available.",
     },
   },
   profile: {
     title: "Profile",
-    stagePlaceholder: "Career and prize history are not implemented in this stage.",
+    stagePlaceholder:
+      "Career and prize history are not implemented in this stage.",
     settingsTitle: "Settings",
     languageLabel: "Language",
     appearanceLabel: "Appearance",
@@ -140,7 +146,8 @@ export const en = {
   },
   errors: {
     generic: "Something went wrong.",
-    missingTelegramInitData: "Open this app in Telegram or configure development initData.",
+    missingTelegramInitData:
+      "Open this app in Telegram or configure development initData.",
     network: "Network request failed.",
     invalidApiResponse: "Could not read the server response.",
     PREDICTION_LOCKED: "This match has started.",
@@ -151,7 +158,8 @@ export const en = {
     FIXTURE_NOT_FOUND: "This match could not be found.",
     FIXTURE_NOT_OPEN: "This match is not open for predictions.",
     FIXTURE_LOCKED: "This match is locked.",
-    FIXTURE_SCORING_SNAPSHOT_MISSING: "Prediction odds are not ready for this match.",
+    FIXTURE_SCORING_SNAPSHOT_MISSING:
+      "Prediction odds are not ready for this match.",
     COMPETITION_NOT_SUPPORTED: "This competition is not supported.",
     COMPETITION_INACTIVE: "This competition is not active.",
     PREDICTION_ALREADY_EXISTS: "You already picked this match.",

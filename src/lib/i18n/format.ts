@@ -1,6 +1,9 @@
 import type { SupportedLocale } from "./locales";
 
-export function formatLocalizedNumber(locale: SupportedLocale, value: number): string {
+export function formatLocalizedNumber(
+  locale: SupportedLocale,
+  value: number,
+): string {
   return new Intl.NumberFormat(locale).format(value);
 }
 
@@ -18,7 +21,10 @@ export function formatKickoffTime(
   }).format(new Date(kickoffAt));
 }
 
-export function formatBusinessDate(locale: SupportedLocale, businessDate: string): string {
+export function formatBusinessDate(
+  locale: SupportedLocale,
+  businessDate: string,
+): string {
   const [year, month, day] = businessDate.split("-").map(Number);
 
   if (!year || !month || !day) {

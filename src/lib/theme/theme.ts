@@ -9,6 +9,9 @@ export function isAppearanceMode(value: unknown): value is AppearanceMode {
   return typeof value === "string" && appearanceModeSet.has(value);
 }
 
-export function resolveEffectiveTheme(appearance: AppearanceMode, systemTheme: EffectiveTheme): EffectiveTheme {
+export function resolveEffectiveTheme(
+  appearance: AppearanceMode,
+  systemTheme: EffectiveTheme,
+): EffectiveTheme {
   return appearance === "system" ? systemTheme : appearance;
 }

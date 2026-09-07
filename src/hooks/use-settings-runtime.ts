@@ -10,7 +10,9 @@ const darkSchemeQuery = "(prefers-color-scheme: dark)";
 export function useSettingsRuntime(): void {
   const locale = useSettingsStore((state) => state.locale);
   const appearance = useSettingsStore((state) => state.appearance);
-  const setEffectiveTheme = useSettingsStore((state) => state.setEffectiveTheme);
+  const setEffectiveTheme = useSettingsStore(
+    (state) => state.setEffectiveTheme,
+  );
 
   useEffect(() => {
     const root = document.documentElement;

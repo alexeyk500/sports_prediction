@@ -14,11 +14,15 @@ const devTelegramUser = {
 
 try {
   if (process.env.NODE_ENV === "production") {
-    throw new Error("Refusing to generate Telegram development initData with NODE_ENV=production.");
+    throw new Error(
+      "Refusing to generate Telegram development initData with NODE_ENV=production.",
+    );
   }
 
   if (!process.env.TELEGRAM_BOT_TOKEN) {
-    console.error("TELEGRAM_BOT_TOKEN is required to generate Telegram development initData.");
+    console.error(
+      "TELEGRAM_BOT_TOKEN is required to generate Telegram development initData.",
+    );
     process.exit(1);
   }
 
@@ -35,7 +39,9 @@ try {
 
   console.log("Telegram development initData generated.");
   console.log("");
-  console.log(`Dev Telegram user: ${devTelegramUser.id} (@${devTelegramUser.username})`);
+  console.log(
+    `Dev Telegram user: ${devTelegramUser.id} (@${devTelegramUser.username})`,
+  );
   console.log(`Generated at: ${now.toISOString()}`);
   console.log("");
 
@@ -53,13 +59,19 @@ try {
     console.log("Restart npm run dev if it is already running.");
   }
 } catch (error) {
-  console.error(error instanceof Error ? error.message : "Failed to generate Telegram development initData.");
+  console.error(
+    error instanceof Error
+      ? error.message
+      : "Failed to generate Telegram development initData.",
+  );
   process.exit(1);
 }
 
 function writeEnvLocalValue(key, value) {
   const path = ".env.local";
-  const lines = existsSync(path) ? readFileSync(path, "utf8").split(/\r?\n/) : [];
+  const lines = existsSync(path)
+    ? readFileSync(path, "utf8").split(/\r?\n/)
+    : [];
   let updated = false;
   const nextLines = lines.map((line) => {
     if (line.startsWith(`${key}=`)) {

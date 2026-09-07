@@ -19,7 +19,11 @@ export class ApiClientError extends Error {
   readonly details: Record<string, unknown>;
   readonly endpoint?: string;
 
-  constructor(error: ApiErrorEnvelope["error"], status: number, endpoint?: string) {
+  constructor(
+    error: ApiErrorEnvelope["error"],
+    status: number,
+    endpoint?: string,
+  ) {
     super(error.message);
     this.name = "ApiClientError";
     this.code = error.code;
@@ -73,7 +77,9 @@ export class ApiClient {
       searchParams.set("cursor", input.cursor);
     }
 
-    return this.request(`/api/cups/${input.cupId}/leaderboard?${searchParams.toString()}`);
+    return this.request(
+      `/api/cups/${input.cupId}/leaderboard?${searchParams.toString()}`,
+    );
   }
 
   getCupLeaderboardAroundMe(input: {
@@ -88,7 +94,9 @@ export class ApiClient {
 
     const queryString = searchParams.toString();
 
-    return this.request(`/api/cups/${input.cupId}/leaderboard/me${queryString ? `?${queryString}` : ""}`);
+    return this.request(
+      `/api/cups/${input.cupId}/leaderboard/me${queryString ? `?${queryString}` : ""}`,
+    );
   }
 
   getSettings(): Promise<UserSettingsDto> {
@@ -162,7 +170,9 @@ export class ApiClient {
         method: init.method ?? "GET",
         headers: {
           "X-Telegram-Init-Data": initData,
-          ...(init.body === undefined ? {} : { "Content-Type": "application/json" }),
+          ...(init.body === undefined
+            ? {}
+            : { "Content-Type": "application/json" }),
           ...init.headers,
         },
         body: init.body === undefined ? undefined : JSON.stringify(init.body),
@@ -195,7 +205,11 @@ export class ApiClient {
   }
 }
 
-export function toApiClientError(payload: unknown, status: number, endpoint?: string): ApiClientError {
+export function toApiClientError(
+  payload: unknown,
+  status: number,
+  endpoint?: string,
+): ApiClientError {
   if (isApiErrorEnvelope(payload)) {
     return new ApiClientError(payload.error, status, endpoint);
   }
@@ -211,9 +225,12 @@ export function toApiClientError(payload: unknown, status: number, endpoint?: st
   );
 }
 
-async function parseJsonResponse(response: Response, endpoint: string): Promise<unknown> {
+async function parseJsonResponse(
+  response: Response,
+  endpoint: string,
+): Promise<unknown> {
   try {
-    return await response.json() as unknown;
+    return (await response.json()) as unknown;
   } catch (error) {
     const apiError = new ApiClientError(
       {

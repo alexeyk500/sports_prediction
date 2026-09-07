@@ -21,9 +21,13 @@ export interface GeneratedTelegramDevInitData {
   generatedAt: string;
 }
 
-export function assertTelegramDevInitDataCanRun(nodeEnv: string | undefined): void {
+export function assertTelegramDevInitDataCanRun(
+  nodeEnv: string | undefined,
+): void {
   if (nodeEnv === "production") {
-    throw new Error("Refusing to generate Telegram development initData with NODE_ENV=production.");
+    throw new Error(
+      "Refusing to generate Telegram development initData with NODE_ENV=production.",
+    );
   }
 }
 
@@ -31,11 +35,15 @@ export function generateTelegramDevInitData(
   options: GenerateTelegramDevInitDataOptions,
 ): GeneratedTelegramDevInitData {
   if (!options.botToken) {
-    throw new Error("TELEGRAM_BOT_TOKEN is required to generate development initData.");
+    throw new Error(
+      "TELEGRAM_BOT_TOKEN is required to generate development initData.",
+    );
   }
 
   if (Number.isNaN(options.now.getTime())) {
-    throw new Error("A valid current time is required to generate development initData.");
+    throw new Error(
+      "A valid current time is required to generate development initData.",
+    );
   }
 
   const authDate = Math.floor(options.now.getTime() / 1000);

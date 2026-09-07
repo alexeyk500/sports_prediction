@@ -8,7 +8,10 @@ export interface TournamentServiceDependencies {
   clock: Clock;
 }
 
-type TournamentReadableClient = Pick<PrismaClient | Prisma.TransactionClient, "tournament">;
+type TournamentReadableClient = Pick<
+  PrismaClient | Prisma.TransactionClient,
+  "tournament"
+>;
 
 export async function findActiveTournamentForInstant(
   { prisma }: { prisma: TournamentReadableClient },
@@ -37,9 +40,13 @@ export async function requireActiveTournamentForPrediction(
   const tournament = await findActiveTournamentForInstant(dependencies, now);
 
   if (!tournament) {
-    throw new DomainError("NO_ACTIVE_TOURNAMENT", "No active tournament found.", {
-      instant: now.toISOString(),
-    });
+    throw new DomainError(
+      "NO_ACTIVE_TOURNAMENT",
+      "No active tournament found.",
+      {
+        instant: now.toISOString(),
+      },
+    );
   }
 
   assertTournamentUsableForPrediction(tournament);

@@ -2,7 +2,11 @@ import type React from "react";
 import type { PredictionOutcome, TodayFixtureDto } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import TrophyValue from "../TrophyValue/TrophyValue";
-import { outcomeDisplayLabel, pointsForOutcome, trophyAriaValues } from "../match-card-presentation";
+import {
+  outcomeDisplayLabel,
+  pointsForOutcome,
+  trophyAriaValues,
+} from "../match-card-presentation";
 import styles from "./PredictionOutcomeButton.module.css";
 
 interface IPredictionOutcomeButtonProps {
@@ -10,7 +14,10 @@ interface IPredictionOutcomeButtonProps {
   outcome: PredictionOutcome;
   selected: boolean;
   disabled: boolean;
-  onSelectOutcome: (fixtureId: string, selectedOutcome: PredictionOutcome) => Promise<void>;
+  onSelectOutcome: (
+    fixtureId: string,
+    selectedOutcome: PredictionOutcome,
+  ) => Promise<void>;
   outcomeLabel: string;
 }
 

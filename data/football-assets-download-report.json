@@ -160,9 +160,7 @@
         "logoUrl": "/assets/teams/1-fc-heidenheim.webp",
         "localPath": "public/assets/teams/1-fc-heidenheim.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -180,10 +178,7 @@
         "logoUrl": "/assets/teams/1899-hoffenheim.webp",
         "localPath": "public/assets/teams/1899-hoffenheim.webp"
       },
-      "competitions": [
-        "BUNDESLIGA",
-        "UEL"
-      ],
+      "competitions": ["BUNDESLIGA", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -201,10 +196,7 @@
         "logoUrl": "/assets/teams/ac-milan.webp",
         "localPath": "public/assets/teams/ac-milan.webp"
       },
-      "competitions": [
-        "SERIE_A",
-        "UCL"
-      ],
+      "competitions": ["SERIE_A", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -222,9 +214,7 @@
         "logoUrl": "/assets/teams/ajax.webp",
         "localPath": "public/assets/teams/ajax.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -242,9 +232,7 @@
         "logoUrl": "/assets/teams/alaves.webp",
         "localPath": "public/assets/teams/alaves.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -262,9 +250,7 @@
         "logoUrl": "/assets/teams/anderlecht.webp",
         "localPath": "public/assets/teams/anderlecht.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -282,9 +268,7 @@
         "logoUrl": "/assets/teams/angers.webp",
         "localPath": "public/assets/teams/angers.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -302,10 +286,7 @@
         "logoUrl": "/assets/teams/apoel-nicosia.webp",
         "localPath": "public/assets/teams/apoel-nicosia.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -323,10 +304,7 @@
         "logoUrl": "/assets/teams/arsenal.webp",
         "localPath": "public/assets/teams/arsenal.webp"
       },
-      "competitions": [
-        "EPL",
-        "UCL"
-      ],
+      "competitions": ["EPL", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -344,10 +322,7 @@
         "logoUrl": "/assets/teams/as-roma.webp",
         "localPath": "public/assets/teams/as-roma.webp"
       },
-      "competitions": [
-        "SERIE_A",
-        "UEL"
-      ],
+      "competitions": ["SERIE_A", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -365,10 +340,7 @@
         "logoUrl": "/assets/teams/aston-villa.webp",
         "localPath": "public/assets/teams/aston-villa.webp"
       },
-      "competitions": [
-        "EPL",
-        "UCL"
-      ],
+      "competitions": ["EPL", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -386,10 +358,7 @@
         "logoUrl": "/assets/teams/atalanta.webp",
         "localPath": "public/assets/teams/atalanta.webp"
       },
-      "competitions": [
-        "SERIE_A",
-        "UCL"
-      ],
+      "competitions": ["SERIE_A", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -407,10 +376,7 @@
         "logoUrl": "/assets/teams/athletic-club.webp",
         "localPath": "public/assets/teams/athletic-club.webp"
       },
-      "competitions": [
-        "LALIGA",
-        "UEL"
-      ],
+      "competitions": ["LALIGA", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -428,10 +394,7 @@
         "logoUrl": "/assets/teams/atletico-madrid.webp",
         "localPath": "public/assets/teams/atletico-madrid.webp"
       },
-      "competitions": [
-        "LALIGA",
-        "UCL"
-      ],
+      "competitions": ["LALIGA", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -449,9 +412,7 @@
         "logoUrl": "/assets/teams/auxerre.webp",
         "localPath": "public/assets/teams/auxerre.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -469,9 +430,7 @@
         "logoUrl": "/assets/teams/az-alkmaar.webp",
         "localPath": "public/assets/teams/az-alkmaar.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -489,9 +448,7 @@
         "logoUrl": "/assets/teams/ballkani.webp",
         "localPath": "public/assets/teams/ballkani.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -509,10 +466,7 @@
         "logoUrl": "/assets/teams/barcelona.webp",
         "localPath": "public/assets/teams/barcelona.webp"
       },
-      "competitions": [
-        "LALIGA",
-        "UCL"
-      ],
+      "competitions": ["LALIGA", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -530,10 +484,7 @@
         "logoUrl": "/assets/teams/bayer-leverkusen.webp",
         "localPath": "public/assets/teams/bayer-leverkusen.webp"
       },
-      "competitions": [
-        "BUNDESLIGA",
-        "UCL"
-      ],
+      "competitions": ["BUNDESLIGA", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -551,10 +502,7 @@
         "logoUrl": "/assets/teams/bayern-munchen.webp",
         "localPath": "public/assets/teams/bayern-munchen.webp"
       },
-      "competitions": [
-        "BUNDESLIGA",
-        "UCL"
-      ],
+      "competitions": ["BUNDESLIGA", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -572,9 +520,7 @@
         "logoUrl": "/assets/teams/benfica.webp",
         "localPath": "public/assets/teams/benfica.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -592,9 +538,7 @@
         "logoUrl": "/assets/teams/besiktas.webp",
         "localPath": "public/assets/teams/besiktas.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -612,10 +556,7 @@
         "logoUrl": "/assets/teams/bodo-glimt.webp",
         "localPath": "public/assets/teams/bodo-glimt.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -633,10 +574,7 @@
         "logoUrl": "/assets/teams/bologna.webp",
         "localPath": "public/assets/teams/bologna.webp"
       },
-      "competitions": [
-        "SERIE_A",
-        "UCL"
-      ],
+      "competitions": ["SERIE_A", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -654,10 +592,7 @@
         "logoUrl": "/assets/teams/borac-banja-luka.webp",
         "localPath": "public/assets/teams/borac-banja-luka.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -675,10 +610,7 @@
         "logoUrl": "/assets/teams/borussia-dortmund.webp",
         "localPath": "public/assets/teams/borussia-dortmund.webp"
       },
-      "competitions": [
-        "BUNDESLIGA",
-        "UCL"
-      ],
+      "competitions": ["BUNDESLIGA", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -696,9 +628,7 @@
         "logoUrl": "/assets/teams/borussia-monchengladbach.webp",
         "localPath": "public/assets/teams/borussia-monchengladbach.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -716,9 +646,7 @@
         "logoUrl": "/assets/teams/botev-plovdiv.webp",
         "localPath": "public/assets/teams/botev-plovdiv.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -736,9 +664,7 @@
         "logoUrl": "/assets/teams/bournemouth.webp",
         "localPath": "public/assets/teams/bournemouth.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -756,9 +682,7 @@
         "logoUrl": "/assets/teams/brentford.webp",
         "localPath": "public/assets/teams/brentford.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -776,9 +700,7 @@
         "logoUrl": "/assets/teams/brighton.webp",
         "localPath": "public/assets/teams/brighton.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -796,9 +718,7 @@
         "logoUrl": "/assets/teams/bsc-young-boys.webp",
         "localPath": "public/assets/teams/bsc-young-boys.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -816,9 +736,7 @@
         "logoUrl": "/assets/teams/cagliari.webp",
         "localPath": "public/assets/teams/cagliari.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -836,10 +754,7 @@
         "logoUrl": "/assets/teams/celje.webp",
         "localPath": "public/assets/teams/celje.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -857,9 +772,7 @@
         "logoUrl": "/assets/teams/celta-vigo.webp",
         "localPath": "public/assets/teams/celta-vigo.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -877,9 +790,7 @@
         "logoUrl": "/assets/teams/celtic.webp",
         "localPath": "public/assets/teams/celtic.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -897,9 +808,7 @@
         "logoUrl": "/assets/teams/cercle-brugge.webp",
         "localPath": "public/assets/teams/cercle-brugge.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -917,9 +826,7 @@
         "logoUrl": "/assets/teams/chelsea.webp",
         "localPath": "public/assets/teams/chelsea.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -937,9 +844,7 @@
         "logoUrl": "/assets/teams/club-brugge-kv.webp",
         "localPath": "public/assets/teams/club-brugge-kv.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -957,9 +862,7 @@
         "logoUrl": "/assets/teams/como.webp",
         "localPath": "public/assets/teams/como.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -977,9 +880,7 @@
         "logoUrl": "/assets/teams/corvinul-hunedoara.webp",
         "localPath": "public/assets/teams/corvinul-hunedoara.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -997,9 +898,7 @@
         "logoUrl": "/assets/teams/crystal-palace.webp",
         "localPath": "public/assets/teams/crystal-palace.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1017,9 +916,7 @@
         "logoUrl": "/assets/teams/decic.webp",
         "localPath": "public/assets/teams/decic.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1037,9 +934,7 @@
         "logoUrl": "/assets/teams/dinamo-batumi.webp",
         "localPath": "public/assets/teams/dinamo-batumi.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1057,10 +952,7 @@
         "logoUrl": "/assets/teams/dinamo-minsk.webp",
         "localPath": "public/assets/teams/dinamo-minsk.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1078,9 +970,7 @@
         "logoUrl": "/assets/teams/dinamo-zagreb.webp",
         "localPath": "public/assets/teams/dinamo-zagreb.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1098,10 +988,7 @@
         "logoUrl": "/assets/teams/dynamo-kyiv.webp",
         "localPath": "public/assets/teams/dynamo-kyiv.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1119,9 +1006,7 @@
         "logoUrl": "/assets/teams/egnatia-rrogozhine.webp",
         "localPath": "public/assets/teams/egnatia-rrogozhine.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1139,10 +1024,7 @@
         "logoUrl": "/assets/teams/eintracht-frankfurt.webp",
         "localPath": "public/assets/teams/eintracht-frankfurt.webp"
       },
-      "competitions": [
-        "BUNDESLIGA",
-        "UEL"
-      ],
+      "competitions": ["BUNDESLIGA", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1160,9 +1042,7 @@
         "logoUrl": "/assets/teams/empoli.webp",
         "localPath": "public/assets/teams/empoli.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1180,9 +1060,7 @@
         "logoUrl": "/assets/teams/espanyol.webp",
         "localPath": "public/assets/teams/espanyol.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1200,9 +1078,7 @@
         "logoUrl": "/assets/teams/everton.webp",
         "localPath": "public/assets/teams/everton.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1220,9 +1096,7 @@
         "logoUrl": "/assets/teams/fc-augsburg.webp",
         "localPath": "public/assets/teams/fc-augsburg.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1240,9 +1114,7 @@
         "logoUrl": "/assets/teams/fc-differdange-03.webp",
         "localPath": "public/assets/teams/fc-differdange-03.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1260,10 +1132,7 @@
         "logoUrl": "/assets/teams/fc-lugano.webp",
         "localPath": "public/assets/teams/fc-lugano.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1281,10 +1150,7 @@
         "logoUrl": "/assets/teams/fc-midtjylland.webp",
         "localPath": "public/assets/teams/fc-midtjylland.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1302,9 +1168,7 @@
         "logoUrl": "/assets/teams/fc-porto.webp",
         "localPath": "public/assets/teams/fc-porto.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1322,9 +1186,7 @@
         "logoUrl": "/assets/teams/fc-st-pauli.webp",
         "localPath": "public/assets/teams/fc-st-pauli.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1342,10 +1204,7 @@
         "logoUrl": "/assets/teams/fcsb.webp",
         "localPath": "public/assets/teams/fcsb.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1363,10 +1222,7 @@
         "logoUrl": "/assets/teams/fenerbahce.webp",
         "localPath": "public/assets/teams/fenerbahce.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1384,10 +1240,7 @@
         "logoUrl": "/assets/teams/ferencvarosi-tc.webp",
         "localPath": "public/assets/teams/ferencvarosi-tc.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1405,9 +1258,7 @@
         "logoUrl": "/assets/teams/feyenoord.webp",
         "localPath": "public/assets/teams/feyenoord.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1425,9 +1276,7 @@
         "logoUrl": "/assets/teams/fiorentina.webp",
         "localPath": "public/assets/teams/fiorentina.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1445,9 +1294,7 @@
         "logoUrl": "/assets/teams/fk-crvena-zvezda.webp",
         "localPath": "public/assets/teams/fk-crvena-zvezda.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1465,10 +1312,7 @@
         "logoUrl": "/assets/teams/fk-partizan.webp",
         "localPath": "public/assets/teams/fk-partizan.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1486,9 +1330,7 @@
         "logoUrl": "/assets/teams/fk-tobol-kostanay.webp",
         "localPath": "public/assets/teams/fk-tobol-kostanay.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1506,9 +1348,7 @@
         "logoUrl": "/assets/teams/flora-tallinn.webp",
         "localPath": "public/assets/teams/flora-tallinn.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1526,9 +1366,7 @@
         "logoUrl": "/assets/teams/fsv-mainz-05.webp",
         "localPath": "public/assets/teams/fsv-mainz-05.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1546,9 +1384,7 @@
         "logoUrl": "/assets/teams/fulham.webp",
         "localPath": "public/assets/teams/fulham.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1566,10 +1402,7 @@
         "logoUrl": "/assets/teams/galatasaray.webp",
         "localPath": "public/assets/teams/galatasaray.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1587,9 +1420,7 @@
         "logoUrl": "/assets/teams/genoa.webp",
         "localPath": "public/assets/teams/genoa.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1607,9 +1438,7 @@
         "logoUrl": "/assets/teams/getafe.webp",
         "localPath": "public/assets/teams/getafe.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1627,10 +1456,7 @@
         "logoUrl": "/assets/teams/girona.webp",
         "localPath": "public/assets/teams/girona.webp"
       },
-      "competitions": [
-        "LALIGA",
-        "UCL"
-      ],
+      "competitions": ["LALIGA", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1648,9 +1474,7 @@
         "logoUrl": "/assets/teams/hamrun-spartans.webp",
         "localPath": "public/assets/teams/hamrun-spartans.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1668,9 +1492,7 @@
         "logoUrl": "/assets/teams/heart-of-midlothian.webp",
         "localPath": "public/assets/teams/heart-of-midlothian.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1688,9 +1510,7 @@
         "logoUrl": "/assets/teams/hellas-verona.webp",
         "localPath": "public/assets/teams/hellas-verona.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1708,9 +1528,7 @@
         "logoUrl": "/assets/teams/hjk-helsinki.webp",
         "localPath": "public/assets/teams/hjk-helsinki.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1728,9 +1546,7 @@
         "logoUrl": "/assets/teams/hnk-rijeka.webp",
         "localPath": "public/assets/teams/hnk-rijeka.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1748,9 +1564,7 @@
         "logoUrl": "/assets/teams/holstein-kiel.webp",
         "localPath": "public/assets/teams/holstein-kiel.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1768,9 +1582,7 @@
         "logoUrl": "/assets/teams/if-elfsborg.webp",
         "localPath": "public/assets/teams/if-elfsborg.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1788,10 +1600,7 @@
         "logoUrl": "/assets/teams/inter.webp",
         "localPath": "public/assets/teams/inter.webp"
       },
-      "competitions": [
-        "SERIE_A",
-        "UCL"
-      ],
+      "competitions": ["SERIE_A", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1809,9 +1618,7 @@
         "logoUrl": "/assets/teams/ipswich.webp",
         "localPath": "public/assets/teams/ipswich.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1829,10 +1636,7 @@
         "logoUrl": "/assets/teams/jagiellonia.webp",
         "localPath": "public/assets/teams/jagiellonia.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1850,10 +1654,7 @@
         "logoUrl": "/assets/teams/juventus.webp",
         "localPath": "public/assets/teams/juventus.webp"
       },
-      "competitions": [
-        "SERIE_A",
-        "UCL"
-      ],
+      "competitions": ["SERIE_A", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1871,10 +1672,7 @@
         "logoUrl": "/assets/teams/ki-klaksvik.webp",
         "localPath": "public/assets/teams/ki-klaksvik.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -1892,9 +1690,7 @@
         "logoUrl": "/assets/teams/kilmarnock.webp",
         "localPath": "public/assets/teams/kilmarnock.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1912,9 +1708,7 @@
         "logoUrl": "/assets/teams/kryvbas-kr.webp",
         "localPath": "public/assets/teams/kryvbas-kr.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1932,9 +1726,7 @@
         "logoUrl": "/assets/teams/larne.webp",
         "localPath": "public/assets/teams/larne.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1952,9 +1744,7 @@
         "logoUrl": "/assets/teams/las-palmas.webp",
         "localPath": "public/assets/teams/las-palmas.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1972,9 +1762,7 @@
         "logoUrl": "/assets/teams/lask-linz.webp",
         "localPath": "public/assets/teams/lask-linz.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -1992,10 +1780,7 @@
         "logoUrl": "/assets/teams/lazio.webp",
         "localPath": "public/assets/teams/lazio.webp"
       },
-      "competitions": [
-        "SERIE_A",
-        "UEL"
-      ],
+      "competitions": ["SERIE_A", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2013,9 +1798,7 @@
         "logoUrl": "/assets/teams/le-havre.webp",
         "localPath": "public/assets/teams/le-havre.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2033,9 +1816,7 @@
         "logoUrl": "/assets/teams/lecce.webp",
         "localPath": "public/assets/teams/lecce.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2053,9 +1834,7 @@
         "logoUrl": "/assets/teams/leganes.webp",
         "localPath": "public/assets/teams/leganes.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2073,9 +1852,7 @@
         "logoUrl": "/assets/teams/leicester.webp",
         "localPath": "public/assets/teams/leicester.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2093,9 +1870,7 @@
         "logoUrl": "/assets/teams/lens.webp",
         "localPath": "public/assets/teams/lens.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2113,10 +1888,7 @@
         "logoUrl": "/assets/teams/lille.webp",
         "localPath": "public/assets/teams/lille.webp"
       },
-      "competitions": [
-        "LIGUE_1",
-        "UCL"
-      ],
+      "competitions": ["LIGUE_1", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2134,10 +1906,7 @@
         "logoUrl": "/assets/teams/lincoln-red-imps-fc.webp",
         "localPath": "public/assets/teams/lincoln-red-imps-fc.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2155,10 +1924,7 @@
         "logoUrl": "/assets/teams/liverpool.webp",
         "localPath": "public/assets/teams/liverpool.webp"
       },
-      "competitions": [
-        "EPL",
-        "UCL"
-      ],
+      "competitions": ["EPL", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2176,9 +1942,7 @@
         "logoUrl": "/assets/teams/llapi.webp",
         "localPath": "public/assets/teams/llapi.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2196,10 +1960,7 @@
         "logoUrl": "/assets/teams/ludogorets.webp",
         "localPath": "public/assets/teams/ludogorets.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2217,10 +1978,7 @@
         "logoUrl": "/assets/teams/lyon.webp",
         "localPath": "public/assets/teams/lyon.webp"
       },
-      "competitions": [
-        "LIGUE_1",
-        "UEL"
-      ],
+      "competitions": ["LIGUE_1", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2238,9 +1996,7 @@
         "logoUrl": "/assets/teams/maccabi-petah-tikva.webp",
         "localPath": "public/assets/teams/maccabi-petah-tikva.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2258,10 +2014,7 @@
         "logoUrl": "/assets/teams/maccabi-tel-aviv.webp",
         "localPath": "public/assets/teams/maccabi-tel-aviv.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2279,9 +2032,7 @@
         "logoUrl": "/assets/teams/mallorca.webp",
         "localPath": "public/assets/teams/mallorca.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2299,10 +2050,7 @@
         "logoUrl": "/assets/teams/malmo-ff.webp",
         "localPath": "public/assets/teams/malmo-ff.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2320,10 +2068,7 @@
         "logoUrl": "/assets/teams/manchester-city.webp",
         "localPath": "public/assets/teams/manchester-city.webp"
       },
-      "competitions": [
-        "EPL",
-        "UCL"
-      ],
+      "competitions": ["EPL", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2341,10 +2086,7 @@
         "logoUrl": "/assets/teams/manchester-united.webp",
         "localPath": "public/assets/teams/manchester-united.webp"
       },
-      "competitions": [
-        "EPL",
-        "UEL"
-      ],
+      "competitions": ["EPL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2362,9 +2104,7 @@
         "logoUrl": "/assets/teams/maribor.webp",
         "localPath": "public/assets/teams/maribor.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2382,9 +2122,7 @@
         "logoUrl": "/assets/teams/marseille.webp",
         "localPath": "public/assets/teams/marseille.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2402,9 +2140,7 @@
         "logoUrl": "/assets/teams/metz.webp",
         "localPath": "public/assets/teams/metz.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2422,9 +2158,7 @@
         "logoUrl": "/assets/teams/molde.webp",
         "localPath": "public/assets/teams/molde.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2442,10 +2176,7 @@
         "logoUrl": "/assets/teams/monaco.webp",
         "localPath": "public/assets/teams/monaco.webp"
       },
-      "competitions": [
-        "LIGUE_1",
-        "UCL"
-      ],
+      "competitions": ["LIGUE_1", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2463,9 +2194,7 @@
         "logoUrl": "/assets/teams/montpellier.webp",
         "localPath": "public/assets/teams/montpellier.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2483,9 +2212,7 @@
         "logoUrl": "/assets/teams/monza.webp",
         "localPath": "public/assets/teams/monza.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2503,9 +2230,7 @@
         "logoUrl": "/assets/teams/nantes.webp",
         "localPath": "public/assets/teams/nantes.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2523,9 +2248,7 @@
         "logoUrl": "/assets/teams/napoli.webp",
         "localPath": "public/assets/teams/napoli.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2543,9 +2266,7 @@
         "logoUrl": "/assets/teams/newcastle.webp",
         "localPath": "public/assets/teams/newcastle.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2563,10 +2284,7 @@
         "logoUrl": "/assets/teams/nice.webp",
         "localPath": "public/assets/teams/nice.webp"
       },
-      "competitions": [
-        "LIGUE_1",
-        "UEL"
-      ],
+      "competitions": ["LIGUE_1", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2584,9 +2302,7 @@
         "logoUrl": "/assets/teams/nottingham-forest.webp",
         "localPath": "public/assets/teams/nottingham-forest.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2604,9 +2320,7 @@
         "logoUrl": "/assets/teams/olympiakos-piraeus.webp",
         "localPath": "public/assets/teams/olympiakos-piraeus.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2624,9 +2338,7 @@
         "logoUrl": "/assets/teams/ordabasy.webp",
         "localPath": "public/assets/teams/ordabasy.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2644,9 +2356,7 @@
         "logoUrl": "/assets/teams/osasuna.webp",
         "localPath": "public/assets/teams/osasuna.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2664,9 +2374,7 @@
         "logoUrl": "/assets/teams/pafos.webp",
         "localPath": "public/assets/teams/pafos.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2684,9 +2392,7 @@
         "logoUrl": "/assets/teams/paks.webp",
         "localPath": "public/assets/teams/paks.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2704,9 +2410,7 @@
         "logoUrl": "/assets/teams/panathinaikos.webp",
         "localPath": "public/assets/teams/panathinaikos.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2724,10 +2428,7 @@
         "logoUrl": "/assets/teams/panevezys.webp",
         "localPath": "public/assets/teams/panevezys.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2745,10 +2446,7 @@
         "logoUrl": "/assets/teams/paok.webp",
         "localPath": "public/assets/teams/paok.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2766,10 +2464,7 @@
         "logoUrl": "/assets/teams/paris-saint-germain.webp",
         "localPath": "public/assets/teams/paris-saint-germain.webp"
       },
-      "competitions": [
-        "LIGUE_1",
-        "UCL"
-      ],
+      "competitions": ["LIGUE_1", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2787,9 +2482,7 @@
         "logoUrl": "/assets/teams/parma.webp",
         "localPath": "public/assets/teams/parma.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2807,10 +2500,7 @@
         "logoUrl": "/assets/teams/petrocub.webp",
         "localPath": "public/assets/teams/petrocub.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2828,9 +2518,7 @@
         "logoUrl": "/assets/teams/plzen.webp",
         "localPath": "public/assets/teams/plzen.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2848,9 +2536,7 @@
         "logoUrl": "/assets/teams/psv-eindhoven.webp",
         "localPath": "public/assets/teams/psv-eindhoven.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2868,9 +2554,7 @@
         "logoUrl": "/assets/teams/pyunik-yerevan.webp",
         "localPath": "public/assets/teams/pyunik-yerevan.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2888,10 +2572,7 @@
         "logoUrl": "/assets/teams/qarabag.webp",
         "localPath": "public/assets/teams/qarabag.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2909,10 +2590,7 @@
         "logoUrl": "/assets/teams/rangers.webp",
         "localPath": "public/assets/teams/rangers.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2930,9 +2608,7 @@
         "logoUrl": "/assets/teams/rapid-vienna.webp",
         "localPath": "public/assets/teams/rapid-vienna.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2950,9 +2626,7 @@
         "logoUrl": "/assets/teams/rayo-vallecano.webp",
         "localPath": "public/assets/teams/rayo-vallecano.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -2970,10 +2644,7 @@
         "logoUrl": "/assets/teams/rb-leipzig.webp",
         "localPath": "public/assets/teams/rb-leipzig.webp"
       },
-      "competitions": [
-        "BUNDESLIGA",
-        "UCL"
-      ],
+      "competitions": ["BUNDESLIGA", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -2991,9 +2662,7 @@
         "logoUrl": "/assets/teams/real-betis.webp",
         "localPath": "public/assets/teams/real-betis.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3011,10 +2680,7 @@
         "logoUrl": "/assets/teams/real-madrid.webp",
         "localPath": "public/assets/teams/real-madrid.webp"
       },
-      "competitions": [
-        "LALIGA",
-        "UCL"
-      ],
+      "competitions": ["LALIGA", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3032,10 +2698,7 @@
         "logoUrl": "/assets/teams/real-sociedad.webp",
         "localPath": "public/assets/teams/real-sociedad.webp"
       },
-      "competitions": [
-        "LALIGA",
-        "UEL"
-      ],
+      "competitions": ["LALIGA", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3053,9 +2716,7 @@
         "logoUrl": "/assets/teams/red-bull-salzburg.webp",
         "localPath": "public/assets/teams/red-bull-salzburg.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3073,9 +2734,7 @@
         "logoUrl": "/assets/teams/reims.webp",
         "localPath": "public/assets/teams/reims.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3093,9 +2752,7 @@
         "logoUrl": "/assets/teams/rennes.webp",
         "localPath": "public/assets/teams/rennes.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3113,10 +2770,7 @@
         "logoUrl": "/assets/teams/rigas-fs.webp",
         "localPath": "public/assets/teams/rigas-fs.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3134,9 +2788,7 @@
         "logoUrl": "/assets/teams/ruzomberok.webp",
         "localPath": "public/assets/teams/ruzomberok.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3154,9 +2806,7 @@
         "logoUrl": "/assets/teams/saint-etienne.webp",
         "localPath": "public/assets/teams/saint-etienne.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3174,9 +2824,7 @@
         "logoUrl": "/assets/teams/sc-braga.webp",
         "localPath": "public/assets/teams/sc-braga.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3194,9 +2842,7 @@
         "logoUrl": "/assets/teams/sc-freiburg.webp",
         "localPath": "public/assets/teams/sc-freiburg.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3214,9 +2860,7 @@
         "logoUrl": "/assets/teams/servette-fc.webp",
         "localPath": "public/assets/teams/servette-fc.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3234,9 +2878,7 @@
         "logoUrl": "/assets/teams/sevilla.webp",
         "localPath": "public/assets/teams/sevilla.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3254,9 +2896,7 @@
         "logoUrl": "/assets/teams/shakhtar-donetsk.webp",
         "localPath": "public/assets/teams/shakhtar-donetsk.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3274,10 +2914,7 @@
         "logoUrl": "/assets/teams/shamrock-rovers.webp",
         "localPath": "public/assets/teams/shamrock-rovers.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3295,9 +2932,7 @@
         "logoUrl": "/assets/teams/sheriff-tiraspol.webp",
         "localPath": "public/assets/teams/sheriff-tiraspol.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3315,9 +2950,7 @@
         "logoUrl": "/assets/teams/silkeborg.webp",
         "localPath": "public/assets/teams/silkeborg.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3335,10 +2968,7 @@
         "logoUrl": "/assets/teams/slavia-praha.webp",
         "localPath": "public/assets/teams/slavia-praha.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3356,9 +2986,7 @@
         "logoUrl": "/assets/teams/slovan-bratislava.webp",
         "localPath": "public/assets/teams/slovan-bratislava.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3376,9 +3004,7 @@
         "logoUrl": "/assets/teams/southampton.webp",
         "localPath": "public/assets/teams/southampton.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3396,9 +3022,7 @@
         "logoUrl": "/assets/teams/sparta-praha.webp",
         "localPath": "public/assets/teams/sparta-praha.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3416,9 +3040,7 @@
         "logoUrl": "/assets/teams/sporting-cp.webp",
         "localPath": "public/assets/teams/sporting-cp.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3436,10 +3058,7 @@
         "logoUrl": "/assets/teams/stade-brestois-29.webp",
         "localPath": "public/assets/teams/stade-brestois-29.webp"
       },
-      "competitions": [
-        "LIGUE_1",
-        "UCL"
-      ],
+      "competitions": ["LIGUE_1", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3457,9 +3076,7 @@
         "logoUrl": "/assets/teams/strasbourg.webp",
         "localPath": "public/assets/teams/strasbourg.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3477,9 +3094,7 @@
         "logoUrl": "/assets/teams/struga.webp",
         "localPath": "public/assets/teams/struga.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3497,9 +3112,7 @@
         "logoUrl": "/assets/teams/sturm-graz.webp",
         "localPath": "public/assets/teams/sturm-graz.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3517,9 +3130,7 @@
         "logoUrl": "/assets/teams/sv-elversberg.webp",
         "localPath": "public/assets/teams/sv-elversberg.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3537,10 +3148,7 @@
         "logoUrl": "/assets/teams/the-new-saints.webp",
         "localPath": "public/assets/teams/the-new-saints.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3558,9 +3166,7 @@
         "logoUrl": "/assets/teams/torino.webp",
         "localPath": "public/assets/teams/torino.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3578,10 +3184,7 @@
         "logoUrl": "/assets/teams/tottenham.webp",
         "localPath": "public/assets/teams/tottenham.webp"
       },
-      "competitions": [
-        "EPL",
-        "UEL"
-      ],
+      "competitions": ["EPL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3599,9 +3202,7 @@
         "logoUrl": "/assets/teams/toulouse.webp",
         "localPath": "public/assets/teams/toulouse.webp"
       },
-      "competitions": [
-        "LIGUE_1"
-      ],
+      "competitions": ["LIGUE_1"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3619,9 +3220,7 @@
         "logoUrl": "/assets/teams/trabzonspor.webp",
         "localPath": "public/assets/teams/trabzonspor.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3639,9 +3238,7 @@
         "logoUrl": "/assets/teams/tsc-backa-topola.webp",
         "localPath": "public/assets/teams/tsc-backa-topola.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3659,10 +3256,7 @@
         "logoUrl": "/assets/teams/twente.webp",
         "localPath": "public/assets/teams/twente.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3680,9 +3274,7 @@
         "logoUrl": "/assets/teams/udinese.webp",
         "localPath": "public/assets/teams/udinese.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3700,10 +3292,7 @@
         "logoUrl": "/assets/teams/ue-santa-coloma.webp",
         "localPath": "public/assets/teams/ue-santa-coloma.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3721,9 +3310,7 @@
         "logoUrl": "/assets/teams/union-berlin.webp",
         "localPath": "public/assets/teams/union-berlin.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3741,10 +3328,7 @@
         "logoUrl": "/assets/teams/union-st-gilloise.webp",
         "localPath": "public/assets/teams/union-st-gilloise.webp"
       },
-      "competitions": [
-        "UCL",
-        "UEL"
-      ],
+      "competitions": ["UCL", "UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3762,9 +3346,7 @@
         "logoUrl": "/assets/teams/valencia.webp",
         "localPath": "public/assets/teams/valencia.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3782,9 +3364,7 @@
         "logoUrl": "/assets/teams/valladolid.webp",
         "localPath": "public/assets/teams/valladolid.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3802,9 +3382,7 @@
         "logoUrl": "/assets/teams/venezia.webp",
         "localPath": "public/assets/teams/venezia.webp"
       },
-      "competitions": [
-        "SERIE_A"
-      ],
+      "competitions": ["SERIE_A"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3822,10 +3400,7 @@
         "logoUrl": "/assets/teams/vfb-stuttgart.webp",
         "localPath": "public/assets/teams/vfb-stuttgart.webp"
       },
-      "competitions": [
-        "BUNDESLIGA",
-        "UCL"
-      ],
+      "competitions": ["BUNDESLIGA", "UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 1,
       "error": null
@@ -3843,9 +3418,7 @@
         "logoUrl": "/assets/teams/vfl-bochum.webp",
         "localPath": "public/assets/teams/vfl-bochum.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3863,9 +3436,7 @@
         "logoUrl": "/assets/teams/vfl-wolfsburg.webp",
         "localPath": "public/assets/teams/vfl-wolfsburg.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3883,9 +3454,7 @@
         "logoUrl": "/assets/teams/vikingur-reykjavik.webp",
         "localPath": "public/assets/teams/vikingur-reykjavik.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3903,9 +3472,7 @@
         "logoUrl": "/assets/teams/villarreal.webp",
         "localPath": "public/assets/teams/villarreal.webp"
       },
-      "competitions": [
-        "LALIGA"
-      ],
+      "competitions": ["LALIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3923,9 +3490,7 @@
         "logoUrl": "/assets/teams/virtus.webp",
         "localPath": "public/assets/teams/virtus.webp"
       },
-      "competitions": [
-        "UCL"
-      ],
+      "competitions": ["UCL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3943,9 +3508,7 @@
         "logoUrl": "/assets/teams/vojvodina.webp",
         "localPath": "public/assets/teams/vojvodina.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3963,9 +3526,7 @@
         "logoUrl": "/assets/teams/werder-bremen.webp",
         "localPath": "public/assets/teams/werder-bremen.webp"
       },
-      "competitions": [
-        "BUNDESLIGA"
-      ],
+      "competitions": ["BUNDESLIGA"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -3983,9 +3544,7 @@
         "logoUrl": "/assets/teams/west-ham.webp",
         "localPath": "public/assets/teams/west-ham.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -4003,9 +3562,7 @@
         "logoUrl": "/assets/teams/wisla-krakow.webp",
         "localPath": "public/assets/teams/wisla-krakow.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -4023,9 +3580,7 @@
         "logoUrl": "/assets/teams/wolves.webp",
         "localPath": "public/assets/teams/wolves.webp"
       },
-      "competitions": [
-        "EPL"
-      ],
+      "competitions": ["EPL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null
@@ -4043,9 +3598,7 @@
         "logoUrl": "/assets/teams/zira.webp",
         "localPath": "public/assets/teams/zira.webp"
       },
-      "competitions": [
-        "UEL"
-      ],
+      "competitions": ["UEL"],
       "downloadStatus": "downloaded",
       "skippedDuplicateCount": 0,
       "error": null

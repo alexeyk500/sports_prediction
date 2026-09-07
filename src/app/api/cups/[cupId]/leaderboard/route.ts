@@ -1,7 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { jsonError, toApiErrorResponse } from "@/lib/http/api-errors";
-import { getRoutePrismaClient, requireAuthenticatedUser } from "@/lib/http/auth";
+import {
+  getRoutePrismaClient,
+  requireAuthenticatedUser,
+} from "@/lib/http/auth";
 import { getCupLeaderboardPage } from "@/modules/tournaments/cup-read.service";
 
 const leaderboardQuerySchema = z.object({
@@ -21,7 +24,9 @@ export async function GET(
   try {
     const auth = await requireAuthenticatedUser(request);
     const { cupId } = paramsSchema.parse(await context.params);
-    const query = leaderboardQuerySchema.parse(Object.fromEntries(request.nextUrl.searchParams));
+    const query = leaderboardQuerySchema.parse(
+      Object.fromEntries(request.nextUrl.searchParams),
+    );
     const prisma = getRoutePrismaClient();
     const tournament = await prisma.tournament.findUnique({
       where: { id: cupId },
@@ -29,7 +34,11 @@ export async function GET(
     });
 
     if (!tournament) {
-      return jsonError("TOURNAMENT_NOT_FOUND", "Tournament was not found.", 404);
+      return jsonError(
+        "TOURNAMENT_NOT_FOUND",
+        "Tournament was not found.",
+        404,
+      );
     }
 
     const result = await getCupLeaderboardPage(prisma, {

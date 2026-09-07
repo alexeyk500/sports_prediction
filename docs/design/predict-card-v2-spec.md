@@ -99,8 +99,7 @@ Recommended implementation:
 
   background: var(--match-card-bg);
 
-  box-shadow:
-    0 10px 30px rgb(15 23 42 / 0.08);
+  box-shadow: 0 10px 30px rgb(15 23 42 / 0.08);
 }
 ```
 
@@ -163,8 +162,7 @@ Competition badge:
 
   background: var(--logo-badge-bg);
 
-  box-shadow:
-    0 4px 14px rgb(15 23 42 / 0.08);
+  box-shadow: 0 4px 14px rgb(15 23 42 / 0.08);
 }
 ```
 
@@ -294,8 +292,7 @@ Team logo maximum size:
 
   background: var(--logo-badge-bg);
 
-  box-shadow:
-    0 5px 16px rgb(15 23 42 / 0.10);
+  box-shadow: 0 5px 16px rgb(15 23 42 / 0.1);
 }
 ```
 
@@ -479,8 +476,7 @@ Layout:
 .outcomes {
   display: grid;
 
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 9px;
 
@@ -713,7 +709,7 @@ The visual result must remain consistent with these values.
 Recommended baseline:
 
 ```css
-[data-theme='dark'] {
+[data-theme="dark"] {
   --match-card-bg: #172233;
   --match-card-border: #334155;
 

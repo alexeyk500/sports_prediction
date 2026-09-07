@@ -15,5 +15,8 @@ export function logPredictLoadError(error: unknown): void {
     return;
   }
 
-  console.error("Predict bootstrap failed", error instanceof Error ? error.message : error);
+  console.error(
+    "Predict bootstrap failed",
+    error instanceof Error ? error.message : error,
+  );
 }

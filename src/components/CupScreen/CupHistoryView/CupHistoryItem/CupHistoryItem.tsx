@@ -18,7 +18,11 @@ const CupHistoryItem: React.FC<ICupHistoryItemProps> = ({ item }) => {
         <span>{item.userResultLabel}</span>
         {item.userPointsLabel ? <strong>{item.userPointsLabel}</strong> : null}
       </div>
-      {item.href ? <span className={styles.chevron} aria-hidden="true">›</span> : null}
+      {item.href ? (
+        <span className={styles.chevron} aria-hidden="true">
+          ›
+        </span>
+      ) : null}
     </>
   );
 

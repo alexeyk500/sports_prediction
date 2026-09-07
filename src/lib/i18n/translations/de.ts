@@ -75,7 +75,8 @@ export const de = {
       plusOne: "+1",
     },
     aria: {
-      selectOutcome: "{outcome}, {trophyValue}, für {homeTeam} gegen {awayTeam} wählen",
+      selectOutcome:
+        "{outcome}, {trophyValue}, für {homeTeam} gegen {awayTeam} wählen",
     },
   },
   cup: {
@@ -90,16 +91,18 @@ export const de = {
     unavailable: "—",
     yourPosition: "Deine Position",
     positionRank: "Rang #{rank}",
-    positionSummary: "{points} Punkte · {predictions} Tipps · {correct} richtig · {wrong} falsch",
+    positionSummary:
+      "{points} Punkte · {predictions} Tipps · {correct} richtig · {wrong} falsch",
     positionUnavailableTitle: "Deine Cup-Position ist noch nicht bereit",
-    positionUnavailableBody: "Gib Tipps ab, um automatisch einzusteigen. Dein Rang erscheint, sobald die Cup-Tabelle verfügbar ist.",
+    positionUnavailableBody:
+      "Gib Tipps ab, um automatisch einzusteigen. Dein Rang erscheint, sobald die Cup-Tabelle verfügbar ist.",
     makePrediction: "Tipp abgeben",
     you: "Du",
     leaderboard: "Leaderboard",
     leaderboardModes: {
-      "top": "Top 50",
+      top: "Top 50",
       "around-me": "Um mich",
-      "all": "Alle Spieler",
+      all: "Alle Spieler",
       ariaLabel: "Leaderboard-Ansichten",
     },
     leaderboardStates: {
@@ -127,14 +130,17 @@ export const de = {
     empty: {
       noCurrentCup: "Kein aktiver Cup verfügbar.",
       leaderboardTitle: "Die Tabelle ist noch nicht bereit",
-      leaderboardBody: "Spielerzeilen erscheinen, sobald die aktuelle Cup-Tabelle verfügbar ist.",
+      leaderboardBody:
+        "Spielerzeilen erscheinen, sobald die aktuelle Cup-Tabelle verfügbar ist.",
       historyTitle: "Noch keine vergangenen Cups",
-      historyBody: "Abgeschlossene Cup-Zusammenfassungen erscheinen hier, sobald finale Ergebnisse verfügbar sind.",
+      historyBody:
+        "Abgeschlossene Cup-Zusammenfassungen erscheinen hier, sobald finale Ergebnisse verfügbar sind.",
     },
   },
   profile: {
     title: "Profil",
-    stagePlaceholder: "Karriere und Preisverlauf sind in dieser Phase noch nicht umgesetzt.",
+    stagePlaceholder:
+      "Karriere und Preisverlauf sind in dieser Phase noch nicht umgesetzt.",
     settingsTitle: "Einstellungen",
     languageLabel: "Sprache",
     appearanceLabel: "Darstellung",
@@ -142,7 +148,8 @@ export const de = {
   },
   errors: {
     generic: "Etwas ist schiefgelaufen.",
-    missingTelegramInitData: "Öffne die App in Telegram oder konfiguriere development initData.",
+    missingTelegramInitData:
+      "Öffne die App in Telegram oder konfiguriere development initData.",
     network: "Netzwerkanfrage fehlgeschlagen.",
     invalidApiResponse: "Serverantwort konnte nicht gelesen werden.",
     PREDICTION_LOCKED: "Dieses Spiel hat begonnen.",
@@ -153,14 +160,17 @@ export const de = {
     FIXTURE_NOT_OPEN: "Dieses Spiel ist nicht für Tipps geöffnet.",
     FIXTURE_NOT_FOUND: "Dieses Spiel wurde nicht gefunden.",
     FIXTURE_LOCKED: "Dieses Spiel ist gesperrt.",
-    FIXTURE_SCORING_SNAPSHOT_MISSING: "Die Tippquoten für dieses Spiel sind noch nicht bereit.",
+    FIXTURE_SCORING_SNAPSHOT_MISSING:
+      "Die Tippquoten für dieses Spiel sind noch nicht bereit.",
     COMPETITION_NOT_SUPPORTED: "Dieser Wettbewerb wird nicht unterstützt.",
     COMPETITION_INACTIVE: "Dieser Wettbewerb ist nicht aktiv.",
     PREDICTION_ALREADY_EXISTS: "Du hast für dieses Spiel bereits getippt.",
     PREDICTION_NOT_FOUND: "Dieser Tipp wurde nicht gefunden.",
     INVALID_AD_REWARD: "Diese Werbe-Belohnung kann nicht verwendet werden.",
-    AD_REWARD_ALREADY_CONSUMED: "Diese Werbe-Belohnung wurde bereits verwendet.",
-    IDEMPOTENCY_CONFLICT: "Diese Anfrage wurde bereits für einen anderen Tipp verwendet.",
+    AD_REWARD_ALREADY_CONSUMED:
+      "Diese Werbe-Belohnung wurde bereits verwendet.",
+    IDEMPOTENCY_CONFLICT:
+      "Diese Anfrage wurde bereits für einen anderen Tipp verwendet.",
   },
   settings: {
     locales: {

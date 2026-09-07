@@ -21,7 +21,9 @@ export interface ICupLeaderboardModeState {
   isLoaded: boolean;
 }
 
-export function toCupLeaderboardRowModel(dto: CupLeaderboardRowDto): ICupLeaderboardRowModel {
+export function toCupLeaderboardRowModel(
+  dto: CupLeaderboardRowDto,
+): ICupLeaderboardRowModel {
   return {
     id: dto.userId,
     rank: dto.rank,

@@ -41,7 +41,9 @@ export async function updateUserSettings(
     where: { id: input.userId },
     data: {
       ...(input.locale === undefined ? {} : { locale: input.locale }),
-      ...(input.appearance === undefined ? {} : { appearance: input.appearance }),
+      ...(input.appearance === undefined
+        ? {}
+        : { appearance: input.appearance }),
     },
     select: {
       locale: true,
