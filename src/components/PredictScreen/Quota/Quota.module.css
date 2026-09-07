@@ -74,7 +74,7 @@
 }
 
 .slotUnused {
-  background: color-mix(in srgb, var(--color-border) 58%, transparent);
+  background: color-mix(in srgb, var(--color-border-strong) 60%, transparent);
 }
 
 .slotDivider {
