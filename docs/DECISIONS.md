@@ -1420,7 +1420,7 @@ Examples:
 
 ``` text
 components/predict/
-components/cup/
+components/CupScreen/
 components/rating/
 components/profile/
 components/settings/

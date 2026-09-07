@@ -69,7 +69,9 @@ Changing these defaults requires the project decision process defined by
 
 # 2. Ownership and Directory Boundaries
 
-Frontend is organized primarily by product feature.
+Frontend UI is organized by component ownership.
+
+Screen components are roots of their UI component trees.
 
 Preferred shape:
 
@@ -79,16 +81,35 @@ src/
 ├── components/
 │   ├── common/
 │   ├── navigation/
-│   ├── predict/
-│   ├── cup/
-│   ├── rating/
-│   ├── profile/
-│   └── settings/
+│   ├── CupScreen/
+│   │   ├── CupScreen.tsx
+│   │   ├── CupScreen.module.css
+│   │   ├── CupHeader/
+│   │   ├── CupModeTabs/
+│   │   ├── CurrentCupView/
+│   │   │   ├── CurrentCupView.tsx
+│   │   │   ├── CurrentCupView.module.css
+│   │   │   ├── CupHero/
+│   │   │   ├── CupParticipantsStrip/
+│   │   │   ├── UserCupPosition/
+│   │   │   └── CupLeaderboard/
+│   │   │       └── LeaderboardRow/
+│   │   └── CupHistoryView/
+│   │       ├── CupHistoryView.tsx
+│   │       ├── CupHistoryView.module.css
+│   │       └── CupHistoryItem/
+│   ├── PredictScreen/
+│   ├── RatingScreen/
+│   ├── ProfileScreen/
+│   └── SettingsScreen/
+├── assets/
+│   └── icons/
 ├── lib/
 │   ├── api/
 │   ├── assets/
 │   ├── telegram/
 │   ├── i18n/
+│   ├── format/
 │   └── ...
 └── stores/
 ```
@@ -102,20 +123,55 @@ Responsibility guide:
   Telegram browser integration               `lib/telegram/`
   Football asset resolution                  `lib/assets/`
   Localization infrastructure                `lib/i18n/`
+  Shared formatting primitives               `lib/format/` when genuinely shared
   Shared application state                   `stores/`
-  Feature UI                                 `components/<feature>/`
-  Genuine shared UI concept                  `components/common/`
+  Shared reusable UI icons                   `assets/icons/`
+  Screen UI tree                             `components/<ScreenName>/`
+  Genuine cross-screen UI concept            `components/common/`
   Global visual tokens/reset/root behavior   global CSS
-  Component geometry/presentation            component CSS Module
+  Component geometry/presentation            owning component CSS Module
 
-This is guidance, not a requirement to create files for trivial code.
+Directory nesting should express ownership/responsibility, not file category.
 
-Feature-specific UI stays with its feature. Move a component into
-`common` only after it represents a stable concept with actual
-cross-feature value.
+Prefer the shallowest structure that preserves clear ownership.
 
-Do not pre-build detailed Cup/Rating/Profile architecture before those
-features have concrete product/design requirements.
+Do not add generic organizational directories such as:
+
+``` text
+components/
+ui/
+internal/
+helpers/
+```
+
+inside a component directory merely to group file kinds.
+
+For example, prefer:
+
+``` text
+src/components/CupScreen/
+├── CupScreen.tsx
+├── CupScreen.module.css
+├── CupHero/
+└── CupHistoryView/
+```
+
+over:
+
+``` text
+src/components/cup/
+└── components/
+    ├── CupHero/
+    └── CupHistoryView/
+```
+
+A meaningful child UI component should live under the directory of its immediate
+owning component.
+
+Feature/component-specific implementation stays close to its owner.
+
+Move a component into `common` only after it represents a stable concept with
+actual cross-screen value.
 
 Preferred evolution:
 
@@ -124,6 +180,8 @@ specific implementation
 → observed reuse
 → shared abstraction
 ```
+
+Do not pre-build shared abstractions for future screens before real reuse exists.
 
 ------------------------------------------------------------------------
 
@@ -448,43 +506,360 @@ Do not remove fallback behavior during visual refactoring.
 
 A component should have a meaningful responsibility.
 
-Extract when there is:
+Complex screens MUST be implemented as hierarchical compositions of
+responsibility-scoped React functional components.
+
+A screen component is primarily a composition/orchestration boundary. It may own:
 
 ``` text
-independent responsibility
-real reuse
+route/screen state
+screen-level data orchestration
+top-level loading/error state
+mode selection
+major screen layout
+screen-shell integration
+```
+
+It must not become the default owner of the detailed markup and styling for
+every visual section of the screen.
+
+Preferred composition shape:
+
+``` text
+Screen
+└── meaningful screen section
+    └── repeated or independently responsible child component
+```
+
+Example:
+
+``` text
+CupScreen
+├── CupHeader
+├── CupModeTabs
+├── CurrentCupView
+│   ├── CupHero
+│   ├── CupParticipantsStrip
+│   ├── UserCupPosition
+│   └── CupLeaderboard
+│       └── LeaderboardRow
+└── CupHistoryView
+    └── CupHistoryItem
+```
+
+The filesystem should mirror this ownership tree for meaningful standalone UI
+components:
+
+``` text
+src/components/CupScreen/
+├── CupScreen.tsx
+├── CupScreen.module.css
+├── CupHeader/
+├── CupModeTabs/
+├── CurrentCupView/
+│   ├── CupHero/
+│   ├── CupParticipantsStrip/
+│   ├── UserCupPosition/
+│   └── CupLeaderboard/
+│       └── LeaderboardRow/
+└── CupHistoryView/
+    └── CupHistoryItem/
+```
+
+This is an ownership model, not a requirement to create a folder for every
+trivial fragment.
+
+## 11.1 Component Boundaries
+
+Extract a standalone UI component when a block has a meaningful independent
+presentation responsibility, for example:
+
+``` text
+screen section
+card/panel with its own visual structure
+repeated row/item
+block with its own presentation states
+block expected to be developed or visually refined independently
 independent interaction/state
 substantial presentation complexity
+real reuse
 ```
 
-There is no arbitrary component/function line limit.
+Do not extract components solely to reduce line count.
 
-Avoid micro-components created only to reduce file length.
+Trivial wrappers, labels, icons or one-off markup fragments should remain inside
+their owning component unless they gain an independent responsibility or genuine
+reuse.
 
-Avoid god components that combine unrelated concerns such as:
+Avoid both extremes:
 
 ``` text
-HTTP implementation
-large transformation logic
-all screen UI
-asset resolution
-error mapping
-complex state orchestration
+one monolithic Screen.tsx + Screen.module.css containing the whole screen
 ```
+
+and:
+
+``` text
+micro-components created for every text node, icon or trivial wrapper
+```
+
+Split by UI responsibility, not arbitrary line count.
+
+## 11.2 Component Directory Contract
+
+Each meaningful standalone UI component should normally own a directory:
+
+``` text
+CupHero/
+├── CupHero.tsx
+└── CupHero.module.css
+```
+
+A meaningful child component should be placed under the directory of its
+immediate owning component.
+
+Do not add generic categorization layers such as:
+
+``` text
+components/
+ui/
+internal/
+```
+
+inside an owning component directory unless they represent a real architectural
+boundary rather than a file-category bucket.
+
+Directory depth must express responsibility.
+
+Prefer the shallowest hierarchy that still mirrors ownership clearly.
+
+## 11.3 Standalone UI Component Contract
+
+Each meaningful standalone UI component:
+
+``` text
+is a typed React functional component
+receives external data/actions through explicit typed props/callbacks
+does not fetch Goalstery application data unless explicitly defined as an
+orchestration/container boundary
+owns its internal presentation
+owns its component-specific CSS Module
+```
+
+### React Component Declaration Convention
+
+Goalstery UI components use an explicit `React.FC` declaration convention.
+
+Components with props MUST declare a named props interface separately from the
+component implementation.
+
+Preferred form:
+
+```tsx
+interface ICupHeroProps {
+  title: string;
+  countdown: string;
+  onClick: () => void;
+}
+
+const CupHero: React.FC<ICupHeroProps> = ({
+  title,
+  countdown,
+  onClick,
+}) => {
+  return (...);
+};
+
+export { CupHero };
+```
+
+Components without props use:
+
+```tsx
+const CupHeader: React.FC = () => {
+  return (...);
+};
+
+export { CupHeader };
+```
+
+For React UI component props:
+
+``` text
+prefer interface I<ComponentName>Props
+do not declare props as an inline object type in the component signature
+do not use export function ComponentName(...) as the default Goalstery UI style
+do not mix type ComponentNameProps and interface IComponentNameProps conventions
+within new/materially modified UI code
+keep the props contract explicit and easy to locate
+```
+
+This convention applies to React UI components. Ordinary non-component
+functions, formatters, utilities and domain/application functions do not use
+React-specific types merely for stylistic consistency.
+
+Props should be cohesive and reasonably narrow.
+
+Avoid passing one giant screen/backend object through descendants only for
+convenience.
+
+Do not fragment one cohesive presentation model into dozens of meaningless
+primitive props either.
+
+Presentation components must preserve the established data flow:
+
+``` text
+HTTP
+→ typed API client
+→ feature/screen orchestration
+→ owned state
+→ presentation model/props
+→ presentation components
+```
+
+## 11.4 CSS Ownership
+
+A standalone UI component owns CSS describing its internal visual
+implementation:
+
+``` text
+internal layout
+component geometry
+component typography
+component-local states
+component-local responsive behavior
+```
+
+Parent CSS may control composition concerns:
+
+``` text
+placement of child components
+spacing between siblings
+screen/grid composition
+screen scrolling
+shell integration
+```
+
+Parent CSS must not become a central stylesheet for the internal DOM of multiple
+child components.
+
+Avoid selectors that depend on or reach deeply into another component's internal
+markup.
+
+Do not create shared CSS abstractions merely because two components currently
+share a few declarations. Use semantic design tokens and extract a shared UI
+concept only after genuine repeated responsibility appears.
+
+## 11.5 Types, Formatters and Utilities
+
+Co-locate component/screen-specific types, formatters and helpers with the
+component tree that owns their semantics.
+
+Do not move code into generic project-wide `types`, `utils` or `helpers` modules
+only because it is not a React component.
+
+Preferred evolution:
+
+``` text
+owner-local implementation
+→ observed cross-screen reuse
+→ shared responsibility-specific module
+```
+
+Move a type/helper/formatter into a shared project module only when:
+
+``` text
+it is used by multiple screens/features
+its semantics are genuinely owner-independent
+the shared contract/name is stable
+extraction reduces duplication rather than merely moving files
+```
+
+Avoid generic dumping-ground modules such as:
+
+``` text
+src/types.ts
+src/utils.ts
+src/helpers.ts
+```
+
+Shared code should live in responsibility-specific modules, for example:
+
+``` text
+src/lib/format/
+src/lib/telegram/
+src/lib/assets/
+src/lib/i18n/
+src/lib/api/
+```
+
+HTTP DTOs remain owned by the API boundary.
+
+Frontend presentation types remain presentation-layer types and must not become
+aliases for Prisma/backend domain models.
+
+A type/helper used only by `CupScreen` or one of its descendants may remain
+inside the `CupScreen` ownership tree.
+
+## 11.6 Screen Responsibility
+
+A complex screen component should remain easy to read at a glance and primarily
+contain:
+
+``` text
+screen-level orchestration
+screen-level local UI state
+selection between screen modes/views
+composition of major child components
+screen-shell integration
+```
+
+Detailed hero markup, leaderboard rows, history cards, section-specific empty
+states and their internal styling belong to the component that owns that UI
+responsibility.
+
+A complex feature screen should not accumulate its full implementation inside
+one large component and one central CSS Module.
+
+## 11.7 Component-Scoped Development
+
+Visual and UI development should be performed at the smallest meaningful
+component boundary.
+
+If a task is scoped to one component, for example `CupHero`, the change should
+remain within that component's responsibility boundary unless a required
+dependency is explicitly identified.
+
+Do not opportunistically redesign, refactor or restyle sibling components during
+a component-scoped task.
+
+If the requested change requires modification outside the owning component
+boundary:
+
+``` text
+identify the dependency
+explain why the boundary must be crossed
+expand scope only as much as required
+```
+
+This enables independent implementation, review, visual verification and
+iteration of UI blocks.
+
+## 11.8 React Implementation Discipline
 
 Use normal React props/state before reaching for imperative refs.
 
-Refs are appropriate for real DOM/browser/integration needs such as
-focus, measurement or intentionally designed imperative APIs.
+Refs are appropriate for real DOM/browser/integration needs such as focus,
+measurement or intentionally designed imperative APIs.
 
-Use effects for synchronization/side effects, not for values derivable
-during render.
+Use effects for synchronization/side effects, not for values derivable during
+render.
 
-Do not add `useMemo`, `useCallback` or `React.memo` mechanically.
-Optimize for a concrete reason.
+Do not add `useMemo`, `useCallback` or `React.memo` mechanically. Optimize for a
+concrete reason.
 
-Repeated entities use stable semantic keys, not array indexes when
-stable IDs exist.
+Repeated entities use stable semantic keys, not array indexes when stable IDs
+exist.
 
 ------------------------------------------------------------------------
 
@@ -581,19 +956,118 @@ framework for basic selected/hover/expand behavior.
 
 # 14. Icons
 
-Production application icons are Goalstery-owned/local SVG assets or
-maintained SVG React components.
+Production application icons are Goalstery-owned/local SVG assets or maintained
+SVG React components.
 
-Do not use third-party icon libraries without an approved architecture
-decision.
+Do not use third-party icon libraries without an approved architecture decision.
 
-Reusable icons may be small typed SVG components.
+Icons follow the same ownership model as UI components.
 
-Decorative icons should be hidden from assistive technology where
-appropriate; meaningful icons require accessible context.
+## 14.1 Component-local icons
 
-Emoji are not substitutes for production UI icons where a proper SVG
-exists or should exist.
+If an icon is specific to one UI component and has no demonstrated reuse, keep
+it inside the directory of that owning component.
+
+Example:
+
+``` text
+CupHero/
+├── CupHero.tsx
+├── CupHero.module.css
+└── TrophyIcon.tsx
+```
+
+If several icons are tightly related to and exclusively used by that component,
+they may live beside it as individually named icon modules:
+
+``` text
+CupHero/
+├── CupHero.tsx
+├── CupHero.module.css
+├── TrophyIcon.tsx
+└── FootballIcon.tsx
+```
+
+Do not move an icon to a screen-wide collector merely because it is SVG.
+
+## 14.2 Shared icons
+
+Move/reuse an icon in the shared icon asset layer only after genuine reuse exists
+across independent components/screens.
+
+Shared reusable icons belong in:
+
+``` text
+src/assets/icons/
+```
+
+Prefer one clearly named module/file per reusable icon, following the existing
+project SVG implementation convention.
+
+Example:
+
+``` text
+src/assets/icons/
+├── TrophyIcon.tsx
+├── ChevronRightIcon.tsx
+├── CheckIcon.tsx
+└── CloseIcon.tsx
+```
+
+Before creating a new shared icon, check whether an equivalent Goalstery-owned
+shared icon already exists.
+
+Do not duplicate an existing shared icon locally.
+
+A shared icon must represent a stable generic visual concept rather than a
+screen-specific implementation detail.
+
+Preferred evolution:
+
+``` text
+component-local icon
+→ observed reuse
+→ shared src/assets/icons/
+```
+
+Do not promote icons to shared scope speculatively.
+
+## 14.3 No icon dumping grounds
+
+Do not create screen/feature-level icon dumping-ground modules such as:
+
+``` text
+CupIcons.tsx
+PredictIcons.tsx
+Icons.tsx
+```
+
+when such files merely collect unrelated icons owned by different child
+components.
+
+Icon ownership is determined by actual usage/responsibility, not by the technical
+fact that the file contains SVG.
+
+If a former icon collector exists, classify each icon independently:
+
+``` text
+single-component usage
+→ move to owning component directory
+
+genuine cross-component/cross-screen reuse
+→ reuse/move to src/assets/icons/
+```
+
+Remove the collector when it no longer represents a genuine single
+responsibility.
+
+Reusable icons may be small typed SVG React components.
+
+Decorative icons should be hidden from assistive technology where appropriate;
+meaningful icons require accessible context.
+
+Emoji are not substitutes for production UI icons where a proper SVG exists or
+should exist.
 
 ------------------------------------------------------------------------
 
@@ -767,7 +1241,7 @@ Use the configured `@/` alias for imports from `src/`.
 Prefer:
 
 ``` ts
-import { MatchCard } from "@/components/predict/MatchCard";
+import { CupHero } from "@/components/CupScreen/CurrentCupView/CupHero/CupHero";
 ```
 
 over long relative paths.
@@ -883,8 +1357,21 @@ report it separately
 do not silently expand scope
 ```
 
-Similarly, do not create speculative abstractions for future
-Cup/Rating/Profile features before actual requirements exist.
+For component-scoped UI work, preserve the ownership boundary defined in
+Section 11:
+
+``` text
+change the owning component
+do not redesign/restyle sibling components
+do not move unrelated responsibilities
+identify required cross-boundary dependencies before expanding scope
+```
+
+A visual correction for one component must not silently become a screen-wide
+redesign.
+
+Similarly, do not create speculative abstractions for future screens/components
+before actual requirements or observed reuse exist.
 
 ------------------------------------------------------------------------
 
@@ -893,7 +1380,7 @@ Cup/Rating/Profile features before actual requirements exist.
 Current MatchCard illustrates the intended separation:
 
 ``` text
-Predict feature orchestration
+Predict screen orchestration
 → fixture/prediction DTO data
 → presentation mapping
 → MatchCard props

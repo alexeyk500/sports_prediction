@@ -275,6 +275,165 @@ HTTP DTO != presentation model != Prisma model
 CSS Modules
 Goalstery-owned UI components
 Goalstery-owned SVG icons
+complex screens composed from responsibility-scoped UI components
+```
+
+### UI composition and filesystem guardrail
+
+React UI filesystem structure следует component ownership.
+
+Screen components являются корнями своих UI trees и должны иметь собственные
+component directories, например:
+
+```text
+src/components/CupScreen/
+src/components/PredictScreen/
+```
+
+Meaningful child UI component должен находиться внутри directory своего
+непосредственного owning component.
+
+Не создавать generic organizational nesting вроде:
+
+```text
+components/
+ui/
+internal/
+```
+
+внутри component directory только ради группировки файлов.
+
+Каждый meaningful standalone UI component:
+
+```text
+имеет собственный .tsx functional component
+имеет собственный component-specific .module.css
+получает external data/actions через explicit typed props/callbacks
+не fetch'ит Goalstery application data напрямую, если это presentation component
+```
+
+### React component declaration guardrail
+
+Новые и materially modified Goalstery UI components используют единый declaration style.
+
+Компонент с props:
+
+```tsx
+interface ICupHeroProps {
+  title: string;
+  onClick: () => void;
+}
+
+const CupHero: React.FC<ICupHeroProps> = ({ title, onClick }) => {
+  // ...
+};
+
+export { CupHero };
+```
+
+Компонент без props:
+
+```tsx
+const CupHeader: React.FC = () => {
+  // ...
+};
+
+export { CupHeader };
+```
+
+Для UI components не использовать как основной стиль:
+
+```text
+export function ComponentName(...)
+inline props object type in component signature
+type ComponentNameProps = ... when defining React component props
+```
+
+Props interface именуется:
+
+```text
+I<ComponentName>Props
+```
+
+Это правило относится к React UI components и не требует `React.FC` для обычных
+non-component functions.
+
+### Icon ownership guardrail
+
+Icons следуют тем же ownership rules, что и UI components.
+
+Не создавать screen/feature-level dumping-ground modules вроде:
+
+```text
+CupIcons.tsx
+PredictIcons.tsx
+Icons.tsx
+```
+
+только для сбора unrelated SVG components одного экрана.
+
+Если icon используется только одним component:
+
+```text
+оставить icon в directory owning component
+```
+
+Если icon действительно переиспользуется independent components/screens:
+
+```text
+reuse/move to src/assets/icons/
+```
+
+Перед созданием нового shared icon проверить, нет ли уже эквивалентного
+Goalstery-owned icon.
+
+Preferred evolution:
+
+```text
+component-local icon
+→ observed reuse
+→ shared src/assets/icons/
+```
+
+Не выносить icons в shared scope speculative и не дублировать existing shared
+icon локально.
+
+Screen component должен в первую очередь orchestrate/compose дочерние UI blocks,
+а не содержать detailed markup + styling всего сложного экрана в одной паре:
+
+```text
+Screen.tsx
+Screen.module.css
+```
+
+Parent CSS отвечает за screen/composition concerns; child CSS — за internal
+presentation своего компонента.
+
+Не дробить trivial markup на бессмысленные micro-components.
+
+Граница компонента определяется UI responsibility, а не количеством строк.
+
+Component-scoped UI task должен оставаться внутри responsibility этого
+компонента. Не redesign/refactor/restyle sibling components без необходимой
+dependency и явного расширения scope.
+
+Feature/component-specific types, formatters и helpers должны оставаться рядом
+с owning feature/component. Выносить их в shared project modules только после
+подтверждённого cross-feature reuse и только в responsibility-specific modules.
+
+Не создавать catch-all shared dumping grounds вроде:
+
+```text
+src/utils.ts
+src/helpers.ts
+src/types.ts
+```
+
+Подробные правила component composition, filesystem ownership, CSS ownership и
+shared extraction определены в:
+
+```text
+docs/FRONTEND_ARCHITECTURE.md
 ```
 
 Без explicit approved decision не добавлять:

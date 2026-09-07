@@ -5,6 +5,7 @@ import { useSettingsRuntime } from "@/hooks/use-settings-runtime";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import { useBootstrapStore } from "@/stores/bootstrap-store";
 import { useSettingsStore } from "@/stores/settings-store";
+import { CupScreen } from "@/components/CupScreen/CupScreen";
 import { ProfileScreen } from "@/components/profile/ProfileScreen";
 import styles from "./AppShell.module.css";
 
@@ -31,6 +32,8 @@ export function AppShell({ predict }: { predict: ReactNode }) {
       <div className={styles.content}>
         {active === "Predict" ? (
           predict
+        ) : active === "Cup" ? (
+          <CupScreen onMakePrediction={() => setActive("Predict")} />
         ) : active === "Profile" ? (
           <ProfileScreen />
         ) : (

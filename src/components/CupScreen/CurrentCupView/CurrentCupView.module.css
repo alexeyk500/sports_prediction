@@ -1,0 +1,13 @@
+.currentStack {
+  display: grid;
+  gap: 14px;
+}
+
+.statePanel {
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  padding: 18px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+}

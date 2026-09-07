@@ -1,0 +1,75 @@
+.positionPanel {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  padding-block: 16px;
+  padding-inline: 16px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+}
+
+.positionAvatar {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-text);
+}
+
+.userIcon {
+  width: 30px;
+  height: 30px;
+  fill: currentColor;
+}
+
+.positionContent {
+  min-width: 0;
+}
+
+.panelLabel {
+  display: block;
+  margin-block-end: 5px;
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.positionContent h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 19px;
+  font-weight: 760;
+  line-height: 1.12;
+}
+
+.positionContent p {
+  margin-block: 5px 12px;
+  margin-inline: 0;
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.predictCta {
+  min-height: 38px;
+  border: 0;
+  border-radius: 10px;
+  padding-block: 9px;
+  padding-inline: 14px;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+}

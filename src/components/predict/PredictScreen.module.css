@@ -555,7 +555,7 @@
 
 .outcomeCode {
   color: var(--match-primary);
-  font-size: 25px;
+  font-size: 23px;
   font-weight: 700;
   line-height: 1;
 }
@@ -564,18 +564,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-block-start: 6px;
+  gap: 7px;
+  margin-block-start: 4px;
   color: var(--match-primary);
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1;
   direction: ltr;
 }
 
 .trophyIcon {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   fill: var(--trophy);
 }
 

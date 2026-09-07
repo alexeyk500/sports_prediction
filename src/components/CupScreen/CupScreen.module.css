@@ -1,0 +1,73 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  padding-block-start: calc(18px + env(safe-area-inset-top));
+  padding-inline: 16px;
+  background: var(--color-app-bg);
+  color: var(--color-text);
+}
+
+.centerState {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  overflow: hidden;
+  padding-block: calc(16px + env(safe-area-inset-top)) 16px;
+  padding-inline: 16px;
+  background: var(--color-app-bg);
+  color: var(--color-text);
+}
+
+.topArea {
+  flex: 0 0 auto;
+}
+
+.scrollArea {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block-end: 16px;
+  scrollbar-gutter: stable;
+}
+
+.statePanel,
+.errorBanner {
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.statePanel {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+}
+
+.statePanel h1 {
+  margin-block: 0 8px;
+  margin-inline: 0;
+}
+
+.statePanel p {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.errorBanner {
+  margin-block-end: 12px;
+  border: 1px solid var(--color-danger-border);
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+@media (max-width: 370px) {
+  .screen {
+    padding-inline: 12px;
+  }
+}

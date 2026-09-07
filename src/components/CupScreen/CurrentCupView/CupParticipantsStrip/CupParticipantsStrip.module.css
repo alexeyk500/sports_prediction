@@ -1,0 +1,54 @@
+.participantStrip {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding-block: 13px;
+  padding-inline: 16px;
+  background: color-mix(in srgb, var(--color-surface) 76%, transparent);
+}
+
+.participantMetric {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.stripIcon {
+  width: 25px;
+  height: 25px;
+  flex: 0 0 auto;
+  fill: var(--color-accent);
+}
+
+.participantMetric strong,
+.participantMetric span {
+  display: block;
+}
+
+.participantMetric strong {
+  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.participantMetric span,
+.participantStrip p {
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1.25;
+}
+
+.participantStrip p {
+  margin: 0;
+  text-align: end;
+  overflow-wrap: anywhere;
+}
