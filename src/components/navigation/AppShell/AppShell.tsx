@@ -1,0 +1,67 @@
+"use client";
+
+import { useEffect, useState, type ReactNode } from "react";
+import type React from "react";
+import CupScreen from "@/components/CupScreen/CupScreen";
+import ProfileScreen from "@/components/profile/ProfileScreen";
+import { useSettingsRuntime } from "@/hooks/use-settings-runtime";
+import { useTranslation } from "@/lib/i18n/use-translation";
+import { useBootstrapStore } from "@/stores/bootstrap-store";
+import { useSettingsStore } from "@/stores/settings-store";
+import { navLabel } from "./app-shell-format";
+import type { NavItem } from "./app-shell-types";
+import NavIcon from "./NavIcon/NavIcon";
+import Placeholder from "./Placeholder/Placeholder";
+import styles from "./AppShell.module.css";
+
+const navItems: NavItem[] = ["Predict", "Cup", "Rating", "Profile"];
+
+interface IAppShellProps {
+  predict: ReactNode;
+}
+
+const AppShell: React.FC<IAppShellProps> = ({ predict }) => {
+  const [active, setActive] = useState<NavItem>("Predict");
+  const bootstrap = useBootstrapStore((state) => state.bootstrap);
+  const setSettings = useSettingsStore((state) => state.setSettings);
+  const { t } = useTranslation();
+
+  useSettingsRuntime();
+
+  useEffect(() => {
+    if (bootstrap) {
+      setSettings(bootstrap.settings);
+    }
+  }, [bootstrap, setSettings]);
+
+  return (
+    <div className={styles.shell}>
+      <div className={styles.content}>
+        {active === "Predict" ? (
+          predict
+        ) : active === "Cup" ? (
+          <CupScreen onMakePrediction={() => setActive("Predict")} />
+        ) : active === "Profile" ? (
+          <ProfileScreen />
+        ) : (
+          <Placeholder title={navLabel(active, t)} />
+        )}
+      </div>
+      <nav className={styles.nav} aria-label={t("navigation.ariaLabel")}>
+        {navItems.map((item) => (
+          <button
+            key={item}
+            type="button"
+            className={active === item ? styles.activeNavButton : styles.navButton}
+            onClick={() => setActive(item)}
+          >
+            <NavIcon item={item} />
+            <span>{navLabel(item, t)}</span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
+};
+
+export default AppShell;

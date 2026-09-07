@@ -22,17 +22,6 @@ const competitionBadgeTones: Record<string, BadgeTone> = {
   UEL: "gold",
 };
 
-export function outcomeDisplayLabel(outcome: PredictionOutcome): "1" | "X" | "2" {
-  switch (outcome) {
-    case "HOME":
-      return "1";
-    case "DRAW":
-      return "X";
-    case "AWAY":
-      return "2";
-  }
-}
-
 export function getCompetitionBadge(competition: TodayFixtureDto["competition"]): VisualBadge {
   return {
     label: competition.name,
@@ -51,8 +40,37 @@ export function getTeamBadge(team: TodayFixtureDto["homeTeam"] | TodayFixtureDto
   };
 }
 
+export function outcomeDisplayLabel(outcome: PredictionOutcome): "1" | "X" | "2" {
+  switch (outcome) {
+    case "HOME":
+      return "1";
+    case "DRAW":
+      return "X";
+    case "AWAY":
+      return "2";
+  }
+}
+
 export function trophyAriaValues(locale: SupportedLocale, points: number): TranslationValues {
   return { count: new Intl.NumberFormat(locale).format(points) };
+}
+
+export function pointsForOutcome(
+  fixture: { outcomes: { home: { points: number }; draw: { points: number }; away: { points: number } } },
+  outcome: PredictionOutcome,
+): number {
+  switch (outcome) {
+    case "HOME":
+      return fixture.outcomes.home.points;
+    case "DRAW":
+      return fixture.outcomes.draw.points;
+    case "AWAY":
+      return fixture.outcomes.away.points;
+  }
+}
+
+export function capitalizeTone(tone: VisualBadge["tone"]): Capitalize<VisualBadge["tone"]> {
+  return `${tone[0].toUpperCase()}${tone.slice(1)}` as Capitalize<VisualBadge["tone"]>;
 }
 
 export function initialsForName(name: string): string {

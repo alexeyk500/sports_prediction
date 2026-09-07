@@ -5,9 +5,9 @@ import {
   initialsForName,
   outcomeDisplayLabel,
   trophyAriaValues,
-} from "@/components/predict/match-card-presentation";
+} from "@/components/PredictScreen/MatchCardShared/match-card-presentation";
 import { getCompetitionAssetUrl, getTeamAssetUrl } from "@/lib/assets/football-assets";
-import { PREDICTION_OUTCOME_ORDER } from "@/components/predict/predict-outcomes";
+import { PREDICTION_OUTCOME_ORDER } from "@/components/PredictScreen/predict-outcomes";
 import { createTranslator, translationResources } from "@/lib/i18n/i18n";
 
 describe("match card presentation", () => {

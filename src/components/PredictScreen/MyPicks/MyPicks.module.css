@@ -1,0 +1,13 @@
+.fixtureList {
+  display: grid;
+  gap: 16px;
+}
+
+.statePanel {
+  border: 1px solid var(--color-border);
+  border-radius: 22px;
+  padding: 18px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+}

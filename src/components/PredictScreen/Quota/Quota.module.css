@@ -1,0 +1,127 @@
+.quota {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-block-end: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding-block: 16px 14px;
+  padding-inline: 18px;
+  background-image: url("/assets/screens/predict-quota-background.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: var(--color-text);
+  box-shadow: 0 6px 18px rgb(15 23 42 / 4%);
+}
+
+.quotaHeader,
+.quotaLabels {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.quotaHeader h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.15;
+}
+
+.quotaHeader strong {
+  flex: 0 0 auto;
+  color: var(--color-text);
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 1;
+  direction: ltr;
+}
+
+.quotaSlots {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  direction: ltr;
+}
+
+.slotGroup {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.freeSlotUsed,
+.rewardedSlotUsed,
+.slotUnused {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.freeSlotUsed {
+  background: var(--color-accent);
+}
+
+.rewardedSlotUsed {
+  background: #35d2b9;
+}
+
+.slotUnused {
+  background: color-mix(in srgb, var(--color-border) 58%, transparent);
+}
+
+.slotDivider {
+  width: 1px;
+  height: 22px;
+  flex: 0 0 auto;
+  background: var(--color-border-strong);
+}
+
+.quotaLabels {
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.rewardCta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  border: 0;
+  border-radius: 10px;
+  padding-block: 8px;
+  padding-inline: 10px;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.15;
+  text-align: start;
+}
+
+.rewardCta:disabled {
+  cursor: not-allowed;
+  opacity: 0.92;
+}
+
+.rewardCta strong {
+  display: inline-grid;
+  min-width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent-contrast) 20%, transparent);
+  color: inherit;
+  direction: ltr;
+}

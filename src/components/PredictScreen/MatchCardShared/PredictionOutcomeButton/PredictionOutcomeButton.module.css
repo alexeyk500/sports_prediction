@@ -1,0 +1,37 @@
+.outcomeButton,
+.selectedOutcome {
+  min-height: 72px;
+  border: 1.5px solid var(--outcome-border);
+  border-radius: 16px;
+  background: var(--outcome-bg);
+  color: var(--match-meta);
+  font: inherit;
+  text-align: center;
+  box-shadow: none;
+}
+
+.outcomeButton:disabled,
+.selectedOutcome:disabled {
+  cursor: not-allowed;
+  color: var(--color-muted);
+  opacity: 0.68;
+}
+
+.outcomeCode {
+  display: block;
+  color: var(--match-primary);
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.selectedOutcome {
+  border-color: var(--selected-border);
+  background: var(--selected-bg);
+  color: var(--selected-text);
+  box-shadow: none;
+}
+
+.selectedOutcome .outcomeCode {
+  color: var(--selected-text);
+}

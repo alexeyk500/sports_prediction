@@ -1,0 +1,33 @@
+.emptyLeaderboard {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 14px;
+  padding-block: 20px;
+  padding-inline: 14px;
+  background: var(--color-surface-elevated);
+  box-shadow: none;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 30px;
+  height: 30px;
+  fill: #f5b72c;
+}
+
+.emptyLeaderboard strong {
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.emptyLeaderboard span {
+  max-width: 260px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+}

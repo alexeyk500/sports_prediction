@@ -1,6 +1,6 @@
 import type React from "react";
-import TrophyIcon from "@/assets/icons/TrophyIcon";
 import { useTranslation } from "@/lib/i18n/use-translation";
+import LeaderboardEmptyState from "./LeaderboardEmptyState/LeaderboardEmptyState";
 import LeaderboardRow from "./LeaderboardRow/LeaderboardRow";
 import type { ICupLeaderboardRowModel } from "./leaderboard-types";
 import styles from "./CupLeaderboard.module.css";
@@ -33,18 +33,6 @@ const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({ rows, pinnedCurrentUse
       )}
       {pinnedCurrentUserRow ? <LeaderboardRow row={pinnedCurrentUserRow} pinned /> : null}
     </section>
-  );
-};
-
-const LeaderboardEmptyState: React.FC = () => {
-  const { t } = useTranslation();
-
-  return (
-    <div className={styles.emptyLeaderboard}>
-      <TrophyIcon className={styles.emptyIcon} />
-      <strong>{t("cup.empty.leaderboardTitle")}</strong>
-      <span>{t("cup.empty.leaderboardBody")}</span>
-    </div>
   );
 };
 

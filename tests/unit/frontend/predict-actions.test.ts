@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { ApiClientError } from "@/lib/api/client";
-import { selectOutcome } from "@/components/predict/predict-actions";
-import { PREDICTION_OUTCOME_ORDER } from "@/components/predict/predict-outcomes";
+import { selectOutcome } from "@/components/PredictScreen/predict-actions";
+import { PREDICTION_OUTCOME_ORDER } from "@/components/PredictScreen/predict-outcomes";
 import type { PredictionDto } from "@/lib/api/types";
 
 const editablePrediction: PredictionDto = {
