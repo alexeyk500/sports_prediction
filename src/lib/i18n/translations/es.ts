@@ -89,6 +89,8 @@ export const es = {
     participantCopy: "Haz tus pronósticos para subir en la tabla!",
     unavailable: "—",
     yourPosition: "Tu posición",
+    positionRank: "Puesto #{rank}",
+    positionSummary: "{points} puntos · {predictions} pronósticos · {correct} aciertos · {wrong} fallos",
     positionUnavailableTitle: "Tu posición en la Copa aún no está lista",
     positionUnavailableBody: "Haz pronósticos para entrar automáticamente. Tu puesto aparecerá cuando esté disponible la clasificación de la Copa.",
     makePrediction: "Hacer pronóstico",

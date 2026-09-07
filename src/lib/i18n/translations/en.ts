@@ -87,6 +87,8 @@ export const en = {
     participantCopy: "Make your picks to climb the leaderboard!",
     unavailable: "—",
     yourPosition: "Your Position",
+    positionRank: "Rank #{rank}",
+    positionSummary: "{points} Points · {predictions} picks · {correct} correct · {wrong} wrong",
     positionUnavailableTitle: "Your Cup position is not ready yet",
     positionUnavailableBody: "Make predictions to enter automatically. Your rank will appear when Cup standings are available.",
     makePrediction: "Make a prediction",

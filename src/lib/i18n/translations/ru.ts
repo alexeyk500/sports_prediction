@@ -65,6 +65,8 @@ export const ru = {
     participantCopy: "Делайте прогнозы, чтобы подняться в таблице!",
     unavailable: "—",
     yourPosition: "Ваша позиция",
+    positionRank: "Место #{rank}",
+    positionSummary: "{points} очков · прогнозов {predictions} · верно {correct} · неверно {wrong}",
     positionUnavailableTitle: "Ваша позиция в Кубке ещё не готова",
     positionUnavailableBody: "Делайте прогнозы, чтобы войти автоматически. Ранг появится, когда будет доступна таблица Кубка.",
     makePrediction: "Сделать прогноз",

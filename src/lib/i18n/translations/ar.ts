@@ -89,6 +89,8 @@ export const ar = {
     participantCopy: "اختر توقعاتك لتتقدم في لوحة الصدارة!",
     unavailable: "—",
     yourPosition: "مركزك",
+    positionRank: "الترتيب #{rank}",
+    positionSummary: "{points} نقطة · {predictions} توقعات · {correct} صحيح · {wrong} خطأ",
     positionUnavailableTitle: "مركزك في الكأس غير جاهز بعد",
     positionUnavailableBody: "أنشئ توقعات للدخول تلقائيا. سيظهر ترتيبك عندما تكون لوحة الكأس متاحة.",
     makePrediction: "أنشئ توقعا",

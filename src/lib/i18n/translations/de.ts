@@ -89,6 +89,8 @@ export const de = {
     participantCopy: "Gib Tipps ab und klettere in der Rangliste!",
     unavailable: "—",
     yourPosition: "Deine Position",
+    positionRank: "Rang #{rank}",
+    positionSummary: "{points} Punkte · {predictions} Tipps · {correct} richtig · {wrong} falsch",
     positionUnavailableTitle: "Deine Cup-Position ist noch nicht bereit",
     positionUnavailableBody: "Gib Tipps ab, um automatisch einzusteigen. Dein Rang erscheint, sobald die Cup-Tabelle verfügbar ist.",
     makePrediction: "Tipp abgeben",

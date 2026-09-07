@@ -12,11 +12,9 @@ import CupHistoryView from "./CupHistoryView/CupHistoryView";
 import CupModeTabs from "./CupModeTabs/CupModeTabs";
 import CurrentCupView from "./CurrentCupView/CurrentCupView";
 import type { ICupHistoryItemModel } from "./CupHistoryView/cup-history-types";
-import type { ICupLeaderboardRowModel } from "./CurrentCupView/CupLeaderboard/leaderboard-types";
 import type { CupTab } from "./cup-types";
 import styles from "./CupScreen.module.css";
 
-const EMPTY_LEADERBOARD_ROWS: ICupLeaderboardRowModel[] = [];
 const EMPTY_HISTORY_ITEMS: ICupHistoryItemModel[] = [];
 
 interface ICupScreenProps {
@@ -106,9 +104,7 @@ const CupScreen: React.FC<ICupScreenProps> = ({ onMakePrediction }) => {
           <CurrentCupView
             bootstrap={bootstrap}
             nowMs={nowMs}
-            leaderboardRows={EMPTY_LEADERBOARD_ROWS}
-            pinnedCurrentUserRow={null}
-            participantCountLabel={t("cup.unavailable")}
+            cup={bootstrap.cup}
             onMakePrediction={onMakePrediction}
           />
         ) : (

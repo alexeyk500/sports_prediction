@@ -64,26 +64,81 @@ const competitionSlugsByApiFootballId = new Map(
 );
 const teamSlugsByApiFootballId = new Map(assetManifest.teams.map((team) => [team.providerTeamId, team.slug]));
 
+const devPlayers = [
+  { telegramUserId: 900000001n, username: "dev_user", firstName: "Dev", lastName: "User", languageCode: "en", targetPoints: 38 },
+  { telegramUserId: 900100001n, username: "GoalHunter", firstName: "Max", lastName: "Volkov", languageCode: "en", targetPoints: 65 },
+  { telegramUserId: 900100002n, username: "footking", firstName: "Leo", lastName: "Morgan", languageCode: "en", targetPoints: 64 },
+  { telegramUserId: 900100003n, username: "Nikita88", firstName: "Nikita", lastName: "Sokolov", languageCode: "ru", targetPoints: 61 },
+  { telegramUserId: 900100004n, username: "AlexR", firstName: "Alex", lastName: "Reed", languageCode: "en", targetPoints: 58 },
+  { telegramUserId: 900100005n, username: "Toni", firstName: "Toni", lastName: "Keller", languageCode: "de", targetPoints: 55 },
+  { telegramUserId: 900100006n, username: "viktor_k", firstName: "Viktor", lastName: "Karpov", languageCode: "ru", targetPoints: 52 },
+  { telegramUserId: 900100007n, username: "footballist", firstName: "Marco", lastName: "Rossi", languageCode: "en", targetPoints: 49 },
+  { telegramUserId: 900100008n, username: "Roman", firstName: "Roman", lastName: "Petrov", languageCode: "ru", targetPoints: 46 },
+  { telegramUserId: 900100009n, username: "pitchmind", firstName: "Oliver", lastName: "Stone", languageCode: "en", targetPoints: 43 },
+  { telegramUserId: 900100010n, username: "MaxBet", firstName: "Maksim", lastName: "Orlov", languageCode: "ru", targetPoints: 40 },
+  { telegramUserId: 900100011n, username: "crossbar", firstName: "Ethan", lastName: "Brooks", languageCode: "en", targetPoints: 38 },
+  { telegramUserId: 900100012n, username: "netfinder", firstName: "Jonas", lastName: "Weber", languageCode: "de", targetPoints: 36 },
+  { telegramUserId: 900100013n, username: "LaMasiaFan", firstName: "Diego", lastName: "Navarro", languageCode: "es", targetPoints: 35 },
+  { telegramUserId: 900100014n, username: "northstand", firstName: "Harry", lastName: "Mason", languageCode: "en", targetPoints: 33 },
+  { telegramUserId: 900100015n, username: "ultra_m", firstName: "Milan", lastName: "Horvat", languageCode: "en", targetPoints: 31 },
+  { telegramUserId: 900100016n, username: "keeper01", firstName: "Sam", lastName: "Foster", languageCode: "en", targetPoints: 30 },
+  { telegramUserId: 900100017n, username: "derbyday", firstName: "Pablo", lastName: "Santos", languageCode: "es", targetPoints: 29 },
+  { telegramUserId: 900100018n, username: "halfspace", firstName: "Luca", lastName: "Bianchi", languageCode: "en", targetPoints: 27 },
+  { telegramUserId: 900100019n, username: "pressingPro", firstName: "Felix", lastName: "Hartmann", languageCode: "de", targetPoints: 25 },
+  { telegramUserId: 900100020n, username: "awaydays", firstName: "Ben", lastName: "Carter", languageCode: "en", targetPoints: 24 },
+  { telegramUserId: 900100021n, username: "xGbrain", firstName: "Ivan", lastName: "Morozov", languageCode: "ru", targetPoints: 23 },
+  { telegramUserId: 900100022n, username: "tinytackle", firstName: "Noah", lastName: "Ward", languageCode: "en", targetPoints: 22 },
+  { telegramUserId: 900100023n, username: "leftwinger", firstName: "Sergio", lastName: "Ruiz", languageCode: "es", targetPoints: 21 },
+  { telegramUserId: 900100024n, username: "cornerkick", firstName: "Adam", lastName: "Nowak", languageCode: "en", targetPoints: 20 },
+  { telegramUserId: 900100025n, username: "cleanSheet", firstName: "Daniel", lastName: "King", languageCode: "en", targetPoints: 19 },
+  { telegramUserId: 900100026n, username: "kopite_m", firstName: "Mason", lastName: "Clark", languageCode: "en", targetPoints: 18 },
+  { telegramUserId: 900100027n, username: "futbolero", firstName: "Carlos", lastName: "Mendez", languageCode: "es", targetPoints: 17 },
+  { telegramUserId: 900100028n, username: "sweeper", firstName: "Owen", lastName: "Taylor", languageCode: "en", targetPoints: 16 },
+  { telegramUserId: 900100029n, username: "gegenpress", firstName: "Moritz", lastName: "Bauer", languageCode: "de", targetPoints: 15 },
+  { telegramUserId: 900100030n, username: "finalthird", firstName: "Tim", lastName: "Fischer", languageCode: "de", targetPoints: 14 },
+  { telegramUserId: 900100031n, username: "no9", firstName: "Artem", lastName: "Egorov", languageCode: "ru", targetPoints: 13 },
+  { telegramUserId: 900100032n, username: "zona14", firstName: "Miguel", lastName: "Torres", languageCode: "es", targetPoints: 12 },
+  { telegramUserId: 900100033n, username: "box2box", firstName: "Chris", lastName: "Walker", languageCode: "en", targetPoints: 11 },
+  { telegramUserId: 900100034n, username: "stoppage", firstName: "Daniil", lastName: "Smirnov", languageCode: "ru", targetPoints: 10 },
+  { telegramUserId: 900100035n, username: "widePlay", firstName: "Luis", lastName: "Garcia", languageCode: "es", targetPoints: 9 },
+  { telegramUserId: 900100036n, username: "overlap", firstName: "Jan", lastName: "Schmidt", languageCode: "de", targetPoints: 8 },
+  { telegramUserId: 900100037n, username: "academy10", firstName: "Tom", lastName: "Hughes", languageCode: "en", targetPoints: 7 },
+  { telegramUserId: 900100038n, username: "deepblock", firstName: "Kirill", lastName: "Lebedev", languageCode: "ru", targetPoints: 7 },
+  { telegramUserId: 900100039n, username: "touchline", firstName: "Hugo", lastName: "Martin", languageCode: "en", targetPoints: 6 },
+  { telegramUserId: 900100040n, username: "setpiece", firstName: "Rafael", lastName: "Silva", languageCode: "es", targetPoints: 6 },
+  { telegramUserId: 900100041n, username: "false9", firstName: "Anton", lastName: "Fedorov", languageCode: "ru", targetPoints: 5 },
+  { telegramUserId: 900100042n, username: "lowCross", firstName: "Jack", lastName: "Evans", languageCode: "en", targetPoints: 5 },
+  { telegramUserId: 900100043n, username: "mezzala", firstName: "Enzo", lastName: "Ricci", languageCode: "en", targetPoints: 4 },
+  { telegramUserId: 900100044n, username: "topbins", firstName: "Oscar", lastName: "Hill", languageCode: "en", targetPoints: 4 },
+  { telegramUserId: 900100045n, username: "pressTrap", firstName: "Amir", lastName: "Khan", languageCode: "en", targetPoints: 3 },
+  { telegramUserId: 900100046n, username: "sideoverload", firstName: "Ilya", lastName: "Kuznetsov", languageCode: "ru", targetPoints: 2 },
+  { telegramUserId: 900100047n, username: "volley", firstName: "Mateo", lastName: "Lopez", languageCode: "es", targetPoints: 1 },
+  { telegramUserId: 900100048n, username: "tapin", firstName: "George", lastName: "Moore", languageCode: "en", targetPoints: 0 },
+  { telegramUserId: 900100049n, username: "lateRun", firstName: "Ahmed", lastName: "Hassan", languageCode: "ar", targetPoints: 0 },
+];
+
 try {
   const now = new Date();
   const businessDate = getBusinessDate(now);
   const range = getBusinessDayRangeUtc(businessDate);
-  const kickoffTimes = createSeedKickoffTimes(now, range, 10);
+  const kickoffTimes = createSeedKickoffTimes(now, range, 6);
+  const cupStartsAt = new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000);
+  const cupEndsAt = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
 
-  await prisma.tournament.upsert({
+  const tournament = await prisma.tournament.upsert({
     where: { number: 1 },
     update: {
       status: "ACTIVE",
-      startsAt: new Date(now.getTime() - 24 * 60 * 60 * 1000),
-      endsAt: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
-      prizePoolNanoTon: 0n,
+      startsAt: cupStartsAt,
+      endsAt: cupEndsAt,
+      prizePoolNanoTon: 10_000_000_000n,
     },
     create: {
       number: 1,
       status: "ACTIVE",
-      startsAt: new Date(now.getTime() - 24 * 60 * 60 * 1000),
-      endsAt: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
-      prizePoolNanoTon: 0n,
+      startsAt: cupStartsAt,
+      endsAt: cupEndsAt,
+      prizePoolNanoTon: 10_000_000_000n,
     },
   });
 
@@ -136,7 +191,8 @@ try {
     ),
   );
 
-  const fixtureDefinitions = buildFixtureDefinitions(businessDate, kickoffTimes);
+  const devUsers = await upsertDevUsers();
+  const fixtureDefinitions = buildFixtureDefinitions({ businessDate, kickoffTimes, now });
   await archiveObsoleteDevelopmentFixtures({
     businessDate,
     currentProviderFixtureIds: fixtureDefinitions.map((fixture) => fixture.providerFixtureId),
@@ -169,15 +225,38 @@ try {
     });
   }
 
+  await seedCupPredictions({
+    tournamentId: tournament.id,
+    users: devUsers,
+    fixtures: seededFixtures,
+    currentInstant: now,
+  });
+
+  const leaderboard = await recalculateTournamentParticipants(tournament.id);
+
   console.log(`Development seed complete for London business date ${businessDate}.`);
+  console.log(`Active Weekly Cup: ${tournament.startsAt.toISOString()} → ${tournament.endsAt.toISOString()}.`);
+  console.log(`Seeded ${devUsers.length} users, ${seededFixtures.length} fixtures and ${leaderboard.predictionCount} predictions.`);
   console.table(
     seededFixtures.map((fixture) => ({
       fixture: `${fixture.homeTeamName} vs ${fixture.awayTeamName}`,
       competition: fixture.competitionName,
       kickoffAt: fixture.kickoffAt.toISOString(),
+      status: fixture.status,
+      score: fixture.homeScore === null ? "" : `${fixture.homeScore}-${fixture.awayScore}`,
       odds: fixture.odds.join(" / "),
       probabilities: fixture.probabilities.join(" / "),
       points: fixture.points.join(" / "),
+    })),
+  );
+  console.table(
+    leaderboard.top10.map((row) => ({
+      rank: row.rank,
+      player: row.player,
+      points: row.points,
+      predictions: row.predictions,
+      correct: row.correct,
+      wrong: row.wrong,
     })),
   );
 } finally {
@@ -203,6 +282,11 @@ async function upsertFixtureWithSnapshot(input) {
       homeTeamId: input.homeTeamId,
       awayTeamId: input.awayTeamId,
       kickoffAt: input.kickoffAt,
+      status: input.status,
+      providerStatus: input.providerStatus ?? null,
+      homeScore: input.homeScore ?? null,
+      awayScore: input.awayScore ?? null,
+      finalOutcome: input.finalOutcome ?? null,
     },
     create: {
       providerFixtureId: input.providerFixtureId,
@@ -210,7 +294,11 @@ async function upsertFixtureWithSnapshot(input) {
       homeTeamId: input.homeTeamId,
       awayTeamId: input.awayTeamId,
       kickoffAt: input.kickoffAt,
-      status: "DRAFT",
+      status: input.status,
+      providerStatus: input.providerStatus ?? null,
+      homeScore: input.homeScore ?? null,
+      awayScore: input.awayScore ?? null,
+      finalOutcome: input.finalOutcome ?? null,
     },
   });
 
@@ -218,7 +306,13 @@ async function upsertFixtureWithSnapshot(input) {
     const [updatedFixture, existingSnapshot] = await Promise.all([
       prisma.fixture.update({
         where: { id: fixture.id },
-        data: { status: "OPEN" },
+        data: {
+          status: input.status,
+          providerStatus: input.providerStatus ?? null,
+          homeScore: input.homeScore ?? null,
+          awayScore: input.awayScore ?? null,
+          finalOutcome: input.finalOutcome ?? null,
+        },
       }),
       prisma.outcomeSnapshot.findUniqueOrThrow({
         where: { id: fixture.scoringSnapshotId },
@@ -250,96 +344,73 @@ async function upsertFixtureWithSnapshot(input) {
     where: { id: fixture.id },
     data: {
       scoringSnapshotId: snapshot.id,
-      status: "OPEN",
+      status: input.status,
+      providerStatus: input.providerStatus ?? null,
+      homeScore: input.homeScore ?? null,
+      awayScore: input.awayScore ?? null,
+      finalOutcome: input.finalOutcome ?? null,
     },
   });
 
   return buildSeededFixtureSummary(updatedFixture, snapshot);
 }
 
-function buildFixtureDefinitions(businessDate, kickoffTimes) {
-  return [
-    {
-      providerFixtureId: `dev-${businessDate}-predict-01`,
-      competitionCode: "EPL",
-      homeTeamProviderId: "dev-arsenal",
-      awayTeamProviderId: "dev-chelsea",
-      kickoffAt: kickoffTimes[0],
-      odds: ["1.700000", "4.100000", "5.400000"],
-    },
-    {
-      providerFixtureId: `dev-${businessDate}-predict-02`,
-      competitionCode: "LALIGA",
-      homeTeamProviderId: "dev-valencia",
-      awayTeamProviderId: "dev-barcelona",
-      kickoffAt: kickoffTimes[1],
-      odds: ["5.200000", "4.000000", "1.720000"],
-    },
-    {
-      providerFixtureId: `dev-${businessDate}-predict-03`,
-      competitionCode: "SERIE_A",
-      homeTeamProviderId: "dev-milan",
-      awayTeamProviderId: "dev-roma",
-      kickoffAt: kickoffTimes[2],
-      odds: ["2.650000", "3.250000", "2.750000"],
-    },
-    {
-      providerFixtureId: `dev-${businessDate}-predict-04`,
-      competitionCode: "BUNDESLIGA",
-      homeTeamProviderId: "dev-bayern",
-      awayTeamProviderId: "dev-dortmund",
-      kickoffAt: kickoffTimes[3],
-      odds: ["1.250000", "6.200000", "11.000000"],
-    },
-    {
-      providerFixtureId: `dev-${businessDate}-predict-05`,
-      competitionCode: "LIGUE_1",
-      homeTeamProviderId: "dev-lyon",
-      awayTeamProviderId: "dev-marseille",
-      kickoffAt: kickoffTimes[4],
-      odds: ["2.950000", "2.750000", "3.050000"],
-    },
-    {
-      providerFixtureId: `dev-${businessDate}-predict-06`,
-      competitionCode: "UCL",
-      homeTeamProviderId: "dev-inter",
-      awayTeamProviderId: "dev-napoli",
-      kickoffAt: kickoffTimes[5],
-      odds: ["2.200000", "3.800000", "2.200000"],
-    },
-    {
-      providerFixtureId: `dev-${businessDate}-predict-07`,
-      competitionCode: "UEL",
-      homeTeamProviderId: "dev-lille",
-      awayTeamProviderId: "dev-benfica",
-      kickoffAt: kickoffTimes[6],
-      odds: ["6.800000", "4.600000", "1.480000"],
-    },
-    {
-      providerFixtureId: `dev-${businessDate}-predict-08`,
-      competitionCode: "EPL",
-      homeTeamProviderId: "dev-chelsea",
-      awayTeamProviderId: "dev-ajax",
-      kickoffAt: kickoffTimes[7],
-      odds: ["1.420000", "5.000000", "8.500000"],
-    },
-    {
-      providerFixtureId: `dev-${businessDate}-predict-09`,
-      competitionCode: "BUNDESLIGA",
-      homeTeamProviderId: "dev-leverkusen",
-      awayTeamProviderId: "dev-leipzig",
-      kickoffAt: kickoffTimes[8],
-      odds: ["2.800000", "3.200000", "2.800000"],
-    },
-    {
-      providerFixtureId: `dev-${businessDate}-predict-10`,
-      competitionCode: "UCL",
-      homeTeamProviderId: "dev-atletico",
-      awayTeamProviderId: "dev-sevilla",
-      kickoffAt: kickoffTimes[9],
-      odds: ["2.050000", "3.550000", "3.700000"],
-    },
-  ];
+function buildFixtureDefinitions({ businessDate, kickoffTimes, now }) {
+  const pastFixtures = [
+    ["01", -4, 13, "EPL", "dev-arsenal", "dev-chelsea", ["1.700000", "4.100000", "5.400000"], 2, 0],
+    ["02", -4, 16, "LALIGA", "dev-valencia", "dev-barcelona", ["5.200000", "4.000000", "1.720000"], 1, 3],
+    ["03", -4, 19, "SERIE_A", "dev-milan", "dev-roma", ["2.650000", "3.250000", "2.750000"], 1, 1],
+    ["04", -3, 12, "BUNDESLIGA", "dev-bayern", "dev-dortmund", ["1.250000", "6.200000", "11.000000"], 3, 1],
+    ["05", -3, 15, "LIGUE_1", "dev-lyon", "dev-marseille", ["2.950000", "2.750000", "3.050000"], 0, 1],
+    ["06", -3, 18, "UCL", "dev-inter", "dev-napoli", ["2.200000", "3.800000", "2.200000"], 2, 2],
+    ["07", -2, 12, "UEL", "dev-lille", "dev-benfica", ["6.800000", "4.600000", "1.480000"], 0, 2],
+    ["08", -2, 15, "EPL", "dev-chelsea", "dev-ajax", ["1.420000", "5.000000", "8.500000"], 2, 0],
+    ["09", -2, 18, "BUNDESLIGA", "dev-leverkusen", "dev-leipzig", ["2.800000", "3.200000", "2.800000"], 1, 0],
+    ["10", -2, 20, "UCL", "dev-atletico", "dev-sevilla", ["2.050000", "3.550000", "3.700000"], 1, 1],
+    ["11", -1, 12, "SERIE_A", "dev-napoli", "dev-milan", ["2.250000", "3.300000", "3.300000"], 2, 1],
+    ["12", -1, 14, "LALIGA", "dev-barcelona", "dev-atletico", ["1.950000", "3.700000", "4.000000"], 0, 0],
+    ["13", -1, 16, "EPL", "dev-arsenal", "dev-leverkusen", ["1.900000", "3.900000", "4.100000"], 2, 2],
+    ["14", -1, 18, "LIGUE_1", "dev-psg", "dev-lille", ["1.520000", "4.500000", "6.400000"], 4, 1],
+    ["15", -1, 20, "UEL", "dev-benfica", "dev-ajax", ["2.150000", "3.600000", "3.350000"], 1, 2],
+    ["16", -1, 21, "BUNDESLIGA", "dev-dortmund", "dev-leipzig", ["2.450000", "3.650000", "2.850000"], 3, 2],
+    ["17", 0, 9, "UCL", "dev-roma", "dev-inter", ["3.400000", "3.350000", "2.200000"], 0, 1],
+    ["18", 0, 10, "EPL", "dev-chelsea", "dev-sevilla", ["1.880000", "3.650000", "4.400000"], 2, 1],
+  ].map(([id, dayOffset, hour, competitionCode, homeTeamProviderId, awayTeamProviderId, odds, homeScore, awayScore]) => ({
+    providerFixtureId: `dev-cup-settled-${id}`,
+    competitionCode,
+    homeTeamProviderId,
+    awayTeamProviderId,
+    kickoffAt: createRelativeKickoff(now, dayOffset, hour),
+    odds,
+    status: "SETTLED",
+    providerStatus: "FT",
+    homeScore,
+    awayScore,
+    finalOutcome: finalOutcomeForScore(homeScore, awayScore),
+  }));
+
+  const todayFixtures = [
+    ["01", "EPL", "dev-arsenal", "dev-chelsea", ["1.700000", "4.100000", "5.400000"]],
+    ["02", "LALIGA", "dev-valencia", "dev-barcelona", ["5.200000", "4.000000", "1.720000"]],
+    ["03", "SERIE_A", "dev-milan", "dev-roma", ["2.650000", "3.250000", "2.750000"]],
+    ["04", "BUNDESLIGA", "dev-bayern", "dev-dortmund", ["1.250000", "6.200000", "11.000000"]],
+    ["05", "LIGUE_1", "dev-lyon", "dev-marseille", ["2.950000", "2.750000", "3.050000"]],
+    ["06", "UCL", "dev-inter", "dev-napoli", ["2.200000", "3.800000", "2.200000"]],
+  ].map(([id, competitionCode, homeTeamProviderId, awayTeamProviderId, odds], index) => ({
+    providerFixtureId: `dev-${businessDate}-predict-${id}`,
+    competitionCode,
+    homeTeamProviderId,
+    awayTeamProviderId,
+    kickoffAt: kickoffTimes[index],
+    odds,
+    status: "OPEN",
+    providerStatus: "NS",
+    homeScore: null,
+    awayScore: null,
+    finalOutcome: null,
+  }));
+
+  return [...pastFixtures, ...todayFixtures];
 }
 
 async function archiveObsoleteDevelopmentFixtures(input) {
@@ -382,7 +453,13 @@ function calculateSnapshot(odds) {
 
 function buildSeededFixtureSummary(fixture, snapshot) {
   return {
+    id: fixture.id,
+    scoringSnapshotId: snapshot.id,
     kickoffAt: fixture.kickoffAt,
+    status: fixture.status,
+    homeScore: fixture.homeScore,
+    awayScore: fixture.awayScore,
+    finalOutcome: fixture.finalOutcome,
     odds: [
       snapshot.homeRawOdds.toFixed(6),
       snapshot.drawRawOdds.toFixed(6),
@@ -394,7 +471,399 @@ function buildSeededFixtureSummary(fixture, snapshot) {
       snapshot.awayProbability.toFixed(8),
     ],
     points: [snapshot.homePoints, snapshot.drawPoints, snapshot.awayPoints],
+    snapshot,
   };
+}
+
+async function upsertDevUsers() {
+  const users = [];
+
+  for (const player of devPlayers) {
+    const user = await prisma.user.upsert({
+      where: { telegramUserId: player.telegramUserId },
+      update: {
+        username: player.username,
+        firstName: player.firstName,
+        lastName: player.lastName,
+        languageCode: player.languageCode,
+        isDeleted: false,
+        deletedAt: null,
+      },
+      create: {
+        telegramUserId: player.telegramUserId,
+        username: player.username,
+        firstName: player.firstName,
+        lastName: player.lastName,
+        languageCode: player.languageCode,
+      },
+    });
+
+    await prisma.ratingProfile.upsert({
+      where: { userId: user.id },
+      update: {
+        rating: 1500 + Math.min(120, player.targetPoints * 2),
+        league: player.targetPoints >= 50 ? "SILVER_III" : "UNRANKED",
+        qualifiedCupsCount: player.targetPoints >= 35 ? 1 : 0,
+      },
+      create: {
+        userId: user.id,
+        rating: 1500 + Math.min(120, player.targetPoints * 2),
+        league: player.targetPoints >= 50 ? "SILVER_III" : "UNRANKED",
+        qualifiedCupsCount: player.targetPoints >= 35 ? 1 : 0,
+      },
+    });
+
+    users.push({ ...player, id: user.id });
+  }
+
+  return users;
+}
+
+async function seedCupPredictions({ tournamentId, users, fixtures, currentInstant }) {
+  const settledFixtures = fixtures.filter((fixture) => fixture.status === "SETTLED");
+  const openFixtures = fixtures.filter((fixture) => fixture.status === "OPEN");
+  const userIds = users.map((user) => user.id);
+
+  await prisma.prediction.deleteMany({
+    where: {
+      tournamentId,
+      userId: { in: userIds },
+    },
+  });
+
+  for (const [userIndex, user] of users.entries()) {
+    const plan = buildPredictionPlan({
+      user,
+      userIndex,
+      settledFixtures,
+      openFixtures,
+    });
+
+    await prisma.tournamentParticipant.upsert({
+      where: {
+        tournamentId_userId: {
+          tournamentId,
+          userId: user.id,
+        },
+      },
+      update: {},
+      create: {
+        tournamentId,
+        userId: user.id,
+      },
+    });
+
+    for (const [predictionIndex, prediction] of plan.entries()) {
+      const snapshot = prediction.fixture.snapshot;
+      const values = snapshotValuesForOutcome(snapshot, prediction.selectedOutcome);
+      const isSettled = prediction.fixture.status === "SETTLED";
+      const isCorrect = isSettled && prediction.selectedOutcome === prediction.fixture.finalOutcome;
+      const createdAt = new Date(prediction.fixture.kickoffAt.getTime() - (95 + predictionIndex * 7) * 60 * 1000);
+
+      await prisma.prediction.upsert({
+        where: {
+          userId_fixtureId: {
+            userId: user.id,
+            fixtureId: prediction.fixture.id,
+          },
+        },
+        update: {
+          tournamentId,
+          outcomeSnapshotId: snapshot.id,
+          selectedOutcome: prediction.selectedOutcome,
+          slotType: prediction.slotType,
+          probabilityAtPrediction: values.probability,
+          potentialPoints: values.points,
+          resultStatus: isSettled ? (isCorrect ? "CORRECT" : "INCORRECT") : "PENDING",
+          earnedPoints: isSettled && isCorrect ? values.points : 0,
+          settledAt: isSettled ? new Date(prediction.fixture.kickoffAt.getTime() + 2 * 60 * 60 * 1000) : null,
+          createdAt,
+        },
+        create: {
+          userId: user.id,
+          tournamentId,
+          fixtureId: prediction.fixture.id,
+          outcomeSnapshotId: snapshot.id,
+          selectedOutcome: prediction.selectedOutcome,
+          slotType: prediction.slotType,
+          probabilityAtPrediction: values.probability,
+          potentialPoints: values.points,
+          resultStatus: isSettled ? (isCorrect ? "CORRECT" : "INCORRECT") : "PENDING",
+          earnedPoints: isSettled && isCorrect ? values.points : 0,
+          settledAt: isSettled ? new Date(prediction.fixture.kickoffAt.getTime() + 2 * 60 * 60 * 1000) : null,
+          createdAt,
+        },
+      });
+    }
+
+    await syncDailyUsageForUser(user.id, currentInstant);
+  }
+}
+
+function buildPredictionPlan({ user, userIndex, settledFixtures, openFixtures }) {
+  const correctFixtures = chooseCorrectFixturesForTarget(user.targetPoints, settledFixtures, userIndex);
+  const usedFixtureIds = new Set(correctFixtures.map((fixture) => fixture.id));
+  const settledIncorrectCount = plannedSettledIncorrectCount(user.targetPoints, userIndex);
+  const todayPendingCount = user.telegramUserId === 900000001n ? 1 : plannedTodayPendingCount(user.targetPoints, userIndex);
+  const predictions = [];
+
+  for (const fixture of correctFixtures) {
+    predictions.push({
+      fixture,
+      selectedOutcome: fixture.finalOutcome,
+    });
+  }
+
+  for (const fixture of rotate(settledFixtures, userIndex * 3)) {
+    if (predictions.filter((prediction) => prediction.fixture.status === "SETTLED" && prediction.selectedOutcome !== prediction.fixture.finalOutcome).length >= settledIncorrectCount) {
+      break;
+    }
+
+    if (usedFixtureIds.has(fixture.id)) {
+      continue;
+    }
+
+    usedFixtureIds.add(fixture.id);
+    predictions.push({
+      fixture,
+      selectedOutcome: firstIncorrectOutcome(fixture.finalOutcome, userIndex + predictions.length),
+    });
+  }
+
+  for (const fixture of rotate(openFixtures, userIndex)) {
+    if (predictions.filter((prediction) => prediction.fixture.status === "OPEN").length >= todayPendingCount) {
+      break;
+    }
+
+    if (usedFixtureIds.has(fixture.id)) {
+      continue;
+    }
+
+    usedFixtureIds.add(fixture.id);
+    predictions.push({
+      fixture,
+      selectedOutcome: outcomeByIndex(userIndex + predictions.length),
+    });
+  }
+
+  return assignDailySlotTypes(
+    predictions.sort((left, right) => left.fixture.kickoffAt.getTime() - right.fixture.kickoffAt.getTime()),
+  );
+}
+
+function assignDailySlotTypes(predictions) {
+  const usageByBusinessDate = new Map();
+  const result = [];
+
+  for (const prediction of predictions) {
+    const businessDate = getBusinessDate(prediction.fixture.kickoffAt);
+    const usage = usageByBusinessDate.get(businessDate) ?? { freeUsed: 0, rewardedUsed: 0 };
+
+    if (usage.freeUsed < 3) {
+      usage.freeUsed += 1;
+      usageByBusinessDate.set(businessDate, usage);
+      result.push({ ...prediction, slotType: "FREE" });
+      continue;
+    }
+
+    if (usage.rewardedUsed < 5) {
+      usage.rewardedUsed += 1;
+      usageByBusinessDate.set(businessDate, usage);
+      result.push({ ...prediction, slotType: "REWARDED" });
+    }
+  }
+
+  return result;
+}
+
+function chooseCorrectFixturesForTarget(targetPoints, settledFixtures, userIndex) {
+  if (targetPoints <= 0) {
+    return [];
+  }
+
+  const candidates = rotate(settledFixtures, userIndex)
+    .map((fixture) => ({
+      fixture,
+      points: snapshotValuesForOutcome(fixture.snapshot, fixture.finalOutcome).points,
+    }))
+    .sort((left, right) => right.points - left.points);
+  const chosen = [];
+  let total = 0;
+
+  for (const candidate of candidates) {
+    if (total + candidate.points > targetPoints + 3 && chosen.length > 0) {
+      continue;
+    }
+
+    chosen.push(candidate.fixture);
+    total += candidate.points;
+
+    if (total >= targetPoints - 2) {
+      break;
+    }
+  }
+
+  return chosen;
+}
+
+function plannedSettledIncorrectCount(targetPoints, userIndex) {
+  if (targetPoints >= 50) {
+    return 7 + (userIndex % 4);
+  }
+
+  if (targetPoints >= 25) {
+    return 5 + (userIndex % 5);
+  }
+
+  if (targetPoints >= 10) {
+    return 3 + (userIndex % 4);
+  }
+
+  return 1 + (userIndex % 2);
+}
+
+function plannedTodayPendingCount(targetPoints, userIndex) {
+  if (targetPoints >= 35) {
+    return 1 + (userIndex % 2);
+  }
+
+  if (targetPoints >= 10) {
+    return userIndex % 3 === 0 ? 1 : 0;
+  }
+
+  return userIndex % 8 === 0 ? 1 : 0;
+}
+
+async function syncDailyUsageForUser(userId, currentInstant) {
+  const businessDates = await prisma.prediction.findMany({
+    where: { userId },
+    select: {
+      slotType: true,
+      fixture: { select: { kickoffAt: true } },
+    },
+  });
+  const usageByDate = new Map();
+
+  for (const prediction of businessDates) {
+    const businessDate = getBusinessDate(prediction.fixture.kickoffAt);
+    const current = usageByDate.get(businessDate) ?? { freeUsed: 0, rewardedUsed: 0 };
+
+    if (prediction.slotType === "FREE") {
+      current.freeUsed += 1;
+    } else {
+      current.rewardedUsed += 1;
+    }
+
+    usageByDate.set(businessDate, current);
+  }
+
+  const currentBusinessDate = getBusinessDate(currentInstant);
+
+  if (!usageByDate.has(currentBusinessDate)) {
+    usageByDate.set(currentBusinessDate, { freeUsed: 0, rewardedUsed: 0 });
+  }
+
+  for (const [businessDate, usage] of usageByDate.entries()) {
+    await prisma.dailyPredictionUsage.upsert({
+      where: {
+        userId_businessDate: {
+          userId,
+          businessDate: businessDateToDatabaseDate(businessDate),
+        },
+      },
+      update: usage,
+      create: {
+        userId,
+        businessDate: businessDateToDatabaseDate(businessDate),
+        ...usage,
+      },
+    });
+  }
+}
+
+async function recalculateTournamentParticipants(tournamentId) {
+  const participants = await prisma.tournamentParticipant.findMany({
+    where: { tournamentId },
+    include: { user: true },
+  });
+  let predictionCount = 0;
+
+  for (const participant of participants) {
+    const predictions = await prisma.prediction.findMany({
+      where: { tournamentId, userId: participant.userId },
+      select: {
+        earnedPoints: true,
+        resultStatus: true,
+      },
+    });
+    predictionCount += predictions.length;
+
+    await prisma.tournamentParticipant.update({
+      where: { id: participant.id },
+      data: {
+        tournamentPoints: predictions.reduce((sum, prediction) => sum + prediction.earnedPoints, 0),
+        predictionsCount: predictions.length,
+        correctPredictionsCount: predictions.filter((prediction) => prediction.resultStatus === "CORRECT").length,
+      },
+    });
+  }
+
+  const top = await prisma.tournamentParticipant.findMany({
+    where: { tournamentId },
+    include: { user: true },
+    orderBy: [{ tournamentPoints: "desc" }, { id: "asc" }],
+    take: 10,
+  });
+  const incorrectCounts = await prisma.prediction.groupBy({
+    by: ["userId"],
+    where: {
+      tournamentId,
+      resultStatus: "INCORRECT",
+      userId: { in: top.map((participant) => participant.userId) },
+    },
+    _count: { _all: true },
+  });
+  const incorrectByUserId = new Map(incorrectCounts.map((row) => [row.userId, row._count._all]));
+
+  return {
+    predictionCount,
+    top10: top.map((participant, index) => ({
+      rank: index + 1,
+      player: participant.user.username ?? participant.user.firstName ?? participant.user.telegramUserId.toString(),
+      points: participant.tournamentPoints,
+      predictions: participant.predictionsCount,
+      correct: participant.correctPredictionsCount,
+      wrong: incorrectByUserId.get(participant.userId) ?? 0,
+    })),
+  };
+}
+
+function snapshotValuesForOutcome(snapshot, outcome) {
+  switch (outcome) {
+    case "HOME":
+      return { probability: snapshot.homeProbability, points: snapshot.homePoints };
+    case "DRAW":
+      return { probability: snapshot.drawProbability, points: snapshot.drawPoints };
+    case "AWAY":
+      return { probability: snapshot.awayProbability, points: snapshot.awayPoints };
+  }
+}
+
+function firstIncorrectOutcome(finalOutcome, index) {
+  return ["HOME", "DRAW", "AWAY"].filter((outcome) => outcome !== finalOutcome)[index % 2];
+}
+
+function outcomeByIndex(index) {
+  return ["HOME", "DRAW", "AWAY"][index % 3];
+}
+
+function rotate(items, offset) {
+  if (items.length === 0) {
+    return [];
+  }
+
+  const normalizedOffset = offset % items.length;
+  return [...items.slice(normalizedOffset), ...items.slice(0, normalizedOffset)];
 }
 
 function createSeedKickoffTimes(now, range, count) {
@@ -414,6 +883,25 @@ function createSeedKickoffTimes(now, range, count) {
   }
 
   return spreadTimes(earliestKickoff, latestKickoff, count);
+}
+
+function createRelativeKickoff(now, dayOffset, londonHour) {
+  const businessDate = getBusinessDate(new Date(now.getTime() + dayOffset * 24 * 60 * 60 * 1000));
+  const [year, month, day] = businessDate.split("-").map(Number);
+
+  return zonedLocalTimeToUtc({ year, month, day, hour: londonHour, minute: 0, second: 0 });
+}
+
+function finalOutcomeForScore(homeScore, awayScore) {
+  if (homeScore > awayScore) {
+    return "HOME";
+  }
+
+  if (homeScore < awayScore) {
+    return "AWAY";
+  }
+
+  return "DRAW";
 }
 
 function spreadTimes(startMs, endMs, count) {
@@ -454,6 +942,12 @@ function getBusinessDayRangeUtc(businessDate) {
       second: 0,
     }),
   };
+}
+
+function businessDateToDatabaseDate(businessDate) {
+  const [year, month, day] = businessDate.split("-").map(Number);
+
+  return new Date(Date.UTC(year, month - 1, day));
 }
 
 function zonedLocalTimeToUtc(localTime) {

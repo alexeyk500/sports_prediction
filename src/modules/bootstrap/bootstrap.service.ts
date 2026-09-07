@@ -6,6 +6,7 @@ import {
   FREE_PREDICTION_LIMIT,
   REWARDED_PREDICTION_LIMIT,
 } from "@/modules/predictions/prediction.domain";
+import { getCurrentCupSummary, type CurrentCupSummaryDto } from "@/modules/tournaments/cup-read.service";
 import { findActiveTournamentForInstant } from "@/modules/tournaments/tournament.service";
 
 export interface BootstrapDependencies {
@@ -47,6 +48,7 @@ export interface BootstrapDto {
     league: string;
     qualifiedCupsCount: number;
   } | null;
+  cup: CurrentCupSummaryDto | null;
   serverTime: string;
   businessTimezone: typeof BUSINESS_TIMEZONE;
 }
@@ -70,6 +72,7 @@ export async function getBootstrap(
     }),
     dependencies.prisma.ratingProfile.findUnique({ where: { userId } }),
   ]);
+  const cup = await getCurrentCupSummary(dependencies.prisma, tournament, userId);
   const freeUsed = usage?.freeUsed ?? 0;
   const rewardedUsed = usage?.rewardedUsed ?? 0;
 
@@ -111,6 +114,7 @@ export async function getBootstrap(
           qualifiedCupsCount: rating.qualifiedCupsCount,
         }
       : null,
+    cup,
     serverTime: now.toISOString(),
     businessTimezone: BUSINESS_TIMEZONE,
   };

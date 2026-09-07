@@ -38,8 +38,27 @@ export interface BootstrapResponse {
     league: string;
     qualifiedCupsCount: number;
   } | null;
+  cup: CurrentCupSummaryDto | null;
   serverTime: string;
   businessTimezone: string;
+}
+
+export interface CupLeaderboardRowDto {
+  id: string;
+  rank: number;
+  playerName: string;
+  correctPredictions: number;
+  wrongPredictions: number;
+  predictionsCount: number;
+  points: number;
+  isCurrentUser: boolean;
+  telegramUrl: string | null;
+}
+
+export interface CurrentCupSummaryDto {
+  participantCount: number;
+  leaderboardRows: CupLeaderboardRowDto[];
+  pinnedCurrentUserRow: CupLeaderboardRowDto | null;
 }
 
 export interface DailyPredictionUsageDto {

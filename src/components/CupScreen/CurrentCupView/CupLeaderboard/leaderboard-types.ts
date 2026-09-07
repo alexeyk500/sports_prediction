@@ -4,6 +4,7 @@ export interface ICupLeaderboardRowModel {
   playerName: string;
   correctPredictions: number;
   wrongPredictions: number;
+  predictionsCount: number;
   points: number;
   isCurrentUser: boolean;
   telegramUrl: string | null;
