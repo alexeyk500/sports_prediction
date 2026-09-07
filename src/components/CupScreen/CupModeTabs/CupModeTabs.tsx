@@ -35,4 +35,4 @@ const CupModeTabs: React.FC<ICupModeTabsProps> = ({ activeTab, onChange }) => {
   );
 };
 
-export { CupModeTabs };
+export default CupModeTabs;

@@ -328,7 +328,7 @@ const CupHero: React.FC<ICupHeroProps> = ({ title, onClick }) => {
   // ...
 };
 
-export { CupHero };
+export default CupHero;
 ```
 
 Компонент без props:
@@ -338,7 +338,28 @@ const CupHeader: React.FC = () => {
   // ...
 };
 
-export { CupHeader };
+export default CupHeader;
+```
+
+React components declared in their own component files MUST use default exports:
+
+```tsx
+import CupHero from "./CupHero";
+```
+
+Do not use named component exports/imports as the default style:
+
+```tsx
+export { CupHero };
+import { CupHero } from "./CupHero";
+```
+
+Named exports remain appropriate for utilities, types, constants, hooks,
+formatters and modules with multiple semantically equal exports. Barrel files
+may re-export a default component as a named public API when necessary:
+
+```tsx
+export { default as CupHero } from "./CupHero";
 ```
 
 Для UI components не использовать как основной стиль:

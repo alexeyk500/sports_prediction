@@ -1,19 +1,24 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import type React from "react";
 import { useSettingsRuntime } from "@/hooks/use-settings-runtime";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import { useBootstrapStore } from "@/stores/bootstrap-store";
 import { useSettingsStore } from "@/stores/settings-store";
-import { CupScreen } from "@/components/CupScreen/CupScreen";
-import { ProfileScreen } from "@/components/profile/ProfileScreen";
+import CupScreen from "@/components/CupScreen/CupScreen";
+import ProfileScreen from "@/components/profile/ProfileScreen";
 import styles from "./AppShell.module.css";
 
 type NavItem = "Predict" | "Cup" | "Rating" | "Profile";
 
 const navItems: NavItem[] = ["Predict", "Cup", "Rating", "Profile"];
 
-export function AppShell({ predict }: { predict: ReactNode }) {
+interface IAppShellProps {
+  predict: ReactNode;
+}
+
+const AppShell: React.FC<IAppShellProps> = ({ predict }) => {
   const [active, setActive] = useState<NavItem>("Predict");
   const bootstrap = useBootstrapStore((state) => state.bootstrap);
   const setSettings = useSettingsStore((state) => state.setSettings);
@@ -55,7 +60,9 @@ export function AppShell({ predict }: { predict: ReactNode }) {
       </nav>
     </div>
   );
-}
+};
+
+export default AppShell;
 
 function Placeholder({ title }: { title: string }) {
   const { t } = useTranslation();

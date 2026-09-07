@@ -670,7 +670,7 @@ const CupHero: React.FC<ICupHeroProps> = ({
   return (...);
 };
 
-export { CupHero };
+export default CupHero;
 ```
 
 Components without props use:
@@ -680,8 +680,52 @@ const CupHeader: React.FC = () => {
   return (...);
 };
 
-export { CupHeader };
+export default CupHeader;
 ```
+
+React components defined in their own component files MUST use default exports.
+
+Preferred:
+
+```tsx
+const CupHero: React.FC<ICupHeroProps> = () => {
+  return (...);
+};
+
+export default CupHero;
+```
+
+Import:
+
+```tsx
+import CupHero from "./CupHero";
+```
+
+Avoid:
+
+```tsx
+export { CupHero };
+```
+
+and:
+
+```tsx
+import { CupHero } from "./CupHero";
+```
+
+Named exports should continue to be used for utilities, types, constants, hooks,
+formatters and other modules where multiple named exports are semantically
+appropriate.
+
+Barrel files may re-export a default component as a named public API when
+necessary:
+
+```tsx
+export { default as CupHero } from "./CupHero";
+```
+
+The default-export rule applies to React component implementation files, not
+indiscriminately to every TypeScript module.
 
 For React UI component props:
 
@@ -1241,7 +1285,7 @@ Use the configured `@/` alias for imports from `src/`.
 Prefer:
 
 ``` ts
-import { CupHero } from "@/components/CupScreen/CurrentCupView/CupHero/CupHero";
+import CupHero from "@/components/CupScreen/CurrentCupView/CupHero/CupHero";
 ```
 
 over long relative paths.

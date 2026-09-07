@@ -1,6 +1,6 @@
 import type React from "react";
 import { useTranslation } from "@/lib/i18n/use-translation";
-import { PeopleIcon } from "./PeopleIcon";
+import PeopleIcon from "./PeopleIcon";
 import styles from "./CupParticipantsStrip.module.css";
 
 interface ICupParticipantsStripProps {
@@ -22,4 +22,4 @@ const CupParticipantsStrip: React.FC<ICupParticipantsStripProps> = ({ participan
   );
 };
 
-export { CupParticipantsStrip };
+export default CupParticipantsStrip;

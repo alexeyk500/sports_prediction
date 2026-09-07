@@ -33,4 +33,4 @@ const CupHistoryItem: React.FC<ICupHistoryItemProps> = ({ item }) => {
   return <article className={styles.item}>{content}</article>;
 };
 
-export { CupHistoryItem };
+export default CupHistoryItem;

@@ -1,6 +1,6 @@
 import type React from "react";
 import { useTranslation } from "@/lib/i18n/use-translation";
-import { UserIcon } from "./UserIcon";
+import UserIcon from "./UserIcon";
 import styles from "./UserCupPosition.module.css";
 
 interface IUserCupPositionProps {
@@ -27,4 +27,4 @@ const UserCupPosition: React.FC<IUserCupPositionProps> = ({ onMakePrediction }) 
   );
 };
 
-export { UserCupPosition };
+export default UserCupPosition;

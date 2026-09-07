@@ -1,11 +1,11 @@
 import type React from "react";
 import type { BootstrapResponse } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
-import { CupHero } from "./CupHero/CupHero";
-import { CupLeaderboard } from "./CupLeaderboard/CupLeaderboard";
+import CupHero from "./CupHero/CupHero";
+import CupLeaderboard from "./CupLeaderboard/CupLeaderboard";
 import type { ICupLeaderboardRowModel } from "./CupLeaderboard/leaderboard-types";
-import { CupParticipantsStrip } from "./CupParticipantsStrip/CupParticipantsStrip";
-import { UserCupPosition } from "./UserCupPosition/UserCupPosition";
+import CupParticipantsStrip from "./CupParticipantsStrip/CupParticipantsStrip";
+import UserCupPosition from "./UserCupPosition/UserCupPosition";
 import styles from "./CurrentCupView.module.css";
 
 interface ICurrentCupViewProps {
@@ -42,4 +42,4 @@ const CurrentCupView: React.FC<ICurrentCupViewProps> = ({
   );
 };
 
-export { CurrentCupView };
+export default CurrentCupView;

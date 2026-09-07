@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import type React from "react";
 import { ApiClient } from "@/lib/api/client";
 import { messageForApiError } from "@/lib/api/error-presentation";
 import type { AppearanceMode, SupportedLocale, UserSettingsDto } from "@/lib/api/types";
@@ -12,7 +13,7 @@ import { useBootstrapStore } from "@/stores/bootstrap-store";
 import { useSettingsStore } from "@/stores/settings-store";
 import styles from "./ProfileScreen.module.css";
 
-export function ProfileScreen() {
+const ProfileScreen: React.FC = () => {
   const bootstrap = useBootstrapStore((state) => state.bootstrap);
   const setBootstrap = useBootstrapStore((state) => state.setBootstrap);
   const selectedLocale = useSettingsStore((state) => state.locale);
@@ -86,4 +87,6 @@ export function ProfileScreen() {
       </section>
     </main>
   );
-}
+};
+
+export default ProfileScreen;

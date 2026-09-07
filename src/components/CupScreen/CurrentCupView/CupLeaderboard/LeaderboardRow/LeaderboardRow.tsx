@@ -24,4 +24,4 @@ const LeaderboardRow: React.FC<ILeaderboardRowProps> = ({ row, pinned = false })
   );
 };
 
-export { LeaderboardRow };
+export default LeaderboardRow;

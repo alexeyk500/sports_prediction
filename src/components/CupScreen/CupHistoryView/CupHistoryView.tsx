@@ -1,8 +1,8 @@
 import type React from "react";
-import { TrophyIcon } from "@/assets/icons/TrophyIcon";
+import TrophyIcon from "@/assets/icons/TrophyIcon";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import type { ICupHistoryItemModel } from "./cup-history-types";
-import { CupHistoryItem } from "./CupHistoryItem/CupHistoryItem";
+import CupHistoryItem from "./CupHistoryItem/CupHistoryItem";
 import styles from "./CupHistoryView.module.css";
 
 interface ICupHistoryViewProps {
@@ -32,4 +32,4 @@ const CupHistoryView: React.FC<ICupHistoryViewProps> = ({ items }) => {
   );
 };
 
-export { CupHistoryView };
+export default CupHistoryView;

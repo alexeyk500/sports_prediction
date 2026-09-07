@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TrophyIcon } from "@/assets/icons/TrophyIcon";
+import TrophyIcon from "@/assets/icons/TrophyIcon";
 import type { PredictionDto, PredictionOutcome, TodayFixtureDto } from "@/lib/api/types";
 import { formatKickoffTime, formatLocalizedNumber } from "@/lib/i18n/format";
 import { useTranslation } from "@/lib/i18n/use-translation";

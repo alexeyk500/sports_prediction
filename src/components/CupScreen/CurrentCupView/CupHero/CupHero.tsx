@@ -1,7 +1,7 @@
 import type React from "react";
 import type { BootstrapResponse } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
-import { ClockIcon } from "./ClockIcon";
+import ClockIcon from "./ClockIcon";
 import { formatCountdown, formatDateRange, formatEndDate, formatNanoTon } from "./cup-hero-format";
 import styles from "./CupHero.module.css";
 
@@ -40,4 +40,4 @@ const CupHero: React.FC<ICupHeroProps> = ({ tournament, nowMs, timeZone }) => {
   );
 };
 
-export { CupHero };
+export default CupHero;

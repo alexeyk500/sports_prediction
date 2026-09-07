@@ -12,4 +12,4 @@ const UserIcon: React.FC<IUserIconProps> = ({ className }) => {
   );
 };
 
-export { UserIcon };
+export default UserIcon;

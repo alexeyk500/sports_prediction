@@ -12,4 +12,4 @@ const TrophyIcon: React.FC<ITrophyIconProps> = ({ className }) => {
   );
 };
 
-export { TrophyIcon };
+export default TrophyIcon;

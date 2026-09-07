@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import type React from "react";
 import { ApiClient, ApiClientError } from "@/lib/api/client";
 import { messageForApiError } from "@/lib/api/error-presentation";
 import type {
@@ -26,7 +27,7 @@ interface PredictState {
   businessDate: string | null;
 }
 
-export function PredictScreen() {
+const PredictScreen: React.FC = () => {
   const { bootstrap, setBootstrap } = useBootstrapStore();
   const { t, locale } = useTranslation();
   const apiClient = useMemo(() => new ApiClient({ getTelegramInitData }), []);
@@ -180,7 +181,9 @@ export function PredictScreen() {
       </div>
     </main>
   );
-}
+};
+
+export default PredictScreen;
 
 function Header({ bootstrap }: { bootstrap: BootstrapResponse }) {
   const { t } = useTranslation();

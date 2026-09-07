@@ -12,4 +12,4 @@ const ClockIcon: React.FC<IClockIconProps> = ({ className }) => {
   );
 };
 
-export { ClockIcon };
+export default ClockIcon;

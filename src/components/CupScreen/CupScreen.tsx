@@ -7,10 +7,10 @@ import { messageForApiError } from "@/lib/api/error-presentation";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import { getTelegramInitData } from "@/lib/telegram/client";
 import { useBootstrapStore } from "@/stores/bootstrap-store";
-import { CupHeader } from "./CupHeader/CupHeader";
-import { CupHistoryView } from "./CupHistoryView/CupHistoryView";
-import { CupModeTabs } from "./CupModeTabs/CupModeTabs";
-import { CurrentCupView } from "./CurrentCupView/CurrentCupView";
+import CupHeader from "./CupHeader/CupHeader";
+import CupHistoryView from "./CupHistoryView/CupHistoryView";
+import CupModeTabs from "./CupModeTabs/CupModeTabs";
+import CurrentCupView from "./CurrentCupView/CurrentCupView";
 import type { ICupHistoryItemModel } from "./CupHistoryView/cup-history-types";
 import type { ICupLeaderboardRowModel } from "./CurrentCupView/CupLeaderboard/leaderboard-types";
 import type { CupTab } from "./cup-types";
@@ -119,7 +119,7 @@ const CupScreen: React.FC<ICupScreenProps> = ({ onMakePrediction }) => {
   );
 };
 
-export { CupScreen };
+export default CupScreen;
 
 function logCupLoadError(error: unknown): void {
   if (process.env.NODE_ENV !== "development") {

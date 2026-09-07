@@ -13,4 +13,4 @@ const CupHeader: React.FC = () => {
   );
 };
 
-export { CupHeader };
+export default CupHeader;

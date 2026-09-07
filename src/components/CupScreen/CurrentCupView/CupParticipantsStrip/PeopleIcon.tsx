@@ -12,4 +12,4 @@ const PeopleIcon: React.FC<IPeopleIconProps> = ({ className }) => {
   );
 };
 
-export { PeopleIcon };
+export default PeopleIcon;
