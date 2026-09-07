@@ -32,11 +32,11 @@ const LeaderboardRow: React.FC<ILeaderboardRowProps> = ({
           <span className={styles.youBadge}>{t("cup.you")}</span>
         ) : null}
       </span>
-      <span className={styles.centerdText}>
+      <span className={styles.centeredText}>
         {row.correctPredictions} / {row.wrongPredictions}
       </span>
 
-      <span className={styles.centerdText}>{row.points}</span>
+      <span className={styles.centeredText}>{row.points}</span>
     </div>
   );
 };

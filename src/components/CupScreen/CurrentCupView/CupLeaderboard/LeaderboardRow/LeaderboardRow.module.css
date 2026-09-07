@@ -21,8 +21,9 @@
 }
 
 .pinnedRow {
+  box-sizing: border-box;
   border-radius: 12px;
-  padding-block: 8px;
+  padding: 8px 2px 8px 12px;
   background: var(--color-accent-soft);
   color: var(--color-accent-text);
 }
@@ -43,7 +44,7 @@
   align-items: center;
   gap: 6px;
 }
-.centerdText {
+.centeredText {
   text-align: center;
 }
 
