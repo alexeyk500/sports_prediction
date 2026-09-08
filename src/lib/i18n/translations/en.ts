@@ -7,7 +7,7 @@ export const en = {
   navigation: {
     predict: "Predict",
     cup: "Cup",
-    rating: "Rating",
+    history: "History",
     profile: "Profile",
     ariaLabel: "Primary navigation",
     placeholder: "This section is not implemented in this stage.",
@@ -133,6 +133,33 @@ export const en = {
       historyTitle: "No past Cups yet",
       historyBody:
         "Completed Cup summaries will appear here when final results are available.",
+    },
+  },
+  history: {
+    title: "History",
+    subtitle: "Your predictions in this Cup",
+    loading: "Loading History...",
+    position: "Your position",
+    rank: "#{rank}",
+    correctWrong: "{correct} correct · {wrong} wrong",
+    matchCount: "{count} matches",
+    timeline: "Prediction history",
+    day: {
+      today: "Today · {date}",
+      yesterday: "Yesterday · {date}",
+    },
+    status: {
+      CORRECT: "Correct",
+      INCORRECT: "Wrong",
+      PENDING: "Pending",
+    },
+    card: {
+      yourPick: "Your pick: {pick}",
+      marketFullTime: "Full time",
+    },
+    empty: {
+      title: "No predictions in this Cup yet",
+      body: "Your current Cup predictions will appear here after you make them.",
     },
   },
   profile: {

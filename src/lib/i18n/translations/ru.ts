@@ -9,7 +9,7 @@ export const ru = {
   navigation: {
     predict: "Прогнозы",
     cup: "Кубок",
-    rating: "Рейтинг",
+    history: "История",
     profile: "Профиль",
     ariaLabel: "Основная навигация",
     placeholder: "Этот раздел пока не реализован.",
@@ -128,6 +128,33 @@ export const ru = {
       historyTitle: "Прошлых Кубков пока нет",
       historyBody:
         "Итоги завершённых Кубков появятся здесь, когда будут доступны финальные результаты.",
+    },
+  },
+  history: {
+    title: "История",
+    subtitle: "Ваши прогнозы в этом Кубке",
+    loading: "Загружаем историю...",
+    position: "Ваша позиция",
+    rank: "#{rank}",
+    correctWrong: "{correct} верно · {wrong} неверно",
+    matchCount: "{count} матчей",
+    timeline: "История прогнозов",
+    day: {
+      today: "Сегодня · {date}",
+      yesterday: "Вчера · {date}",
+    },
+    status: {
+      CORRECT: "Верно",
+      INCORRECT: "Неверно",
+      PENDING: "Ожидает",
+    },
+    card: {
+      yourPick: "Ваш прогноз: {pick}",
+      marketFullTime: "Основное время",
+    },
+    empty: {
+      title: "В этом Кубке пока нет прогнозов",
+      body: "Ваши прогнозы текущего Кубка появятся здесь сразу после создания.",
     },
   },
   profile: {

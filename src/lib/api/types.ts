@@ -75,6 +75,47 @@ export interface CupAroundMeLeaderboardResponse {
   totalParticipants: number;
 }
 
+export interface CupHistoryResponse {
+  cupId: string;
+  days: CupHistoryDayDto[];
+}
+
+export interface CupHistoryDayDto {
+  businessDate: string;
+  predictions: CupHistoryPredictionDto[];
+}
+
+export interface CupHistoryPredictionDto {
+  id: string;
+  fixtureId: string;
+  selectedOutcome: PredictionOutcome;
+  slotType: "FREE" | "REWARDED";
+  potentialPoints: number;
+  earnedPoints: number;
+  resultStatus: "PENDING" | "CORRECT" | "INCORRECT";
+  kickoffAt: string;
+  competition: {
+    id: string;
+    code: string;
+    name: string;
+    slug: string;
+  };
+  homeTeam: {
+    id: string;
+    name: string;
+    slug: string;
+    shortName: string | null;
+  };
+  awayTeam: {
+    id: string;
+    name: string;
+    slug: string;
+    shortName: string | null;
+  };
+  homeScore: number | null;
+  awayScore: number | null;
+}
+
 export interface DailyPredictionUsageDto {
   businessDate: string;
   freeUsed: number;

@@ -9,7 +9,7 @@ export const de = {
   navigation: {
     predict: "Tipps",
     cup: "Cup",
-    rating: "Rang",
+    history: "Historie",
     profile: "Profil",
     ariaLabel: "Hauptnavigation",
     placeholder: "Dieser Bereich ist in dieser Phase noch nicht umgesetzt.",
@@ -135,6 +135,33 @@ export const de = {
       historyTitle: "Noch keine vergangenen Cups",
       historyBody:
         "Abgeschlossene Cup-Zusammenfassungen erscheinen hier, sobald finale Ergebnisse verfügbar sind.",
+    },
+  },
+  history: {
+    title: "Historie",
+    subtitle: "Deine Tipps in diesem Cup",
+    loading: "Historie wird geladen...",
+    position: "Deine Position",
+    rank: "#{rank}",
+    correctWrong: "{correct} richtig · {wrong} falsch",
+    matchCount: "{count} Spiele",
+    timeline: "Tipp-Historie",
+    day: {
+      today: "Heute · {date}",
+      yesterday: "Gestern · {date}",
+    },
+    status: {
+      CORRECT: "Richtig",
+      INCORRECT: "Falsch",
+      PENDING: "Offen",
+    },
+    card: {
+      yourPick: "Dein Tipp: {pick}",
+      marketFullTime: "Regulaere Spielzeit",
+    },
+    empty: {
+      title: "Noch keine Tipps in diesem Cup",
+      body: "Deine aktuellen Cup-Tipps erscheinen hier direkt nach der Abgabe.",
     },
   },
   profile: {

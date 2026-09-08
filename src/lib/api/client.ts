@@ -4,6 +4,7 @@ import type {
   ApiErrorEnvelope,
   BootstrapResponse,
   CupAroundMeLeaderboardResponse,
+  CupHistoryResponse,
   CupLeaderboardModeDto,
   CupLeaderboardPageResponse,
   PredictionMutationResponse,
@@ -97,6 +98,10 @@ export class ApiClient {
     return this.request(
       `/api/cups/${input.cupId}/leaderboard/me${queryString ? `?${queryString}` : ""}`,
     );
+  }
+
+  getCupHistory(input: { cupId: string }): Promise<CupHistoryResponse> {
+    return this.request(`/api/cups/${input.cupId}/history`);
   }
 
   getSettings(): Promise<UserSettingsDto> {

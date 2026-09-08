@@ -1,1 +1,1 @@
-export type NavItem = "Predict" | "Cup" | "Rating" | "Profile";
+export type NavItem = "Predict" | "Cup" | "History" | "Profile";

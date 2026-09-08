@@ -9,7 +9,7 @@ export const ar = {
   navigation: {
     predict: "التوقعات",
     cup: "الكأس",
-    rating: "التصنيف",
+    history: "السجل",
     profile: "الملف",
     ariaLabel: "التنقل الرئيسي",
     placeholder: "هذا القسم غير متاح في هذه المرحلة.",
@@ -135,6 +135,33 @@ export const ar = {
       historyTitle: "لا توجد كؤوس سابقة بعد",
       historyBody:
         "ستظهر ملخصات الكؤوس المكتملة هنا عندما تتوفر النتائج النهائية.",
+    },
+  },
+  history: {
+    title: "السجل",
+    subtitle: "توقعاتك في هذا الكأس",
+    loading: "جار تحميل السجل...",
+    position: "مركزك",
+    rank: "#{rank}",
+    correctWrong: "{correct} صحيح · {wrong} خطأ",
+    matchCount: "{count} مباراة",
+    timeline: "سجل التوقعات",
+    day: {
+      today: "اليوم · {date}",
+      yesterday: "أمس · {date}",
+    },
+    status: {
+      CORRECT: "صحيح",
+      INCORRECT: "خطأ",
+      PENDING: "معلق",
+    },
+    card: {
+      yourPick: "اختيارك: {pick}",
+      marketFullTime: "الوقت الأصلي",
+    },
+    empty: {
+      title: "لا توجد توقعات في هذا الكأس بعد",
+      body: "ستظهر توقعاتك في الكأس الحالي هنا فور إنشائها.",
     },
   },
   profile: {

@@ -9,7 +9,7 @@ export const es = {
   navigation: {
     predict: "Pronosticar",
     cup: "Copa",
-    rating: "Rating",
+    history: "Historial",
     profile: "Perfil",
     ariaLabel: "Navegación principal",
     placeholder: "Esta sección no está implementada en esta etapa.",
@@ -135,6 +135,33 @@ export const es = {
       historyTitle: "Aún no hay Copas anteriores",
       historyBody:
         "Los resúmenes de Copas finalizadas aparecerán aquí cuando estén disponibles los resultados finales.",
+    },
+  },
+  history: {
+    title: "Historial",
+    subtitle: "Tus pronósticos en esta Copa",
+    loading: "Cargando historial...",
+    position: "Tu posición",
+    rank: "#{rank}",
+    correctWrong: "{correct} aciertos · {wrong} fallos",
+    matchCount: "{count} partidos",
+    timeline: "Historial de pronósticos",
+    day: {
+      today: "Hoy · {date}",
+      yesterday: "Ayer · {date}",
+    },
+    status: {
+      CORRECT: "Acierto",
+      INCORRECT: "Fallo",
+      PENDING: "Pendiente",
+    },
+    card: {
+      yourPick: "Tu pick: {pick}",
+      marketFullTime: "Tiempo reglamentario",
+    },
+    empty: {
+      title: "Aún no hay pronósticos en esta Copa",
+      body: "Tus pronósticos de la Copa actual aparecerán aquí al crearlos.",
     },
   },
   profile: {

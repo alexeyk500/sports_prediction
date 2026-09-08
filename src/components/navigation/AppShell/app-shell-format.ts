@@ -10,8 +10,8 @@ export function navLabel(
       return t("navigation.predict");
     case "Cup":
       return t("navigation.cup");
-    case "Rating":
-      return t("navigation.rating");
+    case "History":
+      return t("navigation.history");
     case "Profile":
       return t("navigation.profile");
   }

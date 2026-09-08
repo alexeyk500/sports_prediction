@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type React from "react";
 import CupScreen from "@/components/CupScreen/CupScreen";
+import HistoryScreen from "@/components/HistoryScreen/HistoryScreen";
 import ProfileScreen from "@/components/profile/ProfileScreen";
 import { useSettingsRuntime } from "@/hooks/use-settings-runtime";
 import { useTranslation } from "@/lib/i18n/use-translation";
@@ -11,10 +12,9 @@ import { useSettingsStore } from "@/stores/settings-store";
 import { navLabel } from "./app-shell-format";
 import type { NavItem } from "./app-shell-types";
 import NavIcon from "./NavIcon/NavIcon";
-import Placeholder from "./Placeholder/Placeholder";
 import styles from "./AppShell.module.css";
 
-const navItems: NavItem[] = ["Predict", "Cup", "Rating", "Profile"];
+const navItems: NavItem[] = ["Predict", "Cup", "History", "Profile"];
 
 interface IAppShellProps {
   predict: ReactNode;
@@ -34,19 +34,22 @@ const AppShell: React.FC<IAppShellProps> = ({ predict }) => {
     }
   }, [bootstrap, setSettings]);
 
+  function renderActiveContent(): ReactNode {
+    switch (active) {
+      case "Predict":
+        return predict;
+      case "Cup":
+        return <CupScreen onMakePrediction={() => setActive("Predict")} />;
+      case "History":
+        return <HistoryScreen />;
+      case "Profile":
+        return <ProfileScreen />;
+    }
+  }
+
   return (
     <div className={styles.shell}>
-      <div className={styles.content}>
-        {active === "Predict" ? (
-          predict
-        ) : active === "Cup" ? (
-          <CupScreen onMakePrediction={() => setActive("Predict")} />
-        ) : active === "Profile" ? (
-          <ProfileScreen />
-        ) : (
-          <Placeholder title={navLabel(active, t)} />
-        )}
-      </div>
+      <div className={styles.content}>{renderActiveContent()}</div>
       <nav className={styles.nav} aria-label={t("navigation.ariaLabel")}>
         {navItems.map((item) => (
           <button
