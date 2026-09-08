@@ -14,8 +14,8 @@ const Header: React.FC<IHeaderProps> = ({ bootstrap }) => {
   return (
     <section className={styles.header}>
       <div>
-        <h1>{t("predict.title")}</h1>
-        <p className={styles.subtitle}>{t("predict.subtitle")}</p>
+        <h1>{t("matches.title")}</h1>
+        <p className={styles.subtitle}>{t("matches.subtitle")}</p>
       </div>
       {isDevelopment ? (
         <div className={styles.userBadge} dir="auto">

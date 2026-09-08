@@ -7,15 +7,15 @@ export const ru = {
     trophyCount: "{count} кубков",
   },
   navigation: {
-    predict: "Прогнозы",
+    matches: "Матчи",
     cup: "Кубок",
     history: "История",
     profile: "Профиль",
     ariaLabel: "Основная навигация",
     placeholder: "Этот раздел пока не реализован.",
   },
-  predict: {
-    title: "Прогнозы",
+  matches: {
+    title: "Матчи",
     subtitle: "Сделайте прогнозы на сегодня",
     weeklyCup: "Недельный кубок",
     loading: "Загружаем матчи на сегодня...",

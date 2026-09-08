@@ -7,15 +7,15 @@ export const ar = {
     trophyCount: "{count} كؤوس",
   },
   navigation: {
-    predict: "التوقعات",
+    matches: "المباريات",
     cup: "الكأس",
     history: "السجل",
     profile: "الملف",
     ariaLabel: "التنقل الرئيسي",
     placeholder: "هذا القسم غير متاح في هذه المرحلة.",
   },
-  predict: {
-    title: "التوقعات",
+  matches: {
+    title: "المباريات",
     subtitle: "اختر توقعاتك لليوم",
     weeklyCup: "كأس الأسبوع",
     loading: "جار تحميل مباريات اليوم...",

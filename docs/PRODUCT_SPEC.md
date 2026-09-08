@@ -287,20 +287,20 @@ Bottom Navigation:
 
 | Item    | Purpose                                     |
 | ------- | ------------------------------------------- |
-| Predict | Today's Fixtures, Prediction, My Picks      |
+| Matches | Today's Fixtures, Prediction, My Picks      |
 | Cup     | Current Weekly Cup, Prize Zone, Leaderboard |
-| Rating  | Global Rating and competitive status        |
+| History | Current Cup prediction history              |
 | Profile | Career, History, Achievements, Prizes       |
 
 Settings не является отдельным Bottom Navigation item и открывается из Profile.
 
-Predict — default landing screen при обычном запуске.
+Matches — default landing screen при обычном запуске.
 
 ---
 
-# 9. Predict Screen
+# 9. Matches Screen
 
-Predict должен давать быстрый путь от открытия приложения до Prediction.
+Matches должен давать быстрый путь от открытия приложения до Prediction.
 
 Core content:
 
@@ -391,7 +391,7 @@ NOT_PARTICIPATING
 
 Отдельной Join button нет.
 
-Вне Prize Zone UI показывает progress/gap и CTA к Predict.
+Вне Prize Zone UI показывает progress/gap и CTA к Matches.
 
 В Prize Zone UI показывает current Prize и competitive gaps.
 
@@ -611,10 +611,10 @@ Detailed scoring explanation may be available via Info UI; formula `6.5 / p` is 
 
 | Area       | State                | Product behavior                                                |
 | ---------- | -------------------- | --------------------------------------------------------------- |
-| Predict    | NO_ELIGIBLE_FIXTURES | Explain no available matches today; My Picks remains accessible |
-| Predict    | FREE_AVAILABLE       | One-tap Prediction                                              |
-| Predict    | REWARDED_REQUIRED    | Outcome → rewarded flow                                         |
-| Predict    | DAILY_LIMIT_REACHED  | Block new Prediction until daily reset                          |
+| Matches    | NO_ELIGIBLE_FIXTURES | Explain no available matches today; My Picks remains accessible |
+| Matches    | FREE_AVAILABLE       | One-tap Prediction                                              |
+| Matches    | REWARDED_REQUIRED    | Outcome → rewarded flow                                         |
+| Matches    | DAILY_LIMIT_REACHED  | Block new Prediction until daily reset                          |
 | Prediction | OPEN                 | selectedOutcome editable before kickoff                         |
 | Prediction | LOCKED_OR_LIVE       | Edit forbidden; result Pending                                  |
 | Prediction | SETTLED_CORRECT      | earnedPoints and relevant movement                              |
@@ -800,7 +800,7 @@ Primary Loop:
 
 ```text
 Open
-→ Predict Today
+→ Matches Today
 → Settlement
 → Weekly Cup Movement
 → Global Rating

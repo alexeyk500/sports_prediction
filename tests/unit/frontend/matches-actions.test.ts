@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { ApiClientError } from "@/lib/api/client";
-import { selectOutcome } from "@/components/PredictScreen/predict-actions";
-import { PREDICTION_OUTCOME_ORDER } from "@/components/PredictScreen/predict-outcomes";
+import { selectOutcome } from "@/components/MatchesScreen/matches-actions";
+import { PREDICTION_OUTCOME_ORDER } from "@/components/MatchesScreen/matches-outcomes";
 import type { PredictionDto } from "@/lib/api/types";
 
 const editablePrediction: PredictionDto = {
@@ -16,7 +16,7 @@ const editablePrediction: PredictionDto = {
   editable: true,
 };
 
-describe("Predict screen outcome actions", () => {
+describe("Matches screen outcome actions", () => {
   it("keeps domain outcome order independent of document direction", () => {
     expect(PREDICTION_OUTCOME_ORDER).toEqual(["HOME", "DRAW", "AWAY"]);
   });

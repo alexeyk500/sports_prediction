@@ -5,15 +5,15 @@ export const en = {
     trophyCount: "{count} trophies",
   },
   navigation: {
-    predict: "Predict",
+    matches: "Matches",
     cup: "Cup",
     history: "History",
     profile: "Profile",
     ariaLabel: "Primary navigation",
     placeholder: "This section is not implemented in this stage.",
   },
-  predict: {
-    title: "Predict",
+  matches: {
+    title: "Matches",
     subtitle: "Make your picks for today",
     weeklyCup: "Weekly Cup",
     loading: "Loading today's matches...",
@@ -21,7 +21,7 @@ export const en = {
     tabs: {
       available: "Available",
       myPicks: "My Picks",
-      ariaLabel: "Predict views",
+      ariaLabel: "Matches views",
     },
     quota: {
       free: "Free predictions: {used} / {limit}",

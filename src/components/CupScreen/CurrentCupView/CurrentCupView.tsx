@@ -14,7 +14,7 @@ interface ICurrentCupViewProps {
   nowMs: number;
   cup: BootstrapResponse["cup"];
   apiClient: ApiClient;
-  onMakePrediction: () => void;
+  onOpenMatches: () => void;
 }
 
 const CurrentCupView: React.FC<ICurrentCupViewProps> = ({
@@ -22,7 +22,7 @@ const CurrentCupView: React.FC<ICurrentCupViewProps> = ({
   nowMs,
   cup,
   apiClient,
-  onMakePrediction,
+  onOpenMatches,
 }) => {
   const { t } = useTranslation();
   const tournament = bootstrap.currentTournament;
@@ -50,10 +50,7 @@ const CurrentCupView: React.FC<ICurrentCupViewProps> = ({
           cup ? String(cup.participantCount) : t("cup.unavailable")
         }
       />
-      <UserCupPosition
-        row={currentUserRow}
-        onMakePrediction={onMakePrediction}
-      />
+      <UserCupPosition row={currentUserRow} onOpenMatches={onOpenMatches} />
       <CupLeaderboard
         key={tournament.id}
         cupId={tournament.id}

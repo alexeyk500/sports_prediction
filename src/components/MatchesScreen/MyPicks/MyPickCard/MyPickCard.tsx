@@ -14,8 +14,8 @@ import {
   getCompetitionBadge,
   getTeamBadge,
 } from "../../MatchCardShared/match-card-presentation";
-import { outcomeLabel, slotLabel } from "../../predict-format";
-import { PREDICTION_OUTCOME_ORDER } from "../../predict-outcomes";
+import { outcomeLabel, slotLabel } from "../../matches-format";
+import { PREDICTION_OUTCOME_ORDER } from "../../matches-outcomes";
 import styles from "./MyPickCard.module.css";
 
 interface IMyPickCardProps {
@@ -40,7 +40,7 @@ const MyPickCard: React.FC<IMyPickCardProps> = ({
         {fixture ? (
           <LeagueBadge badge={getCompetitionBadge(fixture.competition)} />
         ) : (
-          <span dir="auto">{t("predict.status.fixtureFallback")}</span>
+          <span dir="auto">{t("matches.status.fixtureFallback")}</span>
         )}
         <time dateTime={prediction.kickoffAt}>
           {formatKickoffTime(locale, prediction.kickoffAt)}
@@ -65,8 +65,8 @@ const MyPickCard: React.FC<IMyPickCardProps> = ({
         <span>{slotLabel(t, prediction.slotType)}</span>
         <span>
           {prediction.editable
-            ? t("predict.status.editable")
-            : t("predict.status.locked")}
+            ? t("matches.status.editable")
+            : t("matches.status.locked")}
         </span>
       </div>
       {fixture && prediction.editable ? (

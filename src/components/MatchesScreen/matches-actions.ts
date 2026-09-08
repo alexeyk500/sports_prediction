@@ -3,7 +3,7 @@
 import { ApiClientError, type ApiClient } from "@/lib/api/client";
 import type { PredictionDto, PredictionOutcome } from "@/lib/api/types";
 
-export type PredictActionResult =
+export type MatchesActionResult =
   | { status: "created" | "updated" }
   | { status: "reward-required" }
   | { status: "locked" };
@@ -18,7 +18,7 @@ export interface SelectOutcomeInput {
 
 export async function selectOutcome(
   input: SelectOutcomeInput,
-): Promise<PredictActionResult> {
+): Promise<MatchesActionResult> {
   if (input.existingPrediction) {
     if (!input.existingPrediction.editable) {
       return { status: "locked" };

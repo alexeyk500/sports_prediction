@@ -31,7 +31,7 @@ const FixtureList: React.FC<IFixtureListProps> = ({
   if (fixtures.length === 0) {
     return (
       <section className={styles.statePanel}>
-        {t("predict.empty.available")}
+        {t("matches.empty.available")}
       </section>
     );
   }

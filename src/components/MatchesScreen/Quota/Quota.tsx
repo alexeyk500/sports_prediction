@@ -34,9 +34,9 @@ const Quota: React.FC<IQuotaProps> = ({ usage }) => {
   return (
     <section className={styles.quota}>
       <div className={styles.quotaHeader}>
-        <h2>{t("predict.quota.title")}</h2>
+        <h2>{t("matches.quota.title")}</h2>
         <strong>
-          {t("predict.quota.totalShort", {
+          {t("matches.quota.totalShort", {
             used: values.totalUsed,
             limit: values.totalLimit,
           })}
@@ -63,13 +63,13 @@ const Quota: React.FC<IQuotaProps> = ({ usage }) => {
       </div>
       <div className={styles.quotaLabels}>
         <span>
-          {t("predict.quota.freeCompact", {
+          {t("matches.quota.freeCompact", {
             used: values.freeUsed,
             limit: values.freeLimit,
           })}
         </span>
         <span>
-          {t("predict.quota.rewardedCompact", {
+          {t("matches.quota.rewardedCompact", {
             used: values.rewardedUsed,
             limit: values.rewardedLimit,
           })}
@@ -83,8 +83,8 @@ const Quota: React.FC<IQuotaProps> = ({ usage }) => {
           aria-disabled="true"
         >
           <VideoIcon />
-          <span>{t("predict.reward.cta")}</span>
-          <strong>{t("predict.reward.plusOne")}</strong>
+          <span>{t("matches.reward.cta")}</span>
+          <strong>{t("matches.reward.plusOne")}</strong>
         </button>
       ) : null}
     </section>

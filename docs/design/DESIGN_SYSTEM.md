@@ -655,9 +655,9 @@ Bottom navigation is persistent primary navigation.
 Current product sections include:
 
 ```text
-Predict
+Matches
 Cup
-Rating
+History
 Profile
 ```
 

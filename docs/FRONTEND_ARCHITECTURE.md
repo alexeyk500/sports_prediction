@@ -100,7 +100,7 @@ src/
 │   │       ├── CupHistoryView.tsx
 │   │       ├── CupHistoryView.module.css
 │   │       └── CupHistoryItem/
-│   ├── PredictScreen/
+│   ├── MatchesScreen/
 │   ├── RatingScreen/
 │   ├── ProfileScreen/
 │   └── SettingsScreen/
@@ -454,7 +454,7 @@ clarity/testability.
 Current example:
 
 ```text
-src/components/predict/match-card-presentation.ts
+src/components/MatchesScreen/MatchCardShared/match-card-presentation.ts
 ```
 
 Domain semantics must remain stable across presentation mappings:
@@ -1428,7 +1428,7 @@ before actual requirements or observed reuse exist.
 Current MatchCard illustrates the intended separation:
 
 ```text
-Predict screen orchestration
+Matches screen orchestration
 → fixture/prediction DTO data
 → presentation mapping
 → MatchCard props

@@ -6,12 +6,12 @@ import styles from "./UserCupPosition.module.css";
 
 interface IUserCupPositionProps {
   row: ICupLeaderboardRowModel | null;
-  onMakePrediction: () => void;
+  onOpenMatches: () => void;
 }
 
 const UserCupPosition: React.FC<IUserCupPositionProps> = ({
   row,
-  onMakePrediction,
+  onOpenMatches,
 }) => {
   const { t } = useTranslation();
 
@@ -39,9 +39,9 @@ const UserCupPosition: React.FC<IUserCupPositionProps> = ({
             <h2>{t("cup.positionUnavailableTitle")}</h2>
             <p>{t("cup.positionUnavailableBody")}</p>
             <button
-              className={styles.predictCta}
+              className={styles.matchesCta}
               type="button"
-              onClick={onMakePrediction}
+              onClick={onOpenMatches}
             >
               {t("cup.makePrediction")}
             </button>

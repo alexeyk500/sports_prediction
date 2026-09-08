@@ -38,7 +38,7 @@ const PredictionOutcomeButton: React.FC<IPredictionOutcomeButtonProps> = ({
       className={selected ? styles.selectedOutcome : styles.outcomeButton}
       disabled={disabled}
       aria-pressed={selected}
-      aria-label={t("predict.aria.selectOutcome", {
+      aria-label={t("matches.aria.selectOutcome", {
         outcome: outcomeLabel,
         trophyValue: t("common.trophyCount", trophyAriaValues(locale, points)),
         homeTeam: fixture.homeTeam.name,

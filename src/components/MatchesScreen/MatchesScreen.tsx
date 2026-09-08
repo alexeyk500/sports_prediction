@@ -18,25 +18,25 @@ import { useBootstrapStore } from "@/stores/bootstrap-store";
 import FixtureList from "./FixtureList/FixtureList";
 import Header from "./Header/Header";
 import MyPicks from "./MyPicks/MyPicks";
-import PredictTabs from "./PredictTabs/PredictTabs";
+import MatchesTabs from "./MatchesTabs/MatchesTabs";
 import Quota from "./Quota/Quota";
 import TodayContextRow from "./TodayContextRow/TodayContextRow";
-import { selectOutcome, type PredictActionResult } from "./predict-actions";
-import { logPredictLoadError } from "./predict-log";
-import type { ActiveTab } from "./predict-types";
-import styles from "./PredictScreen.module.css";
+import { selectOutcome, type MatchesActionResult } from "./matches-actions";
+import { logMatchesLoadError } from "./matches-log";
+import type { ActiveTab } from "./matches-types";
+import styles from "./MatchesScreen.module.css";
 
-interface IPredictState {
+interface IMatchesState {
   fixtures: TodayFixtureDto[];
   predictions: PredictionDto[];
   businessDate: string | null;
 }
 
-const PredictScreen: React.FC = () => {
+const MatchesScreen: React.FC = () => {
   const { bootstrap, setBootstrap } = useBootstrapStore();
   const { t, locale } = useTranslation();
   const apiClient = useMemo(() => new ApiClient({ getTelegramInitData }), []);
-  const [state, setState] = useState<IPredictState>({
+  const [state, setState] = useState<IMatchesState>({
     fixtures: [],
     predictions: [],
     businessDate: null,
@@ -70,7 +70,7 @@ const PredictScreen: React.FC = () => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- initial client bootstrap fetch synchronizes with backend API.
     load()
       .catch((error: unknown) => {
-        logPredictLoadError(error);
+        logMatchesLoadError(error);
         setErrorMessage(messageForApiError(error, locale));
       })
       .finally(() => setIsLoading(false));
@@ -121,7 +121,7 @@ const PredictScreen: React.FC = () => {
   }
 
   async function handleActionResult(
-    result: PredictActionResult,
+    result: MatchesActionResult,
     fixtureId: string,
   ): Promise<void> {
     if (result.status === "reward-required") {
@@ -147,15 +147,15 @@ const PredictScreen: React.FC = () => {
   }
 
   if (isLoading) {
-    return <main className={styles.centerState}>{t("predict.loading")}</main>;
+    return <main className={styles.centerState}>{t("matches.loading")}</main>;
   }
 
   if (!bootstrap) {
     return (
       <main className={styles.centerState}>
         <section className={styles.statePanel}>
-          <h1>{t("predict.title")}</h1>
-          <p>{errorMessage ?? t("predict.authRequired")}</p>
+          <h1>{t("matches.title")}</h1>
+          <p>{errorMessage ?? t("matches.authRequired")}</p>
         </section>
       </main>
     );
@@ -169,7 +169,7 @@ const PredictScreen: React.FC = () => {
           <div className={styles.errorBanner}>{errorMessage}</div>
         ) : null}
         <Quota usage={bootstrap.dailyPredictionUsage} />
-        <PredictTabs
+        <MatchesTabs
           activeTab={activeTab}
           predictionCount={state.predictions.length}
           onChange={setActiveTab}
@@ -179,7 +179,7 @@ const PredictScreen: React.FC = () => {
           matchCount={visibleMatchCount}
         />
       </div>
-      <div className={styles.scrollArea} data-ui="predict-scroll-area">
+      <div className={styles.scrollArea} data-ui="matches-scroll-area">
         {activeTab === "available" ? (
           <FixtureList
             fixtures={state.fixtures}
@@ -200,4 +200,4 @@ const PredictScreen: React.FC = () => {
   );
 };
 
-export default PredictScreen;
+export default MatchesScreen;

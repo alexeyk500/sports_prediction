@@ -5,12 +5,12 @@ import {
   initialsForName,
   outcomeDisplayLabel,
   trophyAriaValues,
-} from "@/components/PredictScreen/MatchCardShared/match-card-presentation";
+} from "@/components/MatchesScreen/MatchCardShared/match-card-presentation";
 import {
   getCompetitionAssetUrl,
   getTeamAssetUrl,
 } from "@/lib/assets/football-assets";
-import { PREDICTION_OUTCOME_ORDER } from "@/components/PredictScreen/predict-outcomes";
+import { PREDICTION_OUTCOME_ORDER } from "@/components/MatchesScreen/matches-outcomes";
 import { createTranslator, translationResources } from "@/lib/i18n/i18n";
 
 describe("match card presentation", () => {
@@ -116,7 +116,7 @@ describe("match card presentation", () => {
 
     expect(trophyValue).toBe("10 trophies");
     expect(
-      t("predict.aria.selectOutcome", {
+      t("matches.aria.selectOutcome", {
         outcome: "Home",
         trophyValue,
         homeTeam: "Arsenal",

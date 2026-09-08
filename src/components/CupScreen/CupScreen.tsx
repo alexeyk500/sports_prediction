@@ -18,10 +18,10 @@ import styles from "./CupScreen.module.css";
 const EMPTY_HISTORY_ITEMS: ICupHistoryItemModel[] = [];
 
 interface ICupScreenProps {
-  onMakePrediction: () => void;
+  onOpenMatches: () => void;
 }
 
-const CupScreen: React.FC<ICupScreenProps> = ({ onMakePrediction }) => {
+const CupScreen: React.FC<ICupScreenProps> = ({ onOpenMatches }) => {
   const { bootstrap, setBootstrap } = useBootstrapStore();
   const { t, locale } = useTranslation();
   const apiClient = useMemo(() => new ApiClient({ getTelegramInitData }), []);
@@ -108,7 +108,7 @@ const CupScreen: React.FC<ICupScreenProps> = ({ onMakePrediction }) => {
             nowMs={nowMs}
             cup={bootstrap.cup}
             apiClient={apiClient}
-            onMakePrediction={onMakePrediction}
+            onOpenMatches={onOpenMatches}
           />
         ) : (
           <CupHistoryView items={EMPTY_HISTORY_ITEMS} />

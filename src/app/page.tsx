@@ -1,6 +1,6 @@
 import AppShell from "@/components/navigation/AppShell/AppShell";
-import PredictScreen from "@/components/PredictScreen/PredictScreen";
+import MatchesScreen from "@/components/MatchesScreen/MatchesScreen";
 
 export default function Home() {
-  return <AppShell predict={<PredictScreen />} />;
+  return <AppShell matches={<MatchesScreen />} />;
 }

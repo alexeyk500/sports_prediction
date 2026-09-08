@@ -14,14 +14,14 @@ import type { NavItem } from "./app-shell-types";
 import NavIcon from "./NavIcon/NavIcon";
 import styles from "./AppShell.module.css";
 
-const navItems: NavItem[] = ["Predict", "Cup", "History", "Profile"];
+const navItems: NavItem[] = ["Matches", "Cup", "History", "Profile"];
 
 interface IAppShellProps {
-  predict: ReactNode;
+  matches: ReactNode;
 }
 
-const AppShell: React.FC<IAppShellProps> = ({ predict }) => {
-  const [active, setActive] = useState<NavItem>("Predict");
+const AppShell: React.FC<IAppShellProps> = ({ matches }) => {
+  const [active, setActive] = useState<NavItem>("Matches");
   const bootstrap = useBootstrapStore((state) => state.bootstrap);
   const setSettings = useSettingsStore((state) => state.setSettings);
   const { t } = useTranslation();
@@ -36,10 +36,10 @@ const AppShell: React.FC<IAppShellProps> = ({ predict }) => {
 
   function renderActiveContent(): ReactNode {
     switch (active) {
-      case "Predict":
-        return predict;
+      case "Matches":
+        return matches;
       case "Cup":
-        return <CupScreen onMakePrediction={() => setActive("Predict")} />;
+        return <CupScreen onOpenMatches={() => setActive("Matches")} />;
       case "History":
         return <HistoryScreen />;
       case "Profile":

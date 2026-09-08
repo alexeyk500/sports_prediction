@@ -39,7 +39,7 @@ describe("i18n", () => {
 
   it("interpolates dynamic values without string concatenation", () => {
     expect(
-      createTranslator("en")("predict.quota.free", { used: 2, limit: 3 }),
+      createTranslator("en")("matches.quota.free", { used: 2, limit: 3 }),
     ).toBe("Free predictions: 2 / 3");
     expect(
       createTranslator("ar")("common.userFallback", { id: "900000001" }),

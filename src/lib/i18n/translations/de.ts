@@ -7,15 +7,15 @@ export const de = {
     trophyCount: "{count} Trophäen",
   },
   navigation: {
-    predict: "Tipps",
+    matches: "Spiele",
     cup: "Cup",
     history: "Historie",
     profile: "Profil",
     ariaLabel: "Hauptnavigation",
     placeholder: "Dieser Bereich ist in dieser Phase noch nicht umgesetzt.",
   },
-  predict: {
-    title: "Tipps",
+  matches: {
+    title: "Spiele",
     subtitle: "Gib deine Tipps für heute ab",
     weeklyCup: "Wochen-Cup",
     loading: "Heutige Spiele werden geladen...",

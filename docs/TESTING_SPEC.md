@@ -822,7 +822,7 @@ Keep E2E small and high-value.
 Core smoke flow should cover implemented navigation/features without
 pretending unfinished screens are complete.
 
-For Predict, representative browser flow:
+For Matches, representative browser flow:
 
 ```text
 open app

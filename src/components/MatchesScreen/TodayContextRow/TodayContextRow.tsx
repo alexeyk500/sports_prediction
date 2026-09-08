@@ -21,11 +21,11 @@ const TodayContextRow: React.FC<ITodayContextRowProps> = ({
     <div className={styles.todayRow}>
       <strong>
         {dateLabel
-          ? t("predict.today.labelWithDate", { date: dateLabel })
-          : t("predict.today.label")}
+          ? t("matches.today.labelWithDate", { date: dateLabel })
+          : t("matches.today.label")}
       </strong>
       <span>
-        {t("predict.today.matchCount", {
+        {t("matches.today.matchCount", {
           count: formatLocalizedNumber(locale, matchCount),
         })}
       </span>

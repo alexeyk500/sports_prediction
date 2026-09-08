@@ -30,7 +30,7 @@ const MyPicks: React.FC<IMyPicksProps> = ({
   if (predictions.length === 0) {
     return (
       <section className={styles.statePanel}>
-        {t("predict.empty.myPicks")}
+        {t("matches.empty.myPicks")}
       </section>
     );
   }

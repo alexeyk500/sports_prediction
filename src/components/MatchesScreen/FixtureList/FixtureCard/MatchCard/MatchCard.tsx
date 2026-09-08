@@ -13,7 +13,7 @@ import {
   getCompetitionBadge,
   getTeamBadge,
 } from "../../../MatchCardShared/match-card-presentation";
-import { PREDICTION_OUTCOME_ORDER } from "../../../predict-outcomes";
+import { PREDICTION_OUTCOME_ORDER } from "../../../matches-outcomes";
 import LockIcon from "./LockIcon/LockIcon";
 import styles from "./MatchCard.module.css";
 
@@ -83,19 +83,19 @@ const MatchCard: React.FC<IMatchCardProps> = ({
           {showLockedStatus ? (
             <span className={styles.statusItem}>
               <LockIcon />
-              <span>{t("predict.status.lockedAfterKickoff")}</span>
+              <span>{t("matches.status.lockedAfterKickoff")}</span>
             </span>
           ) : null}
           {showFixtureStatus ? (
             <span>{fixtureStatusLabel(fixture.status)}</span>
           ) : null}
-          {pending ? <span>{t("predict.status.saving")}</span> : null}
+          {pending ? <span>{t("matches.status.saving")}</span> : null}
         </div>
       ) : null}
       {rewardRequired ? (
         <div className={styles.rewardPlaceholder}>
-          <strong>{t("predict.reward.title")}</strong>
-          <span>{t("predict.reward.body")}</span>
+          <strong>{t("matches.reward.title")}</strong>
+          <span>{t("matches.reward.body")}</span>
         </div>
       ) : null}
     </article>

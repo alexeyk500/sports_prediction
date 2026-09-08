@@ -7,15 +7,15 @@ export const es = {
     trophyCount: "{count} trofeos",
   },
   navigation: {
-    predict: "Pronosticar",
+    matches: "Partidos",
     cup: "Copa",
     history: "Historial",
     profile: "Perfil",
     ariaLabel: "Navegación principal",
     placeholder: "Esta sección no está implementada en esta etapa.",
   },
-  predict: {
-    title: "Pronosticar",
+  matches: {
+    title: "Partidos",
     subtitle: "Haz tus pronósticos de hoy",
     weeklyCup: "Copa semanal",
     loading: "Cargando partidos de hoy...",

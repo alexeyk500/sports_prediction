@@ -6,8 +6,8 @@ export function navLabel(
   t: ReturnType<typeof useTranslation>["t"],
 ): string {
   switch (item) {
-    case "Predict":
-      return t("navigation.predict");
+    case "Matches":
+      return t("navigation.matches");
     case "Cup":
       return t("navigation.cup");
     case "History":

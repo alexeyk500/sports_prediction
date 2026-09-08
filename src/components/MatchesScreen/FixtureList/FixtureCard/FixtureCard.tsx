@@ -5,7 +5,7 @@ import type {
   TodayFixtureDto,
 } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
-import { fixtureStatusLabel, outcomeLabel } from "../../predict-format";
+import { fixtureStatusLabel, outcomeLabel } from "../../matches-format";
 import MatchCard from "./MatchCard/MatchCard";
 
 interface IFixtureCardProps {
