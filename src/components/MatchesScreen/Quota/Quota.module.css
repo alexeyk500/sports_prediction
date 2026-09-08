@@ -1,9 +1,16 @@
 .quota {
+  --quota-primary: #f8fafc;
+  --quota-secondary: #dbeafe;
+  --quota-border: rgb(255 255 255 / 20%);
+  --quota-divider: rgb(248 250 252 / 78%);
+  --quota-free-used: #10b981;
+  --quota-rewarded-used: #35d2b9;
+  --quota-unused: rgb(226 232 240 / 82%);
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
   margin-block-end: 14px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--quota-border);
   border-radius: 14px;
   padding-block: 16px 14px;
   padding-inline: 18px;
@@ -11,7 +18,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  color: var(--color-text);
+  color: var(--quota-primary);
   box-shadow: 0 6px 18px rgb(15 23 42 / 4%);
 }
 
@@ -26,7 +33,7 @@
 
 .quotaHeader h2 {
   margin: 0;
-  color: var(--color-text);
+  color: var(--quota-primary);
   font-size: 17px;
   font-weight: 750;
   line-height: 1.15;
@@ -34,7 +41,7 @@
 
 .quotaHeader strong {
   flex: 0 0 auto;
-  color: var(--color-text);
+  color: var(--quota-primary);
   font-size: 22px;
   font-weight: 750;
   line-height: 1;
@@ -66,26 +73,26 @@
 }
 
 .freeSlotUsed {
-  background: var(--color-accent);
+  background: var(--quota-free-used);
 }
 
 .rewardedSlotUsed {
-  background: #35d2b9;
+  background: var(--quota-rewarded-used);
 }
 
 .slotUnused {
-  background: color-mix(in srgb, var(--color-border-strong) 60%, transparent);
+  background: var(--quota-unused);
 }
 
 .slotDivider {
   width: 1px;
   height: 22px;
   flex: 0 0 auto;
-  background: var(--color-border-strong);
+  background: var(--quota-divider);
 }
 
 .quotaLabels {
-  color: var(--color-muted);
+  color: var(--quota-secondary);
   font-size: 12px;
   font-weight: 600;
   line-height: 1.2;

@@ -1,10 +1,10 @@
 .fixtureCard {
   --match-card-bg: var(--color-surface);
-  --match-card-border: #dbe3ee;
+  --match-card-border: #cbd8e6;
   --match-primary: var(--color-text);
-  --match-meta: var(--color-muted);
-  --outcome-bg: var(--color-surface-elevated);
-  --outcome-border: #d7e0ea;
+  --match-meta: var(--color-text-secondary);
+  --outcome-bg: #f5f8fc;
+  --outcome-border: #c7d5e4;
   --selected-bg: var(--color-accent-soft);
   --selected-border: var(--color-accent);
   --selected-text: var(--color-accent-text);
@@ -16,7 +16,7 @@
   padding-inline: 18px;
   background: var(--match-card-bg);
   color: var(--color-text);
-  box-shadow: 0 8px 22px rgb(15 23 42 / 6%);
+  box-shadow: 0 10px 24px rgb(15 23 42 / 8%);
 }
 
 :global(:root[data-theme="dark"]) .fixtureCard {

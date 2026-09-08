@@ -4,7 +4,7 @@
   border: 1.5px solid var(--outcome-border);
   border-radius: 16px;
   background: var(--outcome-bg);
-  color: var(--match-meta);
+  color: var(--color-text-secondary);
   font: inherit;
   text-align: center;
   box-shadow: none;
@@ -13,7 +13,7 @@
 .outcomeButton:disabled,
 .selectedOutcome:disabled {
   cursor: not-allowed;
-  color: var(--color-muted);
+  color: var(--match-meta);
   opacity: 0.68;
 }
 

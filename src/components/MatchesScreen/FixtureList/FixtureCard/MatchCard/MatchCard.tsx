@@ -87,9 +87,15 @@ const MatchCard: React.FC<IMatchCardProps> = ({
             </span>
           ) : null}
           {showFixtureStatus ? (
-            <span>{fixtureStatusLabel(fixture.status)}</span>
+            <span className={styles.statusBadge}>
+              {fixtureStatusLabel(fixture.status)}
+            </span>
           ) : null}
-          {pending ? <span>{t("matches.status.saving")}</span> : null}
+          {pending ? (
+            <span className={styles.statusBadge}>
+              {t("matches.status.saving")}
+            </span>
+          ) : null}
         </div>
       ) : null}
       {rewardRequired ? (

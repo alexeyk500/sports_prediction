@@ -56,7 +56,9 @@
 
 .badgeLogo {
   background: var(--logo-badge-bg);
-  box-shadow: 0 4px 12px rgb(15 23 42 / 9%);
+  box-shadow:
+    0 0 0 1px rgb(15 23 42 / 7%),
+    0 6px 14px rgb(15 23 42 / 12%);
 }
 
 .badgeLogo img {
