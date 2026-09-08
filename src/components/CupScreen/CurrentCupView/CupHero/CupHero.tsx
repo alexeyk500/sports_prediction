@@ -6,8 +6,8 @@ import {
   formatCountdown,
   formatDateRange,
   formatEndDate,
-  formatNanoTon,
 } from "./cup-hero-format";
+import { calculatePrizePool } from "../../prize-format";
 import styles from "./CupHero.module.css";
 
 interface ICupHeroProps {
@@ -51,7 +51,13 @@ const CupHero: React.FC<ICupHeroProps> = ({ tournament, nowMs, timeZone }) => {
         </div>
         <div className={styles.prizeBlock}>
           <span>{t("cup.prizePool")}</span>
-          <strong>{formatNanoTon(locale, tournament.prizePoolNanoTon)}</strong>
+          <strong>
+            {tournament.prizeDistribution.length === 0
+              ? t("cup.unavailable")
+              : calculatePrizePool(tournament.prizeDistribution) +
+                " " +
+                tournament.prizeCurrency}
+          </strong>
         </div>
       </div>
     </section>

@@ -15,6 +15,7 @@ import {
   type CurrentCupSummaryDto,
 } from "@/modules/tournaments/cup-read.service";
 import { findActiveTournamentForInstant } from "@/modules/tournaments/tournament.service";
+import type { PrizeCurrency } from "@prisma/client";
 
 export interface BootstrapDependencies {
   prisma: PrismaClient;
@@ -39,7 +40,12 @@ export interface BootstrapDto {
     number: number;
     startsAt: string;
     endsAt: string;
-    prizePoolNanoTon: string;
+    prizeCurrency: PrizeCurrency;
+    prizeDistribution: Array<{
+      fromRank: number;
+      toRank: number;
+      amount: string;
+    }>;
   } | null;
   dailyPredictionUsage: {
     businessDate: string;
@@ -84,6 +90,13 @@ export async function getBootstrap(
     tournament,
     userId,
   );
+  const prizeDistribution = tournament
+    ? await dependencies.prisma.prizeDistributionTier.findMany({
+        where: { tournamentId: tournament.id },
+        orderBy: { sortOrder: "asc" },
+        select: { fromRank: true, toRank: true, amount: true },
+      })
+    : [];
   const freeUsed = usage?.freeUsed ?? 0;
   const rewardedUsed = usage?.rewardedUsed ?? 0;
 
@@ -106,7 +119,12 @@ export async function getBootstrap(
           number: tournament.number,
           startsAt: tournament.startsAt.toISOString(),
           endsAt: tournament.endsAt.toISOString(),
-          prizePoolNanoTon: tournament.prizePoolNanoTon.toString(),
+          prizeCurrency: tournament.prizeCurrency,
+          prizeDistribution: prizeDistribution.map((tier) => ({
+            fromRank: tier.fromRank,
+            toRank: tier.toRank,
+            amount: tier.amount.toString(),
+          })),
         }
       : null,
     dailyPredictionUsage: {

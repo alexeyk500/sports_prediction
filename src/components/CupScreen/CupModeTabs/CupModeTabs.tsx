@@ -27,13 +27,13 @@ const CupModeTabs: React.FC<ICupModeTabsProps> = ({ activeTab, onChange }) => {
         {t("cup.tabs.current")}
       </button>
       <button
-        className={activeTab === "history" ? styles.activeTab : styles.tab}
+        className={activeTab === "prizes" ? styles.activeTab : styles.tab}
         type="button"
         role="tab"
-        aria-selected={activeTab === "history"}
-        onClick={() => onChange("history")}
+        aria-selected={activeTab === "prizes"}
+        onClick={() => onChange("prizes")}
       >
-        {t("cup.tabs.history")}
+        {t("cup.tabs.prizes")}
       </button>
     </div>
   );

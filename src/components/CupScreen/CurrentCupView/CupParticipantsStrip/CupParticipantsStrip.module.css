@@ -23,7 +23,8 @@
   width: 25px;
   height: 25px;
   flex: 0 0 auto;
-  fill: var(--color-accent);
+  fill: none;
+  color: var(--color-accent);
 }
 
 .participantMetric strong,

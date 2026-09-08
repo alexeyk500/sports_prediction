@@ -111,8 +111,19 @@ export const ru = {
     pastCups: "Прошлые Кубки",
     tabs: {
       current: "Текущий Кубок",
-      history: "История",
+      prizes: "Призы",
       ariaLabel: "Разделы Кубка",
+    },
+    prizes: {
+      other: "Другие призы",
+      topThreeAria: "Призы за первые 3 места",
+      topPlayersRewarded: "Призы получат топ-{rank} игроков",
+      noRewardedPlayers: "Призы пока не распределены",
+      info: "Топ-{rank} игроков получат призы в {currency} после завершения Кубка.",
+      emptyDistribution: "Распределение призов пока недоступно",
+      singlePlace: "{rank}-е место",
+      rangePlace: "{fromRank}–{toRank}-е места",
+      each: "каждому",
     },
     columns: {
       rank: "#",

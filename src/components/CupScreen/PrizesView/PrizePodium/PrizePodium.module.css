@@ -1,0 +1,61 @@
+.section {
+  min-width: 0;
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 1.78;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--color-surface-elevated)
+    url("/screens/podium-background.png") center / cover no-repeat;
+}
+
+.stage::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-app-bg) 12%, transparent),
+    transparent 50%,
+    color-mix(in srgb, var(--color-app-bg) 22%, transparent)
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.slot {
+  position: absolute;
+  z-index: 1;
+  bottom: 5%;
+  display: grid;
+  justify-items: center;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 80%);
+}
+
+.slot strong {
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+.slot span {
+  font-size: 12px;
+}
+
+.silver {
+  left: 3%;
+  width: 30%;
+}
+
+.gold {
+  left: 35%;
+  width: 30%;
+  bottom: 4%;
+}
+
+.bronze {
+  right: 3%;
+  width: 30%;
+}

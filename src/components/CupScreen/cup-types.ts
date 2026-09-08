@@ -1,1 +1,1 @@
-export type CupTab = "current" | "history";
+export type CupTab = "current" | "prizes";

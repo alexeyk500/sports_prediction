@@ -509,6 +509,7 @@ try {
       startsAt: cupStartsAt,
       endsAt: cupEndsAt,
       prizePoolNanoTon: 10_000_000_000n,
+      prizeCurrency: "USDT",
     },
     create: {
       number: 1,
@@ -516,7 +517,51 @@ try {
       startsAt: cupStartsAt,
       endsAt: cupEndsAt,
       prizePoolNanoTon: 10_000_000_000n,
+      prizeCurrency: "USDT",
     },
+  });
+
+  await prisma.prizeDistributionTier.deleteMany({
+    where: { tournamentId: tournament.id },
+  });
+  await prisma.prizeDistributionTier.createMany({
+    data: [
+      {
+        tournamentId: tournament.id,
+        sortOrder: 1,
+        fromRank: 1,
+        toRank: 1,
+        amount: "3",
+      },
+      {
+        tournamentId: tournament.id,
+        sortOrder: 2,
+        fromRank: 2,
+        toRank: 2,
+        amount: "2",
+      },
+      {
+        tournamentId: tournament.id,
+        sortOrder: 3,
+        fromRank: 3,
+        toRank: 3,
+        amount: "1",
+      },
+      {
+        tournamentId: tournament.id,
+        sortOrder: 4,
+        fromRank: 4,
+        toRank: 10,
+        amount: "0.5",
+      },
+      {
+        tournamentId: tournament.id,
+        sortOrder: 5,
+        fromRank: 11,
+        toRank: 20,
+        amount: "0.1",
+      },
+    ],
   });
 
   for (const competition of supportedCompetitions) {

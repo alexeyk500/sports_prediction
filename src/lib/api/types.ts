@@ -1,6 +1,7 @@
 export type PredictionOutcome = "HOME" | "DRAW" | "AWAY";
 export type SupportedLocale = "en" | "ru" | "de" | "es" | "ar";
 export type AppearanceMode = "system" | "light" | "dark";
+export type PrizeCurrency = "USDT" | "TON";
 
 export interface ApiErrorEnvelope {
   error: {
@@ -29,7 +30,8 @@ export interface BootstrapResponse {
     number: number;
     startsAt: string;
     endsAt: string;
-    prizePoolNanoTon: string;
+    prizeCurrency: PrizeCurrency;
+    prizeDistribution: PrizeDistributionTierDto[];
   } | null;
   dailyPredictionUsage: DailyPredictionUsageDto;
   settings: UserSettingsDto;
@@ -41,6 +43,12 @@ export interface BootstrapResponse {
   cup: CurrentCupSummaryDto | null;
   serverTime: string;
   businessTimezone: string;
+}
+
+export interface PrizeDistributionTierDto {
+  fromRank: number;
+  toRank: number;
+  amount: string;
 }
 
 export interface CupLeaderboardRowDto {

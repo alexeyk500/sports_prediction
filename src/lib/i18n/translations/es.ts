@@ -118,8 +118,19 @@ export const es = {
     pastCups: "Copas anteriores",
     tabs: {
       current: "Copa actual",
-      history: "Historial",
+      prizes: "Premios",
       ariaLabel: "Vistas de Copa",
+    },
+    prizes: {
+      other: "Otros premios",
+      topThreeAria: "Premios para los 3 primeros",
+      topPlayersRewarded: "Los {rank} mejores reciben premios",
+      noRewardedPlayers: "Aún no hay premios asignados",
+      info: "Los {rank} mejores recibirán premios en {currency} al terminar la Copa.",
+      emptyDistribution: "La distribución de premios aún no está disponible",
+      singlePlace: "{rank}º puesto",
+      rangePlace: "Puestos {fromRank}–{toRank}",
+      each: "cada uno",
     },
     columns: {
       rank: "#",

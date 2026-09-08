@@ -54,6 +54,11 @@ enum PrizeClaimStatus {
   FAILED
 }
 
+enum PrizeCurrency {
+  USDT
+  TON
+}
+
 enum RatingLeague {
   UNRANKED
 
@@ -96,18 +101,18 @@ enum UserAppearance {
 }
 
 model User {
-  id             String    @id @default(uuid()) @db.Uuid
-  telegramUserId BigInt    @unique
+  id             String         @id @default(uuid()) @db.Uuid
+  telegramUserId BigInt         @unique
   username       String?
   firstName      String?
   lastName       String?
   languageCode   String?
-  locale         UserLocale @default(en)
+  locale         UserLocale     @default(en)
   appearance     UserAppearance @default(system)
-  isDeleted      Boolean   @default(false)
-  deletedAt      DateTime? @db.Timestamptz(6)
-  createdAt      DateTime  @default(now()) @db.Timestamptz(6)
-  updatedAt      DateTime  @updatedAt @db.Timestamptz(6)
+  isDeleted      Boolean        @default(false)
+  deletedAt      DateTime?      @db.Timestamptz(6)
+  createdAt      DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime       @updatedAt @db.Timestamptz(6)
 
   tournamentParticipants TournamentParticipant[]
   predictions            Prediction[]
@@ -159,18 +164,36 @@ model Tournament {
   startsAt         DateTime         @db.Timestamptz(6)
   endsAt           DateTime         @db.Timestamptz(6)
   prizePoolNanoTon BigInt
+  prizeCurrency    PrizeCurrency    @default(USDT)
   createdAt        DateTime         @default(now()) @db.Timestamptz(6)
   updatedAt        DateTime         @updatedAt @db.Timestamptz(6)
 
-  participants  TournamentParticipant[]
-  predictions   Prediction[]
-  ratingHistory RatingHistory[]
-  prizes        Prize[]
+  participants      TournamentParticipant[]
+  predictions       Prediction[]
+  ratingHistory     RatingHistory[]
+  prizes            Prize[]
+  prizeDistribution PrizeDistributionTier[]
 
   @@index([status])
   @@index([startsAt])
   @@index([endsAt])
   @@index([status, startsAt, endsAt])
+}
+
+model PrizeDistributionTier {
+  id           String   @id @default(uuid()) @db.Uuid
+  tournamentId String   @db.Uuid
+  sortOrder    Int
+  fromRank     Int
+  toRank       Int
+  amount       Decimal  @db.Decimal(20, 8)
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @db.Timestamptz(6)
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([tournamentId, sortOrder])
+  @@index([tournamentId, sortOrder])
 }
 
 model TournamentParticipant {

@@ -8,14 +8,11 @@ import { useTranslation } from "@/lib/i18n/use-translation";
 import { getTelegramInitData } from "@/lib/telegram/client";
 import { useBootstrapStore } from "@/stores/bootstrap-store";
 import CupHeader from "./CupHeader/CupHeader";
-import CupHistoryView from "./CupHistoryView/CupHistoryView";
 import CupModeTabs from "./CupModeTabs/CupModeTabs";
 import CurrentCupView from "./CurrentCupView/CurrentCupView";
-import type { ICupHistoryItemModel } from "./CupHistoryView/cup-history-types";
+import PrizesView from "./PrizesView/PrizesView";
 import type { CupTab } from "./cup-types";
 import styles from "./CupScreen.module.css";
-
-const EMPTY_HISTORY_ITEMS: ICupHistoryItemModel[] = [];
 
 interface ICupScreenProps {
   onOpenMatches: () => void;
@@ -110,8 +107,12 @@ const CupScreen: React.FC<ICupScreenProps> = ({ onOpenMatches }) => {
             apiClient={apiClient}
             onOpenMatches={onOpenMatches}
           />
+        ) : bootstrap.currentTournament ? (
+          <PrizesView tournament={bootstrap.currentTournament} />
         ) : (
-          <CupHistoryView items={EMPTY_HISTORY_ITEMS} />
+          <section className={styles.statePanel}>
+            {t("cup.empty.noCurrentCup")}
+          </section>
         )}
       </div>
     </main>

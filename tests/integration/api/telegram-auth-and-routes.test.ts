@@ -40,7 +40,7 @@ describe("Telegram auth HTTP vertical slice", () => {
   beforeAll(async () => {
     const now = new Date();
 
-    await prisma.tournament.create({
+    const tournament = await prisma.tournament.create({
       data: {
         number: uniqueTournamentNumber(),
         status: "ACTIVE",
@@ -48,6 +48,24 @@ describe("Telegram auth HTTP vertical slice", () => {
         endsAt: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
         prizePoolNanoTon: 123000000000n,
       },
+    });
+    await prisma.prizeDistributionTier.createMany({
+      data: [
+        {
+          tournamentId: tournament.id,
+          sortOrder: 1,
+          fromRank: 1,
+          toRank: 1,
+          amount: "3",
+        },
+        {
+          tournamentId: tournament.id,
+          sortOrder: 2,
+          fromRank: 2,
+          toRank: 10,
+          amount: "0.5",
+        },
+      ],
     });
   });
 
@@ -191,7 +209,14 @@ describe("Telegram auth HTTP vertical slice", () => {
     );
     const zeroBody = (await responseJson(zeroResponse)) as {
       user: { id: string; telegramUserId: string };
-      currentTournament: { prizePoolNanoTon: string } | null;
+      currentTournament: {
+        prizeCurrency: string;
+        prizeDistribution: Array<{
+          fromRank: number;
+          toRank: number;
+          amount: string;
+        }>;
+      } | null;
       dailyPredictionUsage: {
         freeUsed: number;
         rewardedUsed: number;
@@ -203,7 +228,11 @@ describe("Telegram auth HTTP vertical slice", () => {
 
     expect(zeroResponse.status).toBe(200);
     expect(zeroBody.currentTournament).toMatchObject({
-      prizePoolNanoTon: "123000000000",
+      prizeCurrency: "USDT",
+      prizeDistribution: [
+        { fromRank: 1, toRank: 1, amount: "3" },
+        { fromRank: 2, toRank: 10, amount: "0.5" },
+      ],
     });
     expect(zeroBody.dailyPredictionUsage).toMatchObject({
       freeUsed: 0,

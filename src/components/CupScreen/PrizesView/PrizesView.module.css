@@ -1,0 +1,169 @@
+.stack {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.poolCard,
+.infoBlock,
+.tierCard,
+.emptyState {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.poolCard {
+  display: flex;
+  min-height: 112px;
+  align-items: center;
+  gap: 16px;
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent) 38%,
+    var(--color-border)
+  );
+  border-radius: 16px;
+  padding: 16px 20px;
+  background: color-mix(
+    in srgb,
+    var(--color-accent-soft) 72%,
+    var(--color-surface)
+  );
+}
+
+.poolIcon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  color: var(--color-accent);
+}
+
+.poolIcon svg {
+  width: 42px;
+  height: 42px;
+  fill: currentColor;
+}
+
+.poolCopy {
+  display: grid;
+  gap: 3px;
+}
+
+.poolCopy span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.poolCopy strong {
+  color: var(--color-accent);
+  font-size: 29px;
+  line-height: 1.05;
+}
+
+.poolCopy small {
+  font-size: 14px;
+}
+
+.emptyState {
+  display: grid;
+  min-height: 140px;
+  place-items: center;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.emptyState p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.otherSection {
+  display: grid;
+  gap: 10px;
+}
+
+.otherSection h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.tierList {
+  display: grid;
+  gap: 10px;
+}
+
+.tierCard {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  min-height: 74px;
+  align-items: center;
+  gap: 12px;
+  border-radius: 14px;
+  padding: 12px 16px;
+}
+
+.tierCard > div {
+  display: grid;
+  gap: 3px;
+}
+
+.tierCard span {
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.tierCard strong {
+  font-size: 16px;
+}
+
+.peopleIcon,
+.giftIcon {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  color: var(--color-muted);
+}
+
+.chevron {
+  color: var(--color-muted);
+  font-size: 30px !important;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.infoBlock {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-color: var(--color-accent);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.giftIcon {
+  flex: 0 0 auto;
+  color: var(--color-accent);
+}
+
+.infoBlock span {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+@media (max-width: 370px) {
+  .poolCard {
+    padding-inline: 14px;
+  }
+
+  .poolCopy strong {
+    font-size: 25px;
+  }
+}

@@ -116,8 +116,19 @@ export const en = {
     pastCups: "Past Cups",
     tabs: {
       current: "Current Cup",
-      history: "History",
+      prizes: "Prizes",
       ariaLabel: "Cup views",
+    },
+    prizes: {
+      other: "Other prizes",
+      topThreeAria: "Top 3 prizes",
+      topPlayersRewarded: "Top {rank} players get rewarded",
+      noRewardedPlayers: "No players get rewarded",
+      info: "Top {rank} players will receive {currency} prizes after the cup ends.",
+      emptyDistribution: "Prize distribution is not available yet",
+      singlePlace: "{rank}th place",
+      rangePlace: "{fromRank}th–{toRank}th place",
+      each: "each",
     },
     columns: {
       rank: "#",

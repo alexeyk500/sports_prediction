@@ -373,9 +373,14 @@ status             TournamentStatus NOT NULL
 startsAt           TIMESTAMPTZ NOT NULL
 endsAt             TIMESTAMPTZ NOT NULL
 prizePoolNanoTon   BIGINT NOT NULL
+prizeCurrency      PrizeCurrency NOT NULL DEFAULT USDT
 createdAt          TIMESTAMPTZ NOT NULL
 updatedAt          TIMESTAMPTZ NOT NULL
 ```
+
+prizePoolNanoTon is retained for existing settlement compatibility. The
+current Cup UI prize pool is derived exclusively from ordered
+PrizeDistributionTier rows.
 
 Constraints:
 
@@ -397,6 +402,19 @@ Indexes:
 Tournament overlap is currently prevented by application/lifecycle
 correctness plus tests unless/until a database exclusion constraint is
 explicitly adopted.
+
+## 6.1 PrizeDistributionTier
+
+PrizeDistributionTier stores persistent administrator-managed prize
+configuration for each Cup. sortOrder preserves the administrator/API
+order. The application does not validate, normalize, merge, split or repair
+rank ranges.
+
+Fields are:
+
+id, tournamentId, sortOrder, fromRank, toRank, amount, createdAt, updatedAt
+
+amount uses PostgreSQL NUMERIC(20,8).
 
 Exact weekly boundary is not a schema decision.
 

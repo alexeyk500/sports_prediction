@@ -118,8 +118,19 @@ export const de = {
     pastCups: "Vergangene Cups",
     tabs: {
       current: "Aktueller Cup",
-      history: "Historie",
+      prizes: "Preise",
       ariaLabel: "Cup-Ansichten",
+    },
+    prizes: {
+      other: "Weitere Preise",
+      topThreeAria: "Preise für die Top 3",
+      topPlayersRewarded: "Die Top-{rank} erhalten Preise",
+      noRewardedPlayers: "Noch keine Preisverteilung",
+      info: "Die Top-{rank} erhalten nach dem Cup {currency}-Preise.",
+      emptyDistribution: "Preisverteilung ist noch nicht verfügbar",
+      singlePlace: "{rank}. Platz",
+      rangePlace: "{fromRank}.–{toRank}. Platz",
+      each: "pro Spieler",
     },
     columns: {
       rank: "#",

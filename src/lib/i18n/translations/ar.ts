@@ -118,8 +118,19 @@ export const ar = {
     pastCups: "الكؤوس السابقة",
     tabs: {
       current: "الكأس الحالي",
-      history: "السجل",
+      prizes: "الجوائز",
       ariaLabel: "عروض الكأس",
+    },
+    prizes: {
+      other: "جوائز أخرى",
+      topThreeAria: "جوائز أفضل ثلاثة",
+      topPlayersRewarded: "سيحصل أفضل {rank} لاعبين على جوائز",
+      noRewardedPlayers: "لا يوجد توزيع للجوائز بعد",
+      info: "سيحصل أفضل {rank} لاعبين على جوائز {currency} بعد انتهاء الكأس.",
+      emptyDistribution: "توزيع الجوائز غير متاح بعد",
+      singlePlace: "المركز {rank}",
+      rangePlace: "المراكز {fromRank}–{toRank}",
+      each: "لكل لاعب",
     },
     columns: {
       rank: "#",
