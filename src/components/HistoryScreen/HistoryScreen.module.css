@@ -1,0 +1,97 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  padding-inline: 16px;
+  background: var(--color-app-bg);
+  color: var(--color-text);
+}
+
+.centerState {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  overflow: hidden;
+  padding-block: calc(16px + env(safe-area-inset-top)) 16px;
+  padding-inline: 16px;
+  background: var(--color-app-bg);
+  color: var(--color-text);
+}
+
+.scrollArea {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block: calc(20px + env(safe-area-inset-top)) 16px;
+  scrollbar-gutter: stable;
+}
+
+.header {
+  margin-block-end: 14px;
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 40px;
+  font-weight: 760;
+  line-height: 1.05;
+}
+
+.header p {
+  margin-block: 4px 0;
+  margin-inline: 0;
+  color: var(--color-muted);
+  font-size: 20px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.statePanel,
+.errorBanner {
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.statePanel {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+}
+
+.statePanel h1 {
+  margin-block: 0 8px;
+  margin-inline: 0;
+}
+
+.statePanel p {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.errorBanner {
+  margin-block-end: 12px;
+  border: 1px solid var(--color-danger-border);
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+@media (max-width: 370px) {
+  .screen {
+    padding-inline: 12px;
+  }
+
+  .header h1 {
+    font-size: 34px;
+  }
+
+  .header p {
+    font-size: 18px;
+  }
+}

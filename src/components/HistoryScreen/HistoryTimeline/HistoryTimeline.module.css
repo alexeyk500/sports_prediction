@@ -1,0 +1,29 @@
+.timeline {
+  display: grid;
+  gap: 24px;
+  margin-block-start: 22px;
+}
+
+.emptyState {
+  display: grid;
+  gap: 6px;
+  margin-block-start: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  padding-block: 18px;
+  padding-inline: 18px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+}
+
+.emptyState strong {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.emptyState span {
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.35;
+}
