@@ -13,6 +13,10 @@
 }
 
 .nav {
+  --nav-active: #08a87c;
+  /*--nav-inactive: #9a9ea5;*/
+  --nav-inactive: #96bfb8;
+
   flex: 0 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -35,10 +39,10 @@
   border: 0;
   border-radius: 14px;
   background: transparent;
-  color: var(--color-text-secondary);
+  color: var(--nav-inactive);
   font: inherit;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -46,8 +50,12 @@
 }
 
 .activeNavButton {
-  background: var(--color-accent-soft);
-  color: var(--color-accent-text);
-  box-shadow: inset 0 0 0 1px
-    color-mix(in srgb, var(--color-accent) 22%, transparent);
+  color: var(--nav-active);
+  font-weight: 700;
+}
+
+:global(:root[data-theme="dark"]) .nav {
+  /*--nav-active: #32d6c5;*/
+  --nav-active: #28d5bc;
+  --nav-inactive: #5a706d;
 }
