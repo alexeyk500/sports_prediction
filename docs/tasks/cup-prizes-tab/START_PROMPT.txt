@@ -1,0 +1,18 @@
+Реализуй задачу из docs/tasks/cup-prizes-tab/CODEX_TASK.md.
+
+Перед началом обязательно изучи ВСЕ файлы задачи:
+- docs/tasks/cup-prizes-tab/CODEX_TASK.md
+- docs/tasks/cup-prizes-tab/SPEC.md
+- docs/tasks/cup-prizes-tab/prizes-dark.png
+- docs/tasks/cup-prizes-tab/prizes-light.png
+- docs/tasks/cup-prizes-tab/podium-background.png
+
+`prizes-dark.png` и `prizes-light.png` — утверждённые визуальные референсы. Сверь с ними композицию, визуальную иерархию, spacing, Prize Pool card, podium, TOP 3, Other prizes и informational block в обеих темах.
+
+`podium-background.png` — production asset для podium section; динамические суммы и валюту рендери из API, не встраивай их в картинку.
+
+Обязательно выполни секцию `Initial prize distribution` из CODEX_TASK.md: создай/обнови DB migration/schema и реальные seed/bootstrap данные текущего Cup: 1st=3 USDT, 2nd=2 USDT, 3rd=1 USDT, 4th–10th=0.5 USDT each, 11th–20th=0.1 USDT each. Это не frontend mock/fallback.
+
+Prize data должны приходить через bootstrap/current-cup. Total pool вычисляй decimal-safe из prizeDistribution; для этих seed-данных он должен динамически получиться 10.5 USDT.
+
+Замени только History-вкладку внутри Cup на Prizes. Bottom navigation History и отдельный History screen не трогай. Перед завершением проверь light/dark themes и сверь результат с обоими дизайн-референсами.
