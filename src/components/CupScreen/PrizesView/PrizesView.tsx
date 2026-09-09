@@ -2,7 +2,6 @@ import type React from "react";
 import type { BootstrapResponse } from "@/lib/api/types";
 import PeopleIcon from "@/assets/icons/PeopleIcon";
 import PrizeIcon from "@/assets/icons/PrizeIcon";
-import TrophyIcon from "@/assets/icons/TrophyIcon";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import {
   calculatePrizePool,
@@ -30,9 +29,6 @@ const PrizesView: React.FC<IPrizesViewProps> = ({ tournament }) => {
   return (
     <section className={styles.stack}>
       <section className={styles.poolCard}>
-        <div className={styles.poolIcon}>
-          <TrophyIcon />
-        </div>
         <div className={styles.poolCopy}>
           <span>{t("cup.prizePool")}</span>
           <strong>{pool}</strong>

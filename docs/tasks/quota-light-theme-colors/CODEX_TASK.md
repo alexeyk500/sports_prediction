@@ -9,6 +9,7 @@
 См. `reference-light-theme.png`.
 
 Проблемные элементы:
+
 - `Today's predictions`
 - `1 / 8`
 - `Free (1 / 3)`
@@ -21,6 +22,7 @@ Dark theme визуально работает лучше — используй
 ## Перед изменениями
 
 Сначала найди и изучи:
+
 1. React-компонент `Quota` на экране `Matches`;
 2. его CSS Module/styles;
 3. используемые theme variables/tokens;
@@ -52,6 +54,7 @@ Background `Quota` остаётся тёмным независимо от гл�
 ## Не менять
 
 Не менять:
+
 - quota calculation;
 - free/rewarded limits;
 - progress logic;
@@ -67,6 +70,7 @@ Background `Quota` остаётся тёмным независимо от гл�
 ## Проверка
 
 Проверь компонент:
+
 - light theme;
 - dark theme;
 - mobile width;

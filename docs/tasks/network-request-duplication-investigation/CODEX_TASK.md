@@ -9,6 +9,7 @@ Use the attached Network screenshot as evidence:
 - `network-duplicates.png`
 
 The screenshot shows repeated pairs of the same requests, including:
+
 - `bootstrap`
 - `today`
 - `leaderboard?mode=top&limit=50`
@@ -19,6 +20,7 @@ All duplicate calls return `200`, and the initiator shown in DevTools is `client
 ## Important
 
 Do **not** apply a blind workaround such as:
+
 - globally suppressing duplicate fetches;
 - adding arbitrary `useRef` guards everywhere;
 - disabling React Strict Mode without proving it is the root cause;
@@ -75,6 +77,7 @@ history
 Because all of them are duplicated, look first for a shared architectural cause before fixing endpoints individually.
 
 Pay particular attention to:
+
 - app/root providers;
 - page/layout composition;
 - shared bootstrap hooks;
@@ -89,6 +92,7 @@ Pay particular attention to:
 After the root cause is identified, implement the smallest architectural fix so that one logical data load produces one HTTP request.
 
 Preserve:
+
 - existing API contracts;
 - routes;
 - loading/error states;
@@ -103,12 +107,14 @@ Do not introduce endpoint-specific hacks if the same root cause affects all requ
 Verify in browser DevTools Network that the duplicated pairs are gone.
 
 Check at least:
+
 - initial app/bootstrap load;
 - Matches / today data;
 - Cup leaderboard;
 - History.
 
 Run both:
+
 1. normal development mode;
 2. production build/start if the project supports it.
 

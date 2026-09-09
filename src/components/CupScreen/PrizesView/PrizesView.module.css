@@ -14,59 +14,56 @@
 }
 
 .poolCard {
-  display: flex;
+  display: grid;
+  /*grid-template-columns: minmax(126px, 42%) minmax(0, 1fr);*/
+  grid-template-columns: 1fr 2fr;
   min-height: 112px;
   align-items: center;
-  gap: 16px;
+
   border-color: color-mix(
     in srgb,
     var(--color-accent) 38%,
     var(--color-border)
   );
   border-radius: 16px;
-  padding: 16px 20px;
-  background: color-mix(
-    in srgb,
-    var(--color-accent-soft) 72%,
-    var(--color-surface)
-  );
-}
+  padding: 16px 18px;
+  overflow: hidden;
 
-.poolIcon {
-  display: grid;
-  width: 58px;
-  height: 58px;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
-  color: var(--color-accent);
-}
+  background-image: url("/assets/screens/prize-pool-background.webp");
+  background-repeat: no-repeat;
 
-.poolIcon svg {
-  width: 42px;
-  height: 42px;
-  fill: currentColor;
+  background-size: 110% auto;
+  background-position: 70% center;
 }
 
 .poolCopy {
+  margin-left: -7%;
   display: grid;
-  gap: 3px;
+  grid-column: 2;
+  min-width: 0;
+  width: 100%;
+  text-align: left;
+  text-shadow: 0 1px 7px rgb(0 0 0 / 45%);
+  row-gap: 5px;
 }
 
 .poolCopy span {
+  color: rgb(255 255 255 / 80%);
   font-size: 14px;
   font-weight: 500;
 }
 
 .poolCopy strong {
-  color: var(--color-accent);
-  font-size: 29px;
+  color: #ffd166;
+  font-size: 28px;
   line-height: 1.05;
+  overflow-wrap: anywhere;
 }
 
 .poolCopy small {
+  color: rgb(255 255 255 / 82%);
   font-size: 14px;
+  line-height: 1.25;
 }
 
 .emptyState {
@@ -153,10 +150,16 @@
 
 @media (max-width: 370px) {
   .poolCard {
+    grid-template-columns: minmax(116px, 41%) minmax(0, 1fr);
     padding-inline: 14px;
+    background-position: 43% center;
   }
 
   .poolCopy strong {
     font-size: 25px;
+  }
+
+  .poolCopy small {
+    font-size: 13px;
   }
 }

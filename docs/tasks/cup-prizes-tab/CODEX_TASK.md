@@ -29,6 +29,7 @@ Do not modify the bottom-navigation `History` item or standalone History screen.
 Add persistent prize configuration for each Cup.
 
 Required semantics:
+
 - Cup-level `prizeCurrency` enum: `USDT | TON`;
 - default: `USDT`;
 - persistent `prizeDistribution`;
@@ -43,15 +44,15 @@ Do not implement business validation/normalization of administrator prize ranges
 As part of this task, immediately create/seed the prize distribution for the current Cup:
 
 ```ts
-prizeCurrency: "USDT"
+prizeCurrency: "USDT";
 
 prizeDistribution: [
-  { fromRank: 1,  toRank: 1,  amount: "3" },
-  { fromRank: 2,  toRank: 2,  amount: "2" },
-  { fromRank: 3,  toRank: 3,  amount: "1" },
-  { fromRank: 4,  toRank: 10, amount: "0.5" },
-  { fromRank: 11, toRank: 20, amount: "0.1" }
-]
+  { fromRank: 1, toRank: 1, amount: "3" },
+  { fromRank: 2, toRank: 2, amount: "2" },
+  { fromRank: 3, toRank: 3, amount: "1" },
+  { fromRank: 4, toRank: 10, amount: "0.5" },
+  { fromRank: 11, toRank: 20, amount: "0.1" },
+];
 ```
 
 These values must exist in the database after the project's normal migration/seed/bootstrap procedure.
@@ -67,8 +68,8 @@ The distribution computes to `10.5 USDT`, but the UI must derive that value dyna
 Extend the existing `bootstrap/current-cup` payload with:
 
 ```ts
-prizeCurrency
-prizeDistribution
+prizeCurrency;
+prizeDistribution;
 ```
 
 Do not add a separate frontend HTTP request for prizes.
@@ -78,6 +79,7 @@ Serialize Decimal `amount` values as strings.
 ## Frontend
 
 Implement:
+
 1. Prize Pool summary card.
 2. Fixed TOP 3 podium.
 3. `Other prizes`.
@@ -107,6 +109,7 @@ Do not hardcode `10.5`.
 TOP 3 always exist.
 
 Map:
+
 - rank 2 -> left / silver;
 - rank 1 -> center / gold;
 - rank 3 -> right / bronze.
@@ -114,6 +117,7 @@ Map:
 Podium geometry and heights are fixed.
 
 For the initial DB data the UI should render:
+
 - 1st: `3 USDT`;
 - 2nd: `2 USDT`;
 - 3rd: `1 USDT`.
@@ -125,6 +129,7 @@ These values still come exclusively from the API.
 Render all remaining tiers in API order.
 
 For the initial data this produces:
+
 - `4th–10th` -> `0.5 USDT each`;
 - `11th–20th` -> `0.1 USDT each`.
 
@@ -149,6 +154,7 @@ Do not hardcode `20` or `USDT` in the component.
 ## Empty state
 
 When distribution is empty:
+
 - Hero Prize pool: `—`;
 - keep `Prizes` tab;
 - show `Prize distribution is not available yet`;
@@ -167,6 +173,7 @@ Do not invent a separate visual language, hardcode generated screenshot colors u
 ## Tests
 
 Add/update tests for at least:
+
 - DB/current-Cup seed prize data;
 - `bootstrap/current-cup` prize fields;
 - Decimal -> string serialization;

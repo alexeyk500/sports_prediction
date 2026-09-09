@@ -90,9 +90,11 @@ Do not mechanically rename every symbol containing `Predict` or `Prediction`.
 Before renaming, classify each usage:
 
 ### Rename
+
 Screen/route/navigation/component names that mean “the Predict section”.
 
 ### Keep
+
 Domain/business names that mean an actual prediction/pick.
 
 Examples likely to keep:

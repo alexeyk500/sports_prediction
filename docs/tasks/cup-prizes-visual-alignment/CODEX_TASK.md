@@ -16,6 +16,7 @@ The current screen is too large, loose and vertically stretched. The approved de
 ### 1. Overall scale and vertical rhythm
 
 Current implementation:
+
 - oversized header and typography;
 - excessive vertical gaps between sections;
 - oversized cards and rows;
@@ -23,6 +24,7 @@ Current implementation:
 - too much empty space before bottom navigation.
 
 Fix:
+
 - reduce section spacing and component heights;
 - use the approved screenshot as the target for relative proportions;
 - keep the layout compact rather than merely shrinking random fonts;
@@ -31,11 +33,13 @@ Fix:
 ### 2. Header
 
 Approved:
+
 - `Cup` is smaller and less dominant;
 - subtitle is compact and close to title;
 - segmented control starts shortly below subtitle.
 
 Current:
+
 - title/subtitle and their spacing are too large.
 
 Match the approved hierarchy and spacing.
@@ -43,6 +47,7 @@ Match the approved hierarchy and spacing.
 ### 3. Current Cup / Prizes segmented control
 
 Approved:
+
 - shorter overall height;
 - smaller corner radius;
 - active `Prizes` occupies roughly half the control cleanly;
@@ -57,6 +62,7 @@ Reduce height/padding/radius to match the reference. Do not change its behavior.
 This is one of the largest mismatches.
 
 Approved:
+
 - much shorter card;
 - trophy sits in a compact circular icon container;
 - content is horizontally compact;
@@ -64,6 +70,7 @@ Approved:
 - card does not dominate the page.
 
 Current:
+
 - card is much too tall;
 - icon and text are oversized;
 - padding is excessive.
@@ -75,6 +82,7 @@ Reduce height, padding, icon size, amount size and internal gaps. Preserve dynam
 The approved screenshot is the source of truth.
 
 Approved:
+
 - podium scene begins immediately after the Prize Pool card;
 - image is taller/narrower in mobile composition;
 - all three trophies/pedestals are fully visible;
@@ -85,6 +93,7 @@ Approved:
 - labels do not cover the podium numbers.
 
 Current:
+
 - podium image is too wide/short;
 - image crop/composition differs;
 - labels are overlaid on top of the podium/pedestals and collide visually with numbers `1/2/3`;
@@ -93,6 +102,7 @@ Current:
 Fix the podium container/aspect/crop so it visually matches the approved composition. Position dynamic labels like the approved design. Do not alter the production background artwork itself unless the existing CSS crop/object-position is the cause.
 
 Prize values remain API-driven:
+
 - 2nd: `2 USDT`
 - 1st: `3 USDT`
 - 3rd: `1 USDT`
@@ -102,6 +112,7 @@ Do not hardcode them.
 ### 6. Other prizes
 
 Approved:
+
 - heading is smaller;
 - rows are considerably shorter;
 - icons are smaller;
@@ -110,6 +121,7 @@ Approved:
 - rows are separated by a small gap.
 
 Current:
+
 - heading and cards are oversized;
 - rows are too tall;
 - people icon is too large;
@@ -119,12 +131,14 @@ Current:
 Bring row height, icon scale, typography, padding and gaps close to the approved reference.
 
 Keep actual API values:
+
 - 4th–10th: `0.5 USDT each`
 - 11th–20th: `0.1 USDT each`.
 
 ### 7. Informational card
 
 Approved:
+
 - compact height;
 - small gift icon;
 - text fits naturally in two lines;
@@ -139,6 +153,7 @@ Reduce it to the approved density. Keep text dynamic.
 Do not solve this with one global scale transform.
 
 Establish the correct hierarchy per component:
+
 - screen title;
 - subtitle;
 - segmented-control labels;
@@ -155,6 +170,7 @@ Current implementation generally uses type that is too large/heavy. Match the ap
 Approved design uses modest mobile side margins and compact radii.
 
 Current implementation has:
+
 - larger side margins in several sections;
 - larger card radii;
 - heavier visual framing.
@@ -172,6 +188,7 @@ Preserve existing project navigation, routes, icons and active-state logic. Only
 This is a visual-alignment task. Do not regress the already implemented prize data architecture.
 
 Preserve:
+
 - DB prize distribution;
 - `bootstrap/current-cup`;
 - decimal-safe total calculation;

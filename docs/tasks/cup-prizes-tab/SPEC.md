@@ -5,6 +5,7 @@
 Replace the `History` tab inside the Cup screen with a new `Prizes` tab.
 
 Do **not** modify:
+
 - the `History` item in bottom navigation;
 - the standalone prediction History screen;
 - routes or navigation behavior outside the Cup screen.
@@ -57,15 +58,15 @@ interface PrizeTier {
 The current Cup must be initialized in the database with:
 
 ```ts
-prizeCurrency: "USDT"
+prizeCurrency: "USDT";
 
 prizeDistribution: [
-  { fromRank: 1,  toRank: 1,  amount: "3" },
-  { fromRank: 2,  toRank: 2,  amount: "2" },
-  { fromRank: 3,  toRank: 3,  amount: "1" },
-  { fromRank: 4,  toRank: 10, amount: "0.5" },
-  { fromRank: 11, toRank: 20, amount: "0.1" }
-]
+  { fromRank: 1, toRank: 1, amount: "3" },
+  { fromRank: 2, toRank: 2, amount: "2" },
+  { fromRank: 3, toRank: 3, amount: "1" },
+  { fromRank: 4, toRank: 10, amount: "0.5" },
+  { fromRank: 11, toRank: 20, amount: "0.1" },
+];
 ```
 
 These must be real DB/seed data, not frontend mocks, fallbacks or hardcoded UI constants.
@@ -77,8 +78,8 @@ This distribution totals `10.5 USDT`, but `10.5` must never be used as an indepe
 `bootstrap/current-cup` must include:
 
 ```ts
-prizeCurrency
-prizeDistribution
+prizeCurrency;
+prizeDistribution;
 ```
 
 Do not add a separate request only for prizes.
@@ -86,6 +87,7 @@ Do not add a separate request only for prizes.
 `prizeDistribution` may be changed at any time by an administrator.
 
 Do not add backend business validation or normalization for:
+
 - overlapping ranges;
 - gaps between ranges;
 - ordering;
@@ -101,6 +103,7 @@ Persist `amount` as a decimal type and serialize it to the frontend as a string.
 The frontend displays `prizeDistribution` as received from the API.
 
 Do not:
+
 - sort ordinary tiers;
 - normalize ranges;
 - merge tiers;
@@ -108,6 +111,7 @@ Do not:
 - repair administrator data.
 
 The only special mapping is the fixed TOP 3 podium:
+
 - rank `1` -> center / gold;
 - rank `2` -> left / silver;
 - rank `3` -> right / bronze.
@@ -164,6 +168,7 @@ Total = 10.5 USDT
 The `Prizes` tab starts with a Prize Pool summary card.
 
 It displays:
+
 - trophy icon;
 - `Prize pool`;
 - computed total + `prizeCurrency`;
@@ -186,6 +191,7 @@ podium-background.png
 The asset is decorative. Do not bake dynamic amounts, currency or API data into it.
 
 Overlay dynamic TOP 3 data from the API:
+
 - left silver: rank 2;
 - center gold: rank 1;
 - right bronze: rank 3.
@@ -219,6 +225,7 @@ Top N players will receive {currency} prizes after the cup ends.
 ```
 
 Where:
+
 - `N = max(toRank)`;
 - `{currency} = prizeCurrency`.
 
@@ -248,6 +255,7 @@ Prize distribution is not available yet
 Implement both light and dark themes.
 
 Visual references supplied with the task:
+
 - `prizes-dark.png`
 - `prizes-light.png`
 
@@ -260,6 +268,7 @@ Do not introduce an isolated dark visual system into light theme.
 ## Non-goals
 
 Do not change:
+
 - bottom-navigation `History`;
 - standalone History screen;
 - prediction History logic;
