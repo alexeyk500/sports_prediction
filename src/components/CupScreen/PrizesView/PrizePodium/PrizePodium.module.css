@@ -4,7 +4,7 @@
 
 .stage {
   position: relative;
-  aspect-ratio: 1.78;
+  aspect-ratio: 1.4;
   overflow: hidden;
   border-radius: 18px;
   background: var(--color-surface-elevated)

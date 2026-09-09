@@ -115,9 +115,6 @@ const PrizeTier: React.FC<IPrizeTierProps> = ({ tier, currency }) => {
             t("cup.prizes.each")}
         </strong>
       </div>
-      <span className={styles.chevron} aria-hidden="true">
-        ›
-      </span>
     </article>
   );
 };

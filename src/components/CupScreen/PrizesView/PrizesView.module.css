@@ -132,13 +132,6 @@
   color: var(--color-muted);
 }
 
-.chevron {
-  color: var(--color-muted);
-  font-size: 30px !important;
-  font-weight: 300;
-  line-height: 1;
-}
-
 .infoBlock {
   display: flex;
   align-items: center;
