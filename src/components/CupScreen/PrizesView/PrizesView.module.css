@@ -13,18 +13,17 @@
   color: var(--color-text);
 }
 
+.tierCardIco {
+  color: var(--color-accent);
+  width: 40px;
+  height: 40px;
+}
+
 .poolCard {
   display: grid;
-  /*grid-template-columns: minmax(126px, 42%) minmax(0, 1fr);*/
   grid-template-columns: 1fr 2fr;
   min-height: 112px;
   align-items: center;
-
-  border-color: color-mix(
-    in srgb,
-    var(--color-accent) 38%,
-    var(--color-border)
-  );
   border-radius: 16px;
   padding: 16px 18px;
   overflow: hidden;
@@ -133,7 +132,6 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  border-color: var(--color-accent);
   border-radius: 14px;
   padding: 14px 16px;
 }
@@ -141,6 +139,8 @@
 .giftIcon {
   flex: 0 0 auto;
   color: var(--color-accent);
+  width: 40px;
+  height: 40px;
 }
 
 .infoBlock span {

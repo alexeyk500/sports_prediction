@@ -93,7 +93,10 @@ const PrizeTier: React.FC<IPrizeTierProps> = ({ tier, currency }) => {
 
   return (
     <article className={styles.tierCard}>
-      <PeopleIcon />
+      <div className={styles.tierCardIco}>
+        <PeopleIcon />
+      </div>
+
       <div>
         <span>
           {formatPrizeRange(tier, (key, values) =>
