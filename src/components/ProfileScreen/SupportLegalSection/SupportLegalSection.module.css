@@ -1,0 +1,113 @@
+.section {
+  display: grid;
+  gap: 12px;
+}
+
+.section h2 {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.panel {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow: 0 10px 22px rgb(15 23 42 / 4%);
+}
+
+:global(:root[data-theme="dark"]) .panel {
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  box-shadow: 0 14px 30px rgb(0 0 0 / 18%);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 24px;
+  align-items: center;
+  width: 100%;
+  min-height: 68px;
+  border: 0;
+  padding-block: 9px;
+  padding-inline: 16px;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-align: start;
+}
+
+.row + .row {
+  border-block-start: 1px solid
+    color-mix(in srgb, var(--color-border) 74%, transparent);
+}
+
+.row > span:nth-child(2) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.iconBox {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 13px;
+}
+
+.iconBox svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iconBox[data-tone="help"] {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.iconBox[data-tone="privacy"] {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.iconBox[data-tone="terms"] {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+:global(:root[data-theme="dark"]) .iconBox[data-tone="help"] {
+  background: #224936;
+  color: #7ee2a2;
+}
+
+:global(:root[data-theme="dark"]) .iconBox[data-tone="privacy"] {
+  background: #29425f;
+  color: #93c5fd;
+}
+
+:global(:root[data-theme="dark"]) .iconBox[data-tone="terms"] {
+  background: #5b3135;
+  color: #fca5a5;
+}
+
+.chevron {
+  width: 22px;
+  height: 22px;
+  color: var(--color-muted);
+}
+
+[dir="rtl"] .chevron {
+  transform: scaleX(-1);
+}

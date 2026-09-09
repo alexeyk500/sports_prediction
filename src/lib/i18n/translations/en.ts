@@ -175,8 +175,34 @@ export const en = {
   },
   profile: {
     title: "Profile",
-    stagePlaceholder:
-      "Career and prize history are not implemented in this stage.",
+    subtitle: "Manage your account",
+    identity: "Profile identity",
+    identityUnavailable: "Profile is unavailable",
+    destinationUnavailable: "This destination is not configured yet.",
+    appInfo: "App information",
+    prizesWallet: {
+      section: "Prizes & Wallet",
+      title: "Prizes & Wallet",
+      subtitle: "Claims and TON wallet",
+    },
+    preferences: {
+      section: "Preferences",
+      selectLanguage: "Select language",
+      selectAppearance: "Select appearance",
+      closeSelector: "Close selector",
+      appearanceDescriptions: {
+        system: "Use device settings",
+        light: "Always use light theme",
+        dark: "Always use dark theme",
+      },
+    },
+    supportLegal: {
+      section: "Support & Legal",
+      help: "Help & Support",
+      privacy: "Privacy Policy",
+      terms: "Terms of Use",
+    },
+    version: "Version {version}",
     settingsTitle: "Settings",
     languageLabel: "Language",
     appearanceLabel: "Appearance",

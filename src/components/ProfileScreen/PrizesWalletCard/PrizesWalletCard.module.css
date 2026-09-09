@@ -1,0 +1,95 @@
+.section {
+  display: grid;
+  gap: 12px;
+}
+
+.section h2 {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 24px;
+  align-items: center;
+  min-height: 84px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+  border-radius: 14px;
+  padding-block: 12px;
+  padding-inline: 14px 12px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-surface) 96%, #f8c04e 4%),
+    var(--color-surface)
+  );
+  box-shadow: 0 10px 22px rgb(15 23 42 / 5%);
+  color: var(--color-text);
+  font: inherit;
+  text-align: start;
+}
+
+:global(:root[data-theme="dark"]) .card {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-surface-elevated) 92%, #f8c04e 8%),
+    color-mix(in srgb, var(--color-surface) 96%, transparent)
+  );
+  box-shadow: 0 14px 30px rgb(0 0 0 / 20%);
+}
+
+.iconBox {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fff3c4, #ffd36f);
+  color: #b26b00;
+}
+
+:global(:root[data-theme="dark"]) .iconBox {
+  background: linear-gradient(135deg, #59491d, #8a6a1e);
+  color: #ffe383;
+}
+
+.trophyIcon {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+}
+
+.content {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  padding-inline: 12px;
+}
+
+.content strong {
+  overflow-wrap: anywhere;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.content span {
+  overflow-wrap: anywhere;
+  color: var(--color-muted);
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.chevron {
+  width: 22px;
+  height: 22px;
+  color: var(--color-muted);
+}
+
+[dir="rtl"] .chevron {
+  transform: scaleX(-1);
+}

@@ -177,8 +177,34 @@ export const es = {
   },
   profile: {
     title: "Perfil",
-    stagePlaceholder:
-      "La carrera y el historial de premios no están implementados en esta etapa.",
+    subtitle: "Gestiona tu cuenta",
+    identity: "Identidad del perfil",
+    identityUnavailable: "El perfil no esta disponible",
+    destinationUnavailable: "Esta seccion aun no esta configurada.",
+    appInfo: "Informacion de la app",
+    prizesWallet: {
+      section: "Premios y wallet",
+      title: "Premios y wallet",
+      subtitle: "Reclamos y wallet TON",
+    },
+    preferences: {
+      section: "Preferencias",
+      selectLanguage: "Seleccionar idioma",
+      selectAppearance: "Seleccionar apariencia",
+      closeSelector: "Cerrar selector",
+      appearanceDescriptions: {
+        system: "Usar ajustes del dispositivo",
+        light: "Usar siempre tema claro",
+        dark: "Usar siempre tema oscuro",
+      },
+    },
+    supportLegal: {
+      section: "Soporte y legal",
+      help: "Ayuda y soporte",
+      privacy: "Politica de privacidad",
+      terms: "Terminos de uso",
+    },
+    version: "Version {version}",
     settingsTitle: "Ajustes",
     languageLabel: "Idioma",
     appearanceLabel: "Apariencia",

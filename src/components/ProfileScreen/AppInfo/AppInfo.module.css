@@ -1,0 +1,20 @@
+.appInfo {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding-block: 10px 12px;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.appInfo strong {
+  color: var(--color-muted);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.appInfo span {
+  font-size: 14px;
+  line-height: 1.3;
+}

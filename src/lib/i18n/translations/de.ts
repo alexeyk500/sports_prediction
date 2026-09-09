@@ -177,8 +177,34 @@ export const de = {
   },
   profile: {
     title: "Profil",
-    stagePlaceholder:
-      "Karriere und Preisverlauf sind in dieser Phase noch nicht umgesetzt.",
+    subtitle: "Konto verwalten",
+    identity: "Profilidentitaet",
+    identityUnavailable: "Profil ist nicht verfuegbar",
+    destinationUnavailable: "Dieser Bereich ist noch nicht konfiguriert.",
+    appInfo: "App-Informationen",
+    prizesWallet: {
+      section: "Preise & Wallet",
+      title: "Preise & Wallet",
+      subtitle: "Claims und TON-Wallet",
+    },
+    preferences: {
+      section: "Einstellungen",
+      selectLanguage: "Sprache auswählen",
+      selectAppearance: "Darstellung auswählen",
+      closeSelector: "Auswahl schließen",
+      appearanceDescriptions: {
+        system: "Geraeteeinstellungen verwenden",
+        light: "Immer helles Design verwenden",
+        dark: "Immer dunkles Design verwenden",
+      },
+    },
+    supportLegal: {
+      section: "Support & Rechtliches",
+      help: "Hilfe & Support",
+      privacy: "Datenschutzerklaerung",
+      terms: "Nutzungsbedingungen",
+    },
+    version: "Version {version}",
     settingsTitle: "Einstellungen",
     languageLabel: "Sprache",
     appearanceLabel: "Darstellung",

@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import type React from "react";
 import CupScreen from "@/components/CupScreen/CupScreen";
 import HistoryScreen from "@/components/HistoryScreen/HistoryScreen";
-import ProfileScreen from "@/components/profile/ProfileScreen";
+import ProfileScreen from "@/components/ProfileScreen/ProfileScreen";
 import { useSettingsRuntime } from "@/hooks/use-settings-runtime";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import { useBootstrapStore } from "@/stores/bootstrap-store";

@@ -1,0 +1,130 @@
+.section {
+  display: grid;
+  gap: 12px;
+}
+
+.section h2 {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.panel {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow: 0 10px 22px rgb(15 23 42 / 4%);
+}
+
+:global(:root[data-theme="dark"]) .panel {
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  box-shadow: 0 14px 30px rgb(0 0 0 / 18%);
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) minmax(84px, auto) 24px;
+  align-items: center;
+  min-height: 70px;
+  width: 100%;
+  border: 0;
+  padding-block: 9px;
+  padding-inline: 16px;
+  background: transparent;
+  color: var(--color-text);
+  text-align: start;
+  cursor: pointer;
+}
+
+.row:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.row:focus-visible {
+  z-index: 1;
+  outline: 3px solid color-mix(in srgb, var(--color-focus) 34%, transparent);
+  outline-offset: -3px;
+}
+
+.row + .row {
+  border-block-start: 1px solid
+    color-mix(in srgb, var(--color-border) 74%, transparent);
+}
+
+.iconBox {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 13px;
+}
+
+.iconBox svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iconBox[data-tone="language"] {
+  background: #dff2ff;
+  color: #1684db;
+}
+
+.iconBox[data-tone="appearance"] {
+  background: #ebe6ff;
+  color: #6c4ff6;
+}
+
+:global(:root[data-theme="dark"]) .iconBox[data-tone="language"] {
+  background: #2b425e;
+  color: #8bd2ff;
+}
+
+:global(:root[data-theme="dark"]) .iconBox[data-tone="appearance"] {
+  background: #373464;
+  color: #a99bff;
+}
+
+.label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.value {
+  min-width: 0;
+  color: var(--color-muted);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: end;
+  overflow-wrap: anywhere;
+}
+
+.chevron {
+  justify-self: end;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: color-mix(in srgb, var(--color-muted) 76%, transparent);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+[dir="rtl"] .chevron {
+  transform: scaleX(-1);
+}

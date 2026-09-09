@@ -1,0 +1,100 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  align-items: end;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgb(15 23 42 / 28%);
+  cursor: pointer;
+}
+
+:global(:root[data-theme="dark"]) .backdrop {
+  background: rgb(0 0 0 / 42%);
+}
+
+.sheet {
+  position: relative;
+  width: min(100%, 520px);
+  max-height: calc(100dvh - 24px);
+  margin-inline: auto;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-border) 48%, transparent);
+  border-radius: 28px 28px 0 0;
+  background: var(--color-surface);
+  box-shadow: 0 -18px 44px rgb(15 23 42 / 12%);
+}
+
+.sheet:focus {
+  outline: none;
+}
+
+:global(:root[data-theme="dark"]) .sheet {
+  background: color-mix(in srgb, var(--color-surface) 94%, #020617);
+  border-color: color-mix(in srgb, var(--color-border) 42%, transparent);
+  box-shadow: 0 -18px 44px rgb(0 0 0 / 28%);
+}
+
+.handle {
+  width: 46px;
+  height: 4px;
+  margin: 12px auto 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-muted) 24%, transparent);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 12px;
+  padding-block: 18px 10px;
+  padding-inline: 20px;
+}
+
+.header h3 {
+  min-width: 0;
+  margin: 0;
+  color: var(--color-text);
+  font-size: 22px;
+  font-weight: 820;
+  letter-spacing: 0;
+  line-height: 1.12;
+}
+
+.closeButton {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-surface-muted) 62%, transparent);
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.closeButton:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-focus) 34%, transparent);
+  outline-offset: 2px;
+}
+
+.closeButton svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+}
+
+.content {
+  overflow-y: auto;
+  padding-block: 8px max(18px, env(safe-area-inset-bottom));
+  padding-inline: 18px;
+}
