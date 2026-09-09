@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type React from "react";
 import type { BootstrapResponse } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
@@ -12,12 +13,12 @@ import styles from "./CupHero.module.css";
 
 interface ICupHeroProps {
   tournament: NonNullable<BootstrapResponse["currentTournament"]>;
-  nowMs: number;
   timeZone: string;
 }
 
-const CupHero: React.FC<ICupHeroProps> = ({ tournament, nowMs, timeZone }) => {
+const CupHero: React.FC<ICupHeroProps> = ({ tournament, timeZone }) => {
   const { t, locale } = useTranslation();
+  const [mountedAtMs] = useState(() => Date.now());
   const endsAt = new Date(tournament.endsAt);
 
   return (
@@ -40,7 +41,7 @@ const CupHero: React.FC<ICupHeroProps> = ({ tournament, nowMs, timeZone }) => {
           <ClockIcon className={styles.metricIcon} />
           <div>
             <strong>
-              {formatCountdown(t, Math.max(0, endsAt.getTime() - nowMs))}
+              {formatCountdown(t, Math.max(0, endsAt.getTime() - mountedAtMs))}
             </strong>
             <span>
               {t("cup.ends", {

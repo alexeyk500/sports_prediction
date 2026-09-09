@@ -1,154 +1,57 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type React from "react";
-import { ApiClient } from "@/lib/api/client";
-import { messageForApiError } from "@/lib/api/error-presentation";
+import type { CupLeaderboardPageResponse } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import LeaderboardModeTabs from "./LeaderboardModeTabs/LeaderboardModeTabs";
 import LeaderboardTable from "./LeaderboardTable/LeaderboardTable";
-import {
-  mergeCupLeaderboardRows,
-  toCupLeaderboardRowModel,
-  type CupLeaderboardMode,
-  type ICupLeaderboardModeState,
+import type {
+  CupLeaderboardMode,
+  LoadCupLeaderboardAroundMe,
+  LoadCupLeaderboardPage,
 } from "./leaderboard-types";
 import styles from "./CupLeaderboard.module.css";
+import { useCupLeaderboard } from "./useCupLeaderboard";
 
 interface ICupLeaderboardProps {
   cupId: string;
-  apiClient: ApiClient;
+  initialTop: CupLeaderboardPageResponse | null;
+  isInitialTopLoading: boolean;
+  initialTopError: string | null;
+  retryInitialTop: () => void;
+  loadPage: LoadCupLeaderboardPage;
+  loadAroundMe: LoadCupLeaderboardAroundMe;
 }
-
-const PAGE_SIZE = 50;
-const AROUND_ME_RADIUS = 4;
 
 const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({
   cupId,
-  apiClient,
+  initialTop,
+  isInitialTopLoading,
+  initialTopError,
+  retryInitialTop,
+  loadPage,
+  loadAroundMe,
 }) => {
   const { t, locale } = useTranslation();
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const [activeMode, setActiveMode] = useState<CupLeaderboardMode>("top");
-  const [modeState, setModeState] = useState<
-    Record<CupLeaderboardMode, ICupLeaderboardModeState>
-  >({
-    top: createEmptyModeState(),
-    "around-me": createEmptyModeState(),
-    all: createEmptyModeState(),
-  });
-  const [loadingMode, setLoadingMode] = useState<CupLeaderboardMode | null>(
-    null,
-  );
-  const [isLoadingNextPage, setIsLoadingNextPage] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const currentModeState = modeState[activeMode];
-  const isInitialLoading =
-    loadingMode === activeMode && !currentModeState.isLoaded;
-
-  const loadMode = useCallback(
-    async (mode: CupLeaderboardMode, force = false) => {
-      if (!force && modeState[mode].isLoaded) {
-        setErrorMessage(null);
-        return;
-      }
-
-      setLoadingMode(mode);
-      setErrorMessage(null);
-
-      try {
-        if (mode === "around-me") {
-          const response = await apiClient.getCupLeaderboardAroundMe({
-            cupId,
-            radius: AROUND_ME_RADIUS,
-          });
-
-          setModeState((current) => ({
-            ...current,
-            [mode]: {
-              rows: response.items.map(toCupLeaderboardRowModel),
-              totalParticipants: response.totalParticipants,
-              nextCursor: null,
-              isLoaded: true,
-            },
-          }));
-          return;
-        }
-
-        const response = await apiClient.getCupLeaderboard({
-          cupId,
-          mode,
-          limit: PAGE_SIZE,
-        });
-
-        setModeState((current) => ({
-          ...current,
-          [mode]: {
-            rows: response.items.map(toCupLeaderboardRowModel),
-            totalParticipants: response.totalParticipants,
-            nextCursor: response.nextCursor,
-            isLoaded: true,
-          },
-        }));
-      } catch (error: unknown) {
-        setErrorMessage(messageForApiError(error, locale));
-      } finally {
-        setLoadingMode((current) => (current === mode ? null : current));
-      }
-    },
-    [apiClient, cupId, locale, modeState],
-  );
-
-  const loadNextAllPage = useCallback(async () => {
-    const allState = modeState.all;
-
-    if (
-      activeMode !== "all" ||
-      !allState.nextCursor ||
-      isLoadingNextPage ||
-      loadingMode
-    ) {
-      return;
-    }
-
-    setIsLoadingNextPage(true);
-    setErrorMessage(null);
-
-    try {
-      const response = await apiClient.getCupLeaderboard({
-        cupId,
-        mode: "all",
-        limit: PAGE_SIZE,
-        cursor: allState.nextCursor,
-      });
-      const nextRows = response.items.map(toCupLeaderboardRowModel);
-
-      setModeState((current) => ({
-        ...current,
-        all: {
-          rows: mergeCupLeaderboardRows(current.all.rows, nextRows),
-          totalParticipants: response.totalParticipants,
-          nextCursor: response.nextCursor,
-          isLoaded: true,
-        },
-      }));
-    } catch (error: unknown) {
-      setErrorMessage(messageForApiError(error, locale));
-    } finally {
-      setIsLoadingNextPage(false);
-    }
-  }, [
-    activeMode,
-    apiClient,
-    cupId,
+  const {
+    currentModeState,
+    errorMessage,
+    isInitialLoading,
     isLoadingNextPage,
-    loadingMode,
+    loadNextAllPage,
+    retry,
+  } = useCupLeaderboard({
+    cupId,
+    activeMode,
+    initialTop,
+    isInitialTopLoading,
+    initialTopError,
+    retryInitialTop,
+    loadPage,
+    loadAroundMe,
     locale,
-    modeState.all,
-  ]);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- leaderboard modes load independently from the Cup bootstrap request.
-    void loadMode(activeMode);
-  }, [activeMode, loadMode]);
+  });
 
   useEffect(() => {
     const target = loadMoreRef.current;
@@ -216,7 +119,7 @@ const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({
           rows={currentModeState.rows}
           isLoading={isInitialLoading}
           errorMessage={errorMessage}
-          onRetry={() => void loadMode(activeMode, true)}
+          onRetry={retry}
         />
         {activeMode === "all" && currentModeState.rows.length > 0 ? (
           <div className={styles.paginationState}>
@@ -253,12 +156,3 @@ const CupLeaderboard: React.FC<ICupLeaderboardProps> = ({
 };
 
 export default CupLeaderboard;
-
-function createEmptyModeState(): ICupLeaderboardModeState {
-  return {
-    rows: [],
-    totalParticipants: 0,
-    nextCursor: null,
-    isLoaded: false,
-  };
-}

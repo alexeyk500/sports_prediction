@@ -1,0 +1,11 @@
+Реализуй задачу из docs/tasks/cup-top-leaderboard-store-state/CODEX_TASK.md.
+
+Убери initial Top 50 leaderboard из bootstrap. Загружай его отдельно при первом mount/open CupScreen через store-level state по `cupId`.
+
+React Strict Mode уже подтверждён: `CupScreen mounted -> unmounted -> mounted`, поэтому обычный mount effect без guard даст duplicate request. Сделай atomic store action `beginCupTopLeaderboardLoad(cupId)`, который переводит state `idle -> loading` и возвращает boolean. Второй StrictMode mount должен увидеть `loading` и не отправлять второй HTTP request.
+
+Не используй generic in-flight Map, hasLoadedRef/useRef hacks, debounce, timers или отключение StrictMode.
+
+CupLeaderboard сам не должен загружать Top на mount. Он получает Top data/loading/error/retry сверху. Around Me, All и pagination оставь lazy и без изменений по business semantics.
+
+Проверь: first Cup open = ровно один `leaderboard?mode=top&limit=50`; StrictMode remount = 0 дополнительных; повторный заход на тот же cupId = 0; новый cupId = один новый request. Добавь тесты на store state transitions, StrictMode/remount behavior и retry. Выполни lint, typecheck, unit tests и build.

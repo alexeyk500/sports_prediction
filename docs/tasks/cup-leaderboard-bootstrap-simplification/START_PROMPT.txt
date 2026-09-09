@@ -1,0 +1,11 @@
+Реализуй задачу из docs/tasks/cup-leaderboard-bootstrap-simplification/CODEX_TASK.md.
+
+Упрости текущую overengineered загрузку Cup leaderboard. При открытии Cup должен выполняться один initial HTTP request: bootstrap/current-cup. Bootstrap должен содержать initial Top 50 leaderboard, поэтому CupLeaderboard НЕ должен делать `mode=top&limit=50` request на mount.
+
+Top отображай из bootstrap. Around Me, All и pagination загружай только после действий пользователя через явные loader-функции, переданные компоненту. Не передавай presentation-компонентам raw ApiClient без необходимости.
+
+Пересмотри и удали `cup-leaderboard-data-source.ts`, shared in-flight Map и связанные abstractions/tests, если после новой архитектуры они больше не нужны. Не сохраняй сложность только ради дедупликации запроса, которого после refactor вообще не должно быть.
+
+Сохрани Around Me radius=4, All pagination, retry, UI, API contracts и ranking semantics. Не отключай Strict Mode, не используй hasLoadedRef/debounce hacks. Проверь reset state при смене cupId.
+
+После реализации выполни lint, typecheck, unit tests, build и проверь Network: initial Cup = bootstrap once, Top leaderboard request = zero; Around Me/All появляются только после выбора соответствующего режима.

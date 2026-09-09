@@ -1,4 +1,9 @@
-import type { CupLeaderboardRowDto } from "@/lib/api/types";
+import type {
+  CupAroundMeLeaderboardResponse,
+  CupLeaderboardModeDto,
+  CupLeaderboardPageResponse,
+  CupLeaderboardRowDto,
+} from "@/lib/api/types";
 
 export type CupLeaderboardMode = "top" | "around-me" | "all";
 
@@ -20,6 +25,18 @@ export interface ICupLeaderboardModeState {
   nextCursor: string | null;
   isLoaded: boolean;
 }
+
+export type LoadCupLeaderboardPage = (input: {
+  cupId: string;
+  mode: CupLeaderboardModeDto;
+  limit?: number;
+  cursor?: string | null;
+}) => Promise<CupLeaderboardPageResponse>;
+
+export type LoadCupLeaderboardAroundMe = (input: {
+  cupId: string;
+  radius?: number;
+}) => Promise<CupAroundMeLeaderboardResponse>;
 
 export function toCupLeaderboardRowModel(
   dto: CupLeaderboardRowDto,

@@ -1,17 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import type React from "react";
-import { ApiClient, ApiClientError } from "@/lib/api/client";
-import { messageForApiError } from "@/lib/api/error-presentation";
 import { useTranslation } from "@/lib/i18n/use-translation";
-import { getTelegramInitData } from "@/lib/telegram/client";
-import { useBootstrapStore } from "@/stores/bootstrap-store";
 import CupHeader from "./CupHeader/CupHeader";
 import CupModeTabs from "./CupModeTabs/CupModeTabs";
 import CurrentCupView from "./CurrentCupView/CurrentCupView";
+import type {
+  LoadCupLeaderboardAroundMe,
+  LoadCupLeaderboardPage,
+} from "./CurrentCupView/CupLeaderboard/leaderboard-types";
 import PrizesView from "./PrizesView/PrizesView";
 import type { CupTab } from "./cup-types";
+import { useCupBootstrap } from "./hooks/useCupBootstrap";
+import { useCupTopLeaderboard } from "./hooks/useCupTopLeaderboard";
 import styles from "./CupScreen.module.css";
 
 interface ICupScreenProps {
@@ -19,62 +21,21 @@ interface ICupScreenProps {
 }
 
 const CupScreen: React.FC<ICupScreenProps> = ({ onOpenMatches }) => {
-  const { bootstrap, setBootstrap } = useBootstrapStore();
-  const { t, locale } = useTranslation();
-  const apiClient = useMemo(() => new ApiClient({ getTelegramInitData }), []);
+  const { t } = useTranslation();
+  const { bootstrap, isLoading, errorMessage, apiClient } = useCupBootstrap();
   const [activeTab, setActiveTab] = useState<CupTab>("current");
-  const [isBootstrapping, setIsBootstrapping] = useState(!bootstrap);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [clockTick, setClockTick] = useState(0);
+  const cupId = bootstrap?.currentTournament?.id ?? null;
+  const topLeaderboard = useCupTopLeaderboard(cupId, apiClient);
+  const loadLeaderboardPage = useCallback<LoadCupLeaderboardPage>(
+    (input) => apiClient.getCupLeaderboard(input),
+    [apiClient],
+  );
+  const loadLeaderboardAroundMe = useCallback<LoadCupLeaderboardAroundMe>(
+    (input) => apiClient.getCupLeaderboardAroundMe(input),
+    [apiClient],
+  );
 
-  const load = useCallback(async () => {
-    setErrorMessage(null);
-    const nextBootstrap = await apiClient.getBootstrap();
-    setBootstrap(nextBootstrap);
-  }, [apiClient, setBootstrap]);
-
-  useEffect(() => {
-    if (bootstrap) {
-      return;
-    }
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial client bootstrap fetch synchronizes with backend API.
-    load()
-      .catch((error: unknown) => {
-        logCupLoadError(error);
-        setErrorMessage(messageForApiError(error, locale));
-      })
-      .finally(() => setIsBootstrapping(false));
-  }, [bootstrap, load, locale]);
-
-  useEffect(() => {
-    if (!bootstrap) {
-      return;
-    }
-
-    const interval = window.setInterval(() => {
-      setClockTick((current) => current + 1);
-    }, 30_000);
-
-    return () => window.clearInterval(interval);
-  }, [bootstrap]);
-
-  const nowMs = useMemo(() => {
-    if (!bootstrap) {
-      return 0;
-    }
-
-    const serverTimeMs = Date.parse(bootstrap.serverTime);
-
-    if (Number.isNaN(serverTimeMs)) {
-      const fallbackMs = Date.parse(bootstrap.currentTournament?.endsAt ?? "");
-      return Number.isNaN(fallbackMs) ? 0 : fallbackMs;
-    }
-
-    return serverTimeMs + clockTick * 30_000;
-  }, [bootstrap, clockTick]);
-
-  if (isBootstrapping) {
+  if (isLoading) {
     return <main className={styles.centerState}>{t("cup.loading")}</main>;
   }
 
@@ -101,10 +62,15 @@ const CupScreen: React.FC<ICupScreenProps> = ({ onOpenMatches }) => {
       <div className={styles.scrollArea} data-ui="cup-scroll-area">
         {activeTab === "current" ? (
           <CurrentCupView
-            bootstrap={bootstrap}
-            nowMs={nowMs}
+            tournament={bootstrap.currentTournament}
             cup={bootstrap.cup}
-            apiClient={apiClient}
+            businessTimezone={bootstrap.businessTimezone}
+            topLeaderboard={topLeaderboard.data}
+            isTopLeaderboardLoading={topLeaderboard.isLoading}
+            topLeaderboardError={topLeaderboard.errorMessage}
+            retryTopLeaderboard={topLeaderboard.retry}
+            loadLeaderboardPage={loadLeaderboardPage}
+            loadLeaderboardAroundMe={loadLeaderboardAroundMe}
             onOpenMatches={onOpenMatches}
           />
         ) : bootstrap.currentTournament ? (
@@ -120,24 +86,3 @@ const CupScreen: React.FC<ICupScreenProps> = ({ onOpenMatches }) => {
 };
 
 export default CupScreen;
-
-function logCupLoadError(error: unknown): void {
-  if (process.env.NODE_ENV !== "development") {
-    return;
-  }
-
-  if (error instanceof ApiClientError) {
-    console.error("Cup bootstrap failed", {
-      endpoint: error.endpoint,
-      status: error.status,
-      code: error.code,
-      message: error.message,
-    });
-    return;
-  }
-
-  console.error(
-    "Cup bootstrap failed",
-    error instanceof Error ? error.message : error,
-  );
-}

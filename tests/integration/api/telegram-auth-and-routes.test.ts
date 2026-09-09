@@ -210,12 +210,18 @@ describe("Telegram auth HTTP vertical slice", () => {
     const zeroBody = (await responseJson(zeroResponse)) as {
       user: { id: string; telegramUserId: string };
       currentTournament: {
+        id: string;
         prizeCurrency: string;
         prizeDistribution: Array<{
           fromRank: number;
           toRank: number;
           amount: string;
         }>;
+      } | null;
+      cup: {
+        participantCount: number;
+        currentUserRow: unknown;
+        leaderboard?: unknown;
       } | null;
       dailyPredictionUsage: {
         freeUsed: number;
@@ -234,6 +240,11 @@ describe("Telegram auth HTTP vertical slice", () => {
         { fromRank: 2, toRank: 10, amount: "0.5" },
       ],
     });
+    expect(zeroBody.cup).toMatchObject({
+      participantCount: 0,
+      currentUserRow: null,
+    });
+    expect(zeroBody.cup && "leaderboard" in zeroBody.cup).toBe(false);
     expect(zeroBody.dailyPredictionUsage).toMatchObject({
       freeUsed: 0,
       rewardedUsed: 0,
