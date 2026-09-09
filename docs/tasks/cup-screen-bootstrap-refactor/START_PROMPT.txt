@@ -1,0 +1,7 @@
+Реализуй задачу из docs/tasks/cup-screen-bootstrap-refactor/CODEX_TASK.md.
+
+Сначала изучи текущие `CupScreen`, `CurrentCupView`, `ApiClient`, bootstrap store и прямых детей Cup screen. Цель — упростить `CupScreen`: вынести bootstrap loading/error/store sync в отдельный data hook, вынести 30-секундный clock/countdown в отдельный hook и оставить экран в основном composition-компонентом.
+
+На initial Cup load должен оставаться один логический bootstrap request. Проверь прямых детей на автоматические запросы, дублирующие данные bootstrap, но не удаляй легитимные lazy/paginated запросы. Не отключай Strict Mode и не маскируй проблему useRef/global dedupe hacks. Исправь некорректный fallback, где `endsAt` используется как текущее время.
+
+Не меняй Cup business logic, Prizes, leaderboard semantics, routes, navigation и дизайн. После реализации проверь tests/typecheck/lint и кратко опиши итоговый request flow.
