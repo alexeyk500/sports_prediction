@@ -1,7 +1,0 @@
-Исправь визуальную реализацию Cup → Prizes по задаче docs/tasks/cup-prizes-visual-alignment/CODEX_TASK.md.
-
-Перед изменениями обязательно открой и сравни:
-- docs/tasks/cup-prizes-visual-alignment/approved-design.png — утверждённый дизайн и source of truth;
-- docs/tasks/cup-prizes-visual-alignment/current-implementation.png — текущая реализация.
-
-Не редизайнь экран и не меняй data/API logic. Приведи текущий UI максимально близко к approved-design.png по масштабу, плотности, spacing, размерам карточек, typography, podium crop/aspect и расположению TOP 3 labels. После изменений сделай визуальную проверку на mobile viewport в dark и light theme. Bottom navigation не переделывай.

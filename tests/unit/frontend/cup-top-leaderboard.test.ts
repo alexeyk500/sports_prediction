@@ -10,6 +10,7 @@ describe("Cup Top leaderboard loading", () => {
       bootstrapLoadStatus: "idle",
       bootstrapLoadError: null,
       topLeaderboardByCupId: {},
+      historyByCupId: {},
     });
   });
 

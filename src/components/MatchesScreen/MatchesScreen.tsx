@@ -1,95 +1,58 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type React from "react";
-import { ApiClient } from "@/lib/api/client";
 import { messageForApiError } from "@/lib/api/error-presentation";
-import type {
-  PredictionDto,
-  PredictionOutcome,
-  TodayFixtureDto,
-} from "@/lib/api/types";
+import type { PredictionOutcome } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
-import {
-  getTelegramInitData,
-  initializeTelegramWebApp,
-} from "@/lib/telegram/client";
-import { useBootstrapStore } from "@/stores/bootstrap-store";
+import { initializeTelegramWebApp } from "@/lib/telegram/client";
 import FixtureList from "./FixtureList/FixtureList";
 import Header from "./Header/Header";
 import MyPicks from "./MyPicks/MyPicks";
 import MatchesTabs from "./MatchesTabs/MatchesTabs";
 import Quota from "./Quota/Quota";
 import TodayContextRow from "./TodayContextRow/TodayContextRow";
+import { useMatchesData } from "./hooks/useMatchesData";
 import { selectOutcome, type MatchesActionResult } from "./matches-actions";
-import { logMatchesLoadError } from "./matches-log";
 import type { ActiveTab } from "./matches-types";
 import styles from "./MatchesScreen.module.css";
 
-interface IMatchesState {
-  fixtures: TodayFixtureDto[];
-  predictions: PredictionDto[];
-  businessDate: string | null;
-}
-
 const MatchesScreen: React.FC = () => {
-  const { bootstrap, setBootstrap } = useBootstrapStore();
   const { t, locale } = useTranslation();
-  const apiClient = useMemo(() => new ApiClient({ getTelegramInitData }), []);
-  const [state, setState] = useState<IMatchesState>({
-    fixtures: [],
-    predictions: [],
-    businessDate: null,
-  });
+  const {
+    bootstrap,
+    data,
+    isLoading,
+    errorMessage,
+    apiClient,
+    refresh,
+    refreshPredictionsOnly,
+  } = useMatchesData();
   const [activeTab, setActiveTab] = useState<ActiveTab>("available");
-  const [isLoading, setIsLoading] = useState(true);
   const [pendingFixtureId, setPendingFixtureId] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [actionErrorMessage, setActionErrorMessage] = useState<string | null>(
+    null,
+  );
   const [rewardPromptFixtureId, setRewardPromptFixtureId] = useState<
     string | null
   >(null);
 
-  const load = useCallback(async () => {
-    setErrorMessage(null);
-    const [nextBootstrap, fixtures, predictions] = await Promise.all([
-      apiClient.getBootstrap(),
-      apiClient.getTodayFixtures(),
-      apiClient.getTodayPredictions(),
-    ]);
-
-    setBootstrap(nextBootstrap);
-    setState({
-      fixtures: fixtures.fixtures,
-      predictions: predictions.predictions,
-      businessDate: fixtures.businessDate,
-    });
-  }, [apiClient, setBootstrap]);
-
   useEffect(() => {
     initializeTelegramWebApp();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial client bootstrap fetch synchronizes with backend API.
-    load()
-      .catch((error: unknown) => {
-        logMatchesLoadError(error);
-        setErrorMessage(messageForApiError(error, locale));
-      })
-      .finally(() => setIsLoading(false));
-  }, [load, locale]);
+  }, []);
 
   const predictionsByFixture = useMemo(
     () =>
       new Map(
-        state.predictions.map((prediction) => [
+        data.predictions.map((prediction) => [
           prediction.fixtureId,
           prediction,
         ]),
       ),
-    [state.predictions],
+    [data.predictions],
   );
   const visibleMatchCount =
-    activeTab === "available"
-      ? state.fixtures.length
-      : state.predictions.length;
+    activeTab === "available" ? data.fixtures.length : data.predictions.length;
 
   async function handleOutcome(
     fixtureId: string,
@@ -100,7 +63,7 @@ const MatchesScreen: React.FC = () => {
     }
 
     setPendingFixtureId(fixtureId);
-    setErrorMessage(null);
+    setActionErrorMessage(null);
     setRewardPromptFixtureId(null);
 
     try {
@@ -114,7 +77,7 @@ const MatchesScreen: React.FC = () => {
 
       await handleActionResult(result, fixtureId);
     } catch (error) {
-      setErrorMessage(messageForApiError(error, locale));
+      setActionErrorMessage(messageForApiError(error, locale));
     } finally {
       setPendingFixtureId(null);
     }
@@ -130,20 +93,12 @@ const MatchesScreen: React.FC = () => {
     }
 
     if (result.status === "locked") {
-      setErrorMessage(t("errors.PREDICTION_LOCKED"));
+      setActionErrorMessage(t("errors.PREDICTION_LOCKED"));
       await refreshPredictionsOnly();
       return;
     }
 
-    await load();
-  }
-
-  async function refreshPredictionsOnly(): Promise<void> {
-    const predictions = await apiClient.getTodayPredictions();
-    setState((current) => ({
-      ...current,
-      predictions: predictions.predictions,
-    }));
+    await refresh();
   }
 
   if (isLoading) {
@@ -155,7 +110,9 @@ const MatchesScreen: React.FC = () => {
       <main className={styles.centerState}>
         <section className={styles.statePanel}>
           <h1>{t("matches.title")}</h1>
-          <p>{errorMessage ?? t("matches.authRequired")}</p>
+          <p>
+            {actionErrorMessage ?? errorMessage ?? t("matches.authRequired")}
+          </p>
         </section>
       </main>
     );
@@ -165,24 +122,26 @@ const MatchesScreen: React.FC = () => {
     <main className={styles.screen}>
       <div className={styles.topArea}>
         <Header bootstrap={bootstrap} />
-        {errorMessage ? (
-          <div className={styles.errorBanner}>{errorMessage}</div>
+        {actionErrorMessage || errorMessage ? (
+          <div className={styles.errorBanner}>
+            {actionErrorMessage ?? errorMessage}
+          </div>
         ) : null}
         <Quota usage={bootstrap.dailyPredictionUsage} />
         <MatchesTabs
           activeTab={activeTab}
-          predictionCount={state.predictions.length}
+          predictionCount={data.predictions.length}
           onChange={setActiveTab}
         />
         <TodayContextRow
-          businessDate={state.businessDate}
+          businessDate={data.businessDate}
           matchCount={visibleMatchCount}
         />
       </div>
       <div className={styles.scrollArea} data-ui="matches-scroll-area">
         {activeTab === "available" ? (
           <FixtureList
-            fixtures={state.fixtures}
+            fixtures={data.fixtures}
             predictionsByFixture={predictionsByFixture}
             pendingFixtureId={pendingFixtureId}
             rewardPromptFixtureId={rewardPromptFixtureId}
@@ -190,8 +149,8 @@ const MatchesScreen: React.FC = () => {
           />
         ) : (
           <MyPicks
-            predictions={state.predictions}
-            fixtures={state.fixtures}
+            predictions={data.predictions}
+            fixtures={data.fixtures}
             onSelectOutcome={handleOutcome}
           />
         )}

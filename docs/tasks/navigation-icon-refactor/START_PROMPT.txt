@@ -1,1 +1,0 @@
-Реализуй задачу из docs/tasks/navigation-icon-refactor/CODEX_TASK.md. Используй reference-navigation-design.png и SVG из assets/ как визуальный source of truth. Не меняй маршруты и поведение bottom navigation, не добавляй новую библиотеку иконок; сделай локальные theme-aware иконки через currentColor и проверь light/dark active/inactive states.

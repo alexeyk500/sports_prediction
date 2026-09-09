@@ -1,9 +1,0 @@
-Реализуй задачу из docs/tasks/cup-leaderboard-request-dedup-refactor/CODEX_TASK.md.
-
-Сначала проследи полный request flow для CupLeaderboard: от родителя и ICupLeaderboardDataSource до ApiClient. Найди все места, которые могут создавать `GET /api/cups/:cupId/leaderboard?mode=top&limit=50`.
-
-Отрефактори загрузку leaderboard так, чтобы `CupLeaderboard` не владел низкоуровневой дедупликацией запросов. Убери зависимость `modeState -> loadMode -> useEffect`, стабилизируй dataSource и реализуй in-flight deduplication на data/query layer по полноценному request key (`cupId`, `mode`, `limit`, `cursor`, `radius`). Два одновременных одинаковых вызова должны использовать один Promise и отправлять ровно один HTTP request.
-
-Не отключай React Strict Mode, не используй `hasLoadedRef`/useRef hacks, debounce, timers или глобальные boolean-флаги. Сохрани lazy loading режимов, Around Me radius=4, All pagination, retry, API contract, business logic и UI.
-
-Добавь тесты на concurrent deduplication, cleanup после reject/retry, разные request keys и защиту от двойной загрузки одного pagination cursor. После реализации проверь dev Strict Mode Network и production build.

@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import type React from "react";
+import { useBootstrap } from "@/hooks/useBootstrap";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import CupHeader from "./CupHeader/CupHeader";
 import CupModeTabs from "./CupModeTabs/CupModeTabs";
@@ -12,7 +13,6 @@ import type {
 } from "./CurrentCupView/CupLeaderboard/leaderboard-types";
 import PrizesView from "./PrizesView/PrizesView";
 import type { CupTab } from "./cup-types";
-import { useCupBootstrap } from "./hooks/useCupBootstrap";
 import { useCupTopLeaderboard } from "./hooks/useCupTopLeaderboard";
 import styles from "./CupScreen.module.css";
 
@@ -22,7 +22,7 @@ interface ICupScreenProps {
 
 const CupScreen: React.FC<ICupScreenProps> = ({ onOpenMatches }) => {
   const { t } = useTranslation();
-  const { bootstrap, isLoading, errorMessage, apiClient } = useCupBootstrap();
+  const { bootstrap, isLoading, errorMessage, apiClient } = useBootstrap();
   const [activeTab, setActiveTab] = useState<CupTab>("current");
   const cupId = bootstrap?.currentTournament?.id ?? null;
   const topLeaderboard = useCupTopLeaderboard(cupId, apiClient);

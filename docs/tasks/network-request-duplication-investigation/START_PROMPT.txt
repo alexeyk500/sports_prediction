@@ -1,5 +1,0 @@
-Реализуй задачу из docs/tasks/network-request-duplication-investigation/CODEX_TASK.md.
-
-Перед началом обязательно посмотри docs/tasks/network-request-duplication-investigation/network-duplicates.png. На скриншоте видно, что `bootstrap`, `today`, `leaderboard` и `history` выполняются парами.
-
-Сначала найди общий root cause, начиная с initiator `client.ts:174`, и отдельно проверь влияние React Strict Mode в dev и поведение production build. Не маскируй проблему debounce/useRef/global dedupe и не отключай Strict Mode без доказательства причины. Исправь дублирование на правильном архитектурном уровне и проверь Network после исправления.

@@ -1,5 +1,0 @@
-Выполни задачу из docs/tasks/prizes-view-prize-pool-background-refactor/CODEX_TASK.md.
-
-В `PrizesView` установи `/assets/screens/prize-pool-background.webp` фоном карточки Prize Pool и полностью убери текущий `poolIcon` вместе с его ненужным wrapper/styles. Кубок уже нарисован внутри background asset.
-
-Сумму prize pool, валюту, `Prize pool` и `Top N players get rewarded` оставь динамическим React-текстом из текущих API/DB данных. Настрой responsive background crop/position и расположение текста так, чтобы оно соответствовало композиции картинки и не перекрывало кубок. Остальные секции Prizes не меняй.
