@@ -1,32 +1,23 @@
 import type React from "react";
+import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import styles from "./SupportLegalSection.module.css";
 
-interface ISupportLegalSectionProps {
-  onOpenHelp: () => void;
-  onOpenPrivacy: () => void;
-  onOpenTerms: () => void;
-}
-
-const SupportLegalSection: React.FC<ISupportLegalSectionProps> = ({
-  onOpenHelp,
-  onOpenPrivacy,
-  onOpenTerms,
-}) => {
+const SupportLegalSection: React.FC = () => {
   const { t } = useTranslation();
 
   return (
     <section className={styles.section} aria-labelledby="profile-support-legal">
       <h2 id="profile-support-legal">{t("profile.supportLegal.section")}</h2>
       <div className={styles.panel}>
-        <button type="button" className={styles.row} onClick={onOpenHelp}>
+        <Link href="/help" className={styles.row}>
           <span className={styles.iconBox} data-tone="help" aria-hidden="true">
             <HeadsetIcon />
           </span>
           <span>{t("profile.supportLegal.help")}</span>
           <ChevronIcon className={styles.chevron} />
-        </button>
-        <button type="button" className={styles.row} onClick={onOpenPrivacy}>
+        </Link>
+        <Link href="/privacy" className={styles.row}>
           <span
             className={styles.iconBox}
             data-tone="privacy"
@@ -36,14 +27,14 @@ const SupportLegalSection: React.FC<ISupportLegalSectionProps> = ({
           </span>
           <span>{t("profile.supportLegal.privacy")}</span>
           <ChevronIcon className={styles.chevron} />
-        </button>
-        <button type="button" className={styles.row} onClick={onOpenTerms}>
+        </Link>
+        <Link href="/terms" className={styles.row}>
           <span className={styles.iconBox} data-tone="terms" aria-hidden="true">
             <ShieldIcon />
           </span>
           <span>{t("profile.supportLegal.terms")}</span>
           <ChevronIcon className={styles.chevron} />
-        </button>
+        </Link>
       </div>
     </section>
   );

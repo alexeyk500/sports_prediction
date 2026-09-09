@@ -1,0 +1,24 @@
+import type React from "react";
+
+interface IShieldIconProps {
+  className?: string;
+}
+
+const ShieldIcon: React.FC<IShieldIconProps> = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path d="M12 3 19 6v5c0 4.5-2.8 7.7-7 10-4.2-2.3-7-5.5-7-10V6l7-3Z" />
+    <path d="m9.5 12 1.8 1.8 3.4-3.6" />
+  </svg>
+);
+
+export default ShieldIcon;

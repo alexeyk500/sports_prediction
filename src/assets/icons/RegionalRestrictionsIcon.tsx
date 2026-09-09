@@ -1,0 +1,30 @@
+import type React from "react";
+
+interface IRegionalRestrictionsIconProps {
+  className?: string;
+}
+
+const RegionalRestrictionsIcon: React.FC<IRegionalRestrictionsIconProps> = ({
+  className,
+}) => (
+  <svg
+    className={className}
+    viewBox="0 0 40 40"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.4"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <circle cx="20" cy="20" r="15.5" />
+    <path d="M4.5 20h31" />
+    <path d="M20 4.5c4.4 4.2 6.5 9.4 6.5 15.5S24.4 31.3 20 35.5" />
+    <path d="M20 4.5c-4.4 4.2-6.5 9.4-6.5 15.5S15.6 31.3 20 35.5" />
+    <path d="M7.8 10.8c3.5 2 7.6 3 12.2 3s8.7-1 12.2-3" />
+    <path d="M7.8 29.2c3.5-2 7.6-3 12.2-3s8.7 1 12.2 3" />
+  </svg>
+);
+
+export default RegionalRestrictionsIcon;

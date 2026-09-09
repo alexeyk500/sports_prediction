@@ -91,11 +91,7 @@ const ProfileScreen: React.FC = () => {
               updateSettings({ appearance: nextAppearance }, "appearance")
             }
           />
-          <SupportLegalSection
-            onOpenHelp={showPlaceholder}
-            onOpenPrivacy={showPlaceholder}
-            onOpenTerms={showPlaceholder}
-          />
+          <SupportLegalSection />
           <AppInfo />
         </div>
       </div>

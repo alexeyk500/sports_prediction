@@ -619,6 +619,25 @@ CupHero/
 └── CupHero.module.css
 ```
 
+## 11.3 Public Support and Legal Pages
+
+Public Help, Privacy Policy, and Terms of Use routes live outside the
+authenticated `AppShell`.
+
+Approved public-document drafts are converted into typed static runtime
+content under:
+
+```text
+src/content/public-docs/
+```
+
+Runtime public pages must not read `docs/tasks/` files and must not add a
+Markdown or MDX rendering pipeline solely for these documents.
+
+Public long-form pages use their own route/page shell and scoped scroll
+container so the global `html, body` overflow contract for authenticated
+Telegram screens remains intact.
+
 A meaningful child component should be placed under the directory of its
 immediate owning component.
 
