@@ -1,0 +1,558 @@
+.screen {
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 0%, rgb(255 255 255 / 70%), transparent 36%),
+    var(--color-app-bg);
+  color: var(--color-text);
+}
+
+:global(:root[data-theme="dark"]) .screen {
+  background:
+    radial-gradient(circle at 50% 0%, rgb(30 41 59 / 56%), transparent 40%),
+    var(--color-app-bg);
+}
+
+.scrollArea {
+  height: 100%;
+  overflow-y: auto;
+  padding-block: calc(24px + env(safe-area-inset-top)) 28px;
+  padding-inline: 18px;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin-block-end: 18px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 850;
+  line-height: 1.08;
+}
+
+.header p {
+  margin: 6px 0 0;
+  color: var(--color-muted);
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.backButton,
+.closeButton {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.backIcon,
+.closeIcon,
+.chevronIcon,
+.copyIcon,
+.linkIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.closeIcon,
+.chevronIcon,
+.copyIcon,
+.linkIcon {
+  background: currentColor;
+}
+
+.infoCard,
+.summaryCard,
+.stateCard,
+.prizeCard,
+.claimSummary,
+.notice,
+.warning,
+.errorNotice {
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  box-shadow: var(--shadow-card);
+}
+
+.infoCard {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 18px;
+}
+
+.brandIcon {
+  width: 54px;
+  height: 54px;
+}
+
+.smallBrandIcon {
+  width: 34px;
+  height: 34px;
+}
+
+.infoCard strong,
+.summaryCard h2,
+.stateCard strong {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.infoCard p,
+.stateCard p {
+  margin: 6px 0 0;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.summaryCard,
+.stateCard {
+  margin-block-start: 16px;
+  padding: 18px;
+}
+
+.summaryCard h2 {
+  margin: 0 0 16px;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summaryValue {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.summaryValue + .summaryValue {
+  border-inline-start: 1px solid var(--color-border);
+  padding-inline-start: 12px;
+}
+
+.summaryValue span {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.summaryValue strong {
+  font-size: 24px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.summaryValue small {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.pending {
+  color: var(--color-warning-text);
+}
+
+.paid {
+  color: var(--color-accent-text);
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+  margin-block-start: 16px;
+}
+
+.prizeCard {
+  overflow: hidden;
+}
+
+.ready {
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent) 70%,
+    var(--color-border)
+  );
+}
+
+.action {
+  border-color: color-mix(
+    in srgb,
+    var(--color-warning-border) 88%,
+    var(--color-border)
+  );
+}
+
+.rejected {
+  border-color: color-mix(
+    in srgb,
+    var(--color-danger-border) 88%,
+    var(--color-border)
+  );
+}
+
+.cardButton {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) minmax(86px, auto);
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  border: 0;
+  padding: 14px;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-align: start;
+}
+
+.trophyBox {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: color-mix(
+    in srgb,
+    var(--color-surface-elevated) 82%,
+    transparent
+  );
+  color: #d79821;
+}
+
+.review .trophyBox,
+.paidCard .trophyBox {
+  color: var(--color-muted);
+}
+
+.action .trophyBox {
+  color: var(--color-warning-text);
+}
+
+.rejected .trophyBox {
+  color: var(--color-danger-text);
+}
+
+.trophyIcon {
+  width: 30px;
+  height: 30px;
+  background: currentColor;
+}
+
+.cardContent {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.cardContent strong,
+.claimSummary strong {
+  overflow-wrap: anywhere;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.cardContent span,
+.claimSummary span,
+.detailLine {
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.cardContent b,
+.claimSummary b {
+  font-size: 21px;
+  line-height: 1.1;
+}
+
+.cardActions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px;
+  justify-items: end;
+  gap: 10px;
+}
+
+.statusPill {
+  grid-column: 1 / -1;
+  border-radius: 999px;
+  padding-block: 6px;
+  padding-inline: 10px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-text);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.cardActionLabel {
+  align-self: center;
+  border: 1px solid currentColor;
+  border-radius: 10px;
+  padding-block: 8px;
+  padding-inline: 10px;
+  color: var(--color-accent-text);
+  font-size: 12px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.action .cardActionLabel {
+  color: var(--color-warning-text);
+}
+
+.action .statusPill {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.rejected .statusPill {
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}
+
+.review .statusPill {
+  background: color-mix(in srgb, #2563eb 14%, var(--color-surface));
+  color: #2563eb;
+}
+
+.paidCard .statusPill {
+  background: var(--color-accent-soft);
+}
+
+[dir="rtl"] .chevronIcon {
+  transform: scaleX(-1);
+}
+
+.stateCard button,
+.submitButton {
+  width: 100%;
+  min-height: 56px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font: inherit;
+  font-weight: 850;
+}
+
+.sheetBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  align-items: end;
+  background: rgb(15 23 42 / 50%);
+}
+
+.sheet {
+  position: relative;
+  display: grid;
+  max-height: 92dvh;
+  gap: 14px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 24px 24px 0 0;
+  padding-block: 34px calc(24px + env(safe-area-inset-bottom));
+  padding-inline: 18px;
+  background: var(--color-app-bg);
+  box-shadow: 0 -24px 50px rgb(0 0 0 / 28%);
+}
+
+.sheet h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 850;
+  line-height: 1.1;
+}
+
+.sheet > p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.closeButton {
+  position: absolute;
+  inset-block-start: 14px;
+  inset-inline-end: 14px;
+}
+
+.claimSummary {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px;
+}
+
+.assetRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 34px minmax(0, 1.4fr);
+  gap: 8px;
+  align-items: center;
+  border-top: 1px solid var(--color-border);
+  padding-block-start: 14px;
+  font-weight: 800;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.inputWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  align-items: center;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+  background: var(--color-surface);
+}
+
+.inputWrap input {
+  min-width: 0;
+  border: 0;
+  padding-block: 16px;
+  padding-inline: 14px;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+}
+
+.inputWrap button {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--color-muted);
+}
+
+.notice,
+.warning {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 12px;
+  padding: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.35;
+}
+
+.warning {
+  border-color: var(--color-warning-border);
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.errorNotice,
+.fieldError,
+.copyMessage {
+  color: var(--color-danger-text);
+}
+
+.copyMessage {
+  margin: 0;
+  color: var(--color-accent-text);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.errorNotice {
+  padding: 14px;
+}
+
+.noticeIcon {
+  width: 24px;
+  height: 24px;
+  background: currentColor;
+}
+
+.secondaryLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-accent-text);
+  font-weight: 800;
+}
+
+.hashLine {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding-block: 10px;
+  padding-inline: 12px 4px;
+  background: var(--color-surface);
+}
+
+.hashLine span {
+  grid-column: 1 / -1;
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.hashLine bdi {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hashLine button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--color-muted);
+}
+
+.submitButton:disabled {
+  opacity: 0.65;
+}
+
+@media (max-width: 370px) {
+  .scrollArea,
+  .sheet {
+    padding-inline: 14px;
+  }
+
+  .header h1,
+  .sheet h2 {
+    font-size: 27px;
+  }
+
+  .cardButton {
+    grid-template-columns: 50px minmax(0, 1fr);
+  }
+
+  .cardActions {
+    grid-column: 2;
+    grid-template-columns: minmax(0, 1fr) 22px;
+    align-items: center;
+    justify-items: start;
+  }
+}
