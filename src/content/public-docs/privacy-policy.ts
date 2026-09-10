@@ -7,6 +7,21 @@ export const privacyPolicy: IPublicDocument = {
   subtitle: "How Goalstery handles your data.",
   version: "Version 1.0",
   lastUpdatedLabel: "Last updated Sep 9, 2026",
+  contentsLabel: "Contents",
+  authoritativeNotice: null,
+  highlightsAriaLabel: "Privacy highlights",
+  highlights: [
+    {
+      tone: "privacy",
+      title: "Your Telegram privacy",
+      text: "Goalstery does not request access to your Telegram messages, contacts or phone number.",
+    },
+    {
+      tone: "security",
+      title: "Crypto safety",
+      text: "We will never ask for your seed phrase, private key or wallet password.",
+    },
+  ],
   intro: [
     'This Privacy Policy explains how Goalstery ("Goalstery", "we", "us", or "our") handles information when you use the Goalstery Telegram Mini App.',
     "By using Goalstery, you acknowledge the practices described in this Privacy Policy.",

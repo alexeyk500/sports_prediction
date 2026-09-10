@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import PublicHelpPage from "@/components/PublicHelpPage/PublicHelpPage";
+import PublicHelpLocalePage from "@/components/PublicDocsLocalePages/PublicHelpLocalePage";
 
 export const metadata: Metadata = {
   title: "Help & Support | Goalstery",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function HelpPage() {
-  return <PublicHelpPage />;
+  return <PublicHelpLocalePage />;
 }

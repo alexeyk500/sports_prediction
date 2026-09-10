@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import PublicDocumentPage from "@/components/PublicDocumentPage/PublicDocumentPage";
-import { termsOfUse } from "@/content/public-docs/terms-of-use";
+import PublicTermsLocalePage from "@/components/PublicDocsLocalePages/PublicTermsLocalePage";
 
 export const metadata: Metadata = {
   title: "Terms of Use | Goalstery",
@@ -8,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
-  return <PublicDocumentPage document={termsOfUse} />;
+  return <PublicTermsLocalePage />;
 }

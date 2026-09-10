@@ -16,6 +16,7 @@
   width: min(100%, 980px);
   min-height: 100%;
   margin-inline: auto;
+  box-sizing: border-box;
   padding: calc(18px + env(safe-area-inset-top)) 18px
     calc(28px + env(safe-area-inset-bottom));
 }

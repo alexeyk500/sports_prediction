@@ -7,29 +7,37 @@ import TelegramIcon from "@/assets/icons/TelegramIcon";
 import TrophyOutlineIcon from "@/assets/icons/TrophyOutlineIcon";
 import UserIcon from "@/assets/icons/UserIcon";
 import PublicPageShell from "@/components/PublicPageShell/PublicPageShell";
-import {
-  additionalHelpSections,
-  helpCategories,
-  popularHelpQuestions,
-} from "@/content/public-docs/help-support";
 import type {
   IHelpCategory,
+  IHelpContent,
   IHelpQuestion,
 } from "@/content/public-docs/public-doc-types";
+import { directionForLocale, type SupportedLocale } from "@/lib/i18n/locales";
 import { supportDestination } from "@/content/public-docs/support-destination";
 import styles from "./PublicHelpPage.module.css";
 
-const PublicHelpPage: React.FC = () => (
+interface IPublicHelpPageProps {
+  content: IHelpContent;
+  locale: SupportedLocale;
+}
+
+const PublicHelpPage: React.FC<IPublicHelpPageProps> = ({
+  content,
+  locale,
+}) => (
   <PublicPageShell>
-    <div className={styles.page}>
+    <div className={styles.page} lang={locale} dir={directionForLocale(locale)}>
       <header className={styles.hero}>
-        <p className={styles.eyebrow}>SUPPORT & LEGAL</p>
-        <h1>Help & Support</h1>
-        <p>How can we help you?</p>
+        <p className={styles.eyebrow}>{content.eyebrow}</p>
+        <h1>{content.title}</h1>
+        <p>{content.subtitle}</p>
       </header>
 
-      <nav className={styles.categoryGrid} aria-label="Help categories">
-        {helpCategories.map((category) => (
+      <nav
+        className={styles.categoryGrid}
+        aria-label={content.categoriesAriaLabel}
+      >
+        {content.categories.map((category) => (
           <a
             key={category.id}
             href={`#${category.id}`}
@@ -46,44 +54,46 @@ const PublicHelpPage: React.FC = () => (
 
       <section className={styles.popular} aria-labelledby="popular-questions">
         <div className={styles.sectionTitle}>
-          <h2 id="popular-questions">Popular questions</h2>
+          <h2 id="popular-questions">{content.popularQuestionsTitle}</h2>
         </div>
         <div className={styles.faqList}>
-          {popularHelpQuestions.map((question) => (
+          {content.popularQuestions.map((question) => (
             <FaqItem key={question.id} question={question} />
           ))}
         </div>
       </section>
 
-      <SupportCta />
+      <SupportCta content={content} />
 
       <div className={styles.sections}>
-        {[...helpCategories, ...additionalHelpSections].map((category) => (
-          <section
-            key={category.id}
-            id={category.id}
-            className={styles.helpSection}
-          >
-            <div className={styles.helpSectionHeader}>
-              <CategoryIcon category={category} />
-              <span>
-                <h2>{category.title}</h2>
-                <p>{category.description}</p>
-              </span>
-            </div>
-            <div className={styles.faqList}>
-              {category.questions.map((question) => (
-                <FaqItem key={question.id} question={question} />
-              ))}
-            </div>
-          </section>
-        ))}
+        {[...content.categories, ...content.additionalSections].map(
+          (category) => (
+            <section
+              key={category.id}
+              id={category.id}
+              className={styles.helpSection}
+            >
+              <div className={styles.helpSectionHeader}>
+                <CategoryIcon category={category} />
+                <span>
+                  <h2>{category.title}</h2>
+                  <p>{category.description}</p>
+                </span>
+              </div>
+              <div className={styles.faqList}>
+                {category.questions.map((question) => (
+                  <FaqItem key={question.id} question={question} />
+                ))}
+              </div>
+            </section>
+          ),
+        )}
       </div>
 
       <footer className={styles.footer}>
-        <Link href="/privacy">Privacy Policy</Link>
+        <Link href="/privacy">{content.privacyLinkLabel}</Link>
         <span aria-hidden="true">·</span>
-        <Link href="/terms">Terms of Use</Link>
+        <Link href="/terms">{content.termsLinkLabel}</Link>
       </footer>
     </div>
   </PublicPageShell>
@@ -127,27 +137,25 @@ const FaqItem: React.FC<IFaqItemProps> = ({ question }) => (
   </details>
 );
 
-const SupportCta: React.FC = () => (
+interface ISupportCtaProps {
+  content: IHelpContent;
+}
+
+const SupportCta: React.FC<ISupportCtaProps> = ({ content }) => (
   <section className={styles.supportCta} aria-labelledby="support-cta-title">
     <span className={styles.telegramBadge} aria-hidden="true">
       <TelegramIcon />
     </span>
     <div>
-      <h2 id="support-cta-title">Need more help?</h2>
-      <p>
-        Contact the Goalstery support team through the official Telegram support
-        account shown inside Goalstery.
-      </p>
+      <h2 id="support-cta-title">{content.supportTitle}</h2>
+      <p>{content.supportDescription}</p>
     </div>
     {supportDestination.telegramUrl ? (
       <a className={styles.supportButton} href={supportDestination.telegramUrl}>
-        Contact Support
+        {content.supportButtonLabel}
       </a>
     ) : (
-      <p className={styles.supportUnavailable}>
-        Official support account is not configured yet. Use only the support
-        account identified inside Goalstery.
-      </p>
+      <p className={styles.supportUnavailable}>{content.supportUnavailable}</p>
     )}
   </section>
 );

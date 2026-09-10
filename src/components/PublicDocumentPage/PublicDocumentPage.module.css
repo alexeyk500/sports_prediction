@@ -1,13 +1,17 @@
 .document {
   display: grid;
   gap: 18px;
+  width: 100%;
+  min-width: 0;
   max-width: 780px;
   margin-inline: auto;
+  overflow-wrap: anywhere;
 }
 
 .hero {
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 
 .eyebrow {
@@ -50,6 +54,7 @@
 
 .contents {
   overflow: hidden;
+  min-width: 0;
   border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
   border-radius: 10px;
   background: color-mix(in srgb, var(--color-surface) 86%, transparent);
@@ -86,7 +91,8 @@
   display: grid;
   gap: 10px;
   margin: 0;
-  padding: 0 18px 16px 44px;
+  padding-block: 0 16px;
+  padding-inline: 44px 18px;
   color: var(--color-muted);
 }
 
@@ -116,6 +122,22 @@
 
 .intro p {
   margin: 0;
+}
+
+.authoritativeNotice {
+  padding: 12px 14px;
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent) 36%, var(--color-border));
+  border-radius: 8px;
+  background: color-mix(
+    in srgb,
+    var(--color-accent-soft) 34%,
+    var(--color-surface)
+  );
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.4;
 }
 
 .highlight,
@@ -309,7 +331,7 @@
 }
 
 .cupsHeader > div {
-  transform: translateX(8px);
+  margin-inline-start: 8px;
 }
 
 .summaryIcon {
@@ -356,6 +378,12 @@
   font-weight: 500;
   line-height: 1.18;
   white-space: nowrap;
+}
+
+.document:where([lang="ru"], [lang="de"], [lang="es"], [lang="ar"])
+  .cupsColumns
+  li {
+  white-space: normal;
 }
 
 .cupsColumns li svg {

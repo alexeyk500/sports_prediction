@@ -7,6 +7,8 @@ export const termsOfUse: IPublicDocument = {
   subtitle: "The rules for using Goalstery.",
   version: "Version 1.0",
   lastUpdatedLabel: "Last updated Sep 9, 2026",
+  contentsLabel: "Contents",
+  authoritativeNotice: null,
   intro: [
     'These Terms of Use ("Terms") govern your use of the Goalstery Telegram Mini App and related services ("Goalstery" or the "Service").',
     "By using Goalstery, you agree to these Terms. If you do not agree to these Terms, do not use Goalstery.",

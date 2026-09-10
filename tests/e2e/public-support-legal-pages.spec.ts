@@ -1,5 +1,48 @@
 import { expect, test } from "@playwright/test";
 
+const localizedExpectations = {
+  en: {
+    dir: "ltr",
+    help: "Help & Support",
+    privacy: "Privacy Policy",
+    terms: "Terms of Use",
+    contents: "Contents",
+    beforePlay: "Before you play",
+  },
+  ru: {
+    dir: "ltr",
+    help: "Помощь и поддержка",
+    privacy: "Политика конфиденциальности",
+    terms: "Условия использования",
+    contents: "Содержание",
+    beforePlay: "Перед игрой",
+  },
+  de: {
+    dir: "ltr",
+    help: "Hilfe & Support",
+    privacy: "Datenschutzerklärung",
+    terms: "Nutzungsbedingungen",
+    contents: "Inhalt",
+    beforePlay: "Bevor du spielst",
+  },
+  es: {
+    dir: "ltr",
+    help: "Ayuda y soporte",
+    privacy: "Política de privacidad",
+    terms: "Términos de uso",
+    contents: "Contenido",
+    beforePlay: "Antes de jugar",
+  },
+  ar: {
+    dir: "rtl",
+    help: "المساعدة والدعم",
+    privacy: "سياسة الخصوصية",
+    terms: "شروط الاستخدام",
+    contents: "المحتويات",
+    beforePlay: "قبل اللعب",
+  },
+} as const;
+
 test.describe("public support and legal pages", () => {
   test("public routes render directly without bottom navigation", async ({
     page,
@@ -24,7 +67,7 @@ test.describe("public support and legal pages", () => {
   }) => {
     await page.goto("/privacy");
 
-    await page.getByText("Contents").click();
+    await page.locator("details summary", { hasText: "Contents" }).click();
     const firstContentLink = page.getByRole("link", {
       name: "Information We Receive",
     });
@@ -55,5 +98,71 @@ test.describe("public support and legal pages", () => {
     await expect(
       page.getByRole("link", { name: "Contact Support" }),
     ).toHaveCount(0);
+  });
+
+  test("public pages render in the persisted Goalstery locale", async ({
+    baseURL,
+    browser,
+  }) => {
+    const origin = new URL(baseURL ?? "http://127.0.0.1:3000").origin;
+
+    for (const [locale, expectation] of Object.entries(localizedExpectations)) {
+      const context = await browser.newContext({
+        storageState: {
+          cookies: [],
+          origins: [
+            {
+              origin,
+              localStorage: [
+                {
+                  name: "goalstery-settings",
+                  value: JSON.stringify({
+                    state: { locale, appearance: "system" },
+                    version: 0,
+                  }),
+                },
+              ],
+            },
+          ],
+        },
+      });
+      const page = await context.newPage();
+
+      await page.goto("/help");
+      await expect(
+        page.getByRole("heading", { level: 1, name: expectation.help }),
+      ).toBeVisible();
+      await expect(page.locator(`main [lang="${locale}"]`)).toHaveAttribute(
+        "dir",
+        expectation.dir,
+      );
+
+      await page.goto("/privacy");
+      await expect(
+        page.getByRole("heading", { level: 1, name: expectation.privacy }),
+      ).toBeVisible();
+      await page
+        .locator("details summary", { hasText: expectation.contents })
+        .click();
+      await expect(page.locator("#information-we-receive")).toBeVisible();
+
+      await page.goto("/terms");
+      await expect(
+        page.getByRole("heading", { level: 1, name: expectation.terms }),
+      ).toBeVisible();
+      await expect(page.getByText(expectation.beforePlay)).toBeVisible();
+      await expect(
+        page.getByRole("heading", { level: 2, name: "Cups" }).first(),
+      ).toBeVisible();
+
+      if (locale === "ar") {
+        await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
+        await expect(page.locator('main [lang="ar"]')).toContainText(
+          "Telegram",
+        );
+      }
+
+      await context.close();
+    }
   });
 });

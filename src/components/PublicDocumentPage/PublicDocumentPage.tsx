@@ -12,68 +12,39 @@ import TermsSummaryTrophyIcon from "@/assets/icons/TermsSummaryTrophyIcon";
 import TermsSummaryXIcon from "@/assets/icons/TermsSummaryXIcon";
 import type {
   IPublicDocument,
+  IPublicDocumentHighlight,
+  ITermsSummaryContent,
   PublicDocBlock,
 } from "@/content/public-docs/public-doc-types";
+import { directionForLocale, type SupportedLocale } from "@/lib/i18n/locales";
 import PublicPageShell from "@/components/PublicPageShell/PublicPageShell";
 import styles from "./PublicDocumentPage.module.css";
 
 interface IPublicDocumentPageProps {
   document: IPublicDocument;
+  locale: SupportedLocale;
+  termsSummary?: ITermsSummaryContent;
 }
 
-const beforeYouPlayItems = [
-  {
-    label: "18+ only",
-    lines: ["18+", "only"],
-    tone: "neutral",
-    icon: Age18Icon,
-  },
-  {
-    label: "Free participation",
-    lines: ["Free", "participation"],
-    tone: "positive",
-    icon: FreeParticipationIcon,
-  },
-  {
-    label: "No wagering",
-    lines: ["No", "wagering"],
-    tone: "restrictive",
-    icon: NoWageringIcon,
-  },
-  {
-    label: "Cups have no monetary value",
-    lines: ["Cups have", "no monetary", "value"],
-    tone: "informational",
-    icon: NoMonetaryValueIcon,
-  },
-  {
-    label: "Prize Cups may have regional restrictions",
-    lines: ["Prize Cups", "may have", "regional", "restrictions"],
-    tone: "caution",
-    icon: RegionalRestrictionsIcon,
-  },
-];
-
-const cupsPositive = [
-  "Earned through play",
-  "Used for rankings",
-  "Help you compete",
-];
-const cupsNegative = [
-  "Cannot be purchased",
-  "Cannot be transferred",
-  "Cannot be withdrawn",
-  "No monetary value",
-];
+const beforeYouPlayIcons = [
+  Age18Icon,
+  FreeParticipationIcon,
+  NoWageringIcon,
+  NoMonetaryValueIcon,
+  RegionalRestrictionsIcon,
+] as const;
 
 const PublicDocumentPage: React.FC<IPublicDocumentPageProps> = ({
   document,
+  locale,
+  termsSummary,
 }) => {
   const isTerms = document.slug === "terms";
+  const direction = directionForLocale(locale);
 
   return (
     <PublicPageShell>
-      <article className={styles.document}>
+      <article className={styles.document} lang={locale} dir={direction}>
         <div className={styles.hero}>
           <p className={styles.eyebrow}>{document.eyebrow}</p>
           <h1>{document.title}</h1>
@@ -88,7 +59,7 @@ const PublicDocumentPage: React.FC<IPublicDocumentPageProps> = ({
         <details className={styles.contents}>
           <summary>
             <FileTextIcon />
-            <span>Contents</span>
+            <span>{document.contentsLabel}</span>
             <ChevronDownIcon className={styles.contentsChevron} />
           </summary>
           <ol>
@@ -101,25 +72,24 @@ const PublicDocumentPage: React.FC<IPublicDocumentPageProps> = ({
         </details>
 
         <div className={styles.intro}>
+          {document.authoritativeNotice ? (
+            <aside className={styles.authoritativeNotice}>
+              {document.authoritativeNotice}
+            </aside>
+          ) : null}
           {document.intro.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
 
-        {!isTerms ? (
-          <div className={styles.calloutGrid} aria-label="Privacy highlights">
-            <HighlightCard
-              tone="privacy"
-              title="Your Telegram privacy"
-              text="Goalstery does not request access to your Telegram messages, contacts or phone number."
-              icon={<ShieldIcon />}
-            />
-            <HighlightCard
-              tone="security"
-              title="Crypto safety"
-              text="We will never ask for your seed phrase, private key or wallet password."
-              icon={<ShieldIcon />}
-            />
+        {document.highlights ? (
+          <div
+            className={styles.calloutGrid}
+            aria-label={document.highlightsAriaLabel}
+          >
+            {document.highlights.map((highlight) => (
+              <HighlightCard key={highlight.title} highlight={highlight} />
+            ))}
           </div>
         ) : null}
 
@@ -129,11 +99,11 @@ const PublicDocumentPage: React.FC<IPublicDocumentPageProps> = ({
               className={styles.beforePlay}
               aria-labelledby="before-you-play"
             >
-              <h2 id="before-you-play">Before you play</h2>
-              <p>A quick overview of the key rules.</p>
+              <h2 id="before-you-play">{termsSummary?.beforeTitle}</h2>
+              <p>{termsSummary?.beforeSubtitle}</p>
               <div className={styles.beforePlayList}>
-                {beforeYouPlayItems.map((item) => {
-                  const Icon = item.icon;
+                {termsSummary?.facts.map((item, index) => {
+                  const Icon = beforeYouPlayIcons[index];
 
                   return (
                     <span key={item.label} data-tone={item.tone}>
@@ -155,13 +125,13 @@ const PublicDocumentPage: React.FC<IPublicDocumentPageProps> = ({
               <div className={styles.cupsHeader}>
                 <TermsSummaryTrophyIcon className={styles.summaryIcon} />
                 <div>
-                  <h2 id="cups-summary">Cups</h2>
-                  <p>Goalstery scoring points</p>
+                  <h2 id="cups-summary">{termsSummary?.cupsTitle}</h2>
+                  <p>{termsSummary?.cupsSubtitle}</p>
                 </div>
               </div>
               <div className={styles.cupsColumns}>
                 <ul>
-                  {cupsPositive.map((item) => (
+                  {termsSummary?.positiveRules.map((item) => (
                     <li key={item} data-kind="positive">
                       <TermsSummaryCheckIcon />
                       {item}
@@ -169,7 +139,7 @@ const PublicDocumentPage: React.FC<IPublicDocumentPageProps> = ({
                   ))}
                 </ul>
                 <ul>
-                  {cupsNegative.map((item) => (
+                  {termsSummary?.negativeRules.map((item) => (
                     <li key={item} data-kind="negative">
                       <TermsSummaryXIcon />
                       {item}
@@ -206,23 +176,17 @@ const PublicDocumentPage: React.FC<IPublicDocumentPageProps> = ({
 };
 
 interface IHighlightCardProps {
-  tone: "privacy" | "security";
-  title: string;
-  text: string;
-  icon: React.ReactNode;
+  highlight: IPublicDocumentHighlight;
 }
 
-const HighlightCard: React.FC<IHighlightCardProps> = ({
-  tone,
-  title,
-  text,
-  icon,
-}) => (
-  <section className={styles.highlight} data-tone={tone}>
-    <span className={styles.highlightIcon}>{icon}</span>
+const HighlightCard: React.FC<IHighlightCardProps> = ({ highlight }) => (
+  <section className={styles.highlight} data-tone={highlight.tone}>
+    <span className={styles.highlightIcon}>
+      <ShieldIcon />
+    </span>
     <span>
-      <strong>{title}</strong>
-      <span>{text}</span>
+      <strong>{highlight.title}</strong>
+      <span>{highlight.text}</span>
     </span>
   </section>
 );

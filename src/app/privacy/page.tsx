@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import PublicDocumentPage from "@/components/PublicDocumentPage/PublicDocumentPage";
-import { privacyPolicy } from "@/content/public-docs/privacy-policy";
+import PublicPrivacyLocalePage from "@/components/PublicDocsLocalePages/PublicPrivacyLocalePage";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Goalstery",
@@ -8,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  return <PublicDocumentPage document={privacyPolicy} />;
+  return <PublicPrivacyLocalePage />;
 }
