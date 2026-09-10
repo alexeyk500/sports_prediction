@@ -161,6 +161,7 @@ export const privacyPolicy: IPublicDocument = {
         },
         {
           kind: "paragraph",
+          supportLink: true,
           text: "If you are eligible to receive a cryptocurrency prize, you may be asked to contact Goalstery Support and voluntarily provide a wallet address required to deliver the prize. Wallet information will be used for verifying and processing the applicable prize payment and related support or compliance matters.",
         },
         {
@@ -186,6 +187,7 @@ export const privacyPolicy: IPublicDocument = {
       blocks: [
         {
           kind: "paragraph",
+          supportLink: true,
           text: "You may request deletion of your Goalstery account and associated personal information by contacting Goalstery Support through the official Telegram support account.",
         },
         {
@@ -238,6 +240,7 @@ export const privacyPolicy: IPublicDocument = {
       blocks: [
         {
           kind: "paragraph",
+          supportLink: true,
           text: "Depending on where you live, applicable law may provide rights concerning your personal information, which may include rights to request access, correction, deletion, restriction, or other actions. Requests may be submitted through the official Goalstery Telegram support account, and Goalstery may need to verify the account before acting.",
         },
       ],
@@ -258,6 +261,7 @@ export const privacyPolicy: IPublicDocument = {
       blocks: [
         {
           kind: "paragraph",
+          supportLink: true,
           text: "For privacy questions, account deletion requests, or other privacy-related requests, contact Goalstery through its official Telegram support account. The specific official support account displayed by Goalstery should be used to avoid impersonation or fraudulent support accounts.",
         },
       ],

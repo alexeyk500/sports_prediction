@@ -40,6 +40,7 @@ export const popularHelpQuestions: IHelpQuestion[] = [
   {
     id: "contact-support",
     question: "How do I contact support?",
+    supportLink: true,
     answer: [
       "Contact the Goalstery support team through the official Telegram support account shown inside Goalstery. Use only the support account identified inside Goalstery to avoid impersonation or fraudulent support accounts.",
     ],
@@ -108,6 +109,7 @@ export const helpCategories: IHelpCategory[] = [
       {
         id: "claim-crypto-prize",
         question: "How do I claim a cryptocurrency prize?",
+        supportLink: true,
         answer: [
           "If you win an eligible cryptocurrency prize, you may be asked to contact the official Goalstery Telegram support account and provide a compatible public cryptocurrency wallet address so the prize can be sent manually.",
           "Always check the wallet address and network carefully before providing it. Blockchain transactions may be irreversible.",
@@ -184,6 +186,7 @@ export const helpCategories: IHelpCategory[] = [
       {
         id: "delete-account",
         question: "How do I delete my Goalstery account?",
+        supportLink: true,
         answer: [
           "Contact the official Goalstery Telegram support account and request account deletion. Goalstery will process the request and delete or anonymize associated personal information as appropriate.",
           "Some historical competition information may be retained in anonymized form when necessary to preserve the integrity of completed competitions and leaderboards.",
@@ -283,6 +286,7 @@ export const additionalHelpSections: IHelpCategory[] = [
       {
         id: "prediction-pending",
         question: "My prediction is still pending",
+        supportLink: true,
         answer: [
           "A prediction can remain pending while Goalstery waits for sufficient match-result information, particularly when a match is postponed, suspended, abandoned, cancelled, or otherwise unresolved. If you believe a completed match has remained pending incorrectly, contact Goalstery Support.",
         ],
@@ -297,6 +301,7 @@ export const additionalHelpSections: IHelpCategory[] = [
       {
         id: "settled-incorrectly",
         question: "I think my prediction was settled incorrectly",
+        supportLink: true,
         answer: [
           "Contact Goalstery Support and provide enough information to identify the match and prediction. Goalstery can review the settlement and correct it where appropriate.",
         ],
@@ -304,6 +309,7 @@ export const additionalHelpSections: IHelpCategory[] = [
       {
         id: "cannot-access-prize-cup",
         question: "I cannot access a Prize Cup",
+        supportLink: true,
         answer: [
           "A particular Prize Cup may have eligibility or geographic restrictions. Access to Goalstery itself does not guarantee access to every Prize Cup. If you believe you should be eligible, contact Goalstery Support.",
         ],

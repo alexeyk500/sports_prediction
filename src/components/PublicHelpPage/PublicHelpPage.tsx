@@ -133,6 +133,16 @@ const FaqItem: React.FC<IFaqItemProps> = ({ question }) => (
       {question.answer.map((paragraph) => (
         <p key={paragraph}>{paragraph}</p>
       ))}
+      {question.supportLink && supportDestination.telegramUrl ? (
+        <a
+          className={styles.inlineSupportLink}
+          href={supportDestination.telegramUrl}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          <bdi>{supportDestination.displayUsername}</bdi>
+        </a>
+      ) : null}
     </div>
   </details>
 );
@@ -151,7 +161,12 @@ const SupportCta: React.FC<ISupportCtaProps> = ({ content }) => (
       <p>{content.supportDescription}</p>
     </div>
     {supportDestination.telegramUrl ? (
-      <a className={styles.supportButton} href={supportDestination.telegramUrl}>
+      <a
+        className={styles.supportButton}
+        href={supportDestination.telegramUrl}
+        target="_blank"
+        rel="noreferrer noopener"
+      >
         {content.supportButtonLabel}
       </a>
     ) : (

@@ -79,7 +79,7 @@ test.describe("public support and legal pages", () => {
     await expect(page.locator("#information-we-receive")).toBeVisible();
   });
 
-  test("help FAQ expands and support CTA has no fabricated destination", async ({
+  test("help FAQ expands and support links use the configured destination", async ({
     page,
   }) => {
     await page.goto("/help");
@@ -93,11 +93,13 @@ test.describe("public support and legal pages", () => {
         .first(),
     ).toBeVisible();
     await expect(
-      page.getByText("Official support account is not configured yet."),
-    ).toBeVisible();
-    await expect(
       page.getByRole("link", { name: "Contact Support" }),
-    ).toHaveCount(0);
+    ).toHaveAttribute("href", "https://t.me/goalstery_admin");
+
+    await page.getByText("How do I contact support?").first().click();
+    await expect(
+      page.getByRole("link", { name: "@goalstery_admin" }).first(),
+    ).toHaveAttribute("href", "https://t.me/goalstery_admin");
   });
 
   test("public pages render in the persisted Goalstery locale", async ({
@@ -141,6 +143,9 @@ test.describe("public support and legal pages", () => {
       await expect(
         page.getByRole("heading", { level: 1, name: expectation.privacy }),
       ).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: "@goalstery_admin" }).first(),
+      ).toHaveAttribute("href", "https://t.me/goalstery_admin");
       await page
         .locator("details summary", { hasText: expectation.contents })
         .click();
@@ -154,6 +159,9 @@ test.describe("public support and legal pages", () => {
       await expect(
         page.getByRole("heading", { level: 2, name: "Cups" }).first(),
       ).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: "@goalstery_admin" }).first(),
+      ).toHaveAttribute("href", "https://t.me/goalstery_admin");
 
       if (locale === "ar") {
         await expect(page.locator("html")).toHaveAttribute("dir", "rtl");

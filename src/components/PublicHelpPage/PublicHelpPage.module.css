@@ -65,6 +65,7 @@
 .categoryCard:focus-visible,
 .footer a:focus-visible,
 .supportButton:focus-visible,
+.inlineSupportLink:focus-visible,
 .faqItem summary:focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
@@ -169,6 +170,20 @@
   color: var(--color-text-secondary);
   font-size: 15px;
   line-height: 1.45;
+}
+
+.inlineSupportLink {
+  width: fit-content;
+  color: var(--color-accent-text);
+  font-size: 15px;
+  font-weight: 750;
+  line-height: 1.35;
+  text-decoration: none;
+  unicode-bidi: isolate;
+}
+
+.inlineSupportLink:hover {
+  text-decoration: underline;
 }
 
 .supportCta {

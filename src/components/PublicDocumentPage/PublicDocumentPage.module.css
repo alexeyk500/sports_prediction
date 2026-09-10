@@ -102,9 +102,17 @@
 }
 
 .contents a:focus-visible,
-.contents a:hover {
+.contents a:hover,
+.inlineSupportLink:hover {
   color: var(--color-accent-text);
   text-decoration: underline;
+}
+
+.inlineSupportLink {
+  color: var(--color-accent-text);
+  font-weight: 750;
+  text-decoration: none;
+  unicode-bidi: isolate;
 }
 
 .calloutGrid {

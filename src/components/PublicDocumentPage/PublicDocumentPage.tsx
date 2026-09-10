@@ -16,6 +16,7 @@ import type {
   ITermsSummaryContent,
   PublicDocBlock,
 } from "@/content/public-docs/public-doc-types";
+import { supportDestination } from "@/content/public-docs/support-destination";
 import { directionForLocale, type SupportedLocale } from "@/lib/i18n/locales";
 import PublicPageShell from "@/components/PublicPageShell/PublicPageShell";
 import styles from "./PublicDocumentPage.module.css";
@@ -214,7 +215,24 @@ const Block: React.FC<IBlockProps> = ({ block }) => {
     );
   }
 
-  return <p>{block.text}</p>;
+  return (
+    <p>
+      {block.text}
+      {block.supportLink && supportDestination.telegramUrl ? (
+        <>
+          {" "}
+          <a
+            className={styles.inlineSupportLink}
+            href={supportDestination.telegramUrl}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <bdi>{supportDestination.displayUsername}</bdi>
+          </a>
+        </>
+      ) : null}
+    </p>
+  );
 };
 
 export default PublicDocumentPage;

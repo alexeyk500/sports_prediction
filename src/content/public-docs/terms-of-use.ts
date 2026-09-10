@@ -136,6 +136,7 @@ export const termsOfUse: IPublicDocument = {
       blocks: [
         {
           kind: "paragraph",
+          supportLink: true,
           text: "Where a winner is entitled to a cryptocurrency prize, the winner may be required to contact the official Goalstery Support account and provide a valid cryptocurrency wallet address compatible with the announced prize.",
         },
         {
@@ -327,6 +328,7 @@ export const termsOfUse: IPublicDocument = {
       blocks: [
         {
           kind: "paragraph",
+          supportLink: true,
           text: "Questions concerning these Terms, competitions, prize claims, account deletion, or the Service may be submitted through the official Goalstery Telegram support account. Users should rely on the support account identified within Goalstery to avoid impersonation or fraudulent support accounts.",
         },
       ],

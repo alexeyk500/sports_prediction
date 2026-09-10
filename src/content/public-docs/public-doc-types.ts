@@ -2,6 +2,7 @@ export type PublicDocBlock =
   | {
       kind: "paragraph";
       text: string;
+      supportLink?: boolean;
     }
   | {
       kind: "list";
@@ -11,6 +12,7 @@ export type PublicDocBlock =
       kind: "callout";
       text: string;
       tone: "privacy" | "security" | "info";
+      supportLink?: boolean;
     };
 
 export interface IPublicDocSection {
@@ -44,6 +46,7 @@ export interface IHelpQuestion {
   id: string;
   question: string;
   answer: string[];
+  supportLink?: boolean;
 }
 
 export interface IHelpCategory {

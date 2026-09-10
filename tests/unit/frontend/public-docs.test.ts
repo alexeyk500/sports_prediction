@@ -10,7 +10,7 @@ import {
   publicDocsByLocale,
   resolvePublicDocsLocaleContent,
 } from "@/content/public-docs/public-docs-registry";
-import { supportDestination } from "@/content/public-docs/support-destination";
+import { buildSupportDestination } from "@/content/public-docs/support-destination";
 import { termsOfUse } from "@/content/public-docs/terms-of-use";
 
 describe("public support and legal content", () => {
@@ -47,7 +47,7 @@ describe("public support and legal content", () => {
     );
   });
 
-  it("defines Help categories, popular questions and no fabricated support URL", () => {
+  it("defines Help categories and popular questions", () => {
     expect(helpCategories.map((category) => category.title)).toEqual([
       "Predictions",
       "Cups",
@@ -68,7 +68,77 @@ describe("public support and legal content", () => {
       "Privacy & Security",
       "Troubleshooting",
     ]);
-    expect(supportDestination.telegramUrl).toBeNull();
+  });
+
+  it("builds the configured Telegram support destination from env values", () => {
+    expect(buildSupportDestination("goalstery_admin")).toEqual({
+      username: "goalstery_admin",
+      displayUsername: "@goalstery_admin",
+      telegramUrl: "https://t.me/goalstery_admin",
+    });
+    expect(buildSupportDestination("@goalstery_admin")).toEqual({
+      username: "goalstery_admin",
+      displayUsername: "@goalstery_admin",
+      telegramUrl: "https://t.me/goalstery_admin",
+    });
+    expect(buildSupportDestination("bad username")).toEqual({
+      username: null,
+      displayUsername: null,
+      telegramUrl: null,
+    });
+    expect(buildSupportDestination("")).toEqual({
+      username: null,
+      displayUsername: null,
+      telegramUrl: null,
+    });
+  });
+
+  it("marks actionable support locations without changing localized content shape", () => {
+    const helpSupportQuestionIds = new Set(
+      [
+        ...popularHelpQuestions,
+        ...[...helpCategories, ...additionalHelpSections].flatMap(
+          (category) => category.questions,
+        ),
+      ]
+        .filter((question) => question.supportLink)
+        .map((question) => question.id),
+    );
+    const privacySupportSections = privacyPolicy.sections
+      .filter((section) =>
+        section.blocks.some(
+          (block) => "supportLink" in block && block.supportLink,
+        ),
+      )
+      .map((section) => section.id);
+    const termsSupportSections = termsOfUse.sections
+      .filter((section) =>
+        section.blocks.some(
+          (block) => "supportLink" in block && block.supportLink,
+        ),
+      )
+      .map((section) => section.id);
+
+    expect(helpSupportQuestionIds).toEqual(
+      new Set([
+        "contact-support",
+        "claim-crypto-prize",
+        "delete-account",
+        "prediction-pending",
+        "settled-incorrectly",
+        "cannot-access-prize-cup",
+      ]),
+    );
+    expect(privacySupportSections).toEqual([
+      "prize-information",
+      "account-and-data-deletion",
+      "your-rights",
+      "contact",
+    ]);
+    expect(termsSupportSections).toEqual([
+      "prize-claims-and-cryptocurrency-payments",
+      "contact",
+    ]);
   });
 
   it("defines localized public docs for every supported locale", () => {
