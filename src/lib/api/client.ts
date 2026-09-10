@@ -7,6 +7,7 @@ import type {
   CupHistoryResponse,
   CupLeaderboardModeDto,
   CupLeaderboardPageResponse,
+  MonetagRewardSessionDto,
   PredictionMutationResponse,
   PredictionOutcome,
   PrizePayoutCardDto,
@@ -60,6 +61,33 @@ export class ApiClient {
 
   getTodayPredictions(): Promise<TodayPredictionsResponse> {
     return this.request("/api/predictions/today");
+  }
+
+  createMonetagRewardSession(input: {
+    fixtureId: string;
+    selectedOutcome: PredictionOutcome;
+  }): Promise<MonetagRewardSessionDto> {
+    return this.request("/api/ad-rewards/monetag/sessions", {
+      method: "POST",
+      body: input,
+    });
+  }
+
+  getMonetagRewardSession(input: {
+    adRewardId: string;
+  }): Promise<MonetagRewardSessionDto> {
+    return this.request(`/api/ad-rewards/monetag/sessions/${input.adRewardId}`);
+  }
+
+  confirmMonetagRewardSession(input: {
+    adRewardId: string;
+  }): Promise<MonetagRewardSessionDto> {
+    return this.request(
+      `/api/ad-rewards/monetag/sessions/${input.adRewardId}/confirm`,
+      {
+        method: "POST",
+      },
+    );
   }
 
   getCupLeaderboard(input: {
@@ -275,6 +303,16 @@ function logApiClientError(error: ApiClientError, cause?: unknown): void {
     return;
   }
 
+  if (isExpectedControlFlowError(error)) {
+    console.info("API request completed with controlled domain response", {
+      endpoint: error.endpoint,
+      status: error.status,
+      code: error.code,
+      message: error.message,
+    });
+    return;
+  }
+
   console.error("API request failed", {
     endpoint: error.endpoint,
     status: error.status,
@@ -282,6 +320,10 @@ function logApiClientError(error: ApiClientError, cause?: unknown): void {
     message: error.message,
     cause: cause instanceof Error ? cause.message : undefined,
   });
+}
+
+function isExpectedControlFlowError(error: ApiClientError): boolean {
+  return error.code === "REWARDED_AD_REQUIRED";
 }
 
 function isApiErrorEnvelope(payload: unknown): payload is ApiErrorEnvelope {

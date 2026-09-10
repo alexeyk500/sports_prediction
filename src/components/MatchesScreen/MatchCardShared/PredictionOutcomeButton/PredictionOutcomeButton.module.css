@@ -1,5 +1,7 @@
 .outcomeButton,
-.selectedOutcome {
+.selectedOutcome,
+.successOutcome,
+.wrongOutcome {
   min-height: 72px;
   border: 1.5px solid var(--outcome-border);
   border-radius: 16px;
@@ -11,7 +13,9 @@
 }
 
 .outcomeButton:disabled,
-.selectedOutcome:disabled {
+.selectedOutcome:disabled,
+.successOutcome:disabled,
+.wrongOutcome:disabled {
   cursor: not-allowed;
   color: var(--match-meta);
   opacity: 0.68;
@@ -34,4 +38,24 @@
 
 .selectedOutcome .outcomeCode {
   color: var(--selected-text);
+}
+
+.successOutcome {
+  border-color: var(--result-success-border, #21a67a);
+  background: var(--result-success-bg, #dcfce7);
+  color: var(--result-success-text, #14532d);
+}
+
+.successOutcome .outcomeCode {
+  color: var(--result-success-text, #14532d);
+}
+
+.wrongOutcome {
+  border-color: var(--result-wrong-border, #dc2626);
+  background: var(--result-wrong-bg, #fee2e2);
+  color: var(--result-wrong-text, #7f1d1d);
+}
+
+.wrongOutcome .outcomeCode {
+  color: var(--result-wrong-text, #7f1d1d);
 }

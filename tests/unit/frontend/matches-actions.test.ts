@@ -2,7 +2,37 @@ import { describe, expect, it, vi } from "vitest";
 import { ApiClientError } from "@/lib/api/client";
 import { selectOutcome } from "@/components/MatchesScreen/matches-actions";
 import { PREDICTION_OUTCOME_ORDER } from "@/components/MatchesScreen/matches-outcomes";
-import type { PredictionDto } from "@/lib/api/types";
+import type { PredictionDto, TodayFixtureDto } from "@/lib/api/types";
+
+const fixture: TodayFixtureDto = {
+  id: "fixture-1",
+  kickoffAt: "2026-09-05T15:00:00.000Z",
+  competition: {
+    id: "competition-1",
+    code: "EPL",
+    name: "Premier League",
+    slug: "premier-league",
+  },
+  homeTeam: {
+    id: "team-1",
+    name: "Arsenal",
+    slug: "arsenal",
+    shortName: null,
+  },
+  awayTeam: {
+    id: "team-2",
+    name: "Chelsea",
+    slug: "chelsea",
+    shortName: null,
+  },
+  status: "OPEN",
+  winningOutcome: null,
+  outcomes: {
+    home: { points: 13 },
+    draw: { points: 24 },
+    away: { points: 27 },
+  },
+};
 
 const editablePrediction: PredictionDto = {
   id: "prediction-1",
@@ -14,6 +44,7 @@ const editablePrediction: PredictionDto = {
   resultStatus: "PENDING",
   kickoffAt: "2026-09-05T15:00:00.000Z",
   editable: true,
+  fixture,
 };
 
 describe("Matches screen outcome actions", () => {
@@ -30,6 +61,7 @@ describe("Matches screen outcome actions", () => {
         apiClient: { createPrediction, updatePrediction },
         fixtureId: "fixture-1",
         selectedOutcome: "HOME",
+        canSubmitPrediction: true,
         createIdempotencyKey: () => "idem-1",
       }),
     ).resolves.toEqual({ status: "created" });
@@ -51,6 +83,7 @@ describe("Matches screen outcome actions", () => {
         fixtureId: "fixture-1",
         selectedOutcome: "DRAW",
         existingPrediction: editablePrediction,
+        canSubmitPrediction: true,
         createIdempotencyKey: () => "unused",
       }),
     ).resolves.toEqual({ status: "updated" });
@@ -71,6 +104,7 @@ describe("Matches screen outcome actions", () => {
         fixtureId: "fixture-1",
         selectedOutcome: "AWAY",
         existingPrediction: { ...editablePrediction, editable: false },
+        canSubmitPrediction: true,
         createIdempotencyKey: () => "unused",
       }),
     ).resolves.toMatchObject({ status: "locked" });
@@ -96,8 +130,27 @@ describe("Matches screen outcome actions", () => {
         apiClient: { createPrediction, updatePrediction },
         fixtureId: "fixture-1",
         selectedOutcome: "HOME",
+        canSubmitPrediction: true,
         createIdempotencyKey: () => "idem-1",
       }),
     ).resolves.toMatchObject({ status: "reward-required" });
+  });
+
+  it("does not call API when presentation state blocks mutation", async () => {
+    const createPrediction = vi.fn().mockResolvedValue({});
+    const updatePrediction = vi.fn().mockResolvedValue({});
+
+    await expect(
+      selectOutcome({
+        apiClient: { createPrediction, updatePrediction },
+        fixtureId: "fixture-1",
+        selectedOutcome: "HOME",
+        existingPrediction: editablePrediction,
+        canSubmitPrediction: false,
+        createIdempotencyKey: () => "unused",
+      }),
+    ).resolves.toEqual({ status: "blocked" });
+    expect(createPrediction).not.toHaveBeenCalled();
+    expect(updatePrediction).not.toHaveBeenCalled();
   });
 });

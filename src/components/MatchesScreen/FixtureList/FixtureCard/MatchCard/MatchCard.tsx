@@ -11,11 +11,16 @@ import MatchCardAmbientBackground from "../../../MatchCardShared/MatchCardAmbien
 import PredictionOutcomeButton from "../../../MatchCardShared/PredictionOutcomeButton/PredictionOutcomeButton";
 import TeamIdentity from "../../../MatchCardShared/TeamIdentity/TeamIdentity";
 import {
+  deriveMatchCardState,
   getCompetitionBadge,
   getTeamBadge,
 } from "../../../MatchCardShared/match-card-presentation";
 import { PREDICTION_OUTCOME_ORDER } from "../../../matches-outcomes";
-import LockIcon from "./LockIcon/LockIcon";
+import type { RewardFlowPresentation } from "../../../matches-types";
+import {
+  matchCardStatusLabel,
+  rewardFlowStatusLabel,
+} from "../../../matches-format";
 import styles from "./MatchCard.module.css";
 
 interface IMatchCardProps {
@@ -23,11 +28,12 @@ interface IMatchCardProps {
   prediction?: PredictionDto;
   pending: boolean;
   rewardRequired: boolean;
+  rewardFlow?: RewardFlowPresentation;
+  onStartReward: (fixtureId: string) => Promise<void>;
   onSelectOutcome: (
     fixtureId: string,
     selectedOutcome: PredictionOutcome,
   ) => Promise<void>;
-  fixtureStatusLabel: (status: string) => string;
   outcomeLabel: (outcome: PredictionOutcome) => string;
 }
 
@@ -36,18 +42,21 @@ const MatchCard: React.FC<IMatchCardProps> = ({
   prediction,
   pending,
   rewardRequired,
+  rewardFlow,
+  onStartReward,
   onSelectOutcome,
-  fixtureStatusLabel,
   outcomeLabel,
 }) => {
   const { t, locale } = useTranslation();
-  const editable = prediction ? prediction.editable : true;
-  const showLockedStatus = prediction !== undefined && !editable;
-  const showFixtureStatus =
-    prediction === undefined && fixture.status !== "OPEN";
-  const showStatusRow = showLockedStatus || showFixtureStatus || pending;
   const homeBadge = getTeamBadge(fixture.homeTeam);
   const awayBadge = getTeamBadge(fixture.awayTeam);
+  const cardState = deriveMatchCardState({
+    fixture,
+    prediction,
+    pending,
+    rewardRequired,
+  });
+  const statusLabel = matchCardStatusLabel(t, cardState.statusIntent);
 
   return (
     <article className={styles.fixtureCard}>
@@ -74,37 +83,40 @@ const MatchCard: React.FC<IMatchCardProps> = ({
               key={outcome}
               fixture={fixture}
               outcome={outcome}
-              selected={prediction?.selectedOutcome === outcome}
-              disabled={pending || !editable}
+              selected={cardState.selectedOutcome === outcome}
+              disabled={!cardState.canSubmitPrediction}
+              result={cardState.outcomeResults[outcome]}
               onSelectOutcome={onSelectOutcome}
               outcomeLabel={outcomeLabel(outcome)}
             />
           ))}
         </div>
-        {showStatusRow ? (
-          <div className={styles.fixtureStatus}>
-            {showLockedStatus ? (
-              <span className={styles.statusItem}>
-                <LockIcon />
-                <span>{t("matches.status.lockedAfterKickoff")}</span>
-              </span>
-            ) : null}
-            {showFixtureStatus ? (
-              <span className={styles.statusBadge}>
-                {fixtureStatusLabel(fixture.status)}
-              </span>
-            ) : null}
-            {pending ? (
-              <span className={styles.statusBadge}>
-                {t("matches.status.saving")}
-              </span>
-            ) : null}
-          </div>
-        ) : null}
+        <div className={styles.fixtureStatus} data-ui="match-card-status-slot">
+          {statusLabel ? (
+            <span className={styles.statusBadge}>{statusLabel}</span>
+          ) : null}
+        </div>
         {rewardRequired ? (
           <div className={styles.rewardPlaceholder}>
             <strong>{t("matches.reward.title")}</strong>
-            <span>{t("matches.reward.body")}</span>
+            <span>{rewardFlowStatusLabel(t, rewardFlow?.status)}</span>
+            <button
+              className={styles.rewardButton}
+              type="button"
+              disabled={
+                rewardFlow !== undefined &&
+                ![
+                  "required",
+                  "ready",
+                  "failed",
+                  "rejected",
+                  "timeout",
+                ].includes(rewardFlow.status)
+              }
+              onClick={() => void onStartReward(fixture.id)}
+            >
+              {t("matches.reward.start")}
+            </button>
           </div>
         ) : null}
       </div>

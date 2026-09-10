@@ -831,17 +831,29 @@ edit before kickoff
 locked/error behavior handled
 ```
 
-Rewarded flow before real Monetag integration:
+Rewarded Monetag integration:
 
 ```text
 free quota exhausted
 select additional outcome
 controlled rewarded-required UI appears
-frontend does not fabricate VERIFIED reward
+authenticated reward session creation requires eligibility
+ymid is opaque and server-generated
+session creation itself grants nothing
+Monetag SDK boundary uses configured main zone, same ymid and requestVar
+preload uses timeout=5
+direct show does not use preload timeout
+frontend Promise success alone grants nothing
+authenticated confirm after successful SDK Promise creates exactly one VERIFIED AdReward
+missing auth, wrong owner, expired or invalid sessions do not create grants
+duplicate confirm is idempotent
+public Monetag postback is not a reward authority
+verified AdReward is consumed atomically with one rewarded Prediction
+after consumption the same AdReward cannot unlock another Prediction
 ```
 
-After provider integration is approved, add browser coverage appropriate
-to the real verification contract.
+Mocked external-provider responses are allowed only at adapter
+boundaries. Do not mock internal quota/prediction transaction behavior.
 
 Browser layout sanity for current UI should verify:
 

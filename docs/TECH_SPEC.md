@@ -491,16 +491,38 @@ High-level flow:
 intended Prediction
 → server-created reward attempt
 → provider flow
-→ strongest available verification
+→ authenticated server confirmation after successful SDK flow
 → verified AdReward
 → one-time Prediction consumption
 ```
 
-A client callback claiming that an ad was watched is not sufficient
-proof by itself.
+Monetag Rewarded Interstitial uses a server-created `AdReward` session
+with provider `MONETAG`, placement `MATCHES_EXTRA_PREDICTION`, opaque
+server-generated `ymid`, and requestVar `matches_extra_prediction`.
+The frontend receives only client-safe SDK invocation data and must use
+the configured main SDK zone. The reward flow is launched from the
+specific MatchCard after the user selects the intended fixture/outcome.
 
-If the provider lacks a signed server verification mechanism, the
-integration must minimize forgery/replay using mechanisms such as:
+Durable reward authority is the authenticated Goalstery confirmation
+endpoint called after a successful Monetag SDK Promise:
+
+```text
+POST /api/ad-rewards/monetag/sessions/:id/confirm
+```
+
+The confirm endpoint determines ownership from Telegram authentication
+and loads the reward session by internal ID. It validates ownership, TTL,
+provider, placement and lifecycle state. It does not trust client
+supplied `ymid`, zone ID, requestVar, Telegram ID, reward status or
+amount as proof. Repeated confirm of an already `VERIFIED` session is
+idempotent; consumed, expired, rejected or wrong-owner sessions return
+controlled 4xx domain responses.
+
+This MVP intentionally trusts the successful client-side Monetag SDK
+flow followed by authenticated Goalstery confirmation. This is weaker
+than independent server-to-server proof and is an accepted MVP trade-off.
+
+The integration minimizes forgery/replay using:
 
 ```text
 server-created attempt
@@ -511,8 +533,15 @@ replay protection
 telemetry/anomaly detection
 ```
 
-Exact Monetag verification contract remains unresolved until integration
-design is approved.
+Environment configuration:
+
+```text
+MONETAG_REWARDED_INTERSTITIAL_ZONE_ID
+```
+
+Development and production use the same application/backend flow with
+separate real Monetag main SDK zones. Runtime development reward
+bypasses are not allowed.
 
 ---
 

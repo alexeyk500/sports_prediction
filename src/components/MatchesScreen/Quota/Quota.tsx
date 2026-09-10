@@ -2,32 +2,35 @@ import type React from "react";
 import type { BootstrapResponse } from "@/lib/api/types";
 import { formatLocalizedNumber } from "@/lib/i18n/format";
 import { useTranslation } from "@/lib/i18n/use-translation";
-import VideoIcon from "./VideoIcon/VideoIcon";
 import styles from "./Quota.module.css";
 
 interface IQuotaProps {
+  predictionCount: number;
   usage: BootstrapResponse["dailyPredictionUsage"];
 }
 
-const Quota: React.FC<IQuotaProps> = ({ usage }) => {
+const Quota: React.FC<IQuotaProps> = ({ predictionCount, usage }) => {
   const { t, locale } = useTranslation();
-  const freeSlots = Array.from(
-    { length: usage.freeLimit },
-    (_, index) => index < usage.freeUsed,
+  const displayedTotalUsed = Math.min(
+    Math.max(usage.totalUsed, predictionCount),
+    usage.totalLimit,
   );
-  const rewardedSlots = Array.from(
-    { length: usage.rewardedLimit },
-    (_, index) => index < usage.rewardedUsed,
+  const displayedFreeUsed = Math.min(usage.freeLimit, displayedTotalUsed);
+  const displayedRewardedUsed = Math.min(
+    usage.rewardedLimit,
+    Math.max(usage.rewardedUsed, displayedTotalUsed - usage.freeLimit),
   );
-  const showRewardCta =
-    usage.freeUsed >= usage.freeLimit &&
-    usage.rewardedUsed < usage.rewardedLimit;
+  const slots = Array.from({ length: usage.totalLimit }, (_, index) => ({
+    isUsed: index < displayedTotalUsed,
+  }));
+  const freeSlots = slots.slice(0, usage.freeLimit);
+  const rewardedSlots = slots.slice(usage.freeLimit);
   const values = {
-    freeUsed: formatLocalizedNumber(locale, usage.freeUsed),
+    freeUsed: formatLocalizedNumber(locale, displayedFreeUsed),
     freeLimit: formatLocalizedNumber(locale, usage.freeLimit),
-    rewardedUsed: formatLocalizedNumber(locale, usage.rewardedUsed),
+    rewardedUsed: formatLocalizedNumber(locale, displayedRewardedUsed),
     rewardedLimit: formatLocalizedNumber(locale, usage.rewardedLimit),
-    totalUsed: formatLocalizedNumber(locale, usage.totalUsed),
+    totalUsed: formatLocalizedNumber(locale, displayedTotalUsed),
     totalLimit: formatLocalizedNumber(locale, usage.totalLimit),
   };
 
@@ -44,19 +47,21 @@ const Quota: React.FC<IQuotaProps> = ({ usage }) => {
       </div>
       <div className={styles.quotaSlots} aria-hidden="true">
         <span className={styles.slotGroup}>
-          {freeSlots.map((isUsed, index) => (
+          {freeSlots.map((slot, index) => (
             <span
               key={`free-${index}`}
-              className={isUsed ? styles.freeSlotUsed : styles.slotUnused}
+              className={slot.isUsed ? styles.freeSlotUsed : styles.slotUnused}
             />
           ))}
         </span>
         <span className={styles.slotDivider} />
         <span className={styles.slotGroup}>
-          {rewardedSlots.map((isUsed, index) => (
+          {rewardedSlots.map((slot, index) => (
             <span
               key={`rewarded-${index}`}
-              className={isUsed ? styles.rewardedSlotUsed : styles.slotUnused}
+              className={
+                slot.isUsed ? styles.rewardedSlotUsed : styles.slotUnused
+              }
             />
           ))}
         </span>
@@ -75,18 +80,6 @@ const Quota: React.FC<IQuotaProps> = ({ usage }) => {
           })}
         </span>
       </div>
-      {showRewardCta ? (
-        <button
-          className={styles.rewardCta}
-          type="button"
-          disabled
-          aria-disabled="true"
-        >
-          <VideoIcon />
-          <span>{t("matches.reward.cta")}</span>
-          <strong>{t("matches.reward.plusOne")}</strong>
-        </button>
-      ) : null}
     </section>
   );
 };

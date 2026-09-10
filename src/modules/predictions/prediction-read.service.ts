@@ -1,4 +1,6 @@
 import type {
+  FixtureStatus,
+  PredictionOutcome,
   PredictionResultStatus,
   PredictionSlotType,
   PrismaClient,
@@ -8,6 +10,7 @@ import {
   getBusinessDayRangeUtc,
 } from "@/lib/time/business-time";
 import type { Clock } from "@/lib/time/clock";
+import { winningOutcomeForFixture } from "@/modules/fixtures/today-fixtures.service";
 
 export interface TodayPredictionsDependencies {
   prisma: PrismaClient;
@@ -24,6 +27,22 @@ export interface PredictionDto {
   resultStatus: PredictionResultStatus;
   kickoffAt: string;
   editable: boolean;
+  fixture: PredictionFixtureContextDto;
+}
+
+export interface PredictionFixtureContextDto {
+  id: string;
+  kickoffAt: string;
+  status: FixtureStatus;
+  winningOutcome: PredictionOutcome | null;
+  competition: CupHistoryCompetitionDto;
+  homeTeam: CupHistoryTeamDto;
+  awayTeam: CupHistoryTeamDto;
+  outcomes: {
+    home: { points: number };
+    draw: { points: number };
+    away: { points: number };
+  };
 }
 
 export interface CupHistoryTeamDto {
@@ -84,7 +103,14 @@ export async function getTodayPredictions(
       },
     },
     include: {
-      fixture: true,
+      fixture: {
+        include: {
+          competition: true,
+          homeTeam: true,
+          awayTeam: true,
+        },
+      },
+      outcomeSnapshot: true,
     },
     orderBy: [{ fixture: { kickoffAt: "asc" } }, { id: "asc" }],
     take: 100,
@@ -102,6 +128,38 @@ export async function getTodayPredictions(
       resultStatus: prediction.resultStatus,
       kickoffAt: prediction.fixture.kickoffAt.toISOString(),
       editable: now.getTime() < prediction.fixture.kickoffAt.getTime(),
+      fixture: {
+        id: prediction.fixture.id,
+        kickoffAt: prediction.fixture.kickoffAt.toISOString(),
+        status: prediction.fixture.status,
+        winningOutcome: winningOutcomeForFixture(
+          prediction.fixture.status,
+          prediction.fixture.finalOutcome,
+        ),
+        competition: {
+          id: prediction.fixture.competition.id,
+          code: prediction.fixture.competition.code,
+          name: prediction.fixture.competition.name,
+          slug: prediction.fixture.competition.slug,
+        },
+        homeTeam: {
+          id: prediction.fixture.homeTeam.id,
+          name: prediction.fixture.homeTeam.name,
+          slug: prediction.fixture.homeTeam.slug,
+          shortName: prediction.fixture.homeTeam.shortName,
+        },
+        awayTeam: {
+          id: prediction.fixture.awayTeam.id,
+          name: prediction.fixture.awayTeam.name,
+          slug: prediction.fixture.awayTeam.slug,
+          shortName: prediction.fixture.awayTeam.shortName,
+        },
+        outcomes: {
+          home: { points: prediction.outcomeSnapshot.homePoints },
+          draw: { points: prediction.outcomeSnapshot.drawPoints },
+          away: { points: prediction.outcomeSnapshot.awayPoints },
+        },
+      },
     })),
   };
 }
@@ -187,7 +245,7 @@ export function toPredictionDto(
     potentialPoints: number;
   },
   editable: boolean,
-): Omit<PredictionDto, "kickoffAt"> & {
+): Omit<PredictionDto, "kickoffAt" | "fixture"> & {
   probabilityAtPrediction?: string;
   outcomeSnapshotId?: string;
 } {

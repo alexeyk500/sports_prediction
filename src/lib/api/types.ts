@@ -197,6 +197,7 @@ export interface TodayFixtureDto {
     shortName: string | null;
   };
   status: string;
+  winningOutcome: PredictionOutcome | null;
   outcomes: Record<Lowercase<PredictionOutcome>, { points: number }>;
 }
 
@@ -215,6 +216,33 @@ export interface PredictionDto {
   resultStatus: "PENDING" | "CORRECT" | "INCORRECT";
   kickoffAt: string;
   editable: boolean;
+  fixture: PredictionFixtureContextDto;
+}
+
+export interface PredictionFixtureContextDto {
+  id: string;
+  kickoffAt: string;
+  status: string;
+  winningOutcome: PredictionOutcome | null;
+  competition: {
+    id: string;
+    code: string;
+    name: string;
+    slug: string;
+  };
+  homeTeam: {
+    id: string;
+    name: string;
+    slug: string;
+    shortName: string | null;
+  };
+  awayTeam: {
+    id: string;
+    name: string;
+    slug: string;
+    shortName: string | null;
+  };
+  outcomes: Record<Lowercase<PredictionOutcome>, { points: number }>;
 }
 
 export interface PredictionMutationResponse {
@@ -227,4 +255,13 @@ export interface PredictionMutationResponse {
   slotType: "FREE" | "REWARDED";
   probabilityAtPrediction: string;
   potentialPoints: number;
+}
+
+export interface MonetagRewardSessionDto {
+  adRewardId: string;
+  ymid: string;
+  zoneId: string;
+  requestVar: "matches_extra_prediction";
+  status: "CREATED" | "VERIFIED" | "CONSUMED" | "EXPIRED" | "REJECTED";
+  expiresAt: string;
 }

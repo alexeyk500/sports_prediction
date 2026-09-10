@@ -6,19 +6,26 @@ import type { PredictionDto, PredictionOutcome } from "@/lib/api/types";
 export type MatchesActionResult =
   | { status: "created" | "updated" }
   | { status: "reward-required" }
-  | { status: "locked" };
+  | { status: "locked" }
+  | { status: "blocked" };
 
 export interface SelectOutcomeInput {
   apiClient: Pick<ApiClient, "createPrediction" | "updatePrediction">;
   fixtureId: string;
   selectedOutcome: PredictionOutcome;
   existingPrediction?: PredictionDto;
+  canSubmitPrediction: boolean;
+  adRewardId?: string;
   createIdempotencyKey: () => string;
 }
 
 export async function selectOutcome(
   input: SelectOutcomeInput,
 ): Promise<MatchesActionResult> {
+  if (!input.canSubmitPrediction) {
+    return { status: "blocked" };
+  }
+
   if (input.existingPrediction) {
     if (!input.existingPrediction.editable) {
       return { status: "locked" };
@@ -48,6 +55,7 @@ export async function selectOutcome(
       fixtureId: input.fixtureId,
       selectedOutcome: input.selectedOutcome,
       idempotencyKey: input.createIdempotencyKey(),
+      ...(input.adRewardId ? { adRewardId: input.adRewardId } : {}),
     });
 
     return { status: "created" };

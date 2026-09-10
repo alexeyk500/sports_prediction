@@ -5,6 +5,7 @@ import type {
   TodayFixtureDto,
 } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
+import type { RewardFlowPresentation } from "../matches-types";
 import FixtureCard from "./FixtureCard/FixtureCard";
 import styles from "./FixtureList.module.css";
 
@@ -12,7 +13,8 @@ interface IFixtureListProps {
   fixtures: TodayFixtureDto[];
   predictionsByFixture: Map<string, PredictionDto>;
   pendingFixtureId: string | null;
-  rewardPromptFixtureId: string | null;
+  rewardFlow: ({ fixtureId: string } & RewardFlowPresentation) | null;
+  onStartReward: (fixtureId: string) => Promise<void>;
   onSelectOutcome: (
     fixtureId: string,
     selectedOutcome: PredictionOutcome,
@@ -23,7 +25,8 @@ const FixtureList: React.FC<IFixtureListProps> = ({
   fixtures,
   predictionsByFixture,
   pendingFixtureId,
-  rewardPromptFixtureId,
+  rewardFlow,
+  onStartReward,
   onSelectOutcome,
 }) => {
   const { t } = useTranslation();
@@ -44,7 +47,12 @@ const FixtureList: React.FC<IFixtureListProps> = ({
           fixture={fixture}
           prediction={predictionsByFixture.get(fixture.id)}
           pending={pendingFixtureId === fixture.id}
-          rewardRequired={rewardPromptFixtureId === fixture.id}
+          rewardFlow={
+            rewardFlow?.fixtureId === fixture.id
+              ? { status: rewardFlow.status }
+              : undefined
+          }
+          onStartReward={onStartReward}
           onSelectOutcome={onSelectOutcome}
         />
       ))}

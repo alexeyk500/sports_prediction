@@ -11,6 +11,7 @@ import styles from "./MyPicks.module.css";
 interface IMyPicksProps {
   predictions: PredictionDto[];
   fixtures: TodayFixtureDto[];
+  pendingFixtureId: string | null;
   onSelectOutcome: (
     fixtureId: string,
     selectedOutcome: PredictionOutcome,
@@ -20,6 +21,7 @@ interface IMyPicksProps {
 const MyPicks: React.FC<IMyPicksProps> = ({
   predictions,
   fixtures,
+  pendingFixtureId,
   onSelectOutcome,
 }) => {
   const { t } = useTranslation();
@@ -38,13 +40,15 @@ const MyPicks: React.FC<IMyPicksProps> = ({
   return (
     <section className={styles.fixtureList}>
       {predictions.map((prediction) => {
-        const fixture = fixturesById.get(prediction.fixtureId);
+        const fixture =
+          fixturesById.get(prediction.fixtureId) ?? prediction.fixture;
 
         return (
           <MyPickCard
             key={prediction.id}
             prediction={prediction}
             fixture={fixture}
+            pending={pendingFixtureId === prediction.fixtureId}
             onSelectOutcome={onSelectOutcome}
           />
         );

@@ -1334,12 +1334,7 @@ async function seedCupPredictions({
   const openFixtures = fixtures.filter((fixture) => fixture.status === "OPEN");
   const userIds = users.map((user) => user.id);
 
-  await prisma.prediction.deleteMany({
-    where: {
-      tournamentId,
-      userId: { in: userIds },
-    },
-  });
+  await deleteSeedPredictions({ tournamentId, userIds });
 
   for (const [userIndex, user] of users.entries()) {
     const plan = buildPredictionPlan({
@@ -1643,12 +1638,7 @@ async function cleanupSeedTournamentRows({ tournamentId, activeUserIds }) {
     (userId) => !activeUserIdSet.has(userId),
   );
 
-  await prisma.prediction.deleteMany({
-    where: {
-      tournamentId,
-      userId: { in: seedUserIds },
-    },
-  });
+  await deleteSeedPredictions({ tournamentId, userIds: seedUserIds });
 
   if (obsoleteUserIds.length > 0) {
     await prisma.tournamentParticipant.deleteMany({
@@ -1658,6 +1648,32 @@ async function cleanupSeedTournamentRows({ tournamentId, activeUserIds }) {
       },
     });
   }
+}
+
+async function deleteSeedPredictions({ tournamentId, userIds }) {
+  const predictions = await prisma.prediction.findMany({
+    where: {
+      tournamentId,
+      userId: { in: userIds },
+    },
+    select: { id: true },
+  });
+  const predictionIds = predictions.map((prediction) => prediction.id);
+
+  if (predictionIds.length === 0) {
+    return;
+  }
+
+  await prisma.adReward.deleteMany({
+    where: {
+      consumedByPredictionId: { in: predictionIds },
+    },
+  });
+  await prisma.prediction.deleteMany({
+    where: {
+      id: { in: predictionIds },
+    },
+  });
 }
 
 function buildPredictionPlan({

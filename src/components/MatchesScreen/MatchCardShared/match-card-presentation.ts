@@ -1,4 +1,8 @@
-import type { PredictionOutcome, TodayFixtureDto } from "@/lib/api/types";
+import type {
+  PredictionDto,
+  PredictionOutcome,
+  TodayFixtureDto,
+} from "@/lib/api/types";
 import {
   getCompetitionAssetUrl,
   getTeamAssetUrl,
@@ -15,6 +19,44 @@ export interface VisualBadge {
 
 export type BadgeTone =
   "purple" | "blue" | "red" | "green" | "gold" | "cyan" | "slate";
+
+export type MatchPhase =
+  "DRAFT" | "OPEN" | "LOCKED" | "LIVE" | "FINISHED" | "SETTLED";
+
+export type MatchPredictionPresentationState =
+  "NONE" | "SAVING" | "EDITABLE" | "LOCKED" | "CORRECT" | "WRONG";
+
+export type MatchCardStatusIntent =
+  | "NONE"
+  | "SAVING"
+  | "DRAFT"
+  | "PREDICTIONS_CLOSED"
+  | "LOCKED_AFTER_KICKOFF"
+  | "LIVE"
+  | "AWAITING_SETTLEMENT"
+  | "MATCH_FINISHED"
+  | "CORRECT"
+  | "WRONG";
+
+export interface MatchCardPresentationState {
+  phase: MatchPhase;
+  predictionState: MatchPredictionPresentationState;
+  canSubmitPrediction: boolean;
+  selectedOutcome?: PredictionOutcome;
+  statusIntent: MatchCardStatusIntent;
+  outcomeResults: Partial<Record<PredictionOutcome, "success" | "wrong">>;
+  hasStableStatusSlot: true;
+}
+
+export interface DeriveMatchCardStateInput {
+  fixture: Pick<TodayFixtureDto, "status" | "winningOutcome">;
+  prediction?: Pick<
+    PredictionDto,
+    "selectedOutcome" | "editable" | "resultStatus"
+  >;
+  pending: boolean;
+  rewardRequired: boolean;
+}
 
 const competitionBadgeTones: Record<string, BadgeTone> = {
   EPL: "purple",
@@ -45,6 +87,33 @@ export function getTeamBadge(
     tone: toneFromText(team.id),
     initials: initialsForName(team.shortName ?? team.name),
     logoUrl: getTeamAssetUrl(team.slug),
+  };
+}
+
+export function deriveMatchCardState(
+  input: DeriveMatchCardStateInput,
+): MatchCardPresentationState {
+  const phase = toMatchPhase(input.fixture.status);
+  const selectedOutcome = input.prediction?.selectedOutcome;
+  const predictionState = derivePredictionState(input);
+  const canSubmitPrediction =
+    phase === "OPEN" &&
+    !input.pending &&
+    !input.rewardRequired &&
+    (!input.prediction || input.prediction.editable);
+
+  return {
+    phase,
+    predictionState,
+    canSubmitPrediction,
+    selectedOutcome,
+    statusIntent: deriveStatusIntent(phase, predictionState, input.prediction),
+    outcomeResults: deriveOutcomeResults(
+      phase,
+      input.prediction,
+      input.fixture.winningOutcome,
+    ),
+    hasStableStatusSlot: true,
   };
 }
 
@@ -86,6 +155,102 @@ export function pointsForOutcome(
     case "AWAY":
       return fixture.outcomes.away.points;
   }
+}
+
+function derivePredictionState(
+  input: DeriveMatchCardStateInput,
+): MatchPredictionPresentationState {
+  if (input.pending) {
+    return "SAVING";
+  }
+
+  if (!input.prediction) {
+    return "NONE";
+  }
+
+  if (input.fixture.status === "SETTLED") {
+    if (input.prediction.resultStatus === "CORRECT") {
+      return "CORRECT";
+    }
+
+    if (input.prediction.resultStatus === "INCORRECT") {
+      return "WRONG";
+    }
+  }
+
+  return input.prediction.editable ? "EDITABLE" : "LOCKED";
+}
+
+function deriveStatusIntent(
+  phase: MatchPhase,
+  predictionState: MatchPredictionPresentationState,
+  prediction: DeriveMatchCardStateInput["prediction"],
+): MatchCardStatusIntent {
+  if (predictionState === "SAVING") {
+    return "SAVING";
+  }
+
+  if (predictionState === "CORRECT") {
+    return "CORRECT";
+  }
+
+  if (predictionState === "WRONG") {
+    return "WRONG";
+  }
+
+  if (predictionState === "LOCKED") {
+    return "LOCKED_AFTER_KICKOFF";
+  }
+
+  switch (phase) {
+    case "DRAFT":
+      return "DRAFT";
+    case "OPEN":
+      return "NONE";
+    case "LOCKED":
+      return prediction ? "LOCKED_AFTER_KICKOFF" : "PREDICTIONS_CLOSED";
+    case "LIVE":
+      return "LIVE";
+    case "FINISHED":
+      return prediction ? "AWAITING_SETTLEMENT" : "MATCH_FINISHED";
+    case "SETTLED":
+      return "MATCH_FINISHED";
+  }
+}
+
+function deriveOutcomeResults(
+  phase: MatchPhase,
+  prediction: DeriveMatchCardStateInput["prediction"],
+  winningOutcome: PredictionOutcome | null,
+): Partial<Record<PredictionOutcome, "success" | "wrong">> {
+  if (!prediction || phase !== "SETTLED") {
+    return {};
+  }
+
+  if (prediction.resultStatus === "CORRECT") {
+    return { [prediction.selectedOutcome]: "success" };
+  }
+
+  if (prediction.resultStatus === "INCORRECT") {
+    return {
+      [prediction.selectedOutcome]: "wrong",
+      ...(winningOutcome && winningOutcome !== prediction.selectedOutcome
+        ? { [winningOutcome]: "success" as const }
+        : {}),
+    };
+  }
+
+  return {};
+}
+
+function toMatchPhase(status: string): MatchPhase {
+  return isMatchPhase(status) ? status : "DRAFT";
+}
+
+function isMatchPhase(status: string): status is MatchPhase {
+  return ["DRAFT", "OPEN", "LOCKED", "LIVE", "FINISHED", "SETTLED"].includes(
+    status,
+  );
 }
 
 export function capitalizeTone(

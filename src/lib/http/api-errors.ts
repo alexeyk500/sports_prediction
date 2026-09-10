@@ -83,6 +83,7 @@ function statusForDomainError(code: string): number {
     case "COMPETITION_INACTIVE":
     case "INVALID_AD_REWARD":
     case "AD_REWARD_ALREADY_CONSUMED":
+    case "AD_REWARD_NOT_ELIGIBLE":
     case "INVALID_ODDS":
     case "INVALID_PROBABILITY":
     case "OUTCOME_SNAPSHOT_NOT_PUBLISHABLE":

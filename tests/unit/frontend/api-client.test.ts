@@ -116,4 +116,48 @@ describe("frontend API client", () => {
       },
     ]);
   });
+
+  it("creates, reads and confirms Monetag reward sessions through authenticated API", async () => {
+    const requests: Array<{ url: string; body: unknown }> = [];
+    const client = new ApiClient({
+      getTelegramInitData: () => "signed-init-data",
+      fetchImpl: async (input, init) => {
+        requests.push({
+          url: String(input),
+          body: init?.body ? JSON.parse(String(init.body)) : null,
+        });
+
+        return Response.json({
+          adRewardId: "reward-1",
+          ymid: "opaque-ymid",
+          zoneId: "1234567",
+          requestVar: "matches_extra_prediction",
+          status: "CREATED",
+          expiresAt: "2026-09-10T12:00:00.000Z",
+        });
+      },
+    });
+
+    await client.createMonetagRewardSession({
+      fixtureId: "fixture-1",
+      selectedOutcome: "AWAY",
+    });
+    await client.getMonetagRewardSession({ adRewardId: "reward-1" });
+    await client.confirmMonetagRewardSession({ adRewardId: "reward-1" });
+
+    expect(requests).toEqual([
+      {
+        url: "/api/ad-rewards/monetag/sessions",
+        body: { fixtureId: "fixture-1", selectedOutcome: "AWAY" },
+      },
+      {
+        url: "/api/ad-rewards/monetag/sessions/reward-1",
+        body: null,
+      },
+      {
+        url: "/api/ad-rewards/monetag/sessions/reward-1/confirm",
+        body: null,
+      },
+    ]);
+  });
 });

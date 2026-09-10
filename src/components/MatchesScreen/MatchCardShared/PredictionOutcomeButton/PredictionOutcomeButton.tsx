@@ -14,6 +14,7 @@ interface IPredictionOutcomeButtonProps {
   outcome: PredictionOutcome;
   selected: boolean;
   disabled: boolean;
+  result?: "success" | "wrong";
   onSelectOutcome: (
     fixtureId: string,
     selectedOutcome: PredictionOutcome,
@@ -26,16 +27,25 @@ const PredictionOutcomeButton: React.FC<IPredictionOutcomeButtonProps> = ({
   outcome,
   selected,
   disabled,
+  result,
   onSelectOutcome,
   outcomeLabel,
 }) => {
   const { t, locale } = useTranslation();
   const points = pointsForOutcome(fixture, outcome);
+  const className =
+    result === "success"
+      ? styles.successOutcome
+      : result === "wrong"
+        ? styles.wrongOutcome
+        : selected
+          ? styles.selectedOutcome
+          : styles.outcomeButton;
 
   return (
     <button
       type="button"
-      className={selected ? styles.selectedOutcome : styles.outcomeButton}
+      className={className}
       disabled={disabled}
       aria-pressed={selected}
       aria-label={t("matches.aria.selectOutcome", {
@@ -45,7 +55,13 @@ const PredictionOutcomeButton: React.FC<IPredictionOutcomeButtonProps> = ({
         awayTeam: fixture.awayTeam.name,
       })}
       data-outcome={outcome}
-      onClick={() => void onSelectOutcome(fixture.id, outcome)}
+      onClick={() => {
+        if (disabled) {
+          return;
+        }
+
+        void onSelectOutcome(fixture.id, outcome);
+      }}
     >
       <span className={styles.outcomeCode}>{outcomeDisplayLabel(outcome)}</span>
       <TrophyValue value={points} />

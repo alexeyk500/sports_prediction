@@ -5,14 +5,16 @@ import type {
   TodayFixtureDto,
 } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
-import { fixtureStatusLabel, outcomeLabel } from "../../matches-format";
+import { outcomeLabel } from "../../matches-format";
+import type { RewardFlowPresentation } from "../../matches-types";
 import MatchCard from "./MatchCard/MatchCard";
 
 interface IFixtureCardProps {
   fixture: TodayFixtureDto;
   prediction?: PredictionDto;
   pending: boolean;
-  rewardRequired: boolean;
+  rewardFlow?: RewardFlowPresentation;
+  onStartReward: (fixtureId: string) => Promise<void>;
   onSelectOutcome: (
     fixtureId: string,
     selectedOutcome: PredictionOutcome,
@@ -23,7 +25,8 @@ const FixtureCard: React.FC<IFixtureCardProps> = ({
   fixture,
   prediction,
   pending,
-  rewardRequired,
+  rewardFlow,
+  onStartReward,
   onSelectOutcome,
 }) => {
   const { t } = useTranslation();
@@ -33,9 +36,10 @@ const FixtureCard: React.FC<IFixtureCardProps> = ({
       fixture={fixture}
       prediction={prediction}
       pending={pending}
-      rewardRequired={rewardRequired}
+      rewardRequired={rewardFlow !== undefined}
+      rewardFlow={rewardFlow}
+      onStartReward={onStartReward}
       onSelectOutcome={onSelectOutcome}
-      fixtureStatusLabel={(status) => fixtureStatusLabel(t, status)}
       outcomeLabel={(outcome) => outcomeLabel(t, outcome)}
     />
   );

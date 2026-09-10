@@ -10,6 +10,12 @@
   --selected-bg: var(--color-accent-soft);
   --selected-border: var(--color-accent);
   --selected-text: var(--color-accent-text);
+  --result-success-bg: #dcfce7;
+  --result-success-border: #21a67a;
+  --result-success-text: #14532d;
+  --result-wrong-bg: #fee2e2;
+  --result-wrong-border: #dc2626;
+  --result-wrong-text: #7f1d1d;
   --trophy: #f6b817;
   --logo-badge-bg: #ffffff;
   position: relative;
@@ -35,6 +41,12 @@
   --selected-bg: #143f39;
   --selected-border: #63e6c2;
   --selected-text: #d9fff3;
+  --result-success-bg: #12382d;
+  --result-success-border: #63e6c2;
+  --result-success-text: #d9fff3;
+  --result-wrong-bg: #461d28;
+  --result-wrong-border: #fb7185;
+  --result-wrong-text: #ffe4e6;
   --logo-badge-bg: #404b5a;
 }
 
@@ -76,6 +88,7 @@
 .fixtureStatus {
   justify-content: flex-start;
   margin-block-start: 9px;
+  min-height: 26px;
   color: var(--match-meta);
   font-size: 13px;
   font-weight: 600;
@@ -153,4 +166,22 @@
   display: block;
   margin-block-start: 4px;
   font-size: 13px;
+}
+
+.rewardButton {
+  margin-block-start: 10px;
+  border: 1px solid var(--color-warning-border);
+  border-radius: 8px;
+  padding-block: 8px;
+  padding-inline: 12px;
+  background: var(--selected-bg);
+  color: var(--selected-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.rewardButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }

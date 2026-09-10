@@ -1,4 +1,8 @@
-import type { FixtureStatus, PrismaClient } from "@prisma/client";
+import type {
+  FixtureStatus,
+  PredictionOutcome,
+  PrismaClient,
+} from "@prisma/client";
 import {
   getBusinessDate,
   getBusinessDayRangeUtc,
@@ -33,6 +37,7 @@ export interface TodayFixtureDto {
     shortName: string | null;
   };
   status: FixtureStatus;
+  winningOutcome: PredictionOutcome | null;
   outcomes: {
     home: { points: number };
     draw: { points: number };
@@ -99,6 +104,10 @@ export async function getTodayFixtures(
                 shortName: fixture.awayTeam.shortName,
               },
               status: fixture.status,
+              winningOutcome: winningOutcomeForFixture(
+                fixture.status,
+                fixture.finalOutcome,
+              ),
               outcomes: {
                 home: { points: fixture.scoringSnapshot.homePoints },
                 draw: { points: fixture.scoringSnapshot.drawPoints },
@@ -109,4 +118,11 @@ export async function getTodayFixtures(
         : [],
     ),
   };
+}
+
+export function winningOutcomeForFixture(
+  status: FixtureStatus,
+  finalOutcome: PredictionOutcome | null,
+): PredictionOutcome | null {
+  return status === "SETTLED" ? finalOutcome : null;
 }

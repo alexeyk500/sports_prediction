@@ -735,10 +735,19 @@ id                       UUID PK
 userId                   UUID FK
 provider                 VARCHAR NOT NULL
 providerRewardId         VARCHAR NULL
+placement                VARCHAR NULL
 attemptKey               VARCHAR NOT NULL
+ymid                     VARCHAR NULL
+zoneId                   VARCHAR NULL
+requestVar               VARCHAR NULL
+eventType                VARCHAR NULL
+rewardEventType          VARCHAR NULL
+subZoneId                VARCHAR NULL
+estimatedPrice           DECIMAL(20,8) NULL
 status                   AdRewardStatus NOT NULL
 createdAt                TIMESTAMPTZ NOT NULL
 verifiedAt               TIMESTAMPTZ NULL
+rejectedAt               TIMESTAMPTZ NULL
 consumedAt               TIMESTAMPTZ NULL
 expiresAt                TIMESTAMPTZ NULL
 consumedByPredictionId   UUID NULL
@@ -749,6 +758,7 @@ Constraints:
 
 ```text
 UNIQUE(attemptKey)
+UNIQUE(ymid)
 UNIQUE(consumedByPredictionId)
 ```
 
@@ -766,13 +776,21 @@ Indexes:
 ```text
 (userId, status, expiresAt)
 (status, expiresAt)
+(provider, placement, status, expiresAt)
 ```
 
 Reward consumption and rewarded Prediction creation occur in the same
 correctness transaction.
 
-Exact provider verification metadata is intentionally not frozen before
-the Monetag contract is approved.
+For Monetag Rewarded Interstitial, `ymid` is the opaque
+server-generated SDK/session correlation key, `placement` identifies the
+extra prediction flow, and `requestVar` is analytics metadata passed to
+the SDK. `eventType`, `rewardEventType`, `subZoneId` and
+`estimatedPrice` are legacy postback audit fields retained to avoid an
+unnecessary follow-up migration; they are not reward authority in the
+current SDK Promise + authenticated confirm flow. A `VERIFIED` AdReward
+is a single-use extra prediction grant and becomes `CONSUMED` atomically
+with rewarded Prediction creation.
 
 ---
 

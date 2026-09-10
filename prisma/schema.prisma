@@ -328,10 +328,19 @@ model AdReward {
   userId                 String         @db.Uuid
   provider               String
   providerRewardId       String?
+  placement              String?
   attemptKey             String         @unique
+  ymid                   String?        @unique
+  zoneId                 String?
+  requestVar             String?
+  eventType              String?
+  rewardEventType        String?
+  subZoneId              String?
+  estimatedPrice         Decimal?       @db.Decimal(20, 8)
   status                 AdRewardStatus @default(CREATED)
   createdAt              DateTime       @default(now()) @db.Timestamptz(6)
   verifiedAt             DateTime?      @db.Timestamptz(6)
+  rejectedAt             DateTime?      @db.Timestamptz(6)
   consumedAt             DateTime?      @db.Timestamptz(6)
   expiresAt              DateTime?      @db.Timestamptz(6)
   consumedByPredictionId String?        @unique @db.Uuid
@@ -343,6 +352,7 @@ model AdReward {
   @@unique([provider, providerRewardId])
   @@index([userId, status, expiresAt])
   @@index([status, expiresAt])
+  @@index([provider, placement, status, expiresAt])
 }
 
 model RatingProfile {
