@@ -1,5 +1,6 @@
 export type DomainErrorCode =
   | "NO_ACTIVE_TOURNAMENT"
+  | "TOURNAMENT_NOT_FOUND"
   | "TOURNAMENT_NOT_ACTIVE"
   | "FIXTURE_NOT_FOUND"
   | "FIXTURE_NOT_OPEN"
@@ -19,7 +20,12 @@ export type DomainErrorCode =
   | "AD_REWARD_ALREADY_CONSUMED"
   | "IDEMPOTENCY_CONFLICT"
   | "INVALID_ODDS"
-  | "INVALID_PROBABILITY";
+  | "INVALID_PROBABILITY"
+  | "PRIZE_ENTITLEMENT_NOT_FOUND"
+  | "PRIZE_NOT_READY_TO_CLAIM"
+  | "PRIZE_CLAIM_ALREADY_EXISTS"
+  | "PRIZE_CLAIM_READ_ONLY"
+  | "INVALID_TRC20_ADDRESS";
 
 export class DomainError extends Error {
   readonly code: DomainErrorCode;

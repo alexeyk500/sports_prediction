@@ -656,24 +656,23 @@ changes are approved.
 
 ---
 
-# 15. Prize and TON
+# 15. Prizes and USDT/TRC-20
 
-MVP Prize flow uses application-level `Prize` / `PrizeClaim` state.
+MVP Prize flow uses application-level `PrizeEntitlement` / `PrizeClaim` state.
 
 Wallet is not required before a claimable Prize exists.
 
 Prize state transitions and money persistence are governed by
 product/database specs.
 
-Current MVP payout execution is manual unless superseded by an approved
-decision.
+Current MVP payout execution is manual USDT on TRON (TRC-20).
 
-The operator verifies the submitted wallet, performs the TON transfer
-manually, records the transaction reference/hash and marks the claim
-`PAID`.
+The operator verifies the submitted public TRC-20 address, performs the USDT
+transfer manually, records mandatory `paidAt` and optional transaction hash,
+and marks the claim `PAID`.
 
-Exact Prize Distribution by winning rank is intentionally deferred and
-must not be invented by finalization code before it is approved.
+Final settlement creates `PrizeEntitlement` records idempotently from the final
+leaderboard and existing per-Cup `PrizeDistributionTier` rows only.
 
 Critical Prize/Claim state transitions go through controlled
 application/service operations and must be auditable/idempotent.
@@ -1070,9 +1069,9 @@ future Goalstery probability model and required data sources
 probability/snapshot publication policy after model design
 Monetag verification contract
 rating calibration / expected-percentile details
-exact Prize Distribution by winning rank
+future non-USDT Prize Distribution by winning rank
 notification architecture
-TON wallet validation / payout operating procedure
+future payout operating procedure beyond manual USDT/TRC-20
 ```
 
 If implementation depends on an unresolved decision, follow `AGENTS.md`:

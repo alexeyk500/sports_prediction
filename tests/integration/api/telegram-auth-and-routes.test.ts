@@ -13,6 +13,8 @@ import {
   GET as getSettings,
   PATCH as patchSettings,
 } from "@/app/api/settings/route";
+import { GET as getPrizePayouts } from "@/app/api/prizes-payouts/route";
+import { POST as postPrizeClaim } from "@/app/api/prizes-payouts/[entitlementId]/claim/route";
 import { createTestPrismaClient } from "../helpers/prisma-test-client";
 import {
   attachTestScoringSnapshot,
@@ -364,6 +366,78 @@ describe("Telegram auth HTTP vertical slice", () => {
     expect(invalidLocaleBody.error.code).toBe("VALIDATION_ERROR");
     expect(invalidAppearance.status).toBe(400);
     expect(invalidAppearanceBody.error.code).toBe("VALIDATION_ERROR");
+  });
+
+  it("returns authenticated prize payouts and claims only owned entitlements", async () => {
+    const initData = signedInitData({ id: "777000111235" });
+    const bootstrapResponse = await getBootstrap(
+      createApiRequest("/api/bootstrap", initData),
+    );
+    const bootstrapBody = (await responseJson(bootstrapResponse)) as {
+      user: { id: string };
+    };
+    const tournament = await prisma.tournament.create({
+      data: {
+        number: uniqueTournamentNumber(),
+        status: "FINISHED",
+        startsAt: new Date("2026-08-01T00:00:00.000Z"),
+        endsAt: new Date("2026-08-08T00:00:00.000Z"),
+        prizePoolNanoTon: 0n,
+        prizeCurrency: "USDT",
+      },
+    });
+    const entitlement = await prisma.prizeEntitlement.create({
+      data: {
+        tournamentId: tournament.id,
+        userId: bootstrapBody.user.id,
+        finalPlacement: 1,
+        amount: "12.5",
+        asset: "USDT",
+        network: "TRC20",
+        settledAt: new Date("2026-09-10T10:00:00.000Z"),
+      },
+    });
+    const listResponse = await getPrizePayouts(
+      createApiRequest("/api/prizes-payouts", initData),
+    );
+    const listBody = (await responseJson(listResponse)) as {
+      summary: { totalWon: string; pending: string; paid: string };
+      items: Array<{ entitlementId: string; status: string }>;
+    };
+
+    expect(listResponse.status).toBe(200);
+    expect(listBody.summary).toMatchObject({
+      totalWon: "12.5",
+      pending: "12.5",
+      paid: "0",
+    });
+    expect(listBody.items).toHaveLength(1);
+    expect(listBody.items[0]).toMatchObject({
+      entitlementId: entitlement.id,
+      status: "READY_TO_CLAIM",
+    });
+
+    const claimResponse = await postPrizeClaim(
+      createApiRequest(
+        `/api/prizes-payouts/${entitlement.id}/claim`,
+        initData,
+        {
+          method: "POST",
+          body: { walletAddress: `T${"C".repeat(33)}` },
+        },
+      ),
+      { params: Promise.resolve({ entitlementId: entitlement.id }) },
+    );
+    const claimBody = (await responseJson(claimResponse)) as {
+      status: string;
+      walletAddress: string;
+    };
+
+    expect(claimResponse.status).toBe(201);
+    expect(claimBody).toMatchObject({
+      status: "UNDER_REVIEW",
+      walletAddress: `T${"C".repeat(33)}`,
+    });
   });
 
   it("enforces canonical slug uniqueness for teams and competitions", async () => {

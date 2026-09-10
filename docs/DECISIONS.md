@@ -152,7 +152,7 @@ Changed/postponed fixture behavior
 D-005..D-006 + OD-002
 
 Prize distribution / payout
-D-013..D-014 + OD-004
+D-013..D-014 + D-063 + OD-004
 
 Rating expectation / calibration
 D-011..D-012 + OD-003 + OD-005
@@ -632,6 +632,7 @@ independent manually mutable progression system.
 
 **Status:** Accepted\
 **Date:** 2026-09-06
+**Superseded by:** D-063
 
 ### Decision
 
@@ -662,6 +663,7 @@ Presentation precision and persistence precision are separate concerns.
 
 **Status:** Accepted\
 **Date:** 2026-09-06
+**Superseded by:** D-063
 
 ### Decision
 
@@ -2317,6 +2319,7 @@ cadence, and validation methodology have not yet been approved.
 ## OD-004 --- Exact Prize Distribution by winning rank
 
 **Status:** Open
+**Resolved by:** D-063 for the USDT/TRC-20 MVP
 
 ### Question
 
@@ -2331,6 +2334,61 @@ The exact rank → amount distribution has intentionally been deferred and
 must not be inferred from historical examples, seed data or implementation.
 
 MVP payout execution remains manual according to `D-014`.
+
+---
+
+## D-063 --- Prizes & Payouts MVP uses USDT on TRON TRC-20
+
+**Status:** Accepted\
+**Date:** 2026-09-10\
+**Supersedes:** D-013, D-014\
+**Resolves:** OD-004 for the USDT/TRC-20 MVP
+
+### Decision
+
+The Prizes & Payouts MVP supports only `USDT` payouts on the `TRON (TRC-20)`
+network.
+
+Prize entitlement amounts are immutable `NUMERIC(20,8)` decimal snapshots.
+Each entitlement stores immutable `asset = USDT` and `network = TRC20`
+snapshots.
+
+The existing per-Cup `PrizeDistributionTier` rows stored in the database and
+displayed on the Cup screen are the approved rank-to-amount distribution for
+entitlement generation. No second prize configuration is introduced.
+
+Payout execution remains manual. Users submit only a public TRC-20 address for
+their own ready entitlement. Goalstery does not add wallet connect, blockchain
+RPC validation, automated payouts, notifications, or admin UI/API in this MVP.
+
+### Rationale
+
+The existing Cup distribution model already gives operators persistent
+rank-to-amount configuration. Reusing it keeps Cup display, final settlement,
+and payouts aligned to one source of truth.
+
+USDT/TRC-20 is the selected MVP payout rail. Decimal persistence avoids binary
+floating-point monetary errors while matching USDT-style presentation needs.
+
+### Consequences
+
+`PrizeEntitlement` replaces the old TON-oriented `Prize` persistence model for
+this MVP.
+
+`PrizeClaim` state is:
+
+```text
+UNDER_REVIEW
+ACTION_REQUIRED
+PAID
+REJECTED
+```
+
+`READY_TO_CLAIM` is represented by an entitlement without a claim.
+
+Historical wallet address revisions are retained. User-accessible claim
+mutation is limited to initial claim submission and Action Required address
+update.
 
 ---
 
@@ -2376,9 +2434,10 @@ Goalstery scoring uses normalized probabilities and bounded points
 calculations use persisted quantized probability `D-011` --- Global
 Rating measures performance relative to expected difficulty `D-012` ---
 Rating leagues are derived from rating thresholds `D-013` --- Prize
-amounts use nanoTON integer storage `D-014` --- MVP TON payouts use
-manual PrizeClaim workflow `D-015` --- Europe/London is the canonical
-business timezone `D-016` --- Business time uses an injectable Clock
+amounts use nanoTON integer storage, superseded for the current MVP by
+`D-063` `D-014` --- MVP TON payouts use manual PrizeClaim workflow,
+superseded for the current MVP by `D-063` `D-015` --- Europe/London is
+the canonical business timezone `D-016` --- Business time uses an injectable Clock
 abstraction `D-017` --- Internal database entities use UUID identity
 `D-018` --- External sports providers are behind an adapter boundary
 `D-019` --- Match acquisition and outcome evaluation are separate
@@ -2423,7 +2482,8 @@ localization, and RTL are first-class UI requirements `D-059` ---
 Approved visual references are implementation targets `D-060` ---
 Testing follows responsibility boundaries `D-061` --- Concurrency
 correctness is explicitly tested `D-062` --- Visual geometry is verified
-visually rather than through brittle CSS unit tests
+visually rather than through brittle CSS unit tests `D-063` --- Prizes &
+Payouts MVP uses USDT on TRON TRC-20
 
 ## Open
 

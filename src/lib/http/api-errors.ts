@@ -61,8 +61,11 @@ function statusForDomainError(code: string): number {
   switch (code) {
     case "FIXTURE_NOT_FOUND":
     case "PREDICTION_NOT_FOUND":
+    case "TOURNAMENT_NOT_FOUND":
+    case "PRIZE_ENTITLEMENT_NOT_FOUND":
       return 404;
     case "PREDICTION_ALREADY_EXISTS":
+    case "PRIZE_CLAIM_ALREADY_EXISTS":
     case "IDEMPOTENCY_CONFLICT":
       return 409;
     case "PREDICTION_LOCKED":
@@ -83,6 +86,9 @@ function statusForDomainError(code: string): number {
     case "INVALID_ODDS":
     case "INVALID_PROBABILITY":
     case "OUTCOME_SNAPSHOT_NOT_PUBLISHABLE":
+    case "PRIZE_NOT_READY_TO_CLAIM":
+    case "PRIZE_CLAIM_READ_ONLY":
+    case "INVALID_TRC20_ADDRESS":
       return 400;
     default:
       return 400;

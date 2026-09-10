@@ -552,12 +552,8 @@ Monetag integration actually provides.
 
 # 13. Prize Tests
 
-Prize creation must verify rank/User/amount mapping only against an
-approved Prize Distribution.
-
-Exact rank → amount distribution is intentionally deferred. Tests must not
-invent or freeze a distribution from seed data, examples or current
-implementation before that product decision is approved.
+PrizeEntitlement creation must verify final placement/User/amount mapping only
+against existing per-Cup `PrizeDistributionTier` rows.
 
 PrizeClaim integration coverage:
 
@@ -567,12 +563,13 @@ ownership
 nonexistent Prize
 duplicate claim
 invalid transition
-one PrizeClaim per Prize
+one PrizeClaim per PrizeEntitlement
 concurrent claim
 retry/idempotency
 ```
 
-Manual payout state may be tested without connecting to real TON.
+Manual payout state may be tested without connecting to TRON or any blockchain
+API.
 
 Never use real payout credentials in automated tests.
 

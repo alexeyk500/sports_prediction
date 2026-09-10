@@ -5,6 +5,7 @@ import type React from "react";
 import CupScreen from "@/components/CupScreen/CupScreen";
 import HistoryScreen from "@/components/HistoryScreen/HistoryScreen";
 import ProfileScreen from "@/components/ProfileScreen/ProfileScreen";
+import PrizesPayoutsScreen from "@/components/PrizesPayoutsScreen/PrizesPayoutsScreen";
 import { useSettingsRuntime } from "@/hooks/use-settings-runtime";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import { useBootstrapStore } from "@/stores/bootstrap-store";
@@ -15,13 +16,14 @@ import NavIcon from "./NavIcon/NavIcon";
 import styles from "./AppShell.module.css";
 
 const navItems: NavItem[] = ["Matches", "Cup", "History", "Profile"];
+type ActiveView = NavItem | "PrizesPayouts";
 
 interface IAppShellProps {
   matches: ReactNode;
 }
 
 const AppShell: React.FC<IAppShellProps> = ({ matches }) => {
-  const [active, setActive] = useState<NavItem>("Matches");
+  const [active, setActive] = useState<ActiveView>("Matches");
   const bootstrap = useBootstrapStore((state) => state.bootstrap);
   const setSettings = useSettingsStore((state) => state.setSettings);
   const { t } = useTranslation();
@@ -43,7 +45,13 @@ const AppShell: React.FC<IAppShellProps> = ({ matches }) => {
       case "History":
         return <HistoryScreen />;
       case "Profile":
-        return <ProfileScreen />;
+        return (
+          <ProfileScreen
+            onOpenPrizesPayouts={() => setActive("PrizesPayouts")}
+          />
+        );
+      case "PrizesPayouts":
+        return <PrizesPayoutsScreen onBack={() => setActive("Profile")} />;
     }
   }
 

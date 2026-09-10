@@ -181,9 +181,9 @@ export const en = {
     destinationUnavailable: "This destination is not configured yet.",
     appInfo: "App information",
     prizesWallet: {
-      section: "Prizes & Wallet",
-      title: "Prizes & Wallet",
-      subtitle: "Claims and TON wallet",
+      section: "Prizes & Payouts",
+      title: "Prizes & Payouts",
+      subtitle: "Claims and USDT TRC-20 payouts",
     },
     preferences: {
       section: "Preferences",
@@ -208,6 +208,62 @@ export const en = {
     appearanceLabel: "Appearance",
     saveError: "Settings could not be saved.",
   },
+  prizesPayouts: {
+    title: "Prizes & Payouts",
+    subtitle: "Your tournament prizes and payout history.",
+    back: "Back to profile",
+    loading: "Loading prizes...",
+    retry: "Retry",
+    copy: "Copy",
+    copied: "Copied",
+    hashLabel: "Transaction hash",
+    yourPrizes: "Your prizes",
+    cupName: "Cup #{number}",
+    place: "{place} Place",
+    submittedOn: "Submitted on {date}",
+    paidOn: "Paid on {date}",
+    viewTransaction: "View transaction",
+    contactSupport: "Contact support",
+    info: {
+      title: "Prize payouts are made in USDT via the TRON (TRC-20) network.",
+      body: "Goalstery never asks for your seed phrase, private key, or wallet password.",
+    },
+    summary: {
+      totalWon: "Total won",
+      pending: "Pending",
+      paid: "Paid",
+    },
+    status: {
+      READY_TO_CLAIM: "Ready to claim",
+      UNDER_REVIEW: "Under review",
+      ACTION_REQUIRED: "Action required",
+      PAID: "Paid",
+      REJECTED: "Rejected",
+    },
+    actionRequired: {
+      short: "Please update your payout details.",
+    },
+    claim: {
+      title: "Claim prize",
+      subtitle:
+        "Enter your TRON (TRC-20) wallet address to receive your prize.",
+      close: "Close claim form",
+      addressLabel: "Your wallet address (TRC-20)",
+      invalidAddress: "Enter a valid TRON (TRC-20) address.",
+      safety:
+        "Send only a TRON (TRC-20) wallet address. Goalstery will never ask for your seed phrase, private key, or wallet password.",
+      submit: "Submit claim",
+      update: "Update payout details",
+      submitting: "Submitting...",
+    },
+    details: {
+      title: "Prize details",
+    },
+    empty: {
+      title: "No prizes yet",
+      body: "Prize payouts will appear here after a finished Cup creates a winning entitlement.",
+    },
+  },
   errors: {
     generic: "Something went wrong.",
     missingTelegramInitData:
@@ -231,6 +287,11 @@ export const en = {
     INVALID_AD_REWARD: "This ad reward cannot be used.",
     AD_REWARD_ALREADY_CONSUMED: "This ad reward was already used.",
     IDEMPOTENCY_CONFLICT: "This request was already used for a different pick.",
+    PRIZE_ENTITLEMENT_NOT_FOUND: "This prize could not be found.",
+    PRIZE_NOT_READY_TO_CLAIM: "This prize is not ready to claim.",
+    PRIZE_CLAIM_ALREADY_EXISTS: "This prize claim is already under review.",
+    PRIZE_CLAIM_READ_ONLY: "This prize claim cannot be changed.",
+    INVALID_TRC20_ADDRESS: "Enter a valid TRON (TRC-20) address.",
   },
   settings: {
     locales: {

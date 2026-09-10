@@ -20,7 +20,13 @@ import ProfileIdentity from "./ProfileIdentity/ProfileIdentity";
 import SupportLegalSection from "./SupportLegalSection/SupportLegalSection";
 import styles from "./ProfileScreen.module.css";
 
-const ProfileScreen: React.FC = () => {
+interface IProfileScreenProps {
+  onOpenPrizesPayouts: () => void;
+}
+
+const ProfileScreen: React.FC<IProfileScreenProps> = ({
+  onOpenPrizesPayouts,
+}) => {
   const bootstrap = useBootstrapStore((state) => state.bootstrap);
   const setBootstrap = useBootstrapStore((state) => state.setBootstrap);
   const selectedLocale = useSettingsStore((state) => state.locale);
@@ -55,10 +61,6 @@ const ProfileScreen: React.FC = () => {
     }
   }
 
-  function showPlaceholder(): void {
-    setMessage(t("profile.destinationUnavailable"));
-  }
-
   return (
     <main className={styles.screen}>
       <div className={styles.scrollArea} data-ui="profile-scroll-area">
@@ -79,7 +81,7 @@ const ProfileScreen: React.FC = () => {
         {message ? <div className={styles.message}>{message}</div> : null}
 
         <div className={styles.sections}>
-          <PrizesWalletCard onOpen={showPlaceholder} />
+          <PrizesWalletCard onOpen={onOpenPrizesPayouts} />
           <PreferencesSection
             selectedLocale={selectedLocale}
             appearance={appearance}

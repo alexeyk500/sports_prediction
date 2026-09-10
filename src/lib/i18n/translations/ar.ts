@@ -183,9 +183,9 @@ export const ar = {
     destinationUnavailable: "هذا القسم غير مهيأ بعد.",
     appInfo: "معلومات التطبيق",
     prizesWallet: {
-      section: "الجوائز والمحفظة",
-      title: "الجوائز والمحفظة",
-      subtitle: "المطالبات ومحفظة TON",
+      section: "الجوائز والمدفوعات",
+      title: "الجوائز والمدفوعات",
+      subtitle: "المطالبات ومدفوعات USDT TRC-20",
     },
     preferences: {
       section: "التفضيلات",
@@ -210,6 +210,61 @@ export const ar = {
     appearanceLabel: "المظهر",
     saveError: "تعذر حفظ الإعدادات.",
   },
+  prizesPayouts: {
+    title: "الجوائز والمدفوعات",
+    subtitle: "جوائز بطولاتك وسجل المدفوعات.",
+    back: "العودة إلى الملف الشخصي",
+    loading: "جار تحميل الجوائز...",
+    retry: "إعادة المحاولة",
+    copy: "نسخ",
+    copied: "تم النسخ",
+    hashLabel: "هاش المعاملة",
+    yourPrizes: "جوائزك",
+    cupName: "الكأس #{number}",
+    place: "المركز {place}",
+    submittedOn: "تم الإرسال في {date}",
+    paidOn: "تم الدفع في {date}",
+    viewTransaction: "عرض المعاملة",
+    contactSupport: "تواصل مع الدعم",
+    info: {
+      title: "تدفع الجوائز بعملة USDT عبر شبكة TRON (TRC-20).",
+      body: "لا تطلب Goalstery أبدا seed phrase أو private key أو كلمة مرور المحفظة.",
+    },
+    summary: {
+      totalWon: "إجمالي الفوز",
+      pending: "قيد الانتظار",
+      paid: "مدفوع",
+    },
+    status: {
+      READY_TO_CLAIM: "جاهز للمطالبة",
+      UNDER_REVIEW: "قيد المراجعة",
+      ACTION_REQUIRED: "إجراء مطلوب",
+      PAID: "مدفوع",
+      REJECTED: "مرفوض",
+    },
+    actionRequired: {
+      short: "يرجى تحديث بيانات الدفع.",
+    },
+    claim: {
+      title: "المطالبة بالجائزة",
+      subtitle: "أدخل عنوان محفظة TRON (TRC-20) لاستلام جائزتك.",
+      close: "إغلاق نموذج المطالبة",
+      addressLabel: "عنوان محفظتك (TRC-20)",
+      invalidAddress: "أدخل عنوان TRON (TRC-20) صالحا.",
+      safety:
+        "أرسل فقط عنوان محفظة TRON (TRC-20). لن تطلب Goalstery أبدا seed phrase أو private key أو كلمة مرور المحفظة.",
+      submit: "إرسال المطالبة",
+      update: "تحديث بيانات الدفع",
+      submitting: "جار الإرسال...",
+    },
+    details: {
+      title: "تفاصيل الجائزة",
+    },
+    empty: {
+      title: "لا توجد جوائز بعد",
+      body: "ستظهر المدفوعات هنا بعد أن ينشئ كأس منته entitlement فائزا.",
+    },
+  },
   errors: {
     generic: "حدث خطأ ما.",
     missingTelegramInitData:
@@ -233,6 +288,11 @@ export const ar = {
     INVALID_AD_REWARD: "لا يمكن استخدام مكافأة الإعلان هذه.",
     AD_REWARD_ALREADY_CONSUMED: "استُخدمت مكافأة الإعلان هذه بالفعل.",
     IDEMPOTENCY_CONFLICT: "استُخدم هذا الطلب لاختيار آخر بالفعل.",
+    PRIZE_ENTITLEMENT_NOT_FOUND: "تعذر العثور على هذه الجائزة.",
+    PRIZE_NOT_READY_TO_CLAIM: "هذه الجائزة غير جاهزة للمطالبة.",
+    PRIZE_CLAIM_ALREADY_EXISTS: "مطالبة هذه الجائزة قيد المراجعة بالفعل.",
+    PRIZE_CLAIM_READ_ONLY: "لا يمكن تغيير مطالبة هذه الجائزة.",
+    INVALID_TRC20_ADDRESS: "أدخل عنوان TRON (TRC-20) صالحا.",
   },
   settings: {
     locales: {

@@ -48,10 +48,10 @@ enum AdRewardStatus {
 }
 
 enum PrizeClaimStatus {
-  UNCLAIMED
-  CLAIM_PENDING
+  UNDER_REVIEW
+  ACTION_REQUIRED
   PAID
-  FAILED
+  REJECTED
 }
 
 enum PrizeCurrency {
@@ -121,7 +121,9 @@ model User {
   ratingProfile          RatingProfile?
   ratingHistory          RatingHistory[]
   userAchievements       UserAchievement[]
-  prizes                 Prize[]
+  prizeEntitlements      PrizeEntitlement[]
+  prizeClaims            PrizeClaim[]
+  prizeWalletRevisions   PrizeWalletRevision[]
   idempotencyRecords     IdempotencyRecord[]
 
   @@index([createdAt])
@@ -171,7 +173,7 @@ model Tournament {
   participants      TournamentParticipant[]
   predictions       Prediction[]
   ratingHistory     RatingHistory[]
-  prizes            Prize[]
+  prizeEntitlements PrizeEntitlement[]
   prizeDistribution PrizeDistributionTier[]
 
   @@index([status])
@@ -410,41 +412,63 @@ model UserAchievement {
   @@index([achievementId])
 }
 
-model Prize {
-  id            String   @id @default(uuid()) @db.Uuid
-  tournamentId  String   @db.Uuid
-  userId        String   @db.Uuid
-  rank          Int
-  amountNanoTon BigInt
-  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+model PrizeEntitlement {
+  id             String   @id @default(uuid()) @db.Uuid
+  tournamentId   String   @db.Uuid
+  userId         String   @db.Uuid
+  finalPlacement Int
+  amount         Decimal  @db.Decimal(20, 8)
+  asset          String   @default("USDT") @db.VarChar(12)
+  network        String   @default("TRC20") @db.VarChar(24)
+  settledAt      DateTime @db.Timestamptz(6)
+  createdAt      DateTime @default(now()) @db.Timestamptz(6)
 
   tournament Tournament  @relation(fields: [tournamentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   user       User        @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   claim      PrizeClaim?
 
-  @@unique([tournamentId, rank])
+  @@unique([tournamentId, finalPlacement])
   @@unique([tournamentId, userId])
   @@index([userId, createdAt(sort: Desc)])
   @@index([tournamentId])
 }
 
 model PrizeClaim {
-  id              String           @id @default(uuid()) @db.Uuid
-  prizeId         String           @unique @db.Uuid
-  walletAddress   String?
-  status          PrizeClaimStatus @default(UNCLAIMED)
-  transactionHash String?
-  claimedAt       DateTime?        @db.Timestamptz(6)
-  paidAt          DateTime?        @db.Timestamptz(6)
-  failedAt        DateTime?        @db.Timestamptz(6)
-  failureReason   String?          @db.Text
-  createdAt       DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt       DateTime         @updatedAt @db.Timestamptz(6)
+  id                    String           @id @default(uuid()) @db.Uuid
+  entitlementId         String           @unique @db.Uuid
+  userId                String           @db.Uuid
+  walletAddress         String           @db.VarChar(64)
+  status                PrizeClaimStatus @default(UNDER_REVIEW)
+  transactionHash       String?          @db.VarChar(128)
+  claimedAt             DateTime         @db.Timestamptz(6)
+  paidAt                DateTime?        @db.Timestamptz(6)
+  actionRequiredMessage String?          @db.Text
+  rejectionReason       String?          @db.Text
+  createdAt             DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime         @updatedAt @db.Timestamptz(6)
 
-  prize Prize @relation(fields: [prizeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  entitlement     PrizeEntitlement     @relation(fields: [entitlementId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  walletRevisions PrizeWalletRevision[]
 
-  @@index([status])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([status, updatedAt(sort: Desc)])
   @@index([walletAddress])
+}
+
+model PrizeWalletRevision {
+  id                    String   @id @default(uuid()) @db.Uuid
+  claimId               String   @db.Uuid
+  userId                String   @db.Uuid
+  previousWalletAddress String   @db.VarChar(64)
+  nextWalletAddress     String   @db.VarChar(64)
+  createdAt             DateTime @default(now()) @db.Timestamptz(6)
+
+  claim PrizeClaim @relation(fields: [claimId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  user  User       @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([claimId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
 }
 
 model IdempotencyRecord {

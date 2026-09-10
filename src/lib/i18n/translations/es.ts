@@ -183,9 +183,9 @@ export const es = {
     destinationUnavailable: "Esta seccion aun no esta configurada.",
     appInfo: "Informacion de la app",
     prizesWallet: {
-      section: "Premios y wallet",
-      title: "Premios y wallet",
-      subtitle: "Reclamos y wallet TON",
+      section: "Premios y pagos",
+      title: "Premios y pagos",
+      subtitle: "Reclamos y pagos USDT TRC-20",
     },
     preferences: {
       section: "Preferencias",
@@ -210,6 +210,61 @@ export const es = {
     appearanceLabel: "Apariencia",
     saveError: "No se pudieron guardar los ajustes.",
   },
+  prizesPayouts: {
+    title: "Premios y pagos",
+    subtitle: "Tus premios de torneos e historial de pagos.",
+    back: "Volver al perfil",
+    loading: "Cargando premios...",
+    retry: "Reintentar",
+    copy: "Copiar",
+    copied: "Copiado",
+    hashLabel: "Hash de transacción",
+    yourPrizes: "Tus premios",
+    cupName: "Copa #{number}",
+    place: "{place}.º puesto",
+    submittedOn: "Enviado el {date}",
+    paidOn: "Pagado el {date}",
+    viewTransaction: "Ver transacción",
+    contactSupport: "Contactar soporte",
+    info: {
+      title: "Los premios se pagan en USDT por la red TRON (TRC-20).",
+      body: "Goalstery nunca pide tu seed phrase, private key ni contraseña de wallet.",
+    },
+    summary: {
+      totalWon: "Total ganado",
+      pending: "Pendiente",
+      paid: "Pagado",
+    },
+    status: {
+      READY_TO_CLAIM: "Listo para reclamar",
+      UNDER_REVIEW: "En revisión",
+      ACTION_REQUIRED: "Acción requerida",
+      PAID: "Pagado",
+      REJECTED: "Rechazado",
+    },
+    actionRequired: {
+      short: "Actualiza tus datos de pago.",
+    },
+    claim: {
+      title: "Reclamar premio",
+      subtitle: "Introduce tu dirección TRON (TRC-20) para recibir tu premio.",
+      close: "Cerrar formulario",
+      addressLabel: "Tu dirección de wallet (TRC-20)",
+      invalidAddress: "Introduce una dirección TRON (TRC-20) válida.",
+      safety:
+        "Envía solo una dirección de wallet TRON (TRC-20). Goalstery nunca pedirá tu seed phrase, private key ni contraseña de wallet.",
+      submit: "Enviar reclamo",
+      update: "Actualizar datos",
+      submitting: "Enviando...",
+    },
+    details: {
+      title: "Detalles del premio",
+    },
+    empty: {
+      title: "Aún no hay premios",
+      body: "Los pagos aparecerán aquí cuando una Copa finalizada cree un entitlement ganador.",
+    },
+  },
   errors: {
     generic: "Algo salió mal.",
     missingTelegramInitData:
@@ -233,6 +288,11 @@ export const es = {
     INVALID_AD_REWARD: "Esta recompensa de anuncio no se puede usar.",
     AD_REWARD_ALREADY_CONSUMED: "Esta recompensa de anuncio ya se usó.",
     IDEMPOTENCY_CONFLICT: "Esta solicitud ya se usó para otro pick.",
+    PRIZE_ENTITLEMENT_NOT_FOUND: "No se encontró este premio.",
+    PRIZE_NOT_READY_TO_CLAIM: "Este premio no está listo para reclamar.",
+    PRIZE_CLAIM_ALREADY_EXISTS: "Este reclamo ya está en revisión.",
+    PRIZE_CLAIM_READ_ONLY: "Este reclamo no se puede cambiar.",
+    INVALID_TRC20_ADDRESS: "Introduce una dirección TRON (TRC-20) válida.",
   },
   settings: {
     locales: {

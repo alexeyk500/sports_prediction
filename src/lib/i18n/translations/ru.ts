@@ -176,9 +176,9 @@ export const ru = {
     destinationUnavailable: "Этот раздел пока не настроен.",
     appInfo: "Информация о приложении",
     prizesWallet: {
-      section: "Призы и кошелёк",
-      title: "Призы и кошелёк",
-      subtitle: "Получение призов и TON-кошелёк",
+      section: "Призы и выплаты",
+      title: "Призы и выплаты",
+      subtitle: "Получение призов и выплаты USDT TRC-20",
     },
     preferences: {
       section: "Настройки",
@@ -203,6 +203,61 @@ export const ru = {
     appearanceLabel: "Тема",
     saveError: "Не удалось сохранить настройки.",
   },
+  prizesPayouts: {
+    title: "Призы и выплаты",
+    subtitle: "Ваши турнирные призы и история выплат.",
+    back: "Назад в профиль",
+    loading: "Загрузка призов...",
+    retry: "Повторить",
+    copy: "Скопировать",
+    copied: "Скопировано",
+    hashLabel: "Хеш транзакции",
+    yourPrizes: "Ваши призы",
+    cupName: "Кубок #{number}",
+    place: "{place}-е место",
+    submittedOn: "Отправлено {date}",
+    paidOn: "Выплачено {date}",
+    viewTransaction: "Открыть транзакцию",
+    contactSupport: "Связаться с поддержкой",
+    info: {
+      title: "Призы выплачиваются в USDT через сеть TRON (TRC-20).",
+      body: "Goalstery никогда не просит seed phrase, private key или пароль от кошелька.",
+    },
+    summary: {
+      totalWon: "Всего выиграно",
+      pending: "В ожидании",
+      paid: "Выплачено",
+    },
+    status: {
+      READY_TO_CLAIM: "Можно получить",
+      UNDER_REVIEW: "На проверке",
+      ACTION_REQUIRED: "Нужно действие",
+      PAID: "Выплачено",
+      REJECTED: "Отклонено",
+    },
+    actionRequired: {
+      short: "Обновите данные для выплаты.",
+    },
+    claim: {
+      title: "Получить приз",
+      subtitle: "Введите адрес кошелька TRON (TRC-20), чтобы получить приз.",
+      close: "Закрыть форму",
+      addressLabel: "Адрес кошелька (TRC-20)",
+      invalidAddress: "Введите корректный адрес TRON (TRC-20).",
+      safety:
+        "Отправляйте только адрес кошелька TRON (TRC-20). Goalstery никогда не попросит seed phrase, private key или пароль от кошелька.",
+      submit: "Отправить заявку",
+      update: "Обновить данные",
+      submitting: "Отправка...",
+    },
+    details: {
+      title: "Детали приза",
+    },
+    empty: {
+      title: "Призов пока нет",
+      body: "Выплаты появятся здесь после завершения Кубка, если будет создан призовой entitlement.",
+    },
+  },
   errors: {
     generic: "Что-то пошло не так.",
     missingTelegramInitData:
@@ -226,6 +281,11 @@ export const ru = {
     INVALID_AD_REWARD: "Эту рекламную награду нельзя использовать.",
     AD_REWARD_ALREADY_CONSUMED: "Эта рекламная награда уже использована.",
     IDEMPOTENCY_CONFLICT: "Этот запрос уже использован для другого прогноза.",
+    PRIZE_ENTITLEMENT_NOT_FOUND: "Приз не найден.",
+    PRIZE_NOT_READY_TO_CLAIM: "Этот приз пока нельзя получить.",
+    PRIZE_CLAIM_ALREADY_EXISTS: "Заявка на этот приз уже на проверке.",
+    PRIZE_CLAIM_READ_ONLY: "Эту заявку нельзя изменить.",
+    INVALID_TRC20_ADDRESS: "Введите корректный адрес TRON (TRC-20).",
   },
   settings: {
     locales: {

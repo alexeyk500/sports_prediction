@@ -87,4 +87,33 @@ describe("frontend API client", () => {
       "/api/cups/cup-1/leaderboard/me?radius=4",
     ]);
   });
+
+  it("requests prize payouts and submits only wallet address for claims", async () => {
+    const requests: Array<{ url: string; body: unknown }> = [];
+    const client = new ApiClient({
+      getTelegramInitData: () => "signed-init-data",
+      fetchImpl: async (input, init) => {
+        requests.push({
+          url: String(input),
+          body: init?.body ? JSON.parse(String(init.body)) : null,
+        });
+
+        return Response.json({ ok: true });
+      },
+    });
+
+    await client.getPrizePayouts();
+    await client.submitPrizeClaim({
+      entitlementId: "entitlement-1",
+      walletAddress: `T${"A".repeat(33)}`,
+    });
+
+    expect(requests).toEqual([
+      { url: "/api/prizes-payouts", body: null },
+      {
+        url: "/api/prizes-payouts/entitlement-1/claim",
+        body: { walletAddress: `T${"A".repeat(33)}` },
+      },
+    ]);
+  });
 });

@@ -69,18 +69,17 @@ Europe/London
 Application/Clock layer owns conversion between London business time and
 UTC instants.
 
-## 1.3 TON money
+## 1.3 Prize money
 
-TON amounts are never binary floating point.
+Prize amounts are never binary floating point.
 
-Canonical persistence:
+Current Prizes & Payouts MVP persistence:
 
 ```text
-nanoTON
-BIGINT
-Prisma BigInt
-
-1 TON = 1_000_000_000 nanoTON
+USDT
+NUMERIC(20,8)
+Prisma Decimal
+network snapshot: TRC20
 ```
 
 ## 1.4 Decimal values
@@ -119,8 +118,9 @@ Fixture
 OutcomeSnapshot
 Prediction
 RatingHistory
-Prize
+PrizeEntitlement
 PrizeClaim
+PrizeWalletRevision
 ```
 
 User deletion/anonymization policy remains a separate legal/product
@@ -173,10 +173,10 @@ AdRewardStatus
   REJECTED
 
 PrizeClaimStatus
-  UNCLAIMED
-  CLAIM_PENDING
+  UNDER_REVIEW
+  ACTION_REQUIRED
   PAID
-  FAILED
+  REJECTED
 
 RatingLeague
   UNRANKED
@@ -255,7 +255,9 @@ AdReward[]
 RatingProfile?
 RatingHistory[]
 UserAchievement[]
-Prize[]
+PrizeEntitlement[]
+PrizeClaim[]
+PrizeWalletRevision[]
 IdempotencyRecord[]
 ```
 
@@ -915,28 +917,34 @@ added later.
 
 ---
 
-# 17. Prize
+# 17. PrizeEntitlement
 
-Purpose: immutable Tournament award assigned to a rank/User.
+Purpose: immutable Tournament award assigned to a final placement/User after
+final Cup settlement.
 
 Fields:
 
 ```text
-id               UUID PK
-tournamentId     UUID FK
-userId           UUID FK
-rank             INTEGER NOT NULL
-amountNanoTon    BIGINT NOT NULL
-createdAt        TIMESTAMPTZ NOT NULL
+id                UUID PK
+tournamentId      UUID FK
+userId            UUID FK
+finalPlacement    INTEGER NOT NULL
+amount            NUMERIC(20,8) NOT NULL
+asset             VARCHAR NOT NULL DEFAULT USDT
+network           VARCHAR NOT NULL DEFAULT TRC20
+settledAt         TIMESTAMPTZ NOT NULL
+createdAt         TIMESTAMPTZ NOT NULL
 ```
 
 Constraints:
 
 ```text
-UNIQUE(tournamentId, rank)
+UNIQUE(tournamentId, finalPlacement)
 UNIQUE(tournamentId, userId)
-CHECK(rank > 0)
-CHECK(amountNanoTon > 0)
+CHECK(finalPlacement > 0)
+CHECK(amount > 0)
+CHECK(asset = 'USDT')
+CHECK(network = 'TRC20')
 ```
 
 Indexes:
@@ -949,13 +957,11 @@ Indexes:
 Do not hard-code a maximum prize rank in schema unless product rules
 intentionally make it permanent.
 
-Prize is immutable after finalization except explicit audited
-operational correction.
+PrizeEntitlement is immutable after creation except explicit audited
+operational correction outside the user-facing MVP.
 
-Exact rank → amount Prize Distribution is not defined by this schema.
-`Prize` records may only be created from an approved product distribution;
-do not infer a distribution from current code, seed data or historical
-examples.
+For the USDT/TRC-20 MVP, entitlement amount is derived only from existing
+per-Cup `PrizeDistributionTier` rows.
 
 ---
 
@@ -964,29 +970,34 @@ examples.
 Relation:
 
 ```text
-Prize 1 → 0..1 PrizeClaim
+PrizeEntitlement 1 → 0..1 PrizeClaim
 ```
 
 Fields:
 
 ```text
-id                 UUID PK
-prizeId            UUID FK
-walletAddress      VARCHAR NULL
-status             PrizeClaimStatus NOT NULL DEFAULT UNCLAIMED
-transactionHash    VARCHAR NULL
-claimedAt          TIMESTAMPTZ NULL
-paidAt             TIMESTAMPTZ NULL
-failedAt           TIMESTAMPTZ NULL
-failureReason      TEXT NULL
-createdAt          TIMESTAMPTZ NOT NULL
-updatedAt          TIMESTAMPTZ NOT NULL
+id                    UUID PK
+entitlementId         UUID FK
+userId                UUID FK
+walletAddress         VARCHAR NOT NULL
+status                PrizeClaimStatus NOT NULL DEFAULT UNDER_REVIEW
+transactionHash       VARCHAR NULL
+claimedAt             TIMESTAMPTZ NOT NULL
+paidAt                TIMESTAMPTZ NULL
+actionRequiredMessage TEXT NULL
+rejectionReason       TEXT NULL
+createdAt             TIMESTAMPTZ NOT NULL
+updatedAt             TIMESTAMPTZ NOT NULL
 ```
 
 Constraint:
 
 ```text
-UNIQUE(prizeId)
+UNIQUE(entitlementId)
+CHECK(status <> ACTION_REQUIRED OR actionRequiredMessage IS NOT NULL)
+CHECK(status <> REJECTED OR rejectionReason IS NOT NULL)
+CHECK(status <> PAID OR paidAt IS NOT NULL)
+CHECK(walletAddress matches TRC-20 format)
 ```
 
 A unique `transactionHash` must not be introduced unless payout
@@ -996,26 +1007,51 @@ transfer support could invalidate such a constraint.
 Conceptual state invariants:
 
 ```text
-UNCLAIMED
-  walletAddress may be null
+READY_TO_CLAIM
+  represented by PrizeEntitlement without PrizeClaim
 
-CLAIM_PENDING
+UNDER_REVIEW
   walletAddress required
   claimedAt required
+
+ACTION_REQUIRED
+  walletAddress required
+  actionRequiredMessage required
+  user may update walletAddress, preserving old value in PrizeWalletRevision
 
 PAID
   walletAddress required
-  transactionHash required
   paidAt required
+  transactionHash optional
 
-FAILED
-  claimedAt required
-  failedAt required
+REJECTED
+  rejectionReason required
+  final for user
 ```
 
 State-machine consistency is primarily application/service enforced.
 
-Exact wallet validation/payout operational fields remain unresolved.
+## 18.1 PrizeWalletRevision
+
+Purpose: audit history for user wallet-address changes after Action Required.
+
+Fields:
+
+```text
+id                     UUID PK
+claimId                UUID FK
+userId                 UUID FK
+previousWalletAddress  VARCHAR NOT NULL
+nextWalletAddress      VARCHAR NOT NULL
+createdAt              TIMESTAMPTZ NOT NULL
+```
+
+Indexes:
+
+```text
+(claimId, createdAt DESC)
+(userId, createdAt DESC)
+```
 
 ---
 
@@ -1053,8 +1089,8 @@ such as:
 Prediction(userId, fixtureId)
 TournamentParticipant(tournamentId, userId)
 RatingHistory(userId, tournamentId)
-Prize(tournamentId, rank)
-PrizeClaim(prizeId)
+PrizeEntitlement(tournamentId, finalPlacement)
+PrizeClaim(entitlementId)
 ```
 
 ---
@@ -1070,14 +1106,16 @@ User
  ├── 1:1 RatingProfile
  ├── 1:N RatingHistory
  ├── 1:N UserAchievement
- ├── 1:N Prize
+ ├── 1:N PrizeEntitlement
+ ├── 1:N PrizeClaim
+ ├── 1:N PrizeWalletRevision
  └── 1:N IdempotencyRecord
 
 Tournament
  ├── 1:N TournamentParticipant
  ├── 1:N Prediction
  ├── 1:N RatingHistory
- └── 1:N Prize
+ └── 1:N PrizeEntitlement
 
 Competition
  └── 1:N Fixture
@@ -1100,8 +1138,11 @@ OutcomeSnapshot
 Achievement
  └── 1:N UserAchievement
 
-Prize
+PrizeEntitlement
  └── 1:0..1 PrizeClaim
+
+PrizeClaim
+ └── 1:N PrizeWalletRevision
 ```
 
 Explicit Prisma relation names are required where one model participates
@@ -1148,10 +1189,10 @@ RatingHistory(userId, tournamentId)
 Achievement.code
 UserAchievement(userId, achievementId)
 
-Prize(tournamentId, rank)
-Prize(tournamentId, userId)
+PrizeEntitlement(tournamentId, finalPlacement)
+PrizeEntitlement(tournamentId, userId)
 
-PrizeClaim.prizeId
+PrizeClaim.entitlementId
 
 AdReward.attemptKey
 AdReward.consumedByPredictionId
@@ -1167,8 +1208,8 @@ daily quota cannot exceed current limits
 one AdReward cannot unlock multiple Predictions
 settlement has exactly-once business effect
 rating finalization applies once per User/Tournament
-one Prize per Tournament rank
-one PrizeClaim per Prize
+one PrizeEntitlement per Tournament final placement
+one PrizeClaim per PrizeEntitlement
 ```
 
 Current-time invariants such as kickoff lock are enforced
@@ -1410,7 +1451,7 @@ Database contract is compliant when:
 ```text
 internal PKs are UUID
 external IDs remain separate
-TON uses BigInt nanoTON
+USDT prize amounts use Decimal NUMERIC(20,8)
 probability/scoring decimal evidence uses NUMERIC
 canonical Competition/Team slugs are unique and provider-independent
 historical gameplay is protected from accidental cascade deletion
@@ -1422,7 +1463,7 @@ AdReward is one-time consumable
 TournamentParticipant stores leaderboard aggregates
 current Global Rank is derived
 RatingHistory is immutable/unique per User/Tournament
-Prize and PrizeClaim remain separate
+PrizeEntitlement and PrizeClaim remain separate
 critical query paths are indexed
 critical mutations have transactional/unique-constraint support
 retry/concurrency cannot create duplicate business effects

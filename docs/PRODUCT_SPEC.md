@@ -590,7 +590,7 @@ Explain mechanics when they become relevant.
 | FIRST_PREDICTION_SETTLED | Points affect Weekly Leaderboard                 |
 | RATING_PROGRESS          | 10 Predictions required for Rating qualification |
 | FIRST_CUP_FINISHED       | Rating Delta and League movement                 |
-| FIRST_PRIZE              | TON wallet and Prize Claim                       |
+| FIRST_PRIZE              | USDT/TRC-20 wallet and Prize Claim               |
 
 Before first Prediction do not request:
 
@@ -661,11 +661,13 @@ Exact ad-provider verification mechanics belong in technical/integration specs a
 
 ---
 
-# 16. TON Prize Flow
+# 16. USDT/TRC-20 Prize Flow
 
 Prize Pool is fixed before Tournament starts.
 
-Exact Prize Distribution by winning rank is intentionally deferred and must not be treated as approved until separately designed.
+For the USDT/TRC-20 MVP, the existing per-Cup `PrizeDistributionTier` rows
+stored in the database and shown on the Cup screen are the approved Prize
+Distribution source of truth. Do not create a second prize configuration.
 
 Final Leaderboard is fixed after all Tournament-relevant Fixture are settled according to approved Tournament rules.
 
@@ -674,15 +676,21 @@ Wallet is requested only when a Prize Winner needs to claim a Prize.
 Minimum claim states:
 
 ```text
-UNCLAIMED
-CLAIM_PENDING
+READY_TO_CLAIM
+UNDER_REVIEW
+ACTION_REQUIRED
 PAID
-FAILED
+REJECTED
 ```
 
-MVP uses a Prize/PrizeClaim flow with manual TON payout by an operator.
+`READY_TO_CLAIM` is represented by a PrizeEntitlement without a PrizeClaim.
 
-The operator verifies the submitted wallet, performs the TON transfer manually, records the transaction reference/hash, and marks the claim `PAID`.
+MVP uses a PrizeEntitlement/PrizeClaim flow with manual USDT payout on the
+TRON (TRC-20) network by an operator.
+
+The operator verifies the submitted public TRC-20 wallet address, performs the
+USDT transfer manually, records optional transaction hash and mandatory
+`paidAt`, and marks the claim `PAID`.
 
 Automatic server-side or smart-contract payout is not part of the current MVP.
 
@@ -793,7 +801,7 @@ open Mini App
 → optionally unlock up to five Rewarded Predictions/day
 → finish Cup with understandable Tournament Result
 → receive Global Rating update when qualified
-→ connect TON wallet only if a Prize actually requires claim
+→ submit a TRC-20 wallet address only if a Prize actually requires claim
 ```
 
 Primary Loop:

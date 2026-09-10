@@ -2,6 +2,8 @@ export type PredictionOutcome = "HOME" | "DRAW" | "AWAY";
 export type SupportedLocale = "en" | "ru" | "de" | "es" | "ar";
 export type AppearanceMode = "system" | "light" | "dark";
 export type PrizeCurrency = "USDT" | "TON";
+export type PrizePayoutStatus =
+  "READY_TO_CLAIM" | "UNDER_REVIEW" | "ACTION_REQUIRED" | "PAID" | "REJECTED";
 
 export interface ApiErrorEnvelope {
   error: {
@@ -49,6 +51,40 @@ export interface PrizeDistributionTierDto {
   fromRank: number;
   toRank: number;
   amount: string;
+}
+
+export interface PrizePayoutSummaryDto {
+  totalWon: string;
+  pending: string;
+  paid: string;
+  asset: "USDT";
+}
+
+export interface PrizePayoutCardDto {
+  entitlementId: string;
+  claimId: string | null;
+  cupId: string;
+  cupNumber: number;
+  finalPlacement: number;
+  amount: string;
+  asset: "USDT";
+  network: "TRC20";
+  status: PrizePayoutStatus;
+  walletAddress: string | null;
+  maskedWalletAddress: string | null;
+  transactionHash: string | null;
+  transactionUrl: string | null;
+  actionRequiredMessage: string | null;
+  rejectionReason: string | null;
+  settledAt: string;
+  claimedAt: string | null;
+  paidAt: string | null;
+  updatedAt: string;
+}
+
+export interface PrizePayoutsResponse {
+  summary: PrizePayoutSummaryDto;
+  items: PrizePayoutCardDto[];
 }
 
 export interface CupLeaderboardRowDto {

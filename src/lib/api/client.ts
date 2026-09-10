@@ -9,6 +9,8 @@ import type {
   CupLeaderboardPageResponse,
   PredictionMutationResponse,
   PredictionOutcome,
+  PrizePayoutCardDto,
+  PrizePayoutsResponse,
   TodayFixturesResponse,
   TodayPredictionsResponse,
   UserSettingsDto,
@@ -106,6 +108,22 @@ export class ApiClient {
 
   getSettings(): Promise<UserSettingsDto> {
     return this.request("/api/settings");
+  }
+
+  getPrizePayouts(): Promise<PrizePayoutsResponse> {
+    return this.request("/api/prizes-payouts");
+  }
+
+  submitPrizeClaim(input: {
+    entitlementId: string;
+    walletAddress: string;
+  }): Promise<PrizePayoutCardDto> {
+    return this.request(`/api/prizes-payouts/${input.entitlementId}/claim`, {
+      method: "POST",
+      body: {
+        walletAddress: input.walletAddress,
+      },
+    });
   }
 
   updateSettings(input: Partial<UserSettingsDto>): Promise<UserSettingsDto> {

@@ -684,6 +684,11 @@ try {
   });
 
   const leaderboard = await recalculateTournamentParticipants(tournament.id);
+  const prizePayoutDemo = await seedPrizePayoutDemoData({
+    sourceTournamentId: tournament.id,
+    devUsers,
+    now,
+  });
 
   console.log(
     `Development seed complete for London business date ${businessDate}.`,
@@ -693,6 +698,9 @@ try {
   );
   console.log(
     `Seeded ${devUsers.length} users, ${seededFixtures.length} fixtures and ${leaderboard.predictionCount} predictions.`,
+  );
+  console.log(
+    `Seeded ${prizePayoutDemo.count} prize payout demo states for ${prizePayoutDemo.username}.`,
   );
   console.table(
     seededFixtures.map((fixture) => ({
@@ -1424,6 +1432,198 @@ async function seedCupPredictions({
 
     await syncDailyUsageForUser(user.id, currentInstant);
   }
+}
+
+async function seedPrizePayoutDemoData({ sourceTournamentId, devUsers, now }) {
+  const devUser = devUsers.find((user) => user.telegramUserId === 900000001n);
+
+  if (!devUser) {
+    throw new Error("Development payout demo user is missing.");
+  }
+
+  const demoDefinitions = [
+    {
+      number: 880101,
+      finalPlacement: 1,
+      status: null,
+      walletAddress: null,
+      transactionHash: null,
+      paidAt: null,
+      actionRequiredMessage: null,
+      rejectionReason: null,
+    },
+    {
+      number: 880102,
+      finalPlacement: 2,
+      status: "UNDER_REVIEW",
+      walletAddress: "TURrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+      transactionHash: null,
+      paidAt: null,
+      actionRequiredMessage: null,
+      rejectionReason: null,
+    },
+    {
+      number: 880103,
+      finalPlacement: 3,
+      status: "ACTION_REQUIRED",
+      walletAddress: "TACtionRequired1111111111111111111",
+      transactionHash: null,
+      paidAt: null,
+      actionRequiredMessage:
+        "Please confirm the TRC-20 address. The submitted address could not be matched during manual review.",
+      rejectionReason: null,
+    },
+    {
+      number: 880104,
+      finalPlacement: 4,
+      status: "PAID",
+      walletAddress: "TPaid11111111111111111111111111111",
+      transactionHash:
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      paidAt: new Date(now.getTime() - 18 * 60 * 60 * 1000),
+      actionRequiredMessage: null,
+      rejectionReason: null,
+    },
+    {
+      number: 880105,
+      finalPlacement: 5,
+      status: "PAID",
+      walletAddress: "TPaidNoHash11111111111111111111111",
+      transactionHash: null,
+      paidAt: new Date(now.getTime() - 8 * 60 * 60 * 1000),
+      actionRequiredMessage: null,
+      rejectionReason: null,
+    },
+    {
+      number: 880106,
+      finalPlacement: 6,
+      status: "REJECTED",
+      walletAddress: "TRejected1111111111111111111111111",
+      transactionHash: null,
+      paidAt: null,
+      actionRequiredMessage: null,
+      rejectionReason:
+        "The submitted address is not eligible for manual payout. Contact support if you believe this is a mistake.",
+    },
+  ];
+  const amountsByPlacement = await prizeAmountsByPlacement({
+    sourceTournamentId,
+    placements: demoDefinitions.map((definition) => definition.finalPlacement),
+  });
+
+  await cleanupPrizePayoutDemoData(
+    demoDefinitions.map((definition) => definition.number),
+  );
+
+  for (const [index, definition] of demoDefinitions.entries()) {
+    const tournament = await prisma.tournament.create({
+      data: {
+        number: definition.number,
+        status: "FINISHED",
+        startsAt: new Date(now.getTime() - (14 + index) * 24 * 60 * 60 * 1000),
+        endsAt: new Date(now.getTime() - (7 + index) * 24 * 60 * 60 * 1000),
+        prizePoolNanoTon: 0n,
+        prizeCurrency: "USDT",
+      },
+    });
+    const amount = amountsByPlacement.get(definition.finalPlacement);
+
+    if (!amount) {
+      throw new Error(
+        `Missing PrizeDistributionTier amount for placement ${definition.finalPlacement}.`,
+      );
+    }
+
+    const entitlement = await prisma.prizeEntitlement.create({
+      data: {
+        tournamentId: tournament.id,
+        userId: devUser.id,
+        finalPlacement: definition.finalPlacement,
+        amount,
+        asset: "USDT",
+        network: "TRC20",
+        settledAt: new Date(tournament.endsAt.getTime() + 15 * 60 * 1000),
+      },
+    });
+
+    if (definition.status) {
+      await prisma.prizeClaim.create({
+        data: {
+          entitlementId: entitlement.id,
+          userId: devUser.id,
+          walletAddress: definition.walletAddress,
+          status: definition.status,
+          transactionHash: definition.transactionHash,
+          claimedAt: new Date(entitlement.settledAt.getTime() + 30 * 60 * 1000),
+          paidAt: definition.paidAt,
+          actionRequiredMessage: definition.actionRequiredMessage,
+          rejectionReason: definition.rejectionReason,
+        },
+      });
+    }
+  }
+
+  return {
+    count: demoDefinitions.length,
+    username: devUser.username ?? devUser.firstName ?? "dev user",
+  };
+}
+
+async function prizeAmountsByPlacement({ sourceTournamentId, placements }) {
+  const tiers = await prisma.prizeDistributionTier.findMany({
+    where: { tournamentId: sourceTournamentId },
+    orderBy: { sortOrder: "asc" },
+  });
+  const amounts = new Map();
+
+  for (const placement of placements) {
+    const tier = tiers.find(
+      (candidate) =>
+        candidate.fromRank <= placement && candidate.toRank >= placement,
+    );
+
+    if (tier) {
+      amounts.set(placement, tier.amount);
+    }
+  }
+
+  return amounts;
+}
+
+async function cleanupPrizePayoutDemoData(tournamentNumbers) {
+  const tournaments = await prisma.tournament.findMany({
+    where: { number: { in: tournamentNumbers } },
+    select: { id: true },
+  });
+  const tournamentIds = tournaments.map((tournament) => tournament.id);
+
+  if (tournamentIds.length === 0) {
+    return;
+  }
+
+  const entitlements = await prisma.prizeEntitlement.findMany({
+    where: { tournamentId: { in: tournamentIds } },
+    select: { id: true },
+  });
+  const entitlementIds = entitlements.map((entitlement) => entitlement.id);
+  const claims = await prisma.prizeClaim.findMany({
+    where: { entitlementId: { in: entitlementIds } },
+    select: { id: true },
+  });
+  const claimIds = claims.map((claim) => claim.id);
+
+  await prisma.prizeWalletRevision.deleteMany({
+    where: { claimId: { in: claimIds } },
+  });
+  await prisma.prizeClaim.deleteMany({
+    where: { id: { in: claimIds } },
+  });
+  await prisma.prizeEntitlement.deleteMany({
+    where: { id: { in: entitlementIds } },
+  });
+  await prisma.tournament.deleteMany({
+    where: { id: { in: tournamentIds } },
+  });
 }
 
 async function cleanupSeedTournamentRows({ tournamentId, activeUserIds }) {
