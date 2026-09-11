@@ -473,6 +473,20 @@ now >= fixture.kickoffAt → PREDICTION_LOCKED
 It must preserve the original slot/snapshot/quota/reward semantics
 defined by `PRODUCT_SPEC.md`.
 
+`cancelPrediction()` is also server-authoritative and transactional.
+
+Its product invariant is:
+
+```text
+now < fixture.kickoffAt  → permitted
+now >= fixture.kickoffAt → PREDICTION_LOCKED
+```
+
+It removes the Prediction, recomputes DailyPredictionUsage from the total
+remaining Predictions for the business day, updates
+TournamentParticipant.predictionsCount, and leaves any consumed rewarded
+AdReward permanently consumed.
+
 ---
 
 # 11. Rewarded Ads
@@ -796,6 +810,7 @@ GET   /api/fixtures/today
 GET   /api/predictions/today
 POST  /api/predictions
 PATCH /api/predictions/:predictionId
+DELETE /api/predictions/:predictionId
 GET   /api/settings
 PATCH /api/settings
 ```

@@ -63,6 +63,28 @@ export function rewardFlowStatusLabel(
   }
 }
 
+export function rewardFlowActionLabel(
+  t: ReturnType<typeof useTranslation>["t"],
+  status?: RewardFlowStatus,
+): string {
+  switch (status) {
+    case "ready":
+      return t("matches.reward.start");
+    case "failed":
+    case "rejected":
+    case "timeout":
+      return t("matches.reward.retry");
+    case "required":
+    case "preloading":
+      return t("matches.reward.loading");
+    case "showing":
+    case "confirming":
+      return t("matches.reward.start");
+    case undefined:
+      return t("matches.reward.loading");
+  }
+}
+
 function isKnownFixtureStatus(status: string): status is KnownFixtureStatus {
   return ["DRAFT", "OPEN", "LOCKED", "LIVE", "FINISHED", "SETTLED"].includes(
     status,

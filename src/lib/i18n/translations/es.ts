@@ -83,6 +83,8 @@ export const es = {
       title: "Mira un anuncio para desbloquear el pronóstico",
       body: "Los anuncios con recompensa aún no están conectados en esta etapa.",
       start: "Ver anuncio",
+      loading: "Cargando anuncio",
+      retry: "Intentar de nuevo",
       status: {
         required: "Mira un anuncio para desbloquear este pronóstico.",
         preloading: "Preparando anuncio...",
@@ -91,7 +93,7 @@ export const es = {
         confirming: "Confirmando recompensa...",
         failed: "El anuncio no está disponible. Inténtalo de nuevo.",
         rejected: "La recompensa no fue confirmada. Inténtalo de nuevo.",
-        timeout: "La confirmación tarda demasiado. Inténtalo de nuevo.",
+        timeout: "El anuncio no se cargó a tiempo. Inténtalo de nuevo.",
       },
       cta: "Mira un anuncio para desbloquear otro pronóstico",
       plusOne: "+1",

@@ -2390,6 +2390,48 @@ Historical wallet address revisions are retained. User-accessible claim
 mutation is limited to initial claim submission and Action Required address
 update.
 
+## D-064 --- Editable predictions can be cancelled before kickoff
+
+**Status:** Accepted\
+**Date:** 2026-09-11
+
+### Decision
+
+Before kickoff, clicking the already selected outcome cancels the existing
+Prediction.
+
+Cancellation:
+
+- removes the Prediction from the user's current picks
+- recomputes DailyPredictionUsage from the total remaining Predictions
+- decrements TournamentParticipant.predictionsCount
+- does not restore or make reusable a consumed rewarded AdReward
+
+The next new Prediction is FREE only while the total current Predictions for
+the business day is below `FREE_PREDICTION_LIMIT`. Once the user has at least
+that many current Predictions, the next new Prediction requires a rewarded ad
+even if a cancelled Prediction originally used a FREE slot.
+
+For a REWARDED Prediction, the AdReward remains `CONSUMED` permanently. The next
+rewarded Prediction requires a new rewarded ad completion.
+
+At or after kickoff, cancellation follows the same lock boundary as editing and
+returns `PREDICTION_LOCKED`.
+
+### Rationale
+
+Users need a simple way to undo an accidental pre-kickoff pick while keeping
+rewarded advertising single-use and auditable.
+
+### Consequences
+
+Prediction cancellation is a distinct mutation from editing. Editing continues
+to preserve slotType, quota consumption, scoring snapshot and reward consumption
+as defined by `D-006`.
+
+The backend must enforce cancellation transactionally and must not rely on
+frontend toggle state for quota or rewarded-ad correctness.
+
 ---
 
 ## OD-005 --- Global Rating expected-percentile model and calibration
@@ -2483,7 +2525,8 @@ Approved visual references are implementation targets `D-060` ---
 Testing follows responsibility boundaries `D-061` --- Concurrency
 correctness is explicitly tested `D-062` --- Visual geometry is verified
 visually rather than through brittle CSS unit tests `D-063` --- Prizes &
-Payouts MVP uses USDT on TRON TRC-20
+Payouts MVP uses USDT on TRON TRC-20 `D-064` --- Editable predictions
+can be cancelled before kickoff
 
 ## Open
 

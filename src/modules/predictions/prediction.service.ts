@@ -7,13 +7,16 @@ import {
 } from "@prisma/client";
 import { DomainError } from "@/lib/errors/domain-error";
 import {
+  type BusinessDate,
   businessDateToDatabaseDate,
+  getBusinessDayRangeUtc,
   getBusinessDate,
 } from "@/lib/time/business-time";
 import type { Clock } from "@/lib/time/clock";
 import { assertFixtureEligibleForPrediction } from "@/modules/fixtures/fixture.domain";
 import { findActiveTournamentForInstant } from "@/modules/tournaments/tournament.service";
 import {
+  FREE_PREDICTION_LIMIT,
   getSnapshotValuesForOutcome,
   resolvePredictionSlotType,
 } from "./prediction.domain";
@@ -39,6 +42,11 @@ export interface UpdatePredictionInput {
   selectedOutcome: PredictionOutcome;
 }
 
+export interface CancelPredictionInput {
+  userId: string;
+  predictionId: string;
+}
+
 export interface PredictionMutationResult {
   predictionId: string;
   userId: string;
@@ -49,6 +57,14 @@ export interface PredictionMutationResult {
   slotType: "FREE" | "REWARDED";
   probabilityAtPrediction: string;
   potentialPoints: number;
+}
+
+export interface CancelPredictionResult {
+  predictionId: string;
+  userId: string;
+  tournamentId: string;
+  fixtureId: string;
+  slotType: "FREE" | "REWARDED";
 }
 
 interface LockedFixtureRow {
@@ -308,6 +324,68 @@ export async function updatePrediction(
   });
 }
 
+export async function cancelPrediction(
+  dependencies: PredictionServiceDependencies,
+  input: CancelPredictionInput,
+): Promise<CancelPredictionResult> {
+  const now = dependencies.clock.now();
+
+  return dependencies.prisma.$transaction(async (tx) => {
+    const existingPrediction = await lockPredictionForUpdate(
+      tx,
+      input.predictionId,
+      input.userId,
+    );
+
+    if (!existingPrediction) {
+      throw new DomainError("PREDICTION_NOT_FOUND", "Prediction not found.", {
+        predictionId: input.predictionId,
+      });
+    }
+
+    if (now.getTime() >= existingPrediction.kickoffAt.getTime()) {
+      throw new DomainError("PREDICTION_LOCKED", "Prediction is locked.", {
+        predictionId: existingPrediction.id,
+        kickoffAt: existingPrediction.kickoffAt.toISOString(),
+        instant: now.toISOString(),
+      });
+    }
+
+    const businessDate = getBusinessDate(existingPrediction.kickoffAt);
+
+    await lockDailyUsageScope(tx, input.userId, businessDate);
+    await tx.adReward.updateMany({
+      where: { consumedByPredictionId: existingPrediction.id },
+      data: { consumedByPredictionId: null },
+    });
+    await tx.prediction.delete({
+      where: { id: existingPrediction.id },
+    });
+    await reconcileDailyPredictionUsage(tx, {
+      userId: input.userId,
+      businessDate,
+    });
+    await tx.tournamentParticipant.updateMany({
+      where: {
+        tournamentId: existingPrediction.tournamentId,
+        userId: input.userId,
+        predictionsCount: { gt: 0 },
+      },
+      data: {
+        predictionsCount: { decrement: 1 },
+      },
+    });
+
+    return {
+      predictionId: existingPrediction.id,
+      userId: input.userId,
+      tournamentId: existingPrediction.tournamentId,
+      fixtureId: existingPrediction.fixtureId,
+      slotType: existingPrediction.slotType,
+    };
+  });
+}
+
 async function lockCreatePredictionIdempotencyRecord(
   tx: Prisma.TransactionClient,
   input: CreatePredictionInput,
@@ -473,6 +551,38 @@ async function lockAndValidateAdReward(
   }
 
   return reward;
+}
+
+async function reconcileDailyPredictionUsage(
+  tx: Prisma.TransactionClient,
+  input: {
+    userId: string;
+    businessDate: BusinessDate;
+  },
+): Promise<void> {
+  const { startUtc, endUtc } = getBusinessDayRangeUtc(input.businessDate);
+  const totalUsed = await tx.prediction.count({
+    where: {
+      userId: input.userId,
+      fixture: {
+        kickoffAt: {
+          gte: startUtc,
+          lt: endUtc,
+        },
+      },
+    },
+  });
+
+  await tx.dailyPredictionUsage.updateMany({
+    where: {
+      userId: input.userId,
+      businessDate: businessDateToDatabaseDate(input.businessDate),
+    },
+    data: {
+      freeUsed: Math.min(totalUsed, FREE_PREDICTION_LIMIT),
+      rewardedUsed: Math.max(0, totalUsed - FREE_PREDICTION_LIMIT),
+    },
+  });
 }
 
 function toPredictionMutationResult(

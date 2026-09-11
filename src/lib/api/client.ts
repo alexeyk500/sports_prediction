@@ -3,6 +3,7 @@
 import type {
   ApiErrorEnvelope,
   BootstrapResponse,
+  CancelPredictionResponse,
   CupAroundMeLeaderboardResponse,
   CupHistoryResponse,
   CupLeaderboardModeDto,
@@ -189,6 +190,14 @@ export class ApiClient {
       body: {
         selectedOutcome: input.selectedOutcome,
       },
+    });
+  }
+
+  cancelPrediction(input: {
+    predictionId: string;
+  }): Promise<CancelPredictionResponse> {
+    return this.request(`/api/predictions/${input.predictionId}`, {
+      method: "DELETE",
     });
   }
 

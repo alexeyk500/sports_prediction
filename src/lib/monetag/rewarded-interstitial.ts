@@ -40,6 +40,22 @@ export async function showMonetagRewardedInterstitial(
   });
 }
 
+export function isMonetagRewardedInterstitialTimeout(error: unknown): boolean {
+  if (error instanceof Error) {
+    return error.message.toLowerCase() === "timeout";
+  }
+
+  if (typeof error !== "object" || error === null) {
+    return false;
+  }
+
+  const record = error as Record<string, unknown>;
+
+  return (
+    typeof record.error === "string" && record.error.toLowerCase() === "timeout"
+  );
+}
+
 function getAdHandler(zoneId: string): MonetagAdHandler {
   const existing = handlersByZone.get(zoneId);
 

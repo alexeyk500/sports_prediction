@@ -11,7 +11,10 @@ import { POST as createMonetagSession } from "@/app/api/ad-rewards/monetag/sessi
 import { GET as getTodayFixtures } from "@/app/api/fixtures/today/route";
 import { POST as postPrediction } from "@/app/api/predictions/route";
 import { GET as getTodayPredictions } from "@/app/api/predictions/today/route";
-import { PATCH as patchPrediction } from "@/app/api/predictions/[predictionId]/route";
+import {
+  DELETE as deletePrediction,
+  PATCH as patchPrediction,
+} from "@/app/api/predictions/[predictionId]/route";
 import {
   GET as getSettings,
   PATCH as patchSettings,
@@ -661,7 +664,7 @@ describe("Telegram auth HTTP vertical slice", () => {
     );
   });
 
-  it("creates and updates Prediction through HTTP without trusting client user identity", async () => {
+  it("creates, updates and cancels Prediction through HTTP without trusting client user identity", async () => {
     const userInitData = signedInitData({ id: "777000111225" });
     const otherUser = await createTestUser(prisma);
     const fixture = await createHttpEligibleFixture();
@@ -726,6 +729,28 @@ describe("Telegram auth HTTP vertical slice", () => {
         selectedOutcome: "DRAW",
         editable: true,
       }),
+    );
+
+    const deletedResponse = await deletePrediction(
+      createApiRequest(
+        `/api/predictions/${createdBody.predictionId}`,
+        userInitData,
+        {
+          method: "DELETE",
+        },
+      ),
+      { params: Promise.resolve({ predictionId: createdBody.predictionId }) },
+    );
+    const afterDeleteResponse = await getTodayPredictions(
+      createApiRequest("/api/predictions/today", userInitData),
+    );
+    const afterDeleteBody = (await responseJson(afterDeleteResponse)) as {
+      predictions: Array<{ id: string }>;
+    };
+
+    expect(deletedResponse.status).toBe(200);
+    expect(afterDeleteBody.predictions).not.toContainEqual(
+      expect.objectContaining({ id: createdBody.predictionId }),
     );
   });
 
@@ -935,6 +960,9 @@ describe("Telegram auth HTTP vertical slice", () => {
         },
       }),
     );
+    const createdPredictionBody = (await responseJson(createdPrediction)) as {
+      predictionId: string;
+    };
     const consumedReward = await prisma.adReward.findUniqueOrThrow({
       where: { id: sessionBody.adRewardId },
     });
@@ -965,6 +993,38 @@ describe("Telegram auth HTTP vertical slice", () => {
 
     expect(rejectedReuse.status).toBe(400);
     expect(rejectedReuseBody.error.code).toBe("AD_REWARD_ALREADY_CONSUMED");
+
+    const cancelledPrediction = await deletePrediction(
+      createApiRequest(
+        `/api/predictions/${createdPredictionBody.predictionId}`,
+        initData,
+        { method: "DELETE" },
+      ),
+      {
+        params: Promise.resolve({
+          predictionId: createdPredictionBody.predictionId,
+        }),
+      },
+    );
+    const usageAfterCancel = await prisma.dailyPredictionUsage.findFirstOrThrow(
+      {
+        where: { userId: consumedReward.userId },
+      },
+    );
+    const newSessionResponse = await createMonetagSession(
+      createApiRequest("/api/ad-rewards/monetag/sessions", initData, {
+        method: "POST",
+        body: { fixtureId: secondFixture.id, selectedOutcome: "DRAW" },
+      }),
+    );
+    const newSessionBody = (await responseJson(newSessionResponse)) as {
+      adRewardId: string;
+    };
+
+    expect(cancelledPrediction.status).toBe(200);
+    expect(usageAfterCancel.rewardedUsed).toBe(0);
+    expect(newSessionResponse.status).toBe(201);
+    expect(newSessionBody.adRewardId).not.toBe(sessionBody.adRewardId);
   });
 
   it("rejects unauthorized, wrong-owner, expired and invalid Monetag confirms", async () => {

@@ -4,13 +4,16 @@ import { ApiClientError, type ApiClient } from "@/lib/api/client";
 import type { PredictionDto, PredictionOutcome } from "@/lib/api/types";
 
 export type MatchesActionResult =
-  | { status: "created" | "updated" }
+  | { status: "created" | "updated" | "cancelled" }
   | { status: "reward-required" }
   | { status: "locked" }
   | { status: "blocked" };
 
 export interface SelectOutcomeInput {
-  apiClient: Pick<ApiClient, "createPrediction" | "updatePrediction">;
+  apiClient: Pick<
+    ApiClient,
+    "cancelPrediction" | "createPrediction" | "updatePrediction"
+  >;
   fixtureId: string;
   selectedOutcome: PredictionOutcome;
   existingPrediction?: PredictionDto;
@@ -29,6 +32,25 @@ export async function selectOutcome(
   if (input.existingPrediction) {
     if (!input.existingPrediction.editable) {
       return { status: "locked" };
+    }
+
+    if (input.existingPrediction.selectedOutcome === input.selectedOutcome) {
+      try {
+        await input.apiClient.cancelPrediction({
+          predictionId: input.existingPrediction.id,
+        });
+
+        return { status: "cancelled" };
+      } catch (error) {
+        if (
+          error instanceof ApiClientError &&
+          error.code === "PREDICTION_LOCKED"
+        ) {
+          return { status: "locked" };
+        }
+
+        throw error;
+      }
     }
 
     try {

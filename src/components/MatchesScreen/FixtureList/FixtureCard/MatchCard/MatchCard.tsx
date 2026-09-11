@@ -19,6 +19,7 @@ import { PREDICTION_OUTCOME_ORDER } from "../../../matches-outcomes";
 import type { RewardFlowPresentation } from "../../../matches-types";
 import {
   matchCardStatusLabel,
+  rewardFlowActionLabel,
   rewardFlowStatusLabel,
 } from "../../../matches-format";
 import styles from "./MatchCard.module.css";
@@ -78,47 +79,44 @@ const MatchCard: React.FC<IMatchCardProps> = ({
           <TeamIdentity badge={awayBadge} name={fixture.awayTeam.name} />
         </div>
         <div className={styles.outcomes}>
-          {PREDICTION_OUTCOME_ORDER.map((outcome) => (
-            <PredictionOutcomeButton
-              key={outcome}
-              fixture={fixture}
-              outcome={outcome}
-              selected={cardState.selectedOutcome === outcome}
-              disabled={!cardState.canSubmitPrediction}
-              result={cardState.outcomeResults[outcome]}
-              onSelectOutcome={onSelectOutcome}
-              outcomeLabel={outcomeLabel(outcome)}
-            />
-          ))}
+          {rewardRequired ? (
+            <div className={styles.rewardPlaceholder}>
+              <strong>{t("matches.reward.title")}</strong>
+              <span>{rewardFlowStatusLabel(t, rewardFlow?.status)}</span>
+              <button
+                className={styles.rewardButton}
+                type="button"
+                disabled={
+                  rewardFlow === undefined ||
+                  !["ready", "failed", "rejected", "timeout"].includes(
+                    rewardFlow.status,
+                  )
+                }
+                onClick={() => void onStartReward(fixture.id)}
+              >
+                {rewardFlowActionLabel(t, rewardFlow?.status)}
+              </button>
+            </div>
+          ) : (
+            PREDICTION_OUTCOME_ORDER.map((outcome) => (
+              <PredictionOutcomeButton
+                key={outcome}
+                fixture={fixture}
+                outcome={outcome}
+                selected={cardState.selectedOutcome === outcome}
+                disabled={!cardState.canSubmitPrediction}
+                result={cardState.outcomeResults[outcome]}
+                onSelectOutcome={onSelectOutcome}
+                outcomeLabel={outcomeLabel(outcome)}
+              />
+            ))
+          )}
         </div>
         <div className={styles.fixtureStatus} data-ui="match-card-status-slot">
           {statusLabel ? (
             <span className={styles.statusBadge}>{statusLabel}</span>
           ) : null}
         </div>
-        {rewardRequired ? (
-          <div className={styles.rewardPlaceholder}>
-            <strong>{t("matches.reward.title")}</strong>
-            <span>{rewardFlowStatusLabel(t, rewardFlow?.status)}</span>
-            <button
-              className={styles.rewardButton}
-              type="button"
-              disabled={
-                rewardFlow !== undefined &&
-                ![
-                  "required",
-                  "ready",
-                  "failed",
-                  "rejected",
-                  "timeout",
-                ].includes(rewardFlow.status)
-              }
-              onClick={() => void onStartReward(fixture.id)}
-            >
-              {t("matches.reward.start")}
-            </button>
-          </div>
-        ) : null}
       </div>
     </article>
   );

@@ -153,23 +153,36 @@
 }
 
 .rewardPlaceholder {
-  margin-block-start: 10px;
+  display: grid;
+  min-height: 72px;
+  grid-column: 1 / -1;
+  align-content: center;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  row-gap: 4px;
   border: 1px solid var(--color-warning-border);
   border-radius: 8px;
-  padding-block: 10px;
+  padding-block: 9px;
   padding-inline: 12px;
   background: var(--color-warning-bg);
   color: var(--color-warning-text);
 }
 
 .rewardPlaceholder span {
-  display: block;
-  margin-block-start: 4px;
+  min-width: 0;
+  align-self: start;
   font-size: 13px;
 }
 
+.rewardPlaceholder strong,
+.rewardPlaceholder span {
+  grid-column: 1;
+}
+
 .rewardButton {
-  margin-block-start: 10px;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
   border: 1px solid var(--color-warning-border);
   border-radius: 8px;
   padding-block: 8px;
@@ -184,4 +197,17 @@
 .rewardButton:disabled {
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+@media (max-width: 360px) {
+  .rewardPlaceholder {
+    grid-template-columns: 1fr;
+  }
+
+  .rewardButton {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+    margin-block-start: 4px;
+  }
 }

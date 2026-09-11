@@ -83,6 +83,8 @@ export const de = {
       title: "Werbung ansehen, um den Tipp freizuschalten",
       body: "Belohnte Werbung ist in dieser Entwicklungsphase noch nicht verbunden.",
       start: "Werbung ansehen",
+      loading: "Werbung wird geladen",
+      retry: "Erneut versuchen",
       status: {
         required: "Sieh Werbung an, um diesen Tipp freizuschalten.",
         preloading: "Werbung wird vorbereitet...",
@@ -91,7 +93,7 @@ export const de = {
         confirming: "Belohnung wird bestätigt...",
         failed: "Werbung ist nicht verfügbar. Versuche es erneut.",
         rejected: "Belohnung wurde nicht bestätigt. Versuche es erneut.",
-        timeout: "Bestätigung dauert zu lange. Versuche es erneut.",
+        timeout: "Werbung wurde nicht rechtzeitig geladen. Versuche es erneut.",
       },
       cta: "Sieh Werbung an, um einen weiteren Tipp freizuschalten",
       plusOne: "+1",

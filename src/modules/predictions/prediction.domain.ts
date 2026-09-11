@@ -17,7 +17,7 @@ export function resolvePredictionSlotType(
 ): PredictionSlotType {
   const totalUsed = usage.freeUsed + usage.rewardedUsed;
 
-  if (usage.freeUsed < FREE_PREDICTION_LIMIT) {
+  if (totalUsed < FREE_PREDICTION_LIMIT) {
     return "FREE";
   }
 

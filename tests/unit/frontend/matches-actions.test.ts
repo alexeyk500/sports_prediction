@@ -53,12 +53,13 @@ describe("Matches screen outcome actions", () => {
   });
 
   it("creates a free prediction when no prediction exists", async () => {
+    const cancelPrediction = vi.fn().mockResolvedValue({});
     const createPrediction = vi.fn().mockResolvedValue({});
     const updatePrediction = vi.fn().mockResolvedValue({});
 
     await expect(
       selectOutcome({
-        apiClient: { createPrediction, updatePrediction },
+        apiClient: { cancelPrediction, createPrediction, updatePrediction },
         fixtureId: "fixture-1",
         selectedOutcome: "HOME",
         canSubmitPrediction: true,
@@ -74,12 +75,13 @@ describe("Matches screen outcome actions", () => {
   });
 
   it("patches an existing editable prediction", async () => {
+    const cancelPrediction = vi.fn().mockResolvedValue({});
     const createPrediction = vi.fn().mockResolvedValue({});
     const updatePrediction = vi.fn().mockResolvedValue({});
 
     await expect(
       selectOutcome({
-        apiClient: { createPrediction, updatePrediction },
+        apiClient: { cancelPrediction, createPrediction, updatePrediction },
         fixtureId: "fixture-1",
         selectedOutcome: "DRAW",
         existingPrediction: editablePrediction,
@@ -91,16 +93,40 @@ describe("Matches screen outcome actions", () => {
       predictionId: "prediction-1",
       selectedOutcome: "DRAW",
     });
+    expect(cancelPrediction).not.toHaveBeenCalled();
     expect(createPrediction).not.toHaveBeenCalled();
   });
 
-  it("does not call API for locked prediction", async () => {
+  it("cancels an existing editable prediction when selected outcome is clicked again", async () => {
+    const cancelPrediction = vi.fn().mockResolvedValue({});
     const createPrediction = vi.fn().mockResolvedValue({});
     const updatePrediction = vi.fn().mockResolvedValue({});
 
     await expect(
       selectOutcome({
-        apiClient: { createPrediction, updatePrediction },
+        apiClient: { cancelPrediction, createPrediction, updatePrediction },
+        fixtureId: "fixture-1",
+        selectedOutcome: "HOME",
+        existingPrediction: editablePrediction,
+        canSubmitPrediction: true,
+        createIdempotencyKey: () => "unused",
+      }),
+    ).resolves.toEqual({ status: "cancelled" });
+    expect(cancelPrediction).toHaveBeenCalledWith({
+      predictionId: "prediction-1",
+    });
+    expect(updatePrediction).not.toHaveBeenCalled();
+    expect(createPrediction).not.toHaveBeenCalled();
+  });
+
+  it("does not call API for locked prediction", async () => {
+    const cancelPrediction = vi.fn().mockResolvedValue({});
+    const createPrediction = vi.fn().mockResolvedValue({});
+    const updatePrediction = vi.fn().mockResolvedValue({});
+
+    await expect(
+      selectOutcome({
+        apiClient: { cancelPrediction, createPrediction, updatePrediction },
         fixtureId: "fixture-1",
         selectedOutcome: "AWAY",
         existingPrediction: { ...editablePrediction, editable: false },
@@ -108,11 +134,13 @@ describe("Matches screen outcome actions", () => {
         createIdempotencyKey: () => "unused",
       }),
     ).resolves.toMatchObject({ status: "locked" });
+    expect(cancelPrediction).not.toHaveBeenCalled();
     expect(createPrediction).not.toHaveBeenCalled();
     expect(updatePrediction).not.toHaveBeenCalled();
   });
 
   it("surfaces rewarded-required placeholder state", async () => {
+    const cancelPrediction = vi.fn().mockResolvedValue({});
     const createPrediction = vi.fn().mockRejectedValue(
       new ApiClientError(
         {
@@ -127,7 +155,7 @@ describe("Matches screen outcome actions", () => {
 
     await expect(
       selectOutcome({
-        apiClient: { createPrediction, updatePrediction },
+        apiClient: { cancelPrediction, createPrediction, updatePrediction },
         fixtureId: "fixture-1",
         selectedOutcome: "HOME",
         canSubmitPrediction: true,
@@ -137,12 +165,13 @@ describe("Matches screen outcome actions", () => {
   });
 
   it("does not call API when presentation state blocks mutation", async () => {
+    const cancelPrediction = vi.fn().mockResolvedValue({});
     const createPrediction = vi.fn().mockResolvedValue({});
     const updatePrediction = vi.fn().mockResolvedValue({});
 
     await expect(
       selectOutcome({
-        apiClient: { createPrediction, updatePrediction },
+        apiClient: { cancelPrediction, createPrediction, updatePrediction },
         fixtureId: "fixture-1",
         selectedOutcome: "HOME",
         existingPrediction: editablePrediction,
@@ -150,6 +179,7 @@ describe("Matches screen outcome actions", () => {
         createIdempotencyKey: () => "unused",
       }),
     ).resolves.toEqual({ status: "blocked" });
+    expect(cancelPrediction).not.toHaveBeenCalled();
     expect(createPrediction).not.toHaveBeenCalled();
     expect(updatePrediction).not.toHaveBeenCalled();
   });

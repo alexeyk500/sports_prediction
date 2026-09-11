@@ -10,6 +10,7 @@ import type {
 } from "@/lib/api/types";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import {
+  isMonetagRewardedInterstitialTimeout,
   preloadMonetagRewardedInterstitial,
   showMonetagRewardedInterstitial,
 } from "@/lib/monetag/rewarded-interstitial";
@@ -25,6 +26,9 @@ import { useMatchesData } from "./hooks/useMatchesData";
 import { selectOutcome, type MatchesActionResult } from "./matches-actions";
 import type { ActiveTab } from "./matches-types";
 import styles from "./MatchesScreen.module.css";
+
+const REWARD_PRELOAD_MAX_ATTEMPTS = 3;
+const REWARD_PRELOAD_RETRY_DELAY_MS = 750;
 
 const MatchesScreen: React.FC = () => {
   const { t, locale } = useTranslation();
@@ -60,6 +64,7 @@ const MatchesScreen: React.FC = () => {
     session?: MonetagRewardSessionDto;
   } | null>(null);
   const rewardFlowInFlightRef = useRef(false);
+  const rewardFlowGenerationRef = useRef(0);
 
   useEffect(() => {
     initializeTelegramWebApp();
@@ -105,9 +110,10 @@ const MatchesScreen: React.FC = () => {
       return;
     }
 
+    const rewardFlowGeneration = closeRewardFlow();
+
     setPendingFixtureId(fixtureId);
     setActionErrorMessage(null);
-    setRewardPromptFixtureId(null);
 
     try {
       const result = await selectOutcome({
@@ -119,7 +125,12 @@ const MatchesScreen: React.FC = () => {
         createIdempotencyKey: () => crypto.randomUUID(),
       });
 
-      await handleActionResult(result, fixtureId, selectedOutcome);
+      await handleActionResult(
+        result,
+        fixtureId,
+        selectedOutcome,
+        rewardFlowGeneration,
+      );
     } catch (error) {
       setActionErrorMessage(messageForApiError(error, locale));
     } finally {
@@ -131,6 +142,7 @@ const MatchesScreen: React.FC = () => {
     result: MatchesActionResult,
     fixtureId: string,
     selectedOutcome: PredictionOutcome,
+    rewardFlowGeneration: number,
   ): Promise<void> {
     if (result.status === "blocked") {
       return;
@@ -143,6 +155,7 @@ const MatchesScreen: React.FC = () => {
         selectedOutcome,
         status: "required",
       });
+      void preloadRewardFlow(fixtureId, selectedOutcome, rewardFlowGeneration);
       return;
     }
 
@@ -156,46 +169,31 @@ const MatchesScreen: React.FC = () => {
   }
 
   async function handleStartReward(fixtureId: string): Promise<void> {
-    if (rewardFlowInFlightRef.current) {
-      return;
-    }
-
     if (rewardFlow?.fixtureId && rewardFlow.fixtureId !== fixtureId) {
       return;
     }
 
+    if (!rewardFlow) {
+      return;
+    }
+
+    if (
+      ["required", "failed", "rejected", "timeout"].includes(rewardFlow.status)
+    ) {
+      await preloadRewardFlow(fixtureId, rewardFlow.selectedOutcome);
+      return;
+    }
+
+    if (rewardFlowInFlightRef.current) {
+      return;
+    }
+
+    if (rewardFlow.status !== "ready" || !rewardFlow.session) {
+      return;
+    }
+
     rewardFlowInFlightRef.current = true;
-
     try {
-      if (!rewardFlow) {
-        return;
-      }
-
-      if (
-        ["required", "failed", "rejected", "timeout"].includes(
-          rewardFlow.status,
-        )
-      ) {
-        const session = await prepareRewardFlow(
-          fixtureId,
-          rewardFlow.selectedOutcome,
-        );
-
-        if (session) {
-          await showPreparedReward(
-            fixtureId,
-            rewardFlow.selectedOutcome,
-            session,
-          );
-        }
-
-        return;
-      }
-
-      if (rewardFlow.status !== "ready" || !rewardFlow.session) {
-        return;
-      }
-
       await showPreparedReward(
         fixtureId,
         rewardFlow.selectedOutcome,
@@ -243,56 +241,111 @@ const MatchesScreen: React.FC = () => {
     }
   }
 
+  async function preloadRewardFlow(
+    fixtureId: string,
+    selectedOutcome: PredictionOutcome,
+    rewardFlowGeneration: number = rewardFlowGenerationRef.current,
+  ): Promise<MonetagRewardSessionDto | null> {
+    if (rewardFlowInFlightRef.current) {
+      return null;
+    }
+
+    rewardFlowInFlightRef.current = true;
+
+    try {
+      return await prepareRewardFlow(
+        fixtureId,
+        selectedOutcome,
+        () => rewardFlowGeneration !== rewardFlowGenerationRef.current,
+      );
+    } finally {
+      rewardFlowInFlightRef.current = false;
+    }
+  }
+
+  function closeRewardFlow(): number {
+    rewardFlowGenerationRef.current += 1;
+    rewardFlowInFlightRef.current = false;
+    setRewardPromptFixtureId(null);
+    setRewardFlow(null);
+    return rewardFlowGenerationRef.current;
+  }
+
   async function prepareRewardFlow(
     fixtureId: string,
     selectedOutcome: PredictionOutcome,
     isCancelled: () => boolean = () => false,
   ): Promise<MonetagRewardSessionDto | null> {
-    try {
-      setActionErrorMessage(null);
-      setRewardFlow({ fixtureId, selectedOutcome, status: "preloading" });
-
-      const session = await apiClient.createMonetagRewardSession({
-        fixtureId,
-        selectedOutcome,
-      });
-
+    for (let attempt = 1; attempt <= REWARD_PRELOAD_MAX_ATTEMPTS; attempt++) {
       if (isCancelled()) {
         return null;
       }
 
-      if (session.status === "VERIFIED") {
-        await submitRewardedPrediction(
+      try {
+        setActionErrorMessage(null);
+        setRewardFlow({ fixtureId, selectedOutcome, status: "preloading" });
+
+        const session = await apiClient.createMonetagRewardSession({
           fixtureId,
           selectedOutcome,
-          session.adRewardId,
-        );
+        });
+
+        if (isCancelled()) {
+          return null;
+        }
+
+        if (session.status === "VERIFIED") {
+          await submitRewardedPrediction(
+            fixtureId,
+            selectedOutcome,
+            session.adRewardId,
+          );
+          return null;
+        }
+
+        await preloadMonetagRewardedInterstitial(session);
+
+        if (isCancelled()) {
+          return null;
+        }
+
+        setRewardFlow({ fixtureId, selectedOutcome, status: "ready", session });
+        return session;
+      } catch (error) {
+        if (isCancelled()) {
+          return null;
+        }
+
+        const isTimeout = isMonetagRewardedInterstitialTimeout(error);
+
+        console.warn("monetag_reward_prepare_failed", {
+          fixtureId,
+          attempt,
+          attempts: REWARD_PRELOAD_MAX_ATTEMPTS,
+          error: error instanceof Error ? error.message : "unknown",
+        });
+
+        if (isTimeout && attempt < REWARD_PRELOAD_MAX_ATTEMPTS) {
+          await delay(REWARD_PRELOAD_RETRY_DELAY_MS);
+          if (isCancelled()) {
+            return null;
+          }
+          continue;
+        }
+
+        setRewardFlow({
+          fixtureId,
+          selectedOutcome,
+          status: isTimeout ? "timeout" : "failed",
+        });
+        if (error instanceof ApiClientError) {
+          setActionErrorMessage(messageForApiError(error, locale));
+        }
         return null;
       }
-
-      await preloadMonetagRewardedInterstitial(session);
-
-      if (isCancelled()) {
-        return null;
-      }
-
-      setRewardFlow({ fixtureId, selectedOutcome, status: "ready", session });
-      return session;
-    } catch (error) {
-      if (isCancelled()) {
-        return null;
-      }
-
-      console.warn("monetag_reward_prepare_failed", {
-        fixtureId,
-        error: error instanceof Error ? error.message : "unknown",
-      });
-      setRewardFlow({ fixtureId, selectedOutcome, status: "failed" });
-      if (error instanceof ApiClientError) {
-        setActionErrorMessage(messageForApiError(error, locale));
-      }
-      return null;
     }
+
+    return null;
   }
 
   async function submitRewardedPrediction(
@@ -382,5 +435,11 @@ const MatchesScreen: React.FC = () => {
     </main>
   );
 };
+
+function delay(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+}
 
 export default MatchesScreen;

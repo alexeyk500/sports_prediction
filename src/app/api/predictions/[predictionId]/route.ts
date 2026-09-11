@@ -7,7 +7,10 @@ import {
 } from "@/lib/http/auth";
 import { readJsonBody } from "@/lib/http/json-body";
 import { systemClock } from "@/lib/time/clock";
-import { updatePrediction } from "@/modules/predictions/prediction.service";
+import {
+  cancelPrediction,
+  updatePrediction,
+} from "@/modules/predictions/prediction.service";
 
 const updatePredictionBodySchema = z
   .object({
@@ -36,6 +39,30 @@ export async function PATCH(
         userId: auth.user.id,
         predictionId: params.predictionId,
         selectedOutcome: body.selectedOutcome,
+      },
+    );
+
+    return NextResponse.json(result);
+  } catch (error) {
+    return toApiErrorResponse(error);
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ predictionId: string }> },
+) {
+  try {
+    const auth = await requireAuthenticatedUser(request);
+    const params = paramsSchema.parse(await context.params);
+    const result = await cancelPrediction(
+      {
+        prisma: getRoutePrismaClient(),
+        clock: systemClock,
+      },
+      {
+        userId: auth.user.id,
+        predictionId: params.predictionId,
       },
     );
 

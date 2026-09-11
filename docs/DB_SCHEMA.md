@@ -792,6 +792,11 @@ current SDK Promise + authenticated confirm flow. A `VERIFIED` AdReward
 is a single-use extra prediction grant and becomes `CONSUMED` atomically
 with rewarded Prediction creation.
 
+If a user cancels the associated REWARDED Prediction before kickoff, the
+AdReward remains `CONSUMED` and cannot be reused. The nullable
+`consumedByPredictionId` relation may be cleared so the cancelled Prediction can
+be removed without violating the historical `ON DELETE RESTRICT` relation.
+
 ---
 
 # 13. RatingProfile
@@ -1268,6 +1273,22 @@ update potentialPoints
 ```
 
 No quota/slot/reward/snapshot identity changes.
+
+## cancelPrediction
+
+Transactionally:
+
+```text
+load/lock relevant Prediction + Fixture
+validate authoritative kickoff rule
+clear consumedByPredictionId from associated AdReward, if present
+delete Prediction
+recompute DailyPredictionUsage from total remaining business-day Predictions
+decrement TournamentParticipant.predictionsCount
+```
+
+For REWARDED Predictions, AdReward.status remains `CONSUMED`; cancellation does
+not recreate a reusable grant.
 
 ## settleFixture
 

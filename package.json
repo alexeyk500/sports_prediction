@@ -22,6 +22,7 @@
     "db:test:migrate": "node --env-file=.env scripts/run-with-test-database.mjs prisma migrate deploy",
     "db:test:reset": "node --env-file=.env scripts/reset-test-database.mjs && node --env-file=.env scripts/run-with-test-database.mjs prisma migrate deploy",
     "db:seed:dev": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env scripts/seed-dev.mjs",
+    "db:reset-today-predictions:dev": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env scripts/reset-today-predictions-dev.mjs",
     "telegram:dev-init-data": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env scripts/generate-telegram-dev-init-data.mjs",
     "football:assets:manifest:build": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-football-assets-manifest.mjs",
     "football:assets:validate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/validate-football-assets-manifest.mjs",

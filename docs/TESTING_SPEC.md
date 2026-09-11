@@ -338,6 +338,27 @@ kickoffAt + 1 ms → PREDICTION_LOCKED
 pre-kickoff edit unless a later approved product rule explicitly changes
 this.
 
+## 7.4 Integration --- cancelPrediction
+
+Before kickoff, prove:
+
+```text
+Prediction is removed from current picks
+DailyPredictionUsage is recomputed from total remaining Predictions
+next Prediction requires reward when total remaining Predictions is at or above
+FREE_PREDICTION_LIMIT
+TournamentParticipant.predictionsCount decrements
+consumed AdReward remains CONSUMED and cannot be reused
+```
+
+Boundary regression:
+
+```text
+kickoffAt - 1 ms → allowed
+kickoffAt        → PREDICTION_LOCKED
+kickoffAt + 1 ms → PREDICTION_LOCKED
+```
+
 ---
 
 # 8. Prediction Concurrency Tests
@@ -640,6 +661,7 @@ GET /api/fixtures/today
 GET /api/predictions/today
 POST /api/predictions
 PATCH /api/predictions/:predictionId
+DELETE /api/predictions/:predictionId
 GET /api/settings
 PATCH /api/settings
 ```

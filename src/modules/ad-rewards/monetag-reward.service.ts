@@ -288,7 +288,7 @@ async function assertUserEligibleForRewardSession(
   const rewardedUsed = usage?.rewardedUsed ?? 0;
   const totalUsed = freeUsed + rewardedUsed;
 
-  if (freeUsed < FREE_PREDICTION_LIMIT) {
+  if (totalUsed < FREE_PREDICTION_LIMIT) {
     throw new DomainError(
       "AD_REWARD_NOT_ELIGIBLE",
       "Free prediction quota is still available.",

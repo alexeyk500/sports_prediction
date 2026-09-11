@@ -1,6 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { FixedClock } from "@/lib/time/clock";
-import { createPrediction } from "@/modules/predictions/prediction.service";
+import {
+  cancelPrediction,
+  createPrediction,
+} from "@/modules/predictions/prediction.service";
 import { createTestPrismaClient } from "../../integration/helpers/prisma-test-client";
 import {
   createActiveTestTournament,
@@ -296,6 +299,55 @@ describe("prediction creation concurrency", () => {
         where: { userId: user.id, key: idempotencyKey },
       }),
     ).toBe(1);
+  });
+
+  it("allows only one concurrent cancellation of the same prediction", async () => {
+    const user = await createTestUser(prisma);
+    const { fixture } = await createEligibleTestFixture(prisma);
+    const created = await createPrediction(
+      { prisma, clock },
+      {
+        userId: user.id,
+        fixtureId: fixture.id,
+        selectedOutcome: "HOME",
+        idempotencyKey: uniqueTestKey("idem"),
+      },
+    );
+
+    const results = await Promise.allSettled([
+      cancelPrediction(
+        { prisma, clock },
+        { userId: user.id, predictionId: created.predictionId },
+      ),
+      cancelPrediction(
+        { prisma, clock },
+        { userId: user.id, predictionId: created.predictionId },
+      ),
+    ]);
+    const usage = await prisma.dailyPredictionUsage.findFirstOrThrow({
+      where: { userId: user.id },
+    });
+    const participant = await prisma.tournamentParticipant.findFirstOrThrow({
+      where: { userId: user.id },
+    });
+
+    expect(
+      results.filter((result) => result.status === "fulfilled"),
+    ).toHaveLength(1);
+    expect(
+      results.filter((result) => result.status === "rejected"),
+    ).toHaveLength(1);
+    expect(
+      results.find((result) => result.status === "rejected"),
+    ).toMatchObject({
+      reason: { code: "PREDICTION_NOT_FOUND" },
+    });
+    expect(await prisma.prediction.count({ where: { userId: user.id } })).toBe(
+      0,
+    );
+    expect(usage.freeUsed).toBe(0);
+    expect(usage.rewardedUsed).toBe(0);
+    expect(participant.predictionsCount).toBe(0);
   });
 });
 

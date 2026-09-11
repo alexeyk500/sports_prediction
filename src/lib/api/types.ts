@@ -257,6 +257,14 @@ export interface PredictionMutationResponse {
   potentialPoints: number;
 }
 
+export interface CancelPredictionResponse {
+  predictionId: string;
+  userId: string;
+  tournamentId: string;
+  fixtureId: string;
+  slotType: "FREE" | "REWARDED";
+}
+
 export interface MonetagRewardSessionDto {
   adRewardId: string;
   ymid: string;

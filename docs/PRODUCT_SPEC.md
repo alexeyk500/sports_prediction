@@ -161,6 +161,34 @@ original scoring snapshot remains attached
 
 Backend remains authoritative regardless of client state or Sports API delay.
 
+## 4.2 Cancellation
+
+Before kickoff, tapping the already selected outcome cancels that Prediction.
+
+Cancellation:
+
+```text
+removes Prediction from My Picks
+recomputes DailyPredictionUsage from the total remaining Predictions
+decrements predictionsCount
+does not restore consumed rewarded AdReward
+```
+
+Free-vs-rewarded requirement for the next new Prediction is determined by the
+total number of current Predictions for the business day. If the user already
+has at least `FREE_PREDICTION_LIMIT` current Predictions, the next Prediction
+requires a new rewarded ad even if the cancelled Prediction originally used a
+FREE slot.
+
+For a REWARDED Prediction, the already consumed AdReward remains spent
+permanently. The next rewarded Prediction requires a new rewarded ad completion.
+
+At or after kickoff:
+
+```text
+cancel → PREDICTION_LOCKED
+```
+
 ---
 
 # 5. Daily Match Pool
@@ -356,6 +384,9 @@ Outcome tap
 Rewarded Ad не запускается автоматически.
 
 После verified rewarded completion Backend сохраняет intended Prediction согласно product rules.
+
+Повторный tap на уже выбранный outcome до kickoff отменяет Prediction вместо
+повторного сохранения того же outcome.
 
 My Picks показывает relevant OPEN/LOCKED/LIVE/SETTLED Prediction и summary metrics.
 

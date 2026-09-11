@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { FixedClock } from "@/lib/time/clock";
 import {
+  cancelPrediction,
   createPrediction,
   updatePrediction,
 } from "@/modules/predictions/prediction.service";
@@ -388,6 +389,247 @@ describe("prediction service", () => {
     });
   });
 
+  it("cancels free prediction before kickoff and releases free quota", async () => {
+    const user = await createTestUser(prisma);
+    const { fixture } = await createEligibleTestFixture(prisma);
+    const created = await createPrediction(
+      { prisma, clock },
+      {
+        userId: user.id,
+        fixtureId: fixture.id,
+        selectedOutcome: "HOME",
+        idempotencyKey: uniqueTestKey("idem"),
+      },
+    );
+
+    await expect(
+      cancelPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          predictionId: created.predictionId,
+        },
+      ),
+    ).resolves.toMatchObject({
+      predictionId: created.predictionId,
+      slotType: "FREE",
+    });
+
+    const usage = await prisma.dailyPredictionUsage.findFirstOrThrow({
+      where: { userId: user.id },
+    });
+    const participant = await prisma.tournamentParticipant.findFirstOrThrow({
+      where: { userId: user.id },
+    });
+
+    expect(
+      await prisma.prediction.findUnique({
+        where: { id: created.predictionId },
+      }),
+    ).toBeNull();
+    expect(usage.freeUsed).toBe(0);
+    expect(usage.rewardedUsed).toBe(0);
+    expect(participant.predictionsCount).toBe(0);
+  });
+
+  it("cancels rewarded prediction before kickoff, releases rewarded quota and keeps AdReward consumed", async () => {
+    const user = await createTestUser(prisma);
+    await createFreePredictions(user.id, 3);
+
+    const reward = await createTestAdReward(prisma, user.id);
+    const { fixture } = await createEligibleTestFixture(prisma);
+    const created = await createPrediction(
+      { prisma, clock },
+      {
+        userId: user.id,
+        fixtureId: fixture.id,
+        selectedOutcome: "HOME",
+        adRewardId: reward.id,
+        idempotencyKey: uniqueTestKey("idem"),
+      },
+    );
+
+    await expect(
+      cancelPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          predictionId: created.predictionId,
+        },
+      ),
+    ).resolves.toMatchObject({
+      predictionId: created.predictionId,
+      slotType: "REWARDED",
+    });
+
+    const usage = await prisma.dailyPredictionUsage.findFirstOrThrow({
+      where: { userId: user.id },
+    });
+    const participant = await prisma.tournamentParticipant.findFirstOrThrow({
+      where: { userId: user.id },
+    });
+    const consumedReward = await prisma.adReward.findUniqueOrThrow({
+      where: { id: reward.id },
+    });
+    const newRewardedFixture = await createEligibleTestFixture(prisma);
+
+    expect(usage.freeUsed).toBe(3);
+    expect(usage.rewardedUsed).toBe(0);
+    expect(participant.predictionsCount).toBe(3);
+    expect(consumedReward.status).toBe("CONSUMED");
+    expect(consumedReward.consumedByPredictionId).toBeNull();
+    await expect(
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: newRewardedFixture.fixture.id,
+          selectedOutcome: "DRAW",
+          adRewardId: reward.id,
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      ),
+    ).rejects.toMatchObject({ code: "AD_REWARD_ALREADY_CONSUMED" });
+  });
+
+  it("requires reward after cancelling a free prediction when total used remains above free limit", async () => {
+    const user = await createTestUser(prisma);
+    const freePredictions: Array<{ predictionId: string }> = [];
+
+    for (let index = 0; index < 3; index += 1) {
+      const { fixture } = await createEligibleTestFixture(prisma);
+      freePredictions.push(
+        await createPrediction(
+          { prisma, clock },
+          {
+            userId: user.id,
+            fixtureId: fixture.id,
+            selectedOutcome: "HOME",
+            idempotencyKey: uniqueTestKey("idem"),
+          },
+        ),
+      );
+    }
+
+    const reward = await createTestAdReward(prisma, user.id);
+    const rewardedFixture = await createEligibleTestFixture(prisma);
+    await createPrediction(
+      { prisma, clock },
+      {
+        userId: user.id,
+        fixtureId: rewardedFixture.fixture.id,
+        selectedOutcome: "DRAW",
+        adRewardId: reward.id,
+        idempotencyKey: uniqueTestKey("idem"),
+      },
+    );
+
+    await cancelPrediction(
+      { prisma, clock },
+      {
+        userId: user.id,
+        predictionId: freePredictions[0]?.predictionId ?? "",
+      },
+    );
+
+    const usage = await prisma.dailyPredictionUsage.findFirstOrThrow({
+      where: { userId: user.id },
+    });
+    const nextFixture = await createEligibleTestFixture(prisma);
+
+    expect(usage.freeUsed).toBe(3);
+    expect(usage.rewardedUsed).toBe(0);
+    await expect(
+      createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: nextFixture.fixture.id,
+          selectedOutcome: "AWAY",
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      ),
+    ).rejects.toMatchObject({ code: "REWARDED_AD_REQUIRED" });
+
+    const nextReward = await createTestAdReward(prisma, user.id);
+    const rewarded = await createPrediction(
+      { prisma, clock },
+      {
+        userId: user.id,
+        fixtureId: nextFixture.fixture.id,
+        selectedOutcome: "AWAY",
+        adRewardId: nextReward.id,
+        idempotencyKey: uniqueTestKey("idem"),
+      },
+    );
+
+    expect(rewarded.slotType).toBe("REWARDED");
+  });
+
+  it("lets user refill the eighth slot with a new reward after cancelling a free prediction", async () => {
+    const user = await createTestUser(prisma);
+    const firstFreeFixture = await createEligibleTestFixture(prisma);
+    const firstFree = await createPrediction(
+      { prisma, clock },
+      {
+        userId: user.id,
+        fixtureId: firstFreeFixture.fixture.id,
+        selectedOutcome: "HOME",
+        idempotencyKey: uniqueTestKey("idem"),
+      },
+    );
+
+    await createFreePredictions(user.id, 2);
+
+    for (let index = 0; index < 5; index += 1) {
+      const reward = await createTestAdReward(prisma, user.id);
+      const { fixture } = await createEligibleTestFixture(prisma);
+      await createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: fixture.id,
+          selectedOutcome: "DRAW",
+          adRewardId: reward.id,
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      );
+    }
+
+    await cancelPrediction(
+      { prisma, clock },
+      {
+        userId: user.id,
+        predictionId: firstFree.predictionId,
+      },
+    );
+
+    const usageAfterCancel = await prisma.dailyPredictionUsage.findFirstOrThrow(
+      {
+        where: { userId: user.id },
+      },
+    );
+    const nextReward = await createTestAdReward(prisma, user.id);
+    const nextFixture = await createEligibleTestFixture(prisma);
+    const refilled = await createPrediction(
+      { prisma, clock },
+      {
+        userId: user.id,
+        fixtureId: nextFixture.fixture.id,
+        selectedOutcome: "AWAY",
+        adRewardId: nextReward.id,
+        idempotencyKey: uniqueTestKey("idem"),
+      },
+    );
+
+    expect(usageAfterCancel.freeUsed).toBe(3);
+    expect(usageAfterCancel.rewardedUsed).toBe(4);
+    expect(refilled.slotType).toBe("REWARDED");
+    expect(await prisma.prediction.count({ where: { userId: user.id } })).toBe(
+      8,
+    );
+  });
+
   it("updates selected outcome immediately before kickoff", async () => {
     const user = await createTestUser(prisma);
     const competition = await createSupportedTestCompetition(prisma);
@@ -507,6 +749,40 @@ describe("prediction service", () => {
           userId: user.id,
           predictionId: created.predictionId,
           selectedOutcome: "DRAW",
+        },
+      ),
+    ).rejects.toMatchObject({ code: "PREDICTION_LOCKED" });
+
+    clock.set("2026-09-05T12:00:00.000Z");
+  });
+
+  it("rejects cancel at kickoff", async () => {
+    const user = await createTestUser(prisma);
+    const competition = await createSupportedTestCompetition(prisma);
+    const fixture = await createTestFixture(prisma, {
+      competitionId: competition.id,
+      kickoffAt: new Date("2026-09-05T12:00:00.000Z"),
+    });
+    await attachTestScoringSnapshot(prisma, fixture.id);
+
+    clock.set("2026-09-05T11:59:59.999Z");
+    const created = await createPrediction(
+      { prisma, clock },
+      {
+        userId: user.id,
+        fixtureId: fixture.id,
+        selectedOutcome: "HOME",
+        idempotencyKey: uniqueTestKey("idem"),
+      },
+    );
+
+    clock.set("2026-09-05T12:00:00.000Z");
+    await expect(
+      cancelPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          predictionId: created.predictionId,
         },
       ),
     ).rejects.toMatchObject({ code: "PREDICTION_LOCKED" });

@@ -81,6 +81,8 @@ export const en = {
       title: "Watch ad to unlock prediction",
       body: "Rewarded ads are not connected in this development stage.",
       start: "Watch ad",
+      loading: "Loading ad",
+      retry: "Try again",
       status: {
         required: "Watch an ad to unlock this prediction.",
         preloading: "Preparing ad...",
@@ -89,7 +91,7 @@ export const en = {
         confirming: "Confirming reward...",
         failed: "Ad is unavailable. Try again.",
         rejected: "Reward was not confirmed. Try again.",
-        timeout: "Reward confirmation is taking too long. Try again.",
+        timeout: "Ad did not load in time. Try again.",
       },
       cta: "Watch an ad to unlock another prediction",
       plusOne: "+1",

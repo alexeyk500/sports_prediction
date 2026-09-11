@@ -160,4 +160,34 @@ describe("frontend API client", () => {
       },
     ]);
   });
+
+  it("cancels prediction through authenticated API", async () => {
+    const requests: Array<{ method: string | undefined; url: string }> = [];
+    const client = new ApiClient({
+      getTelegramInitData: () => "signed-init-data",
+      fetchImpl: async (input, init) => {
+        requests.push({
+          method: init?.method,
+          url: String(input),
+        });
+
+        return Response.json({
+          predictionId: "prediction-1",
+          userId: "user-1",
+          tournamentId: "tournament-1",
+          fixtureId: "fixture-1",
+          slotType: "FREE",
+        });
+      },
+    });
+
+    await client.cancelPrediction({ predictionId: "prediction-1" });
+
+    expect(requests).toEqual([
+      {
+        method: "DELETE",
+        url: "/api/predictions/prediction-1",
+      },
+    ]);
+  });
 });
