@@ -8,15 +8,10 @@ import styles from "./HistoryDay.module.css";
 
 interface IHistoryDayProps {
   day: CupHistoryDayDto;
-  currentBusinessDate: string;
-  timeZone: string;
+  currentUtcDateKey: string;
 }
 
-const HistoryDay: React.FC<IHistoryDayProps> = ({
-  day,
-  currentBusinessDate,
-  timeZone,
-}) => {
+const HistoryDay: React.FC<IHistoryDayProps> = ({ day, currentUtcDateKey }) => {
   const { t, locale } = useTranslation();
 
   return (
@@ -27,7 +22,7 @@ const HistoryDay: React.FC<IHistoryDayProps> = ({
             t,
             locale,
             day.businessDate,
-            currentBusinessDate,
+            currentUtcDateKey,
           )}
         </h2>
         <span>
@@ -38,11 +33,7 @@ const HistoryDay: React.FC<IHistoryDayProps> = ({
       </div>
       <div className={styles.entries}>
         {day.predictions.map((prediction) => (
-          <HistoryPredictionCard
-            key={prediction.id}
-            prediction={prediction}
-            timeZone={timeZone}
-          />
+          <HistoryPredictionCard key={prediction.id} prediction={prediction} />
         ))}
       </div>
     </section>

@@ -44,7 +44,6 @@ export interface BootstrapResponse {
   } | null;
   cup: CurrentCupSummaryDto | null;
   serverTime: string;
-  businessTimezone: string;
 }
 
 export interface PrizeDistributionTierDto {

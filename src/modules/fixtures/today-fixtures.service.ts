@@ -3,10 +3,7 @@ import type {
   PredictionOutcome,
   PrismaClient,
 } from "@prisma/client";
-import {
-  getBusinessDate,
-  getBusinessDayRangeUtc,
-} from "@/lib/time/business-time";
+import { getUtcDateKey, getUtcDayRange } from "@/lib/time/utc-day";
 import type { Clock } from "@/lib/time/clock";
 import { SUPPORTED_COMPETITION_CODES } from "./fixture.domain";
 
@@ -49,8 +46,8 @@ export async function getTodayFixtures(
   dependencies: TodayFixturesDependencies,
 ): Promise<{ businessDate: string; fixtures: TodayFixtureDto[] }> {
   const now = dependencies.clock.now();
-  const businessDate = getBusinessDate(now);
-  const { startUtc, endUtc } = getBusinessDayRangeUtc(businessDate);
+  const businessDate = getUtcDateKey(now);
+  const { startUtc, endUtc } = getUtcDayRange(businessDate);
   const fixtures = await dependencies.prisma.fixture.findMany({
     where: {
       kickoffAt: {

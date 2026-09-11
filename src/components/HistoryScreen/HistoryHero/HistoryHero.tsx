@@ -8,7 +8,6 @@ import styles from "./HistoryHero.module.css";
 
 interface IHistoryHeroProps {
   tournament: NonNullable<BootstrapResponse["currentTournament"]>;
-  timeZone: string;
   rank: number | null;
   cupReward: number;
   correct: number;
@@ -17,7 +16,6 @@ interface IHistoryHeroProps {
 
 const HistoryHero: React.FC<IHistoryHeroProps> = ({
   tournament,
-  timeZone,
   rank,
   cupReward,
   correct,
@@ -35,7 +33,6 @@ const HistoryHero: React.FC<IHistoryHeroProps> = ({
               locale,
               tournament.startsAt,
               tournament.endsAt,
-              timeZone,
             )}
           </p>
         </div>

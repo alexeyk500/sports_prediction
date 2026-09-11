@@ -1,4 +1,4 @@
-import { formatBusinessDate } from "@/lib/i18n/format";
+import { formatUtcDateKey } from "@/lib/i18n/format";
 import type { SupportedLocale } from "@/lib/i18n/locales";
 import type { useTranslation } from "@/lib/i18n/use-translation";
 
@@ -8,12 +8,10 @@ export function formatHistoryDateRange(
   locale: SupportedLocale,
   startsAt: string,
   endsAt: string,
-  timeZone: string,
 ): string {
   const formatter = new Intl.DateTimeFormat(locale, {
     day: "numeric",
     month: "short",
-    timeZone,
   });
 
   return `${formatter.format(new Date(startsAt))} - ${formatter.format(new Date(endsAt))}`;
@@ -22,16 +20,16 @@ export function formatHistoryDateRange(
 export function formatHistoryDayTitle(
   t: Translator,
   locale: SupportedLocale,
-  businessDate: string,
-  currentBusinessDate: string,
+  utcDateKey: string,
+  currentUtcDateKey: string,
 ): string {
-  const date = formatBusinessDate(locale, businessDate);
+  const date = formatUtcDateKey(locale, utcDateKey);
 
-  if (businessDate === currentBusinessDate) {
+  if (utcDateKey === currentUtcDateKey) {
     return t("history.day.today", { date });
   }
 
-  if (businessDate === previousBusinessDate(currentBusinessDate)) {
+  if (utcDateKey === previousUtcDateKey(currentUtcDateKey)) {
     return t("history.day.yesterday", { date });
   }
 
@@ -41,19 +39,17 @@ export function formatHistoryDayTitle(
 export function formatHistoryKickoff(
   locale: SupportedLocale,
   kickoffAt: string,
-  timeZone: string,
 ): string {
   return new Intl.DateTimeFormat(locale, {
     day: "numeric",
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
-    timeZone,
   }).format(new Date(kickoffAt));
 }
 
-function previousBusinessDate(businessDate: string): string {
-  const [year, month, day] = businessDate.split("-").map(Number);
+function previousUtcDateKey(utcDateKey: string): string {
+  const [year, month, day] = utcDateKey.split("-").map(Number);
 
   if (!year || !month || !day) {
     return "";

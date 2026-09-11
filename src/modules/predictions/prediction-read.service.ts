@@ -5,10 +5,7 @@ import type {
   PredictionSlotType,
   PrismaClient,
 } from "@prisma/client";
-import {
-  getBusinessDate,
-  getBusinessDayRangeUtc,
-} from "@/lib/time/business-time";
+import { getUtcDateKey, getUtcDayRange } from "@/lib/time/utc-day";
 import type { Clock } from "@/lib/time/clock";
 import { winningOutcomeForFixture } from "@/modules/fixtures/today-fixtures.service";
 
@@ -90,8 +87,8 @@ export async function getTodayPredictions(
   userId: string,
 ): Promise<{ businessDate: string; predictions: PredictionDto[] }> {
   const now = dependencies.clock.now();
-  const businessDate = getBusinessDate(now);
-  const { startUtc, endUtc } = getBusinessDayRangeUtc(businessDate);
+  const businessDate = getUtcDateKey(now);
+  const { startUtc, endUtc } = getUtcDayRange(businessDate);
   const predictions = await dependencies.prisma.prediction.findMany({
     where: {
       userId,
@@ -191,7 +188,7 @@ export async function getCupHistory(
   const days = new Map<string, CupHistoryPredictionDto[]>();
 
   for (const prediction of predictions) {
-    const businessDate = getBusinessDate(prediction.fixture.kickoffAt);
+    const businessDate = getUtcDateKey(prediction.fixture.kickoffAt);
     const dayPredictions = days.get(businessDate) ?? [];
 
     dayPredictions.push({

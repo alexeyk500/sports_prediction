@@ -102,13 +102,13 @@ Prize Pool ≈ 10 TON
 
 # 4. Daily Predictions
 
-Canonical business timezone:
+Backend/domain day authority:
 
 ```text
-Europe/London
+UTC
 ```
 
-Daily Match Pool и Daily Prediction quota используют London calendar day.
+Daily Match Pool и Daily Prediction quota используют UTC calendar day.
 
 Limits:
 
@@ -123,12 +123,12 @@ These are centralized product/domain configuration constants. Application/UI log
 
 Rules:
 
-- New Prediction доступна только для Fixture текущего London calendar day.
+- New Prediction доступна только для Fixture текущего UTC calendar day.
 - На завтрашние и более поздние Fixture заранее прогнозировать нельзя.
 - Unused slots не переносятся.
 - Rewarded Ad даёт право сохранить конкретную intended Prediction; отдельного user-facing Ticket/Token нет.
 - Prediction остаются в My Picks после kickoff и Settlement.
-- При 8/8 новые Prediction блокируются до следующего London business day.
+- При 8/8 новые Prediction блокируются до следующего UTC day.
 
 ## 4.1 Editing
 
@@ -203,7 +203,7 @@ MVP competitions:
 6. UEFA Champions League
 7. UEFA Europa League
 
-В Daily Match Pool входят все eligible Fixture этих competitions текущего London calendar day.
+В Daily Match Pool входят все eligible Fixture этих competitions текущего UTC calendar day.
 
 Искусственного лимита Fixture на Competition нет.
 
@@ -295,6 +295,14 @@ DRAFT → OPEN → LOCKED → LIVE → FINISHED → SETTLED
 | FINISHED | Final result received                        |
 | SETTLED  | Prediction results/Points applied            |
 
+Fixture disruption fact states:
+
+| Status    | Product meaning                                      |
+| --------- | ---------------------------------------------------- |
+| POSTPONED | Provider reports postponement; downstream policy TBD |
+| CANCELLED | Provider reports cancellation; normal polling stops  |
+| SUSPENDED | Provider reports ambiguous interruption/disruption   |
+
 Important:
 
 Existing Prediction editability определяется kickoff rule из §4.1, а не `Fixture.status === OPEN`.
@@ -305,7 +313,9 @@ Existing Prediction editability определяется kickoff rule из §4.1
 
 Worker polling/timing/batching mechanics принадлежат `docs/TECH_SPEC.md`.
 
-Policy для postponed/cancelled/abandoned/rescheduled Fixture остаётся Open Decision.
+`worker:matches` records external match facts only. It does not settle,
+void, compensate, refund quota, update cups/leaderboards/prizes or notify users
+for disrupted fixtures.
 
 ---
 
@@ -787,7 +797,6 @@ Product areas known to require explicit resolution before affected behavior is i
 
 ```text
 exact Weekly Cup boundary
-postponed/cancelled/abandoned/rescheduled Fixture policy
 Goalstery mathematical outcome model
 exact Prize Distribution by winning rank
 Global Rating expected-percentile model / calibration

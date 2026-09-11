@@ -278,26 +278,32 @@ architecture approval and synchronized contract updates.
 
 Persistent timestamps are timezone-aware and represent UTC instants.
 
-Canonical business timezone:
+Backend/domain day authority:
 
 ```text
-Europe/London
+UTC
 ```
 
-Use IANA timezone semantics; never emulate London with a fixed UTC
-offset.
+Goalstery has no configurable business timezone.
 
-Business-day logic must use one shared time boundary implementation for:
+Backend calendar-day logic uses UTC lower-inclusive / upper-exclusive
+intervals:
 
 ```text
-current business date
-business-day UTC range
+YYYY-MM-DDT00:00:00.000Z <= timestamp < next YYYY-MM-DDT00:00:00.000Z
+```
+
+UTC-day logic must use one shared time boundary implementation for:
+
+```text
+current UTC date
+UTC-day range
 Daily Prediction quota
 Daily Match Pool
 Tournament time rules where applicable
 ```
 
-Frontend/device local time is not authoritative.
+Frontend/device local time is presentation-only and is not authoritative.
 
 Time-sensitive business logic uses the approved `Clock` abstraction so
 tests can control time deterministically.
@@ -359,6 +365,9 @@ OPEN
 LOCKED
 LIVE
 FINISHED
+POSTPONED
+CANCELLED
+SUSPENDED
 SETTLED
 ```
 
@@ -376,8 +385,8 @@ authoritative Fixture/snapshot/day rules.
 Existing Prediction editability follows the product kickoff rule and
 must not be prematurely blocked by `Fixture.status`.
 
-Policy for postponed/cancelled/abandoned/rescheduled Fixture remains
-unresolved until explicitly decided.
+Postponed/cancelled/rescheduled/suspended fixture fact handling is defined by
+`D-065`; downstream settlement behavior is outside `worker:matches`.
 
 ---
 
@@ -437,7 +446,7 @@ resolve Active Tournament
 lock/read eligible Fixture
 enforce current Daily Match Pool eligibility
 resolve published scoring snapshot
-resolve London business date
+resolve UTC date key
 enforce DailyPredictionUsage quota
 validate/consume Rewarded entitlement when required
 create TournamentParticipant if absent
@@ -566,7 +575,7 @@ Sports provider code is isolated behind the Sports Provider adapter.
 Current provider/discovery source:
 
 ```text
-API-Football / API-Sports
+football-data.org v4 for `worker:matches` factual match synchronization
 ```
 
 Core domain code must not depend on raw provider responses.
@@ -583,10 +592,36 @@ data required by the future Goalstery probability model
 Provider predictions are not Goalstery's authoritative probability
 model.
 
-Provider request budgeting, endpoint selection and polling cadence are
-operational concerns and may evolve without changing product rules,
-provided correctness and approved provider/model boundaries remain
-intact.
+Provider request budgeting, endpoint selection and polling cadence for
+`worker:matches` follow the approved match-worker specification:
+
+```text
+current UTC-day discovery every 30 minutes
+due fixture polling batched by provider match ids where possible
+30 minutes before kickoff -> every 10 minutes
+after kickoff before LIVE -> every 5 minutes
+LIVE -> every 10 minutes
+>4 hours after kickoff without FINISHED -> every 30 minutes + anomaly log
+FINISHED/CANCELLED -> stop normal polling
+```
+
+`worker:matches` uses `X-Auth-Token` from server-side
+`FOOTBALL_DATA_API_TOKEN`, validates provider responses at the adapter boundary,
+handles `429`/`Retry-After` centrally, and uses bounded retry/backoff for
+network and provider `5xx` failures.
+
+`worker:matches` emits only match fact events:
+
+```text
+match.started
+match.finished
+match.postponed
+match.cancelled
+match.rescheduled
+```
+
+Prediction settlement, cups, leaderboards, prizes, notifications and
+`worker:events` consumption are outside `worker:matches`.
 
 ## 12.1 Canonical football assets
 
@@ -761,6 +796,26 @@ Workers must assume scheduler/process delivery is at-least-once.
 
 # 17. Worker Model
 
+Runtime processes:
+
+```text
+web
+worker:matches
+worker:events (future)
+```
+
+`worker:matches` is a separate long-running Node process started with:
+
+```bash
+npm run worker:matches
+```
+
+Starting the web process does not start `worker:matches`; starting
+`worker:matches` does not require the web process. The worker connects directly
+to PostgreSQL through shared Prisma infrastructure, reconstructs scheduling
+state from PostgreSQL/current time after restart, avoids overlapping its own
+cycles, and supports graceful `SIGTERM`/`SIGINT` shutdown.
+
 Logical responsibilities:
 
 ```text
@@ -787,8 +842,8 @@ duplicate timer invocation
 temporary provider/network failure
 ```
 
-Exact polling intervals are configuration/operations, not architectural
-product rules.
+`worker:matches` currently assumes one running worker instance. It does not add
+distributed scheduling infrastructure.
 
 ---
 
@@ -1012,7 +1067,7 @@ Telegram
 Sports Provider
 Rewarded Ads
 TON
-Business Time
+UTC Time
 ```
 
 Current examples include:
@@ -1028,7 +1083,6 @@ TELEGRAM_INIT_DATA_MAX_AGE_SECONDS
 API_FOOTBALL_KEY
 API_FOOTBALL_BASE_URL
 
-BUSINESS_TIMEZONE=Europe/London
 ```
 
 Development-only public Telegram initData configuration may exist
@@ -1108,7 +1162,6 @@ affected implementation include, depending on current Decision register:
 
 ```text
 exact Weekly Cup boundary
-fixture disruption policy
 future Goalstery probability model and required data sources
 probability/snapshot publication policy after model design
 Monetag verification contract
@@ -1154,7 +1207,7 @@ Rewarded entitlement cannot be consumed twice
 Settlement is retry-safe
 Rating finalization is retry-safe
 published scoring evidence remains immutable
-business time uses Europe/London correctly
+domain day semantics use UTC correctly
 Leaderboard relies on maintained aggregates
 Workers reuse application/domain logic without self-HTTP
 external sports provider is adapter-isolated

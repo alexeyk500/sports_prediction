@@ -64,7 +64,6 @@ const CupScreen: React.FC<ICupScreenProps> = ({ onOpenMatches }) => {
           <CurrentCupView
             tournament={bootstrap.currentTournament}
             cup={bootstrap.cup}
-            businessTimezone={bootstrap.businessTimezone}
             topLeaderboard={topLeaderboard.data}
             isTopLeaderboardLoading={topLeaderboard.isLoading}
             topLeaderboardError={topLeaderboard.errorMessage}

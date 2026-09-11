@@ -21,14 +21,14 @@ export function formatKickoffTime(
   }).format(new Date(kickoffAt));
 }
 
-export function formatBusinessDate(
+export function formatUtcDateKey(
   locale: SupportedLocale,
-  businessDate: string,
+  utcDateKey: string,
 ): string {
-  const [year, month, day] = businessDate.split("-").map(Number);
+  const [year, month, day] = utcDateKey.split("-").map(Number);
 
   if (!year || !month || !day) {
-    return businessDate;
+    return utcDateKey;
   }
 
   return new Intl.DateTimeFormat(locale, {

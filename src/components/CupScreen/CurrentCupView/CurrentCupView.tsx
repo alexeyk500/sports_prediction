@@ -18,7 +18,6 @@ import styles from "./CurrentCupView.module.css";
 interface ICurrentCupViewProps {
   tournament: BootstrapResponse["currentTournament"];
   cup: BootstrapResponse["cup"];
-  businessTimezone: string;
   topLeaderboard: CupLeaderboardPageResponse | null;
   isTopLeaderboardLoading: boolean;
   topLeaderboardError: string | null;
@@ -31,7 +30,6 @@ interface ICurrentCupViewProps {
 const CurrentCupView: React.FC<ICurrentCupViewProps> = ({
   tournament,
   cup,
-  businessTimezone,
   topLeaderboard,
   isTopLeaderboardLoading,
   topLeaderboardError,
@@ -55,7 +53,7 @@ const CurrentCupView: React.FC<ICurrentCupViewProps> = ({
 
   return (
     <section className={styles.currentStack}>
-      <CupHero tournament={tournament} timeZone={businessTimezone} />
+      <CupHero tournament={tournament} />
       <CupParticipantsStrip
         participantCountLabel={
           cup ? String(cup.participantCount) : t("cup.unavailable")

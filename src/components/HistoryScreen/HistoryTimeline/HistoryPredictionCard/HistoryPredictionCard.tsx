@@ -16,12 +16,10 @@ import styles from "./HistoryPredictionCard.module.css";
 
 interface IHistoryPredictionCardProps {
   prediction: CupHistoryPredictionDto;
-  timeZone: string;
 }
 
 const HistoryPredictionCard: React.FC<IHistoryPredictionCardProps> = ({
   prediction,
-  timeZone,
 }) => {
   const { t, locale } = useTranslation();
   const statusClassName = statusClassFor(prediction.resultStatus);
@@ -46,7 +44,7 @@ const HistoryPredictionCard: React.FC<IHistoryPredictionCardProps> = ({
             <span dir="auto">{prediction.competition.name}</span>
           </span>
           <time dateTime={prediction.kickoffAt}>
-            {formatHistoryKickoff(locale, prediction.kickoffAt, timeZone)}
+            {formatHistoryKickoff(locale, prediction.kickoffAt)}
           </time>
         </div>
         <div className={styles.matchRow}>

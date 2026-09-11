@@ -7,11 +7,11 @@ import {
 } from "@prisma/client";
 import { DomainError } from "@/lib/errors/domain-error";
 import {
-  type BusinessDate,
-  businessDateToDatabaseDate,
-  getBusinessDayRangeUtc,
-  getBusinessDate,
-} from "@/lib/time/business-time";
+  type UtcDateKey,
+  utcDateKeyToDatabaseDate,
+  getUtcDayRange,
+  getUtcDateKey,
+} from "@/lib/time/utc-day";
 import type { Clock } from "@/lib/time/clock";
 import { assertFixtureEligibleForPrediction } from "@/modules/fixtures/fixture.domain";
 import { findActiveTournamentForInstant } from "@/modules/tournaments/tournament.service";
@@ -99,7 +99,7 @@ export async function createPrediction(
   input: CreatePredictionInput,
 ): Promise<PredictionMutationResult> {
   const now = dependencies.clock.now();
-  const businessDate = getBusinessDate(now);
+  const businessDate = getUtcDateKey(now);
   const requestHash = hashCreatePredictionInput(input);
 
   return dependencies.prisma.$transaction(
@@ -138,14 +138,14 @@ export async function createPrediction(
         });
       }
 
-      if (getBusinessDate(fixture.kickoffAt) !== businessDate) {
+      if (getUtcDateKey(fixture.kickoffAt) !== businessDate) {
         throw new DomainError(
           "FIXTURE_NOT_IN_DAILY_POOL",
           "Fixture is not in the current daily match pool.",
           {
             fixtureId: fixture.id,
             businessDate,
-            fixtureBusinessDate: getBusinessDate(fixture.kickoffAt),
+            fixtureUtcDateKey: getUtcDateKey(fixture.kickoffAt),
           },
         );
       }
@@ -165,13 +165,13 @@ export async function createPrediction(
         where: {
           userId_businessDate: {
             userId: input.userId,
-            businessDate: businessDateToDatabaseDate(businessDate),
+            businessDate: utcDateKeyToDatabaseDate(businessDate),
           },
         },
         update: {},
         create: {
           userId: input.userId,
-          businessDate: businessDateToDatabaseDate(businessDate),
+          businessDate: utcDateKeyToDatabaseDate(businessDate),
         },
       });
       const slotType = resolvePredictionSlotType(
@@ -351,7 +351,7 @@ export async function cancelPrediction(
       });
     }
 
-    const businessDate = getBusinessDate(existingPrediction.kickoffAt);
+    const businessDate = getUtcDateKey(existingPrediction.kickoffAt);
 
     await lockDailyUsageScope(tx, input.userId, businessDate);
     await tx.adReward.updateMany({
@@ -557,10 +557,10 @@ async function reconcileDailyPredictionUsage(
   tx: Prisma.TransactionClient,
   input: {
     userId: string;
-    businessDate: BusinessDate;
+    businessDate: UtcDateKey;
   },
 ): Promise<void> {
-  const { startUtc, endUtc } = getBusinessDayRangeUtc(input.businessDate);
+  const { startUtc, endUtc } = getUtcDayRange(input.businessDate);
   const totalUsed = await tx.prediction.count({
     where: {
       userId: input.userId,
@@ -576,7 +576,7 @@ async function reconcileDailyPredictionUsage(
   await tx.dailyPredictionUsage.updateMany({
     where: {
       userId: input.userId,
-      businessDate: businessDateToDatabaseDate(input.businessDate),
+      businessDate: utcDateKeyToDatabaseDate(input.businessDate),
     },
     data: {
       freeUsed: Math.min(totalUsed, FREE_PREDICTION_LIMIT),

@@ -6,10 +6,10 @@ import {
 } from "@prisma/client";
 import { DomainError } from "@/lib/errors/domain-error";
 import {
-  businessDateToDatabaseDate,
-  getBusinessDate,
-  type BusinessDate,
-} from "@/lib/time/business-time";
+  utcDateKeyToDatabaseDate,
+  getUtcDateKey,
+  type UtcDateKey,
+} from "@/lib/time/utc-day";
 import type { Clock } from "@/lib/time/clock";
 import { assertFixtureEligibleForPrediction } from "@/modules/fixtures/fixture.domain";
 import {
@@ -51,7 +51,7 @@ export async function createMonetagRewardSession(
   const now = dependencies.clock.now();
   const zoneId = requireMonetagZoneId();
   const expiresAt = new Date(now.getTime() + SESSION_TTL_MS);
-  const businessDate = getBusinessDate(now);
+  const businessDate = getUtcDateKey(now);
 
   return dependencies.prisma.$transaction(async (tx) => {
     await lockMonetagRewardSessionScope(tx, input.userId);
@@ -274,13 +274,13 @@ async function assertUserEligibleForRewardSession(
   tx: Prisma.TransactionClient,
   input: CreateMonetagRewardSessionInput,
   now: Date,
-  businessDate: BusinessDate,
+  businessDate: UtcDateKey,
 ): Promise<void> {
   const usage = await tx.dailyPredictionUsage.findUnique({
     where: {
       userId_businessDate: {
         userId: input.userId,
-        businessDate: businessDateToDatabaseDate(businessDate),
+        businessDate: utcDateKeyToDatabaseDate(businessDate),
       },
     },
   });
@@ -317,14 +317,14 @@ async function assertUserEligibleForRewardSession(
     });
   }
 
-  if (getBusinessDate(fixture.kickoffAt) !== businessDate) {
+  if (getUtcDateKey(fixture.kickoffAt) !== businessDate) {
     throw new DomainError(
       "FIXTURE_NOT_IN_DAILY_POOL",
       "Fixture is not in the current daily match pool.",
       {
         fixtureId: fixture.id,
         businessDate,
-        fixtureBusinessDate: getBusinessDate(fixture.kickoffAt),
+        fixtureUtcDateKey: getUtcDateKey(fixture.kickoffAt),
       },
     );
   }

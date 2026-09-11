@@ -121,7 +121,16 @@ export async function createTestFixture(
   prisma: PrismaClient,
   overrides: {
     competitionId?: string;
-    status?: "DRAFT" | "OPEN" | "LOCKED" | "LIVE" | "FINISHED" | "SETTLED";
+    status?:
+      | "DRAFT"
+      | "OPEN"
+      | "LOCKED"
+      | "LIVE"
+      | "FINISHED"
+      | "POSTPONED"
+      | "CANCELLED"
+      | "SUSPENDED"
+      | "SETTLED";
     kickoffAt?: Date;
     scoringSnapshotId?: string | null;
   } = {},

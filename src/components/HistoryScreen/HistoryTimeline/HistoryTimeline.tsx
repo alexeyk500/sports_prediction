@@ -6,14 +6,12 @@ import styles from "./HistoryTimeline.module.css";
 
 interface IHistoryTimelineProps {
   days: CupHistoryDayDto[];
-  currentBusinessDate: string;
-  timeZone: string;
+  currentUtcDateKey: string;
 }
 
 const HistoryTimeline: React.FC<IHistoryTimelineProps> = ({
   days,
-  currentBusinessDate,
-  timeZone,
+  currentUtcDateKey,
 }) => {
   const { t } = useTranslation();
 
@@ -32,8 +30,7 @@ const HistoryTimeline: React.FC<IHistoryTimelineProps> = ({
         <HistoryDay
           key={day.businessDate}
           day={day}
-          currentBusinessDate={currentBusinessDate}
-          timeZone={timeZone}
+          currentUtcDateKey={currentUtcDateKey}
         />
       ))}
     </section>

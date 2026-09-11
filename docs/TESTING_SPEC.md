@@ -242,26 +242,27 @@ synchronized model/spec migration.
 
 ---
 
-# 6. Business Time Tests
+# 6. UTC Day Tests
 
-Canonical timezone behavior must be deterministic.
+Backend/domain day behavior must be UTC-only and deterministic.
 
 Mandatory coverage:
 
 ```text
-normal GMT date
-normal BST date
-GMT → BST transition
-BST → GMT transition
-London midnight boundary
-UTC date differing from London business date
+UTC day lower-inclusive boundary
+UTC day upper-exclusive boundary
+summer date
+winter date
+former UK DST transition dates behave like ordinary UTC dates
+host timezone independence
 ```
 
 Critical exact boundaries:
 
 ```text
-23:59:59 London
-00:00:00 London
+00:00:00.000Z included
+23:59:59.999Z included
+next 00:00:00.000Z excluded
 
 kickoffAt - 1 ms
 kickoffAt
@@ -273,8 +274,8 @@ endsAt - 1 ms
 endsAt
 ```
 
-Relevant business-time helpers and workflows must use a controllable
-Clock rather than real wall-clock time.
+Relevant UTC-day helpers and workflows must use a controllable Clock rather
+than real wall-clock time.
 
 ---
 
@@ -698,8 +699,9 @@ malformed response
 provider status mapping
 ```
 
-Postponed/cancelled/rescheduled business behavior must not be invented
-before the corresponding Open Decision is resolved.
+Postponed/cancelled/rescheduled/suspended match fact ingestion follows `D-065`.
+Tests for `worker:matches` must verify fact persistence and outbox emission
+without implementing downstream settlement.
 
 Football asset manifest validation must cover:
 
@@ -744,6 +746,15 @@ settlement
 tournament-lifecycle
 rating-finalization
 ```
+
+`worker:matches` coverage must include provider status normalization,
+UTC-day windows versus provider UTC date filters, team
+create/update behavior, fixture idempotency, transition event emission without
+duplicates, rescheduling, cancellation/postponement/suspension handling,
+polling cadence, batch provider-id retrieval, bounded retry/backoff, `429`
+cooldown, missing final-score handling, long-running unfinished anomalies,
+conflicting provider identity data, and restart/state reconstruction where
+practical.
 
 Do not require tests for an obsolete `odds-sync` worker name merely
 because an older spec listed it. Current probability/snapshot ingestion
@@ -1020,7 +1031,7 @@ rating applied twice
 PrizeClaim business effect duplicated
 wrong Telegram User acting as another User
 published scoring evidence silently mutated
-London daily reset calculated incorrectly
+UTC daily reset calculated incorrectly
 idempotency key race creating duplicate mutation
 ```
 

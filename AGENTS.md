@@ -566,9 +566,9 @@ Detailed workflow rules принадлежат product/technical/testing specs.
 
 ## 10. Time, Numeric and Money Safety
 
-Canonical business timezone и time rules определяются specs/Accepted decisions.
+Canonical UTC/domain time rules определяются specs/Accepted decisions.
 
-Не использовать device/server local timezone или fixed UTC offset как business-calendar authority.
+Не использовать device/server local timezone как backend/domain calendar authority.
 
 Time-sensitive business logic должно использовать approved Clock abstraction.
 

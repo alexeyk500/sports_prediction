@@ -1,5 +1,5 @@
 import type React from "react";
-import { formatBusinessDate, formatLocalizedNumber } from "@/lib/i18n/format";
+import { formatUtcDateKey, formatLocalizedNumber } from "@/lib/i18n/format";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import styles from "./TodayContextRow.module.css";
 
@@ -13,9 +13,7 @@ const TodayContextRow: React.FC<ITodayContextRowProps> = ({
   matchCount,
 }) => {
   const { t, locale } = useTranslation();
-  const dateLabel = businessDate
-    ? formatBusinessDate(locale, businessDate)
-    : "";
+  const dateLabel = businessDate ? formatUtcDateKey(locale, businessDate) : "";
 
   return (
     <div className={styles.todayRow}>

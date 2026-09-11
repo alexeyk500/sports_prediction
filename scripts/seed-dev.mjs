@@ -26,13 +26,48 @@ const prisma = new PrismaClient({
 });
 
 const supportedCompetitions = [
-  { code: "EPL", name: "Premier League", apiFootballLeagueId: 39 },
-  { code: "LALIGA", name: "La Liga", apiFootballLeagueId: 140 },
-  { code: "SERIE_A", name: "Serie A", apiFootballLeagueId: 135 },
-  { code: "BUNDESLIGA", name: "Bundesliga", apiFootballLeagueId: 78 },
-  { code: "LIGUE_1", name: "Ligue 1", apiFootballLeagueId: 61 },
-  { code: "UCL", name: "UEFA Champions League", apiFootballLeagueId: 2 },
-  { code: "UEL", name: "UEFA Europa League", apiFootballLeagueId: 3 },
+  {
+    code: "EPL",
+    name: "Premier League",
+    footballDataCompetitionId: 2021,
+    apiFootballLeagueId: 39,
+  },
+  {
+    code: "LALIGA",
+    name: "La Liga",
+    footballDataCompetitionId: 2014,
+    apiFootballLeagueId: 140,
+  },
+  {
+    code: "SERIE_A",
+    name: "Serie A",
+    footballDataCompetitionId: 2019,
+    apiFootballLeagueId: 135,
+  },
+  {
+    code: "BUNDESLIGA",
+    name: "Bundesliga",
+    footballDataCompetitionId: 2002,
+    apiFootballLeagueId: 78,
+  },
+  {
+    code: "LIGUE_1",
+    name: "Ligue 1",
+    footballDataCompetitionId: 2015,
+    apiFootballLeagueId: 61,
+  },
+  {
+    code: "UCL",
+    name: "UEFA Champions League",
+    footballDataCompetitionId: 2001,
+    apiFootballLeagueId: 2,
+  },
+  {
+    code: "UEL",
+    name: "UEFA Europa League",
+    footballDataCompetitionId: 2146,
+    apiFootballLeagueId: 3,
+  },
 ];
 
 const teams = [
@@ -496,8 +531,8 @@ const devPlayers = buildDevPlayers(baseDevPlayers, requestedLeaderboardSize);
 
 try {
   const now = new Date();
-  const businessDate = getBusinessDate(now);
-  const range = getBusinessDayRangeUtc(businessDate);
+  const businessDate = getUtcDateKey(now);
+  const range = getUtcDayRange(businessDate);
   const kickoffTimes = createSeedKickoffTimes(now, range, 6);
   const cupStartsAt = new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000);
   const cupEndsAt = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
@@ -578,7 +613,7 @@ try {
       where: { code: competition.code },
       update: { name: competition.name, slug, isActive: true },
       create: {
-        providerCompetitionId: `dev-${competition.code}`,
+        providerCompetitionId: String(competition.footballDataCompetitionId),
         code: competition.code,
         name: competition.name,
         slug,
@@ -690,9 +725,7 @@ try {
     now,
   });
 
-  console.log(
-    `Development seed complete for London business date ${businessDate}.`,
-  );
+  console.log(`Development seed complete for UTC date ${businessDate}.`);
   console.log(
     `Active Weekly Cup: ${tournament.startsAt.toISOString()} → ${tournament.endsAt.toISOString()}.`,
   );
@@ -1758,26 +1791,26 @@ function buildPredictionPlan({
 }
 
 function assignDailySlotTypes(predictions) {
-  const usageByBusinessDate = new Map();
+  const usageByUtcDateKey = new Map();
   const result = [];
 
   for (const prediction of predictions) {
-    const businessDate = getBusinessDate(prediction.fixture.kickoffAt);
-    const usage = usageByBusinessDate.get(businessDate) ?? {
+    const businessDate = getUtcDateKey(prediction.fixture.kickoffAt);
+    const usage = usageByUtcDateKey.get(businessDate) ?? {
       freeUsed: 0,
       rewardedUsed: 0,
     };
 
     if (usage.freeUsed < 3) {
       usage.freeUsed += 1;
-      usageByBusinessDate.set(businessDate, usage);
+      usageByUtcDateKey.set(businessDate, usage);
       result.push({ ...prediction, slotType: "FREE" });
       continue;
     }
 
     if (usage.rewardedUsed < 5) {
       usage.rewardedUsed += 1;
-      usageByBusinessDate.set(businessDate, usage);
+      usageByUtcDateKey.set(businessDate, usage);
       result.push({ ...prediction, slotType: "REWARDED" });
     }
   }
@@ -1859,7 +1892,7 @@ async function syncDailyUsageForUser(userId, currentInstant) {
   const usageByDate = new Map();
 
   for (const prediction of businessDates) {
-    const businessDate = getBusinessDate(prediction.fixture.kickoffAt);
+    const businessDate = getUtcDateKey(prediction.fixture.kickoffAt);
     const current = usageByDate.get(businessDate) ?? {
       freeUsed: 0,
       rewardedUsed: 0,
@@ -1874,10 +1907,10 @@ async function syncDailyUsageForUser(userId, currentInstant) {
     usageByDate.set(businessDate, current);
   }
 
-  const currentBusinessDate = getBusinessDate(currentInstant);
+  const currentUtcDateKey = getUtcDateKey(currentInstant);
 
-  if (!usageByDate.has(currentBusinessDate)) {
-    usageByDate.set(currentBusinessDate, { freeUsed: 0, rewardedUsed: 0 });
+  if (!usageByDate.has(currentUtcDateKey)) {
+    usageByDate.set(currentUtcDateKey, { freeUsed: 0, rewardedUsed: 0 });
   }
 
   for (const [businessDate, usage] of usageByDate.entries()) {
@@ -1885,13 +1918,13 @@ async function syncDailyUsageForUser(userId, currentInstant) {
       where: {
         userId_businessDate: {
           userId,
-          businessDate: businessDateToDatabaseDate(businessDate),
+          businessDate: utcDateKeyToDatabaseDate(businessDate),
         },
       },
       update: usage,
       create: {
         userId,
-        businessDate: businessDateToDatabaseDate(businessDate),
+        businessDate: utcDateKeyToDatabaseDate(businessDate),
         ...usage,
       },
     });
@@ -2036,7 +2069,7 @@ function createSeedKickoffTimes(now, range, count) {
 }
 
 function createRelativeKickoff(now, dayOffset, londonHour) {
-  const businessDate = getBusinessDate(
+  const businessDate = getUtcDateKey(
     new Date(now.getTime() + dayOffset * 24 * 60 * 60 * 1000),
   );
   const [year, month, day] = businessDate.split("-").map(Number);
@@ -2076,102 +2109,21 @@ function spreadTimes(startMs, endMs, count) {
   );
 }
 
-function getBusinessDate(instant) {
-  const values = Object.fromEntries(
-    new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Europe/London",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    })
-      .formatToParts(instant)
-      .map((part) => [part.type, part.value]),
-  );
-
-  return `${values.year}-${values.month}-${values.day}`;
+function getUtcDateKey(instant) {
+  return `${instant.getUTCFullYear()}-${String(instant.getUTCMonth() + 1).padStart(2, "0")}-${String(instant.getUTCDate()).padStart(2, "0")}`;
 }
 
-function getBusinessDayRangeUtc(businessDate) {
+function getUtcDayRange(businessDate) {
   const [year, month, day] = businessDate.split("-").map(Number);
-  const nextDay = new Date(Date.UTC(year, month - 1, day + 1));
 
   return {
-    startUtc: zonedLocalTimeToUtc({
-      year,
-      month,
-      day,
-      hour: 0,
-      minute: 0,
-      second: 0,
-    }),
-    endUtc: zonedLocalTimeToUtc({
-      year: nextDay.getUTCFullYear(),
-      month: nextDay.getUTCMonth() + 1,
-      day: nextDay.getUTCDate(),
-      hour: 0,
-      minute: 0,
-      second: 0,
-    }),
+    startUtc: new Date(Date.UTC(year, month - 1, day)),
+    endUtc: new Date(Date.UTC(year, month - 1, day + 1)),
   };
 }
 
-function businessDateToDatabaseDate(businessDate) {
+function utcDateKeyToDatabaseDate(businessDate) {
   const [year, month, day] = businessDate.split("-").map(Number);
 
   return new Date(Date.UTC(year, month - 1, day));
-}
-
-function zonedLocalTimeToUtc(localTime) {
-  let utcTimestamp = Date.UTC(
-    localTime.year,
-    localTime.month - 1,
-    localTime.day,
-    localTime.hour,
-    localTime.minute,
-    localTime.second,
-  );
-
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    const instant = new Date(utcTimestamp);
-    const values = Object.fromEntries(
-      new Intl.DateTimeFormat("en-GB", {
-        timeZone: "Europe/London",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hourCycle: "h23",
-      })
-        .formatToParts(instant)
-        .map((part) => [part.type, part.value]),
-    );
-    const localAsUtc = Date.UTC(
-      Number(values.year),
-      Number(values.month) - 1,
-      Number(values.day),
-      Number(values.hour),
-      Number(values.minute),
-      Number(values.second),
-    );
-    const nextUtcTimestamp =
-      Date.UTC(
-        localTime.year,
-        localTime.month - 1,
-        localTime.day,
-        localTime.hour,
-        localTime.minute,
-        localTime.second,
-      ) -
-      (localAsUtc - instant.getTime());
-
-    if (nextUtcTimestamp === utcTimestamp) {
-      break;
-    }
-
-    utcTimestamp = nextUtcTimestamp;
-  }
-
-  return new Date(utcTimestamp);
 }

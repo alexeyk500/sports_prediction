@@ -1,9 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
-import {
-  BUSINESS_TIMEZONE,
-  businessDateToDatabaseDate,
-  getBusinessDate,
-} from "@/lib/time/business-time";
+import { getUtcDateKey, utcDateKeyToDatabaseDate } from "@/lib/time/utc-day";
 import type { Clock } from "@/lib/time/clock";
 import {
   DAILY_PREDICTION_LIMIT,
@@ -63,7 +59,6 @@ export interface BootstrapDto {
   } | null;
   cup: CurrentCupSummaryDto | null;
   serverTime: string;
-  businessTimezone: typeof BUSINESS_TIMEZONE;
 }
 
 export async function getBootstrap(
@@ -71,7 +66,7 @@ export async function getBootstrap(
   userId: string,
 ): Promise<BootstrapDto> {
   const now = dependencies.clock.now();
-  const businessDate = getBusinessDate(now);
+  const businessDate = getUtcDateKey(now);
   const [user, tournament, usage, rating] = await Promise.all([
     dependencies.prisma.user.findUniqueOrThrow({ where: { id: userId } }),
     findActiveTournamentForInstant({ prisma: dependencies.prisma }, now),
@@ -79,7 +74,7 @@ export async function getBootstrap(
       where: {
         userId_businessDate: {
           userId,
-          businessDate: businessDateToDatabaseDate(businessDate),
+          businessDate: utcDateKeyToDatabaseDate(businessDate),
         },
       },
     }),
@@ -145,6 +140,5 @@ export async function getBootstrap(
       : null,
     cup,
     serverTime: now.toISOString(),
-    businessTimezone: BUSINESS_TIMEZONE,
   };
 }

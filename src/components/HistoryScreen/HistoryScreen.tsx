@@ -46,7 +46,6 @@ const HistoryScreen: React.FC = () => {
         ) : null}
         <HistoryHero
           tournament={bootstrap.currentTournament}
-          timeZone={bootstrap.businessTimezone}
           rank={currentUserRow?.rank ?? null}
           cupReward={currentUserRow?.points ?? 0}
           correct={currentUserRow?.correct ?? 0}
@@ -54,8 +53,7 @@ const HistoryScreen: React.FC = () => {
         />
         <HistoryTimeline
           days={history.data?.days ?? []}
-          currentBusinessDate={bootstrap.dailyPredictionUsage.businessDate}
-          timeZone={bootstrap.businessTimezone}
+          currentUtcDateKey={bootstrap.dailyPredictionUsage.businessDate}
         />
       </div>
     </main>

@@ -13,10 +13,9 @@ import styles from "./CupHero.module.css";
 
 interface ICupHeroProps {
   tournament: NonNullable<BootstrapResponse["currentTournament"]>;
-  timeZone: string;
 }
 
-const CupHero: React.FC<ICupHeroProps> = ({ tournament, timeZone }) => {
+const CupHero: React.FC<ICupHeroProps> = ({ tournament }) => {
   const { t, locale } = useTranslation();
   const [mountedAtMs] = useState(() => Date.now());
   const endsAt = new Date(tournament.endsAt);
@@ -27,12 +26,7 @@ const CupHero: React.FC<ICupHeroProps> = ({ tournament, timeZone }) => {
         <div>
           <h2>{t("cup.weeklyCup")}</h2>
           <p>
-            {formatDateRange(
-              locale,
-              tournament.startsAt,
-              tournament.endsAt,
-              timeZone,
-            )}
+            {formatDateRange(locale, tournament.startsAt, tournament.endsAt)}
           </p>
         </div>
       </div>
@@ -45,7 +39,7 @@ const CupHero: React.FC<ICupHeroProps> = ({ tournament, timeZone }) => {
             </strong>
             <span>
               {t("cup.ends", {
-                date: formatEndDate(locale, tournament.endsAt, timeZone),
+                date: formatEndDate(locale, tournament.endsAt),
               })}
             </span>
           </div>

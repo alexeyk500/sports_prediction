@@ -58,16 +58,16 @@ PostgreSQL TIMESTAMPTZ
 Prisma DateTime @db.Timestamptz(6)
 ```
 
-Business timezone:
+Backend/domain day authority:
 
 ```text
-Europe/London
+UTC
 ```
 
-`businessDate` --- London calendar date stored as PostgreSQL `DATE`.
+`businessDate` --- UTC calendar date stored as PostgreSQL `DATE`.
 
-Application/Clock layer owns conversion between London business time and
-UTC instants.
+Application/Clock layer owns UTC date-key derivation and UTC day-range
+construction.
 
 ## 1.3 Prize money
 
@@ -518,8 +518,60 @@ Prediction[]
 Provider-specific status remains separate from Goalstery
 `FixtureStatus`.
 
+FixtureStatus values:
+
+```text
+DRAFT
+OPEN
+LOCKED
+LIVE
+FINISHED
+POSTPONED
+CANCELLED
+SUSPENDED
+SETTLED
+```
+
+`POSTPONED`, `CANCELLED` and `SUSPENDED` are external match fact states written
+by `worker:matches`. They do not by themselves perform prediction settlement or
+cup/leaderboard/prize effects.
+
 Final-state cross-field invariants may be enforced in application/domain
 code where clearer than SQL CHECKs.
+
+---
+
+# 8.1 OutboxEvent
+
+Purpose: transactional persistence of internal fact events for asynchronous
+consumers.
+
+Fields:
+
+```text
+id            UUID PK
+eventType     VARCHAR NOT NULL
+aggregateType VARCHAR NOT NULL
+aggregateId   UUID NOT NULL
+payload       JSONB NOT NULL
+occurredAt    TIMESTAMPTZ NOT NULL
+processedAt   TIMESTAMPTZ NULL
+createdAt     TIMESTAMPTZ NOT NULL
+```
+
+Current `worker:matches` event types:
+
+```text
+match.started
+match.finished
+match.postponed
+match.cancelled
+match.rescheduled
+```
+
+Fixture mutation and related outbox event insertion must be committed in the
+same PostgreSQL transaction. `worker:events` dispatch/consumption is outside the
+current schema behavior.
 
 ---
 
@@ -675,6 +727,10 @@ Cross-field settlement consistency is application/domain enforced.
 
 Purpose: atomic daily quota accounting.
 
+`businessDate` is the UTC date key for quota accounting. The column name is
+kept for compatibility with existing application/API contracts; it no longer
+means a configurable or Europe/London business timezone date.
+
 Fields:
 
 ```text
@@ -719,8 +775,8 @@ Indexes:
 (businessDate)
 ```
 
-These CHECKs intentionally mirror current hard product limits. Product
-changes to quota require synchronized schema migration.
+Quota range indexes remain keyed by `(userId, businessDate)` and
+`businessDate`.
 
 ---
 
@@ -1283,7 +1339,7 @@ load/lock relevant Prediction + Fixture
 validate authoritative kickoff rule
 clear consumedByPredictionId from associated AdReward, if present
 delete Prediction
-recompute DailyPredictionUsage from total remaining business-day Predictions
+recompute DailyPredictionUsage from total remaining UTC-day Predictions
 decrement TournamentParticipant.predictionsCount
 ```
 
@@ -1467,7 +1523,6 @@ Database areas that may require future explicit resolution include:
 
 ```text
 official leaderboard tie-break fields/indexes
-fixture disruption representation
 future Goalstery probability-model evidence fields
 candidate-vs-published snapshot persistence after model design
 Telegram anonymization/re-registration identity policy

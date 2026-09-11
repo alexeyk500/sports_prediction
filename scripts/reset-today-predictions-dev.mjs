@@ -25,9 +25,9 @@ const telegramUserId = parseTelegramUserId(
     DEFAULT_DEV_TELEGRAM_USER_ID,
 );
 const now = new Date();
-const businessDate = getBusinessDate(now);
-const businessDateForDatabase = businessDateToDatabaseDate(businessDate);
-const { startUtc, endUtc } = getBusinessDayRangeUtc(businessDate);
+const businessDate = getUtcDateKey(now);
+const businessDateForDatabase = utcDateKeyToDatabaseDate(businessDate);
+const { startUtc, endUtc } = getUtcDayRange(businessDate);
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg(databaseUrl),
@@ -267,107 +267,21 @@ async function refreshTournamentParticipants(tx, userId, tournamentIds) {
   }
 }
 
-function getBusinessDate(instant) {
-  const values = Object.fromEntries(
-    new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Europe/London",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    })
-      .formatToParts(instant)
-      .map((part) => [part.type, part.value]),
-  );
-
-  return `${values.year}-${values.month}-${values.day}`;
+function getUtcDateKey(instant) {
+  return `${instant.getUTCFullYear()}-${String(instant.getUTCMonth() + 1).padStart(2, "0")}-${String(instant.getUTCDate()).padStart(2, "0")}`;
 }
 
-function getBusinessDayRangeUtc(businessDateValue) {
+function getUtcDayRange(businessDateValue) {
   const [year, month, day] = businessDateValue.split("-").map(Number);
-  const nextDay = new Date(Date.UTC(year, month - 1, day + 1));
 
   return {
-    startUtc: zonedLocalTimeToUtc({
-      year,
-      month,
-      day,
-      hour: 0,
-      minute: 0,
-      second: 0,
-    }),
-    endUtc: zonedLocalTimeToUtc({
-      year: nextDay.getUTCFullYear(),
-      month: nextDay.getUTCMonth() + 1,
-      day: nextDay.getUTCDate(),
-      hour: 0,
-      minute: 0,
-      second: 0,
-    }),
+    startUtc: new Date(Date.UTC(year, month - 1, day)),
+    endUtc: new Date(Date.UTC(year, month - 1, day + 1)),
   };
 }
 
-function businessDateToDatabaseDate(businessDateValue) {
+function utcDateKeyToDatabaseDate(businessDateValue) {
   const [year, month, day] = businessDateValue.split("-").map(Number);
 
   return new Date(Date.UTC(year, month - 1, day));
-}
-
-function zonedLocalTimeToUtc(localTime) {
-  let utcTimestamp = Date.UTC(
-    localTime.year,
-    localTime.month - 1,
-    localTime.day,
-    localTime.hour,
-    localTime.minute,
-    localTime.second,
-  );
-
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    const offset = getTimeZoneOffsetMilliseconds(new Date(utcTimestamp));
-    const nextUtcTimestamp =
-      Date.UTC(
-        localTime.year,
-        localTime.month - 1,
-        localTime.day,
-        localTime.hour,
-        localTime.minute,
-        localTime.second,
-      ) - offset;
-
-    if (nextUtcTimestamp === utcTimestamp) {
-      break;
-    }
-
-    utcTimestamp = nextUtcTimestamp;
-  }
-
-  return new Date(utcTimestamp);
-}
-
-function getTimeZoneOffsetMilliseconds(instant) {
-  const values = Object.fromEntries(
-    new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Europe/London",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hourCycle: "h23",
-    })
-      .formatToParts(instant)
-      .map((part) => [part.type, part.value]),
-  );
-
-  const asUtcTimestamp = Date.UTC(
-    Number(values.year),
-    Number(values.month) - 1,
-    Number(values.day),
-    Number(values.hour),
-    Number(values.minute),
-    Number(values.second),
-  );
-
-  return asUtcTimestamp - instant.getTime();
 }

@@ -8,29 +8,22 @@ export function formatDateRange(
   locale: SupportedLocale,
   startsAt: string,
   endsAt: string,
-  timeZone: string,
 ): string {
   const formatter = new Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
-    timeZone,
   });
 
   return formatter.formatRange(new Date(startsAt), new Date(endsAt));
 }
 
-export function formatEndDate(
-  locale: SupportedLocale,
-  endsAt: string,
-  timeZone: string,
-): string {
+export function formatEndDate(locale: SupportedLocale, endsAt: string): string {
   return new Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-    timeZone,
   }).format(new Date(endsAt));
 }
 

@@ -73,6 +73,44 @@ describe("prediction service", () => {
     expect(prediction.tournamentId).toBe(participant.tournamentId);
   });
 
+  it("uses the UTC calendar day for fixture eligibility and daily usage", async () => {
+    const user = await createTestUser(prisma);
+    const competition = await createSupportedTestCompetition(prisma);
+    const fixture = await createTestFixture(prisma, {
+      competitionId: competition.id,
+      kickoffAt: new Date("2026-09-05T23:30:00.000Z"),
+    });
+    await attachTestScoringSnapshot(prisma, fixture.id);
+
+    try {
+      clock.set("2026-09-05T22:00:00.000Z");
+      const result = await createPrediction(
+        { prisma, clock },
+        {
+          userId: user.id,
+          fixtureId: fixture.id,
+          selectedOutcome: "HOME",
+          idempotencyKey: uniqueTestKey("idem"),
+        },
+      );
+
+      const usage = await prisma.dailyPredictionUsage.findUniqueOrThrow({
+        where: {
+          userId_businessDate: {
+            userId: user.id,
+            businessDate: new Date("2026-09-05T00:00:00.000Z"),
+          },
+        },
+      });
+
+      expect(result.slotType).toBe("FREE");
+      expect(usage.freeUsed).toBe(1);
+      expect(usage.rewardedUsed).toBe(0);
+    } finally {
+      clock.set("2026-09-05T12:00:00.000Z");
+    }
+  });
+
   it("creates the third free prediction without consuming a supplied reward", async () => {
     const user = await createTestUser(prisma);
 

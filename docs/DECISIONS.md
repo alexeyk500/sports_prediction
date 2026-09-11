@@ -149,7 +149,7 @@ Weekly Cup boundary
 D-002 + OD-001
 
 Changed/postponed fixture behavior
-D-005..D-006 + OD-002
+D-005..D-006 + D-065
 
 Prize distribution / payout
 D-013..D-014 + D-063 + OD-004
@@ -694,7 +694,7 @@ decision.
 
 ## D-015 --- Europe/London is the canonical business timezone
 
-**Status:** Accepted\
+**Status:** Superseded by D-066\
 **Date:** 2026-09-06
 
 ### Decision
@@ -731,6 +731,56 @@ DST must be handled using timezone-aware logic.
 
 ---
 
+## D-066 --- Backend and domain day semantics are UTC-only
+
+**Status:** Accepted\
+**Date:** 2026-09-11
+
+### Decision
+
+Goalstery has no configurable business timezone. UTC is the sole
+backend/domain time basis.
+
+All persisted timestamps remain absolute UTC instants. Backend calendar-day
+membership for daily quotas, Daily Match Pool, Matches API queries, worker match
+discovery and history grouping uses UTC day boundaries:
+
+```text
+utcDayStart <= timestamp < nextUtcDayStart
+```
+
+User/device-local time may be used for presentation formatting only. It must not
+change fixture eligibility, prediction deadlines, quota day membership,
+settlement, worker polling, tournament state, API filtering, or database
+queries.
+
+`BUSINESS_TIMEZONE` is removed from runtime configuration and must not be
+reintroduced as `UTC`; UTC is an architectural invariant, not a deployment
+choice.
+
+### Rationale
+
+football-data.org provides match kickoff timestamps as UTC instants, prediction
+locking depends on absolute `kickoffAt`, and Goalstery is not tied to one
+geographic market. Removing Europe/London day semantics removes BST/GMT/DST
+edge cases and makes worker/API/database behavior deterministic.
+
+### Consequences
+
+DailyPredictionUsage.`businessDate` remains the existing persisted quota key and
+API field name for compatibility, but its value is now the UTC date key.
+
+A fixture may belong to one UTC backend day while displaying as the previous or
+next local calendar day for some users.
+
+The migration to this decision must not shift existing timestamp instants.
+Historical DailyPredictionUsage date rows are recomputed from existing
+Prediction -> Fixture.`kickoffAt` UTC dates.
+
+This decision supersedes `D-015`.
+
+---
+
 ## D-016 --- Business time uses an injectable Clock abstraction
 
 **Status:** Accepted\
@@ -755,8 +805,8 @@ FixedClock
 
 ### Rationale
 
-Prediction locking, quotas, tournament boundaries, and London calendar
-behavior must be deterministic and testable.
+Prediction locking, quotas, tournament boundaries, and UTC calendar behavior
+must be deterministic and testable.
 
 ### Consequences
 
@@ -2255,8 +2305,8 @@ and request an explicit decision.
 
 ### Question
 
-What exact weekday and Europe/London local time define the boundary
-between consecutive Weekly Cups?
+What exact UTC weekday and time define the boundary between consecutive Weekly
+Cups?
 
 ### Current constraint
 
@@ -2265,30 +2315,6 @@ Weekly Cups are continuous.
 When one Cup ends, the next begins.
 
 The exact boundary has not yet been approved.
-
----
-
-## OD-002 --- Postponed / cancelled / abandoned / rescheduled fixture policy
-
-**Status:** Open
-
-### Question
-
-How should Goalstery handle predictions when a fixture is:
-
-- postponed
-- cancelled
-- abandoned
-- rescheduled
-- otherwise materially changed after publication
-
-### Current constraint
-
-Existing prediction editing is governed by the approved kickoff-lock
-decision.
-
-This Open Decision must not be resolved by silently adding
-`Fixture.status` as an additional prediction-edit lock condition.
 
 ---
 
@@ -2434,6 +2460,52 @@ frontend toggle state for quota or rewarded-ad correctness.
 
 ---
 
+## D-065 --- Match disruption facts are persisted by worker:matches
+
+**Status:** Accepted\
+**Date:** 2026-09-11
+
+### Decision
+
+`worker:matches` persists external match-state facts for disrupted fixtures
+without performing prediction settlement or deciding user-facing compensation.
+
+The accepted fixture disruption policy for external match facts is:
+
+- postponed fixtures remain stored, move to `FixtureStatus.POSTPONED`, emit
+  `match.postponed`, and continue to be tracked according to provider state and
+  the approved worker polling cadence;
+- cancelled fixtures remain stored, move to `FixtureStatus.CANCELLED`, emit
+  `match.cancelled`, and stop normal polling for that provider match;
+- rescheduled fixtures keep the same `Fixture`, update `kickoffAt`, emit
+  `match.rescheduled`, and leave current-day active polling when the new kickoff
+  is outside the current UTC day until that UTC day becomes current;
+- suspended or otherwise ambiguous provider statuses must not be interpreted as
+  `FINISHED` or `CANCELLED` without sufficient provider signal; they may be
+  stored as a safe disruption state such as `FixtureStatus.SUSPENDED`.
+
+`worker:matches` emits facts only. Downstream handlers/domain logic remain
+responsible for any prediction settlement, voiding, compensation, quota, cup,
+leaderboard, prize, or notification consequences.
+
+### Rationale
+
+External provider state changes must be recorded consistently and atomically so
+future downstream workers can react to facts without the match-ingestion worker
+owning product settlement policy.
+
+### Consequences
+
+The fixture lifecycle includes disruption states in addition to the normal
+prediction/result lifecycle.
+
+The database stores a minimal outbox for match fact events. Fixture mutation and
+outbox insertion must happen in one PostgreSQL transaction.
+
+`OD-002` is resolved by this decision and removed from the Open Decision list.
+
+---
+
 ## OD-005 --- Global Rating expected-percentile model and calibration
 
 **Status:** Open
@@ -2479,8 +2551,8 @@ Rating leagues are derived from rating thresholds `D-013` --- Prize
 amounts use nanoTON integer storage, superseded for the current MVP by
 `D-063` `D-014` --- MVP TON payouts use manual PrizeClaim workflow,
 superseded for the current MVP by `D-063` `D-015` --- Europe/London is
-the canonical business timezone `D-016` --- Business time uses an injectable Clock
-abstraction `D-017` --- Internal database entities use UUID identity
+the canonical business timezone, superseded by `D-066` `D-016` ---
+Business time uses an injectable Clock abstraction `D-017` --- Internal database entities use UUID identity
 `D-018` --- External sports providers are behind an adapter boundary
 `D-019` --- Match acquisition and outcome evaluation are separate
 concerns `D-020` --- API-Football IDs are provider identities, not
@@ -2526,13 +2598,14 @@ Testing follows responsibility boundaries `D-061` --- Concurrency
 correctness is explicitly tested `D-062` --- Visual geometry is verified
 visually rather than through brittle CSS unit tests `D-063` --- Prizes &
 Payouts MVP uses USDT on TRON TRC-20 `D-064` --- Editable predictions
-can be cancelled before kickoff
+can be cancelled before kickoff `D-065` --- Match disruption facts are
+persisted by worker:matches `D-066` --- Backend and domain day semantics
+are UTC-only
 
 ## Open
 
-`OD-001` --- Exact Weekly Cup boundary `OD-002` --- Postponed /
-cancelled / abandoned / rescheduled fixture policy `OD-003` ---
-Goalstery mathematical outcome model
+`OD-001` --- Exact Weekly Cup boundary `OD-003` --- Goalstery
+mathematical outcome model
 
 ---
 

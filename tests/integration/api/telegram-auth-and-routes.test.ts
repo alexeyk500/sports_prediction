@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
-  getBusinessDate,
-  getBusinessDayRangeUtc,
-  businessDateToDatabaseDate,
-} from "@/lib/time/business-time";
+  getUtcDateKey,
+  getUtcDayRange,
+  utcDateKeyToDatabaseDate,
+} from "@/lib/time/utc-day";
 import { GET as getBootstrap } from "@/app/api/bootstrap/route";
 import { GET as getMonetagSession } from "@/app/api/ad-rewards/monetag/sessions/[adRewardId]/route";
 import { POST as confirmMonetagSession } from "@/app/api/ad-rewards/monetag/sessions/[adRewardId]/confirm/route";
@@ -268,7 +268,7 @@ describe("Telegram auth HTTP vertical slice", () => {
     await prisma.dailyPredictionUsage.create({
       data: {
         userId: zeroBody.user.id,
-        businessDate: businessDateToDatabaseDate(getBusinessDate(new Date())),
+        businessDate: utcDateKeyToDatabaseDate(getUtcDateKey(new Date())),
         freeUsed: 2,
         rewardedUsed: 1,
       },
@@ -493,7 +493,7 @@ describe("Telegram auth HTTP vertical slice", () => {
 
   it("returns today's displayable fixtures and excludes tomorrow, inactive, and unsupported competitions", async () => {
     const initData = signedInitData({ id: "777000111224" });
-    const todayRange = getBusinessDayRangeUtc(getBusinessDate(new Date()));
+    const todayRange = getUtcDayRange(getUtcDateKey(new Date()));
     const activeCompetition = await createSupportedTestCompetition(
       prisma,
       "LALIGA",
@@ -598,7 +598,7 @@ describe("Telegram auth HTTP vertical slice", () => {
 
   it("derives winningOutcome from settled fixture final outcome only", async () => {
     const initData = signedInitData({ id: "777000111228" });
-    const todayRange = getBusinessDayRangeUtc(getBusinessDate(new Date()));
+    const todayRange = getUtcDayRange(getUtcDateKey(new Date()));
     const competition = await createSupportedTestCompetition(prisma, "EPL");
     const homeFixture = await createTestFixture(prisma, {
       competitionId: competition.id,
@@ -1359,7 +1359,7 @@ describe("Telegram auth HTTP vertical slice", () => {
     expect(lateResponse.status).toBe(423);
     expect(lateBody.error.code).toBe("PREDICTION_LOCKED");
 
-    const todayRange = getBusinessDayRangeUtc(getBusinessDate(new Date()));
+    const todayRange = getUtcDayRange(getUtcDateKey(new Date()));
     const lockedFixture = await createTestFixture(prisma, {
       competitionId: competition.id,
       kickoffAt: new Date(
@@ -1407,7 +1407,7 @@ function signedInitData(user: {
 }
 
 async function createHttpEligibleFixture() {
-  const todayRange = getBusinessDayRangeUtc(getBusinessDate(new Date()));
+  const todayRange = getUtcDayRange(getUtcDateKey(new Date()));
   const competition = await createSupportedTestCompetition(prisma, "EPL");
   const fixture = await createTestFixture(prisma, {
     competitionId: competition.id,
